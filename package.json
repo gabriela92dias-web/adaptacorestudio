@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "start": "tsx watch --exclude dist server.ts",
+    "start": "tsx server.ts",
     "build": "vite build",
     "dev": "vite dev"
   },
