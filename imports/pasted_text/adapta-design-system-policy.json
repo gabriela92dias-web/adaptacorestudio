@@ -1,0 +1,394 @@
+{
+  "name": "Adapta Design System",
+  "version": "2026.1",
+  "confidential": true,
+  "chromatic-governance": {
+    "policy": "CHROMATIC PURITY MANDATE",
+    "established": "2026-03-11T03:45:00Z",
+    "lastUpdated": "2026-03-11T03:45:00Z",
+    "updateLog": [
+      {
+        "timestamp": "2026-03-11T03:45:00Z",
+        "change": "Estabelecimento de Mandato de Pureza Cromática Absoluta",
+        "authority": "Design System Lead",
+        "enforcement": "CRÍTICO",
+        "description": "Nenhum tom ou cor será utilizado fora da paleta definida em absolutamente nenhuma circunstância"
+      }
+    ],
+    "rules": {
+      "RULE_001_ABSOLUTE_CONFORMITY": {
+        "title": "Conformidade Cromática Absoluta",
+        "enforcement": "CRÍTICO",
+        "description": "Nenhum outro tom deverá ser usado em nenhum lugar do código. Essas são as regras máximas e devem ser respeitadas em absolutamente todo o código.",
+        "penalty": "CODE_REJECTION",
+        "scope": "GLOBAL"
+      },
+      "RULE_002_NEW_IMPLEMENTATION": {
+        "title": "Implementação de Novos Recursos",
+        "enforcement": "CRÍTICO",
+        "description": "Se algo novo for implantado no código, deverá ser implantado já utilizando cores da interface definida.",
+        "requirement": "Todo novo componente, página ou funcionalidade deve utilizar APENAS cores da paleta Adapta",
+        "scope": "GLOBAL"
+      },
+      "RULE_003_EXTERNAL_TOOLS": {
+        "title": "Ferramentas Externas e Cromática",
+        "enforcement": "CRÍTICO",
+        "description": "No caso de ferramentas que utilizem informações cromáticas para além da interface, o agente deverá confirmar com o editor quais as cores que deverão ser usadas.",
+        "requirement": "NUNCA o agente deve supor que cor usar ou herdar cores de outros locais",
+        "mandate": "Confirmação obrigatória com editor antes de qualquer implementação",
+        "scope": "GLOBAL"
+      },
+      "RULE_004_WRAPPED_APPLICATIONS": {
+        "title": "Aplicações Encapsuladas",
+        "enforcement": "CRÍTICO",
+        "description": "Mesmo se for em aplicações 'com wrap' ou similares tipo hardcoded deverão respeitar essa regra.",
+        "examples": [
+          "iframes",
+          "web components",
+          "shadow DOM",
+          "embedded content",
+          "third-party integrations",
+          "hardcoded styles"
+        ],
+        "scope": "ABSOLUTO"
+      },
+      "RULE_005_THIRD_PARTY_FALLBACK": {
+        "title": "Bloqueio de Bibliotecas Externas",
+        "enforcement": "CRÍTICO",
+        "description": "Bibliotecas UI de terceiros (Bootstrap, Material UI, etc) não podem ser utilizadas com suas cores padrão",
+        "requirement": "Deve-se criar wrappers ou override de ALL suas cores com paleta Adapta",
+        "scope": "GLOBAL"
+      }
+    }
+  },
+  "shield-mechanism": {
+    "name": "Chromatic Purity Shield",
+    "version": "1.0.0",
+    "activated": "2026-03-11T03:45:00Z",
+    "protection_layers": {
+      "layer_1_regex_validation": {
+        "level": "LEXICAL",
+        "description": "Detecta padrões de cores em código antes da compilação",
+        "enabled": true,
+        "rules": [
+          {
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "action": "VALIDATE_AGAINST_PALETTE",
+            "reject_if": "NOT_IN_ADAPTA_PALETTE"
+          },
+          {
+            "pattern": "rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\)",
+            "action": "VALIDATE_AGAINST_PALETTE",
+            "reject_if": "NOT_IN_ADAPTA_PALETTE"
+          },
+          {
+            "pattern": "hsl\\(\\s*\\d+\\s*,\\s*\\d+%\\s*,\\s*\\d+%\\s*\\)",
+            "action": "VALIDATE_AGAINST_PALETTE",
+            "reject_if": "NOT_IN_ADAPTA_PALETTE"
+          },
+          {
+            "pattern": "color:\\s*(?!var\\(--)",
+            "action": "WARN_USE_CSS_VARIABLES",
+            "severity": "CRITICAL"
+          }
+        ]
+      },
+      "layer_2_css_validator": {
+        "level": "STYLESHEET",
+        "description": "Valida arquivos CSS/SCSS durante build",
+        "enabled": true,
+        "checks": [
+          "all_color_values_must_be_css_variables",
+          "no_hardcoded_hex_values",
+          "no_rgb_rgb_direct_values",
+          "no_named_colors_except_transparent",
+          "no_gradient_with_external_colors"
+        ]
+      },
+      "layer_3_component_validator": {
+        "level": "COMPONENT",
+        "description": "Valida atributos de estilo em componentes",
+        "enabled": true,
+        "checks": [
+          "inline_styles_forbidden_for_colors",
+          "style_bindings_must_use_css_variables",
+          "no_dynamic_color_generation",
+          "no_color_modifications_via_filters"
+        ]
+      },
+      "layer_4_runtime_monitor": {
+        "level": "EXECUTION",
+        "description": "Monitora aplicação em tempo de execução",
+        "enabled": true,
+        "checks": [
+          "computed_styles_validation",
+          "dom_color_attribute_audit",
+          "svg_color_attributes_validation",
+          "canvas_color_usage_validation",
+          "image_color_palette_check"
+        ]
+      },
+      "layer_5_dependency_audit": {
+        "level": "DEPENDENCY",
+        "description": "Audita pacotes e dependências externas",
+        "enabled": true,
+        "checks": [
+          "block_default_color_themes",
+          "require_color_override_bundles",
+          "validate_imported_stylesheets",
+          "scan_node_modules_for_color_injection"
+        ]
+      },
+      "layer_6_build_gate": {
+        "level": "CI/CD",
+        "description": "Gate na pipeline de build",
+        "enabled": true,
+        "action": "FAIL_BUILD_ON_COLOR_VIOLATION",
+        "report_format": "detailed_color_audit"
+      }
+    }
+  },
+  "validation_rules": {
+    "approved_color_formats": [
+      "CSS Variables: var(--spectre-color)",
+      "HEX (via CSS Variable only)",
+      "RGB (via CSS Variable only)",
+      "HSL (via CSS Variable only)"
+    ],
+    "forbidden_color_formats": [
+      "Direct HEX values",
+      "Direct RGB values",
+      "Direct HSL values",
+      "Named CSS colors",
+      "Color functions (except var())",
+      "Inherited colors from external libraries"
+    ],
+    "external_tool_protocol": {
+      "step_1": "Identificar ferramenta externa que utiliza cromática",
+      "step_2": "Documentar exatamente quais cores ela necessita",
+      "step_3": "PARAR e CONFIRMAR com editor/design lead",
+      "step_4": "Mapear cores solicitadas para paleta Adapta",
+      "step_5": "Implementar com override obrigatório",
+      "step_6": "Documentar no changelog de cores"
+    }
+  },
+  "color_audit_checklist": {
+    "pre_commit": [
+      "❌ Nenhuma cor hardcoded em arquivos",
+      "❌ Todos os valores de cor utilizam CSS variables",
+      "❌ Nenhuma importação de temas de bibliotecas externas",
+      "❌ Nenhum gradient com cores externas"
+    ],
+    "pre_merge": [
+      "❌ Code review com foco em conformidade cromática",
+      "❌ Validação automática passou",
+      "❌ Cores documentadas no sistema",
+      "❌ Nenhuma cor nova foi introduzida"
+    ],
+    "pre_deploy": [
+      "❌ Audit runtime passou sem violações",
+      "❌ CSS variables carregadas corretamente",
+      "❌ Temas light/dark respeitam paleta",
+      "❌ Relatório de auditoria assinado"
+    ]
+  }
+}
+Copy
+Sistema de Validação em TypeScript/JavaScript
+Copy// shield-config.ts
+import { colorPalette } from './adapta-colors';
+
+interface ColorViolation {
+  timestamp: string;
+  location: string;
+  foundColor: string;
+  severity: 'CRITICAL' | 'WARNING';
+  rule: string;
+}
+
+class ChromaticPurityShield {
+  private violations: ColorViolation[] = [];
+  private shieldActivated: string = '2026-03-11T03:45:00Z';
+  
+  constructor() {
+    this.initializeShield();
+  }
+
+  private initializeShield(): void {
+    console.log(`%c🛡️ CHROMATIC PURITY SHIELD ACTIVATED`, 'color: #455A4F; font-weight: bold');
+    console.log(`Last Updated: 2026-03-11T03:45:00Z`);
+    console.log(`Status: ENFORCING ABSOLUTE COLOR CONFORMITY`);
+  }
+
+  // Layer 1: Regex Validation
+  validateColorFormat(value: string): boolean {
+    const adapataColors = Object.values(colorPalette).flat();
+    
+    // Apenas CSS variables são permitidas
+    const cssVarPattern = /^var\(--[a-z0-9-]+\)$/i;
+    if (cssVarPattern.test(value)) {
+      return true;
+    }
+
+    // Se encontrou uma cor hardcoded, falha
+    const colorPatterns = [
+      /^#[0-9A-Fa-f]{6}$/,
+      /^rgb\([\d\s,]+\)$/,
+      /^hsl\([\d\s,%]+\)$/
+    ];
+
+    for (const pattern of colorPatterns) {
+      if (pattern.test(value)) {
+        this.reportViolation({
+          timestamp: new Date().toISOString(),
+          location: 'Color Format Validation',
+          foundColor: value,
+          severity: 'CRITICAL',
+          rule: 'RULE_001_ABSOLUTE_CONFORMITY'
+        });
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // Layer 3: Component Validator
+  validateComponentStyles(element: HTMLElement): void {
+    const computedStyle = window.getComputedStyle(element);
+    const colorProperties = [
+      'color',
+      'backgroundColor',
+      'borderColor',
+      'fill',
+      'stroke'
+    ];
+
+    colorProperties.forEach(prop => {
+      const value = computedStyle.getPropertyValue(prop);
+      if (value && !this.isValidAdaptaColor(value)) {
+        this.reportViolation({
+          timestamp: new Date().toISOString(),
+          location: `${element.tagName}.${element.className}`,
+          foundColor: value,
+          severity: 'CRITICAL',
+          rule: 'RULE_001_ABSOLUTE_CONFORMITY'
+        });
+      }
+    });
+  }
+
+  // Layer 4: Runtime Monitor
+  monitorDOMColors(): void {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName?.includes('style')) {
+          const element = mutation.target as HTMLElement;
+          this.validateComponentStyles(element);
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['style']
+    });
+  }
+
+  // Layer 5: Dependency Audit
+  auditDependencies(): void {
+    // Verifica se bibliotecas externas estão injetando cores
+    const stylesheets = Array.from(document.styleSheets);
+    
+    stylesheets.forEach(sheet => {
+      try {
+        const rules = sheet.cssRules || [];
+        Array.from(rules).forEach(rule => {
+          if (rule instanceof CSSStyleRule) {
+            const style = rule.style;
+            ['color', 'backgroundColor', 'borderColor'].forEach(prop => {
+              const value = style.getPropertyValue(prop);
+              if (value && !this.isValidAdaptaColor(value)) {
+                this.reportViolation({
+                  timestamp: new Date().toISOString(),
+                  location: `External Stylesheet: ${rule.selectorText}`,
+                  foundColor: value,
+                  severity: 'CRITICAL',
+                  rule: 'RULE_005_THIRD_PARTY_FALLBACK'
+                });
+              }
+            });
+          }
+        });
+      } catch (e) {
+        // CORS protection
+      }
+    });
+  }
+
+  // Validar contra paleta Adapta
+  private isValidAdaptaColor(color: string): boolean {
+    const allValidColors = Object.values(colorPalette).flat();
+    
+    // Normalize color para HEX
+    const hexColor = this.rgbToHex(color) || color;
+    
+    return allValidColors.some(valid => 
+      valid.hex.toUpperCase() === hexColor.toUpperCase()
+    );
+  }
+
+  // Helper para converter RGB para HEX
+  private rgbToHex(rgb: string): string | null {
+    const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    if (!match) return null;
+    
+    const r = parseInt(match[1]).toString(16).padStart(2, '0');
+    const g = parseInt(match[2]).toString(16).padStart(2, '0');
+    const b = parseInt(match[3]).toString(16).padStart(2, '0');
+    
+    return `#${r}${g}${b}`;
+  }
+
+  // Reportar violações
+  private reportViolation(violation: ColorViolation): void {
+    this.violations.push(violation);
+    
+    console.error(
+      `%c❌ COLOR VIOLATION DETECTED`,
+      'color: #CF6E9B; font-weight: bold; font-size: 14px'
+    );
+    console.error(`Rule: ${violation.rule}`);
+    console.error(`Location: ${violation.location}`);
+    console.error(`Found Color: ${violation.foundColor}`);
+    console.error(`Timestamp: ${violation.timestamp}`);
+
+    if (violation.severity === 'CRITICAL') {
+      throw new Error(`CHROMATIC PURITY VIOLATION: ${violation.rule}`);
+    }
+  }
+
+  // Gerar relatório
+  generateAuditReport(): string {
+    return `
+CHROMATIC PURITY SHIELD AUDIT REPORT
+=====================================
+Generated: ${new Date().toISOString()}
+Shield Activated: ${this.shieldActivated}
+
+Total Violations: ${this.violations.length}
+
+${this.violations.map(v => `
+  ❌ ${v.rule}
+     Location: ${v.location}
+     Color: ${v.foundColor}
+     Time: ${v.timestamp}
+`).join('\n')}
+
+Status: ${this.violations.length === 0 ? '✅ COMPLIANT' : '❌ NON-COMPLIANT'}
+    `;
+  }
+}
+
+export const shield = new ChromaticPurityShield();

@@ -1,0 +1,326 @@
+{
+  "name": "Adapta Design System",
+  "version": "2026.1",
+  "date": "2026-03-09",
+  "confidential": true,
+  "colorSpectres": {
+    "LUZ": {
+      "name": "Espectro de brancura e claridade estrutural",
+      "colors": {
+        "sageMist": {
+          "hex": "#FAFBFA",
+          "rgb": [250, 251, 250],
+          "hsl": [120, 11, 98],
+          "wcag": "AAA",
+          "contrast": {"w": 1.04, "b": 20.24},
+          "usage": "Backgrounds de destaque máximo, overlays"
+        },
+        "hempCanvas": {
+          "hex": "#F7F9F8",
+          "rgb": [247, 249, 248],
+          "hsl": [150, 14, 97],
+          "wcag": "AAA",
+          "contrast": {"w": 1.06, "b": 19.86},
+          "usage": "Background principal tema claro"
+        },
+        "sageWhisper": {
+          "hex": "#EDF1EF",
+          "rgb": [237, 241, 239],
+          "hsl": [150, 12, 94],
+          "wcag": "AAA",
+          "contrast": {"w": 1.14, "b": 18.43},
+          "usage": "Backgrounds secundários, cards neutros"
+        }
+      }
+    },
+    "ALMA": {
+      "name": "Espectro de meio-termo e equilíbrio neutro",
+      "colors": {
+        "greenSmoke": {
+          "hex": "#8FA89B",
+          "rgb": [143, 168, 155],
+          "hsl": [149, 13, 61],
+          "wcag": "AAA",
+          "contrast": {"w": 2.55, "b": 8.24},
+          "usage": "Textos terciários, ícones desabilitados"
+        },
+        "emeraldHaze": {
+          "hex": "#6A8A7A",
+          "rgb": [106, 138, 122],
+          "hsl": [150, 13, 48],
+          "wcag": "AA",
+          "contrast": {"w": 3.80, "b": 5.53},
+          "usage": "Max 20% layout - Acentos médios"
+        },
+        "deepPine": {
+          "hex": "#455A4F",
+          "rgb": [69, 90, 79],
+          "hsl": [149, 13, 31],
+          "wcag": "AAA",
+          "contrast": {"w": 7.42, "b": 2.83},
+          "usage": "Textos primários, elementos de contraste"
+        }
+      }
+    },
+    "FIRMEZA": {
+      "name": "Espectro de densidade e presença escura",
+      "colors": {
+        "darkForest": {
+          "hex": "#1A231D",
+          "rgb": [26, 35, 29],
+          "hsl": [140, 15, 12],
+          "wcag": "AAA",
+          "contrast": {"w": 16.13, "b": 1.30},
+          "usage": "Backgrounds escuros, profundidade"
+        },
+        "blackEarth": {
+          "hex": "#141A17",
+          "rgb": [20, 26, 23],
+          "hsl": [150, 13, 9],
+          "wcag": "AAA",
+          "contrast": {"w": 17.65, "b": 1.19},
+          "usage": "Background principal tema escuro"
+        },
+        "deepShadow": {
+          "hex": "#0F1411",
+          "rgb": [15, 20, 17],
+          "hsl": [144, 14, 7],
+          "wcag": "AAA",
+          "contrast": {"w": 18.61, "b": 1.13},
+          "usage": "Máxima densidade estrutural"
+        }
+      }
+    },
+    "CANDY": {
+      "name": "Espectro de verde limão pastel nebuloso, doçura cítrica",
+      "colors": {
+        "marshmallow": {
+          "hex": "#F7FBF0",
+          "rgb": [247, 251, 240],
+          "hsl": [82, 58, 96],
+          "wcag": "AAA",
+          "contrast": {"w": 1.05, "b": 20.01},
+          "usage": "Backgrounds leves, cards de destaque jovem"
+        },
+        "acucar": {
+          "hex": "#EFF7E0",
+          "rgb": [239, 247, 224],
+          "hsl": [81, 59, 92],
+          "wcag": "AAA",
+          "contrast": {"w": 1.10, "b": 19.05},
+          "usage": "Overlays frescos, hover states suaves"
+        },
+        "baunilha": {
+          "hex": "#E5F2D0",
+          "rgb": [229, 242, 208],
+          "hsl": [83, 57, 88],
+          "wcag": "AAA",
+          "contrast": {"w": 1.17, "b": 17.94},
+          "usage": "Badges, pills, elementos decorativos"
+        }
+      }
+    },
+    "LEMON": {
+      "name": "Espectro de verde limão suave, frescor cítrico controlado",
+      "colors": {
+        "neblina": {
+          "hex": "#F5F9F2",
+          "rgb": [245, 249, 242],
+          "hsl": [94, 37, 96],
+          "wcag": "AAA",
+          "contrast": {"w": 1.07, "b": 19.71},
+          "usage": "Backgrounds de campanha, seções de bem-estar"
+        },
+        "vapor": {
+          "hex": "#EAF3E5",
+          "rgb": [234, 243, 229],
+          "hsl": [99, 37, 93],
+          "wcag": "AAA",
+          "contrast": {"w": 1.14, "b": 18.45},
+          "usage": "Cards emocionais, overlays leves"
+        },
+        "citrus": {
+          "hex": "#DFEDD8",
+          "rgb": [223, 237, 216],
+          "hsl": [100, 37, 89],
+          "wcag": "AAA",
+          "contrast": {"w": 1.22, "b": 17.24},
+          "usage": "Hover states, transições suaves"
+        }
+      }
+    },
+    "VENTURA": {
+      "name": "Espectro de verde acinzentado etéreo, atmosférico sofisticado",
+      "colors": {
+        "nevoaclara": {
+          "hex": "#E8EFE0",
+          "rgb": [232, 239, 224],
+          "hsl": [88, 32, 91],
+          "wcag": "AAA",
+          "contrast": {"w": 1.18, "b": 17.85},
+          "usage": "Elementos de apoio, fundos com presença"
+        },
+        "fumaca": {
+          "hex": "#D7E3CC",
+          "rgb": [215, 227, 204],
+          "hsl": [91, 29, 85],
+          "wcag": "AAA",
+          "contrast": {"w": 1.33, "b": 15.75},
+          "usage": "Textos suaves, divisores sutis"
+        },
+        "bruma": {
+          "hex": "#C1D4B2",
+          "rgb": [193, 212, 178],
+          "hsl": [94, 28, 76],
+          "wcag": "AAA",
+          "contrast": {"w": 1.58, "b": 13.33},
+          "usage": "Bordas suaves, estados desabilitados"
+        }
+      }
+    },
+    "ENERGIA": {
+      "name": "Espectro de luz quente e frutada",
+      "colors": {
+        "campoAlto": {
+          "hex": "#FFFAE0",
+          "rgb": [255, 250, 224],
+          "hsl": [50, 100, 94],
+          "wcag": "AAA",
+          "contrast": {"w": 1.05, "b": 20.00},
+          "cssVar": "--energia-campo-alto"
+        },
+        "campoVelado": {
+          "hex": "#FFE7A3",
+          "rgb": [255, 231, 163],
+          "hsl": [44, 100, 82],
+          "wcag": "AAA",
+          "contrast": {"w": 1.22, "b": 17.21},
+          "cssVar": "--energia-campo-velado"
+        },
+        "centro": {
+          "hex": "#FFE2C2",
+          "rgb": [255, 226, 194],
+          "hsl": [31, 100, 88],
+          "wcag": "AAA",
+          "contrast": {"w": 1.24, "b": 16.91},
+          "cssVar": "--energia-centro"
+        },
+        "marcaTexto": {
+          "hex": "#FED376",
+          "rgb": [254, 211, 118],
+          "hsl": [41, 99, 73],
+          "wcag": "AAA",
+          "contrast": {"w": 1.42, "b": 14.79},
+          "cssVar": "--energia-marca-texto"
+        },
+        "denso": {
+          "hex": "#F58E72",
+          "rgb": [245, 142, 114],
+          "hsl": [13, 87, 70],
+          "wcag": "AAA",
+          "contrast": {"w": 2.33, "b": 8.99},
+          "cssVar": "--energia-denso"
+        }
+      }
+    },
+    "ALEGRIA": {
+      "name": "Espectro de rosa vivo e berry suave",
+      "colors": {
+        "campoAlto": {
+          "hex": "#FDE2DD",
+          "rgb": [253, 226, 221],
+          "hsl": [9, 89, 93],
+          "wcag": "AAA",
+          "contrast": {"w": 1.23, "b": 17.10},
+          "cssVar": "--alegria-campo-alto"
+        },
+        "campoVelado": {
+          "hex": "#FFC8C2",
+          "rgb": [255, 200, 194],
+          "hsl": [6, 100, 88],
+          "wcag": "AAA",
+          "contrast": {"w": 1.47, "b": 14.29},
+          "cssVar": "--alegria-campo-velado"
+        },
+        "centro": {
+          "hex": "#FFA3B1",
+          "rgb": [255, 163, 177],
+          "hsl": [351, 100, 82],
+          "wcag": "AAA",
+          "contrast": {"w": 1.94, "b": 10.81},
+          "cssVar": "--alegria-centro"
+        },
+        "marcaTexto": {
+          "hex": "#FE86A4",
+          "rgb": [254, 134, 164],
+          "hsl": [345, 98, 76],
+          "wcag": "AAA",
+          "contrast": {"w": 2.29, "b": 9.16},
+          "cssVar": "--alegria-marca-texto"
+        },
+        "denso": {
+          "hex": "#CF6E9B",
+          "rgb": [207, 110, 155],
+          "hsl": [332, 50, 62],
+          "wcag": "AA",
+          "contrast": {"w": 3.30, "b": 6.36},
+          "cssVar": "--alegria-denso"
+        }
+      }
+    },
+    "SEGURANCA": {
+      "name": "Espectro de lavanda rosada, pervinca e roxo frio",
+      "colors": {
+        "campoAlto": {
+          "hex": "#F1E6F0",
+          "rgb": [241, 230, 240],
+          "hsl": [305, 28, 92],
+          "wcag": "AAA",
+          "contrast": {"w": 1.21, "b": 17.32},
+          "cssVar": "--segurança-campo-alto"
+        },
+        "campoVelado": {
+          "hex": "#DEC7DE",
+          "rgb": [222, 199, 222],
+          "hsl": [300, 26, 83],
+          "wcag": "AAA",
+          "contrast": {"w": 1.58, "b": 13.33},
+          "cssVar": "--segurança-campo-velado"
+        },
+        "centro": {
+          "hex": "#D0AEE0",
+          "rgb": [208, 174, 224],
+          "hsl": [281, 45, 78],
+          "wcag": "AAA",
+          "contrast": {"w": 1.89, "b": 11.13},
+          "cssVar": "--segurança-centro"
+        },
+        "marcaTexto": {
+          "hex": "#D1B4FE",
+          "rgb": [209, 180, 254],
+          "hsl": [264, 97, 85],
+          "wcag": "AAA",
+          "contrast": {"w": 1.80, "b": 11.67},
+          "cssVar": "--segurança-marca-texto"
+        },
+        "denso": {
+          "hex": "#9DA0EC",
+          "rgb": [157, 160, 236],
+          "hsl": [238, 68, 77],
+          "wcag": "AAA",
+          "contrast": {"w": 2.42, "b": 8.67},
+          "cssVar": "--segurança-denso"
+        }
+      }
+    }
+  },
+  "operationalRules": {
+    "rule1": "VERDE + AMARELO JAMAIS - Exceção: Copa do Mundo. Evitar associação cromática.",
+    "rule2": "GRADIENTES SUAVES - Nunca cores complementares. Usar análogas/monocromáticas.",
+    "rule3": "COLOR CORE = CONTEÚDO - Restrito a materiais promocionais. Não em UI estrutural.",
+    "rule4": "NEUTRALS = ESTRUTURA - Base de toda interface. Backgrounds, cards, borders, texto.",
+    "rule5": "VERDE = MONOCROMÁTICO - Verde institucional sempre sozinho. Não mix com Color Core.",
+    "rule6": "WCAG 2.1 AA MÍNIMO - Contraste 4.5:1 texto normal, 3:1 texto grande. AAA ideal."
+  },
+  "summary": "45 cores • 9 espectros • RGB/HSL/HEX • WCAG 2.1 AA/AAA"
+}

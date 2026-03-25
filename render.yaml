@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: adapta-corestudio
+    env: node
+    buildCommand: npm install -g pnpm && pnpm install && pnpm run build
+    startCommand: pnpm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20

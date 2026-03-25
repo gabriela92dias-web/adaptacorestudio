@@ -1,0 +1,411 @@
+.layout {
+  display: flex;
+  height: 100%;
+  background-color: var(--background);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.sidebar {
+  width: 300px;
+  min-width: 300px;
+  background-color: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--animation-duration-normal) cubic-bezier(0.2, 0, 0, 1), min-width var(--animation-duration-normal) cubic-bezier(0.2, 0, 0, 1);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.collapsed {
+  width: 3.5rem;
+  min-width: 3.5rem;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.mainPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background);
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .sidebar.hiddenOnMobile {
+    display: none;
+  }
+  .mainPanel.hiddenOnMobile {
+    display: none;
+  }
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    border-right: none;
+  }
+}
+
+.sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-5);
+  border-bottom: 1px solid var(--border);
+  transition: padding var(--animation-duration-normal) ease;
+  height: 5.5rem;
+  box-sizing: border-box;
+}
+
+.sidebar.collapsed .sidebarHeader {
+  padding: 0;
+  justify-content: center;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.addButtonCollapsed {
+  margin: auto;
+}
+
+.title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: 0;
+  color: var(--foreground);
+}
+
+.subtitle {
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-1);
+}
+
+.sectorList {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.sidebar.collapsed .sectorList {
+  overflow-y: hidden;
+  padding: var(--spacing-2) 0;
+  align-items: center;
+}
+
+.skeletonItem {
+  height: 2.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.sidebar.collapsed .skeletonItem {
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: 0 auto;
+  border-radius: var(--radius-md);
+}
+
+.emptyList {
+  padding: var(--spacing-6) 0;
+  text-align: center;
+  color: var(--muted-foreground);
+  font-size: var(--font-size-base);
+}
+
+.sectorItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  width: 100%;
+  padding: var(--spacing-3);
+  border: none;
+  background-color: transparent;
+  color: var(--foreground);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--animation-duration-fast) ease;
+  position: relative;
+}
+
+.sidebar.collapsed .sectorItem {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.sectorItem:hover {
+  background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.sidebar.collapsed .sectorItem:hover {
+  transform: scale(1.05);
+}
+
+.sectorItemActive {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 500;
+}
+
+.sidebar.collapsed .sectorItemActive {
+  background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
+  color: var(--foreground);
+}
+
+.sidebar.collapsed .sectorItemActive::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--primary);
+}
+
+.sectorItemActive:hover {
+  background-color: var(--primary);
+}
+
+.sidebar.collapsed .sectorItemActive:hover {
+  background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.sectorIcon {
+  color: var(--muted-foreground);
+}
+
+.sectorItemActive .sectorIcon {
+  color: var(--primary-foreground);
+}
+
+.sectorName {
+  font-size: var(--font-size-base);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebarFooter {
+  padding: var(--spacing-3);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.collapsed .sidebarFooter {
+  padding: var(--spacing-3) 0;
+  align-items: center;
+}
+
+.collapseButton {
+  width: 100%;
+  justify-content: center;
+  color: var(--muted-foreground);
+  height: 2rem;
+  border: 1px solid var(--border);
+  transition: all var(--animation-duration-fast) ease;
+}
+
+.collapseButton:hover {
+  color: var(--foreground);
+  background-color: var(--border);
+}
+
+.sidebar.collapsed .collapseButton {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: var(--radius-full);
+  border: none;
+  margin: 0 auto;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.sidebar.collapsed .collapseButton:hover {
+  transform: scale(1.05);
+  background-color: color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.noSelection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-foreground);
+  text-align: center;
+  padding: var(--spacing-6);
+}
+
+.noSelectionIcon {
+  margin-bottom: var(--spacing-4);
+  opacity: 0.2;
+}
+
+.noSelection h3 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-2);
+  color: var(--foreground);
+}
+
+.noSelection p {
+  font-size: var(--font-size-base);
+}
+
+.mt4 {
+  margin-top: var(--spacing-4);
+}
+
+.detailContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: var(--spacing-5) var(--spacing-6);
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+}
+
+.backButton {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .backButton {
+    display: flex;
+  }
+}
+
+.detailTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  margin: 0;
+  color: var(--foreground);
+}
+
+.tabsRoot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tabContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-4) 0;
+}
+
+.wideSheet {
+  max-width: min(800px, 90vw);
+}
+
+.dashboardContainer {
+  flex: 1;
+  overflow: hidden;
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .dashboardContainer {
+    padding: var(--spacing-2);
+  }
+}
+
+/* Adaptive Level Declarations (required for CSS Modules export) */
+.level0 { }
+.level1 { }
+.level2 { }
+.level3 { }
+
+/* Adaptive Levels */
+.level1 .sidebar, :global(.adaptive-level-1) .sidebar {
+  width: 260px;
+  min-width: 260px;
+}
+.level1 .sectorItem, :global(.adaptive-level-1) .sectorItem {
+  padding: var(--spacing-2);
+}
+
+.level2 .sidebar, :global(.adaptive-level-2) .sidebar {
+  width: 180px;
+  min-width: 180px;
+}
+.level2 .sidebarHeader, :global(.adaptive-level-2) .sidebarHeader {
+  padding: var(--spacing-2) var(--spacing-3);
+  height: auto;
+  min-height: 2.5rem;
+}
+.level2 .sectorItem, :global(.adaptive-level-2) .sectorItem {
+  padding: var(--spacing-1) var(--spacing-2);
+}
+.level2 .sectorName, :global(.adaptive-level-2) .sectorName {
+  font-size: var(--font-size-xs);
+}
+.level2 .title, :global(.adaptive-level-2) .title {
+  font-size: var(--font-size-base);
+}
+.level2 .subtitle, :global(.adaptive-level-2) .subtitle {
+  display: none;
+}
+
+.level3 .sidebar:not(.collapsed), :global(.adaptive-level-3) .sidebar:not(.collapsed) {
+  width: 3.5rem;
+  min-width: 3.5rem;
+  overflow: hidden;
+}
+.level3 .sidebar:not(.collapsed) .sidebarHeader, :global(.adaptive-level-3) .sidebar:not(.collapsed) .sidebarHeader {
+  padding: 0;
+  justify-content: center;
+}
+.level3 .sidebar:not(.collapsed) .headerText, :global(.adaptive-level-3) .sidebar:not(.collapsed) .headerText {
+  display: none;
+}
+.level3 .sidebar:not(.collapsed) .addButtonCollapsed, :global(.adaptive-level-3) .sidebar:not(.collapsed) .addButtonCollapsed {
+  margin: auto;
+}
+.level3 .sidebar:not(.collapsed) .sectorList, :global(.adaptive-level-3) .sidebar:not(.collapsed) .sectorList {
+  overflow-y: hidden;
+  padding: var(--spacing-2) 0;
+  align-items: center;
+}
+.level3 .sidebar:not(.collapsed) .sectorItem, :global(.adaptive-level-3) .sidebar:not(.collapsed) .sectorItem {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  justify-content: center;
+  margin: 0 auto;
+}
+.level3 .sidebar:not(.collapsed) .sectorName, :global(.adaptive-level-3) .sidebar:not(.collapsed) .sectorName {
+  display: none;
+}
+.level3 .sidebar:not(.collapsed) .sidebarFooter, :global(.adaptive-level-3) .sidebar:not(.collapsed) .sidebarFooter {
+  display: none;
+}

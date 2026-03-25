@@ -1,0 +1,338 @@
+{
+  "color": {
+    "luz": {
+      "sageMist": {
+        "$type": "color",
+        "$value": "#FAFBFA"
+      },
+      "hempCanvas": {
+        "$type": "color",
+        "$value": "#F7F9F8"
+      },
+      "sageWhisper": {
+        "$type": "color",
+        "$value": "#EDF1EF"
+      },
+      "leafFrost": {
+        "$type": "color",
+        "$value": "#D5E2D5"
+      },
+      "forestDew": {
+        "$type": "color",
+        "$value": "#B5C5BC"
+      }
+    },
+    "alma": {
+      "greenSmoke": {
+        "$type": "color",
+        "$value": "#8FA89B"
+      },
+      "emeraldHaze": {
+        "$type": "color",
+        "$value": "#6A8A7A"
+      },
+      "deepPine": {
+        "$type": "color",
+        "$value": "#455A4F"
+      },
+      "forestShadow": {
+        "$type": "color",
+        "$value": "#2E3E34"
+      },
+      "midnightGarden": {
+        "$type": "color",
+        "$value": "#1F2A23"
+      }
+    },
+    "firmeza": {
+      "darkForest": {
+        "$type": "color",
+        "$value": "#1A231D"
+      },
+      "blackEarth": {
+        "$type": "color",
+        "$value": "#141A17"
+      },
+      "deepShadow": {
+        "$type": "color",
+        "$value": "#0F1411"
+      },
+      "voidGreen": {
+        "$type": "color",
+        "$value": "#0A0D0B"
+      },
+      "absolute": {
+        "$type": "color",
+        "$value": "#000000"
+      }
+    },
+    "candy": {
+      "marshmallow": {
+        "$type": "color",
+        "$value": "#F7FBF0"
+      },
+      "acucar": {
+        "$type": "color",
+        "$value": "#EFF7E0"
+      },
+      "baunilha": {
+        "$type": "color",
+        "$value": "#E5F2D0"
+      },
+      "pistache": {
+        "$type": "color",
+        "$value": "#DBEDC2"
+      },
+      "chantilly": {
+        "$type": "color",
+        "$value": "#D1E8B4"
+      }
+    },
+    "lemon": {
+      "neblina": {
+        "$type": "color",
+        "$value": "#F5F9F2"
+      },
+      "vapor": {
+        "$type": "color",
+        "$value": "#EAF3E5"
+      },
+      "citrus": {
+        "$type": "color",
+        "$value": "#DFEDD8"
+      },
+      "zeste": {
+        "$type": "color",
+        "$value": "#D3E7CA"
+      },
+      "sumo": {
+        "$type": "color",
+        "$value": "#C7E1BD"
+      }
+    },
+    "ventura": {
+      "nevoaclara": {
+        "$type": "color",
+        "$value": "#E8EFE0"
+      },
+      "fumaca": {
+        "$type": "color",
+        "$value": "#D7E3CC"
+      },
+      "bruma": {
+        "$type": "color",
+        "$value": "#C1D4B2"
+      },
+      "veu": {
+        "$type": "color",
+        "$value": "#A8BF9A"
+      },
+      "sombra": {
+        "$type": "color",
+        "$value": "#8CA680"
+      }
+    },
+    "energia": {
+      "campoAlto": {
+        "$type": "color",
+        "$value": "#FFFAE0"
+      },
+      "campoVelado": {
+        "$type": "color",
+        "$value": "#FFE7A3"
+      },
+      "centro": {
+        "$type": "color",
+        "$value": "#FFE2C2"
+      },
+      "marcaTexto": {
+        "$type": "color",
+        "$value": "#FED376"
+      },
+      "denso": {
+        "$type": "color",
+        "$value": "#F58E72"
+      }
+    },
+    "alegria": {
+      "campoAlto": {
+        "$type": "color",
+        "$value": "#FDE2DD"
+      },
+      "campoVelado": {
+        "$type": "color",
+        "$value": "#FFC8C2"
+      },
+      "centro": {
+        "$type": "color",
+        "$value": "#FFA3B1"
+      },
+      "marcaTexto": {
+        "$type": "color",
+        "$value": "#FE86A4"
+      },
+      "denso": {
+        "$type": "color",
+        "$value": "#CF6E9B"
+      }
+    },
+    "seguranca": {
+      "campoAlto": {
+        "$type": "color",
+        "$value": "#F1E6F0"
+      },
+      "campoVelado": {
+        "$type": "color",
+        "$value": "#DEC7DE"
+      },
+      "centro": {
+        "$type": "color",
+        "$value": "#D0AEE0"
+      },
+      "marcaTexto": {
+        "$type": "color",
+        "$value": "#D1B4FE"
+      },
+      "denso": {
+        "$type": "color",
+        "$value": "#9DA0EC"
+      }
+    }
+  },
+  "font": {
+    "family": {
+      "display": {
+        "$type": "fontFamily",
+        "$value": "MuseoModerno, Montserrat, ui-sans-serif, system-ui, sans-serif"
+      },
+      "heading": {
+        "$type": "fontFamily",
+        "$value": "Montserrat, ui-sans-serif, system-ui, sans-serif"
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": "Glacial Indifference, Raleway, ui-sans-serif, system-ui, sans-serif"
+      },
+      "editorial": {
+        "$type": "fontFamily",
+        "$value": "Cormorant Garamond, ui-serif, Georgia, serif"
+      },
+      "energetic": {
+        "$type": "fontFamily",
+        "$value": "All Caps, Montserrat, sans-serif"
+      },
+      "warm": {
+        "$type": "fontFamily",
+        "$value": "Cause, cursive"
+      },
+      "bold": {
+        "$type": "fontFamily",
+        "$value": "SUSE, sans-serif"
+      },
+      "regional": {
+        "$type": "fontFamily",
+        "$value": "Ofissina, sans-serif"
+      },
+      "signature": {
+        "$type": "fontFamily",
+        "$value": "Mayonice, cursive"
+      },
+      "crafted": {
+        "$type": "fontFamily",
+        "$value": "Fomo, sans-serif"
+      }
+    },
+    "size": {
+      "xs": {
+        "$type": "dimension",
+        "$value": "0.75rem"
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": "0.875rem"
+      },
+      "base": {
+        "$type": "dimension",
+        "$value": "1rem"
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": "1.125rem"
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": "1.25rem"
+      },
+      "2xl": {
+        "$type": "dimension",
+        "$value": "1.5rem"
+      },
+      "3xl": {
+        "$type": "dimension",
+        "$value": "1.875rem"
+      },
+      "4xl": {
+        "$type": "dimension",
+        "$value": "2.25rem"
+      },
+      "5xl": {
+        "$type": "dimension",
+        "$value": "3rem"
+      },
+      "6xl": {
+        "$type": "dimension",
+        "$value": "3.75rem"
+      },
+      "7xl": {
+        "$type": "dimension",
+        "$value": "4.5rem"
+      },
+      "8xl": {
+        "$type": "dimension",
+        "$value": "6rem"
+      },
+      "9xl": {
+        "$type": "dimension",
+        "$value": "8rem"
+      }
+    },
+    "weight": {
+      "thin": {
+        "$type": "fontWeight",
+        "$value": 100
+      },
+      "extralight": {
+        "$type": "fontWeight",
+        "$value": 200
+      },
+      "light": {
+        "$type": "fontWeight",
+        "$value": 300
+      },
+      "regular": {
+        "$type": "fontWeight",
+        "$value": 400
+      },
+      "medium": {
+        "$type": "fontWeight",
+        "$value": 500
+      },
+      "semibold": {
+        "$type": "fontWeight",
+        "$value": 600
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700
+      },
+      "extrabold": {
+        "$type": "fontWeight",
+        "$value": 800
+      },
+      "black": {
+        "$type": "fontWeight",
+        "$value": 900
+      }
+    }
+  }
+}

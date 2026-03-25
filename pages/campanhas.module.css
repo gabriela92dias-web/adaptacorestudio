@@ -1,0 +1,233 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--spacing-4);
+}
+
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.countBadge {
+  font-size: var(--font-size-md);
+  padding: var(--spacing-1) var(--spacing-3);
+  font-weight: 600;
+}
+
+.filters {
+  margin-bottom: var(--spacing-2);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--spacing-5);
+}
+
+.card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  transition: all var(--animation-duration-normal) ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.8);
+  transform: translateY(-2px);
+}
+
+.cardHeader {
+  padding: var(--spacing-5);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+.cardTitle {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--card-foreground);
+  margin: 0 0 var(--spacing-3) 0;
+  line-height: 1.3;
+}
+
+.cardBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.actionButton {
+  color: var(--muted-foreground);
+  flex-shrink: 0;
+  margin-top: -0.25rem;
+}
+
+.actionButton:hover {
+  color: var(--error);
+  background-color: color-mix(in srgb, var(--error) 10%, transparent);
+}
+
+.cardBody {
+  padding: var(--spacing-5);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.metaInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-base);
+  color: var(--muted-foreground);
+}
+
+.metaIcon {
+  color: var(--muted-foreground);
+}
+
+.metaDot {
+  font-size: var(--font-size-2xs);
+  opacity: 0.5;
+}
+
+.channelsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.channelTag {
+  font-size: var(--font-size-xs);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  padding: 2px var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.postsMeta {
+  margin-top: auto;
+  padding-top: var(--spacing-4);
+}
+
+.postsCount {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--card-foreground);
+}
+
+.cardFooter {
+  padding: var(--spacing-4) var(--spacing-5);
+  background-color: color-mix(in srgb, var(--surface) 30%, transparent);
+  border-top: 1px solid var(--border);
+}
+
+.viewButton {
+  width: 100%;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-16) var(--spacing-6);
+  text-align: center;
+  background-color: color-mix(in srgb, var(--surface) 30%, transparent);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--muted-foreground);
+}
+
+.emptyIcon {
+  margin-bottom: var(--spacing-4);
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.emptyState h2 {
+  font-family: var(--font-family-heading);
+  color: var(--foreground);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-6);
+}
+
+/* Skeletons */
+.skeletonCard {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
+  display: flex;
+  flex-direction: column;
+}
+
+.skeletonHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-4);
+}
+
+.skeletonMeta {
+  display: flex;
+  gap: var(--spacing-4);
+  margin: var(--spacing-4) 0;
+}
+
+.skeletonFooter {
+  margin-top: auto;
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+  }
+}
+
+/* Adaptive Level Declarations */
+.level0 { }
+.level1 { }
+.level2 { }
+.level3 { }

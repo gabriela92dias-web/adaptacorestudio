@@ -1,0 +1,289 @@
+@layer base {
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-5);
+  }
+
+  .sectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: var(--spacing-3);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sectionTitle {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--foreground);
+    margin: 0;
+  }
+
+  .stagesList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .stageGroup {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background-color: var(--card);
+  }
+
+  .stageHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-3) var(--spacing-4);
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stageInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+
+  .stageName {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .addTaskBtn {
+    color: var(--muted-foreground);
+  }
+
+  .addTaskBtn:hover:not(:disabled) {
+    color: var(--foreground);
+    background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+
+  .taskList {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .emptyTasks {
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-sm);
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  .emptyState {
+    text-align: center;
+    padding: var(--spacing-6);
+    color: var(--muted-foreground);
+    font-size: var(--font-size-base);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    background-color: var(--surface);
+  }
+
+  .loadingState {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .taskRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-3) var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+    background-color: var(--card);
+    transition: background-color var(--animation-duration-fast) ease;
+    cursor: pointer;
+    gap: var(--spacing-4);
+  }
+
+  .taskRow:last-child {
+    border-bottom: none;
+  }
+
+  .taskRow:hover {
+    background-color: color-mix(in srgb, var(--surface) 50%, transparent);
+  }
+
+  .taskRow:focus-visible {
+    outline: none;
+    background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+
+  .taskPrimary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    flex: 1;
+    min-width: 0; /* allows text truncation */
+  }
+
+  .taskName {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .taskSecondary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-5);
+    flex-shrink: 0;
+  }
+
+  .taskMeta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    font-size: var(--font-size-xs);
+    color: var(--muted-foreground);
+  }
+
+  .assignee {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  .avatar {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 1px;
+  }
+
+  .assigneeName {
+    font-size: var(--font-size-xs);
+    color: var(--foreground);
+    font-weight: 500;
+  }
+
+  .unassigned {
+    font-size: var(--font-size-xs);
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  .chevron {
+    color: var(--muted-foreground);
+    opacity: 0.5;
+    transition: opacity var(--animation-duration-fast) ease, transform var(--animation-duration-fast) ease;
+  }
+
+  .taskRow:hover .chevron {
+    opacity: 1;
+    color: var(--primary);
+    transform: translateX(2px);
+  }
+
+  /* Inline Forms */
+  .stageInlineForm {
+    background-color: var(--surface);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius);
+    padding: var(--spacing-3);
+    animation: fadeIn var(--animation-duration-fast) ease-out;
+  }
+
+  .taskInlineForm {
+    background-color: color-mix(in srgb, var(--surface) 50%, var(--card));
+    padding: var(--spacing-3) var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+    animation: fadeIn var(--animation-duration-fast) ease-out;
+  }
+
+  .taskInlineForm:last-child {
+    border-bottom: none;
+  }
+
+  .inlineFormLayout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    width: 100%;
+  }
+
+  .inlineFormInputs {
+    display: flex;
+    flex: 1;
+    gap: var(--spacing-3);
+    align-items: flex-start;
+  }
+
+  .inlineFormActions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding-top: var(--spacing-1); /* align with inputs height */
+  }
+
+  .flexItem {
+    flex: 1;
+    margin-bottom: 0 !important;
+  }
+
+  .fixedWidthItem {
+    width: 160px;
+    flex-shrink: 0;
+    margin-bottom: 0 !important;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 640px) {
+    .taskRow {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-3);
+    }
+
+    .taskSecondary {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .inlineFormLayout {
+      flex-direction: column;
+    }
+
+    .inlineFormInputs {
+      width: 100%;
+      flex-direction: column;
+    }
+
+    .fixedWidthItem {
+      width: 100%;
+    }
+
+    .inlineFormActions {
+      align-self: flex-end;
+      width: 100%;
+      justify-content: flex-end;
+      padding-top: var(--spacing-2);
+    }
+  }
+}
