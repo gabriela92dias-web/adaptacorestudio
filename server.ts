@@ -1182,14 +1182,21 @@ app.post('_api/dev/build',async c => {
     return c.text("Error loading endpoint code " + e.message, 500)
   }
 })
-app.use("/*", serveStatic({ root: "./static" }));
+// app.use("/*", serveStatic({ root: "./static" }));
 app.use('/*', serveStatic({ root: './dist' }))
+import fs from 'fs';
+
 app.get("*", async (c, next) => {
   const p = c.req.path;
   if (p.startsWith("/_api")) {
     return next();
   }
-  return serveStatic({ path: "./dist/index.html" })(c, next);
+  try {
+    const html = fs.readFileSync("./dist/index.html", "utf-8");
+    return c.html(html);
+  } catch (err) {
+    return c.text("Página não encontrada ou o build não foi gerado.", 404);
+  }
 });
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3333;
