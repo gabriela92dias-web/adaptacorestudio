@@ -1193,6 +1193,6 @@ app.get("*", async (c, next) => {
 });
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3333;
-serve({ fetch: app.fetch, port });
+serve({ fetch: app.fetch, port, hostname: '0.0.0.0' });
 console.log(`🚀 API & Frontend Production Server running at http://0.0.0.0:${port}`);
       
