@@ -1,4 +1,4 @@
-import { Link as RouterLink, type LinkProps } from "react-router";
+import { Link as RouterLink, type LinkProps } from "react-router-dom";
 import { forwardRef } from "react";
 
 // Estende LinkProps para aceitar qualquer prop do Figma Inspector no TypeScript
