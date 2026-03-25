@@ -1182,20 +1182,56 @@ app.post('_api/dev/build',async c => {
     return c.text("Error loading endpoint code " + e.message, 500)
   }
 })
-// app.use("/*", serveStatic({ root: "./static" }));
-app.use('/*', serveStatic({ root: './dist' }))
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DIST_DIR = path.resolve(__dirname, 'dist');
+
+// Serve static assets with correct MIME types (JS, CSS, images, fonts)
+app.use('/_assets/*', async (c, next) => {
+  const filePath = path.join(DIST_DIR, c.req.path);
+  try {
+    const ext = path.extname(filePath).toLowerCase();
+    const mimeTypes: Record<string, string> = {
+      '.js': 'application/javascript',
+      '.mjs': 'application/javascript',
+      '.css': 'text/css',
+      '.svg': 'image/svg+xml',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.woff': 'font/woff',
+      '.woff2': 'font/woff2',
+      '.ttf': 'font/ttf',
+      '.json': 'application/json',
+    };
+    const data = fs.readFileSync(filePath);
+    const contentType = mimeTypes[ext] || 'application/octet-stream';
+    return new Response(data, {
+      headers: { 'Content-Type': contentType, 'Cache-Control': 'public, max-age=31536000, immutable' }
+    });
+  } catch {
+    return next();
+  }
+});
+
+// Serve all other static files from dist
+app.use('/*', serveStatic({ root: DIST_DIR }))
+
+// SPA fallback: serve index.html for all non-API routes
 app.get("*", async (c, next) => {
   const p = c.req.path;
   if (p.startsWith("/_api")) {
     return next();
   }
   try {
-    const html = fs.readFileSync("./dist/index.html", "utf-8");
+    const html = fs.readFileSync(path.join(DIST_DIR, 'index.html'), 'utf-8');
     return c.html(html);
   } catch (err) {
-    return c.text("Página não encontrada ou o build não foi gerado.", 404);
+    return c.text("Build não encontrado. Execute 'pnpm run build' antes de iniciar o servidor.", 404);
   }
 });
 
