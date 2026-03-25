@@ -7,13 +7,12 @@
  * para todas as rotas do React Router
  */
 
-import { RouterProvider as ReactRouterProvider, createBrowserRouter } from 'react-router';
+import { RouterProvider as ReactRouterProvider, createBrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '../contexts/auth-context';
 import { LanguageProvider } from '../contexts/language-context';
 import { ModulesProvider } from '../contexts/modules-context';
 import { BrandProvider } from '../contexts/brand-context';
 import { CampaignsProvider } from '../contexts/campaigns-context';
-import { BrandStudioProvider } from '../contexts/brand-context';
 
 interface RouterWrapperProps {
   router: ReturnType<typeof createBrowserRouter>;
@@ -22,6 +21,7 @@ interface RouterWrapperProps {
 /**
  * Wrapper que garante que todos os contextos estão disponíveis
  * para as rotas do React Router
+ * Nota: BrandProvider já inclui BrandStudioContext internamente
  */
 export function RouterWrapper({ router }: RouterWrapperProps) {
   return (
@@ -29,15 +29,12 @@ export function RouterWrapper({ router }: RouterWrapperProps) {
       <LanguageProvider>
         <ModulesProvider>
           <BrandProvider>
-            <BrandStudioProvider>
-              <CampaignsProvider>
-                <ReactRouterProvider router={router} />
-              </CampaignsProvider>
-            </BrandStudioProvider>
+            <CampaignsProvider>
+              <ReactRouterProvider router={router} />
+            </CampaignsProvider>
           </BrandProvider>
         </ModulesProvider>
       </LanguageProvider>
     </AuthProvider>
   );
 }
-

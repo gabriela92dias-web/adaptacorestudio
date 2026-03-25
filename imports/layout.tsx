@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLocation } from "react-router-dom";
 import { Link } from "../components/ui/link";
 import { motion, AnimatePresence } from "motion/react";
 import { 
