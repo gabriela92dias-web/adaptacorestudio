@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const mapSupabaseUser = (sessionUser: any): User => ({
     id: 1, 
     email: sessionUser.email || "",
-    displayName: sessionUser.user_metadata?.name || "Usuário Teste",
+    displayName: sessionUser.user_metadata?.name || "Gabriela Dias",
     avatarUrl: null,
     role: "admin" 
   });
