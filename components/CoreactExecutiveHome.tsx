@@ -87,9 +87,9 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
 
           <div className={styles.projectsByOwnerCard}>
             <h3 className={styles.cardTitle}>Projects by Owner (Mock)</h3>
-            <div style={{ height: 280, width: '100%', position: 'relative' }}>
+            <div style={{ height: 180, width: '100%', position: 'relative' }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barData} barSize={40} margin={{ top: 30, right: 0, left: -20, bottom: 0 }}>
+                <BarChart data={barData} barSize={24} margin={{ top: 20, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-tertiary)' }} dy={10} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-tertiary)' }} />
@@ -103,10 +103,10 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
               {/* Fake Avatars manually placed over bars for the visual effect */}
               <div style={{ position: 'absolute', top: 0, left: 'calc(10% - 10px)', display: 'flex', gap: 'calc(20% - 12px)', width: '90%', pointerEvents: 'none' }}>
                 <Avatar style={{ width: 24, height: 24 }}><AvatarFallback style={{ fontSize: 10 }}>AM</AvatarFallback></Avatar>
-                <Avatar style={{ width: 24, height: 24, marginTop: -20 }}><AvatarFallback style={{ fontSize: 10 }}>CH</AvatarFallback></Avatar>
-                <Avatar style={{ width: 24, height: 24, marginTop: 30 }}><AvatarFallback style={{ fontSize: 10 }}>CR</AvatarFallback></Avatar>
-                <Avatar style={{ width: 24, height: 24, marginTop: -10 }}><AvatarFallback style={{ fontSize: 10 }}>EK</AvatarFallback></Avatar>
-                <Avatar style={{ width: 24, height: 24, marginTop: -30 }}><AvatarFallback style={{ fontSize: 10 }}>FA</AvatarFallback></Avatar>
+                <Avatar style={{ width: 24, height: 24, marginTop: -15 }}><AvatarFallback style={{ fontSize: 10 }}>CH</AvatarFallback></Avatar>
+                <Avatar style={{ width: 24, height: 24, marginTop: 20 }}><AvatarFallback style={{ fontSize: 10 }}>CR</AvatarFallback></Avatar>
+                <Avatar style={{ width: 24, height: 24, marginTop: -5 }}><AvatarFallback style={{ fontSize: 10 }}>EK</AvatarFallback></Avatar>
+                <Avatar style={{ width: 24, height: 24, marginTop: -20 }}><AvatarFallback style={{ fontSize: 10 }}>FA</AvatarFallback></Avatar>
               </div>
             </div>
           </div>
@@ -117,7 +117,7 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
                 <span><FileText size={16} /> Budget Usage</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-                <div style={{ position: 'relative', width: 150, height: 150 }}>
+                <div style={{ position: 'relative', width: 110, height: 110 }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={[{value:75}, {value:25}]} innerRadius={55} outerRadius={70} dataKey="value" stroke="none">
@@ -131,7 +131,7 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
                     </PieChart>
                   </ResponsiveContainer>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: '1.25rem', fontWeight: 700 }}>$180,347</span>
+                    <span style={{ fontSize: '1rem', fontWeight: 700 }}>$180,347</span>
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
             <h3 className={styles.cardTitle} style={{ alignSelf: 'flex-start' }}>Overall Progress</h3>
             
             {/* Half Donut */}
-            <div style={{ width: '100%', height: 160, position: 'relative', marginTop: '1rem' }}>
+            <div style={{ width: '100%', height: 120, position: 'relative', marginTop: '0.5rem' }}>
                <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -196,8 +196,8 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
                 </PieChart>
                </ResponsiveContainer>
                <div style={{ position: 'absolute', bottom: '10%', left: 0, right: 0, textAlign: 'center' }}>
-                 <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>77%</div>
-                 <div style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>Near complete</div>
+                 <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>77%</div>
+                 <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>Near complete</div>
                </div>
             </div>
 

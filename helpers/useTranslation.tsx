@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 
-export type Locale = "pt" | "en";
+export type Locale = "pt" | "en" | "de";
 
 interface GoogleTranslateContextType {
   locale: Locale;
@@ -22,7 +22,7 @@ export const GoogleTranslateProvider = ({ children }: { children: ReactNode }) =
     if (typeof window !== "undefined") {
       try {
         const saved = localStorage.getItem("adapta-locale");
-        if (saved === "pt" || saved === "en") return saved as Locale;
+        if (saved === "pt" || saved === "en" || saved === "de") return saved as Locale;
       } catch (e) {}
     }
     return "pt";
@@ -44,7 +44,7 @@ export const GoogleTranslateProvider = ({ children }: { children: ReactNode }) =
       new (window as any).google.translate.TranslateElement(
         {
           pageLanguage: 'pt',
-          includedLanguages: 'en,pt',
+          includedLanguages: 'en,pt,de',
           autoDisplay: false,
         },
         'google_translate_element'
@@ -109,7 +109,7 @@ export const GoogleTranslateProvider = ({ children }: { children: ReactNode }) =
     setTimeout(() => {
        const htmlTag = document.querySelector('html');
        const isTranslated = htmlTag && htmlTag.classList.contains('translated-ltr');
-       if ((newLocale === 'en' && !isTranslated) || (newLocale === 'pt' && isTranslated)) {
+       if ((newLocale !== 'pt' && !isTranslated) || (newLocale === 'pt' && isTranslated)) {
            window.location.reload();
        }
     }, 250);

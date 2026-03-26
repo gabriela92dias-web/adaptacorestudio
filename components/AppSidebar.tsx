@@ -434,7 +434,10 @@ export const AppSidebar = () => {
               size="icon-sm" 
               className={styles.iconButton} 
               aria-label={"Acessibilidade"}
-              onClick={() => setLocale(locale === "pt" ? "en" : "pt")}
+              onClick={() => {
+                const nextLocale = locale === "pt" ? "en" : locale === "en" ? "de" : "pt";
+                setLocale(nextLocale);
+              }}
             >
               <Globe size={16} />
               <span style={{ fontSize: "var(--font-size-2xs)", fontWeight: "bold", marginLeft: "4px" }}>

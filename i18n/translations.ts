@@ -10,11 +10,12 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-export type Language = 'pt' | 'en';
+export type Language = 'pt' | 'en' | 'de';
 
 export interface Translation {
   pt: string;
   en: string;
+  de?: string; // Alemão é opcional para permitir adoção gradual
 }
 
 export const translations = {

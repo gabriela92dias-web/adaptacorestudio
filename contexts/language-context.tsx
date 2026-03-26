@@ -10,7 +10,7 @@
 
 import { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 
-type Language = 'pt' | 'en';
+type Language = 'pt' | 'en' | 'de';
 
 interface LanguageContextType {
   language: Language;
@@ -25,7 +25,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => {
     try {
       const saved = localStorage.getItem('adapta-language');
-      return (saved === 'en' || saved === 'pt') ? saved : 'pt';
+      return (saved === 'en' || saved === 'pt' || saved === 'de') ? saved as Language : 'pt';
     } catch {
       return 'pt';
     }

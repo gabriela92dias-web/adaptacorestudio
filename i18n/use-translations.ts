@@ -42,9 +42,9 @@ export function useTranslations() {
       const translationGroup = translations[group as TranslationKey];
       
       if (translationGroup) {
-        const translation = translationGroup[key as any];
+        const translation = translationGroup[key as any] as any;
         if (translation) {
-          return translation[language];
+          return translation[language] || translation['en'] || translation['pt'] || path;
         }
       }
     }
@@ -69,16 +69,16 @@ export function useTranslations() {
     
     // Se subKey foi fornecida, retorna apenas essa tradução
     if (subKey) {
-      const translation = group[subKey as TranslationSubKey<K>];
-      return translation ? translation[language] : subKey;
+      const translation = group[subKey as TranslationSubKey<K>] as any;
+      return translation ? (translation[language] || translation['en'] || translation['pt']) : subKey;
     }
     
     // Retorna o grupo inteiro traduzido (recalculado a cada mudança de idioma)
     const translatedGroup: Record<string, string> = {};
     
     for (const key in group) {
-      const translation = group[key as TranslationSubKey<K>];
-      translatedGroup[key] = translation ? translation[language] : key;
+      const translation = group[key as TranslationSubKey<K>] as any;
+      translatedGroup[key] = translation ? (translation[language] || translation['en'] || translation['pt']) : key;
     }
     
     return translatedGroup;
