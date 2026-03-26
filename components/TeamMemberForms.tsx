@@ -14,6 +14,7 @@ import styles from "./TeamMemberForms.module.css";
 const teamMemberSchema = z.object({
   name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres"),
   fullName: z.string().optional(),
+  email: z.string().email("E-mail inválido").optional().or(z.literal("")),
   nickname: z.string().optional(),
   phone: z.string().optional(),
   role: z.string().optional(),
@@ -29,6 +30,7 @@ export function CreateTeamMemberForm({ onSuccess }: { onSuccess: () => void }) {
     defaultValues: {
       name: "",
       fullName: "",
+      email: "",
       nickname: "",
       phone: "",
       role: "",
@@ -73,6 +75,21 @@ export function CreateTeamMemberForm({ onSuccess }: { onSuccess: () => void }) {
               onChange={e => form.setValues(prev => ({ ...prev, fullName: e.target.value }))}
             />
           </FormControl>
+          <FormMessage />
+        </FormItem>
+        <FormItem name="email">
+          <FormLabel>E-mail (Para vincular conta futura)</FormLabel>
+          <FormControl>
+            <Input
+              type="email"
+              placeholder="Ex: ana@empresa.com"
+              value={form.values.email || ""}
+              onChange={e => form.setValues(prev => ({ ...prev, email: e.target.value }))}
+            />
+          </FormControl>
+          <p style={{ fontSize: "0.75rem", color: "var(--text-tertiary)", marginTop: "4px" }}>
+            Se preenchido, o membro receberá acesso automático às tarefas quando criar a conta com este e-mail.
+          </p>
           <FormMessage />
         </FormItem>
         <div className={styles.formRow}>

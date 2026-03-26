@@ -7,6 +7,7 @@ export const schema = z.object({
   name: z.string().min(1),
   fullName: z.string().optional().nullable(),
   nickname: z.string().optional().nullable(),
+  email: z.string().email("E-mail inválido").optional().nullable(),
   phone: z.string().optional().nullable(),
   role: z.string().optional().nullable(),
   initials: z.string().optional().nullable(),

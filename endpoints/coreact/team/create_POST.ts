@@ -12,6 +12,8 @@ export async function handle(request: Request) {
       .values({
         id: nanoid(),
         name: input.name,
+        email: input.email ?? null,
+        status: input.email ? "pending_registration" : "active",
         fullName: input.fullName ?? null,
         nickname: input.nickname ?? null,
         phone: input.phone ?? null,
