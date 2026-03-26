@@ -9,6 +9,14 @@ dns.setDefaultResultOrder('ipv4first');
 
 const app = new Hono();
 
+app.get('/_api/debug-env', async c => {
+  return c.json({
+    urlMatch: process.env.FLOOT_DATABASE_URL,
+    keysMatching: Object.keys(process.env).filter(k => k.includes('FLOOT')),
+    allKeysLength: Object.keys(process.env).length
+  });
+});
+
 app.get('/_api/migrate-db-magic', async c => {
   try {
     const process = await import("process");
