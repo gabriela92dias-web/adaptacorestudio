@@ -13,7 +13,6 @@ coverage/
 ehthumbs.db
 ehthumbs_vista.db
 *.sqlite
-*.sql
 *.log
 Thumbs.db
 npm-debug.log*
