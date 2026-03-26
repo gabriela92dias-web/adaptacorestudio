@@ -419,27 +419,10 @@ export default function CoreActOverview() {
     return null; 
   }
 
-  if (!roleData?.teamMemberId) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.emptyState}>
-          <h3>Boas-vindas</h3>
-          <p>Seu perfil ainda não foi vinculado a um membro da equipe. Solicite ao administrador para configurar seu acesso.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const isManager = roleData.sectorRoles.some(r => r.role === 'responsavel');
-
-  if (isManager) {
-    return <CoreactExecutiveHome userName={authState.user.displayName} />;
-  }
-
+  // FORCING EXECUTIVE HOME FOR VISUAL VALIDATION
   return (
-    <CoreActAgentDashboard 
-      teamMemberId={roleData.teamMemberId} 
-      userName={authState.user.displayName} 
-    />
+    <div className={styles.coreactContainer}>
+      <CoreactExecutiveHome userName={authState.type === 'authenticated' ? authState.user.displayName : 'Usuário'} />
+    </div>
   );
 }
