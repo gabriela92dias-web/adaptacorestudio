@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { 
-  Users, DollarSign, 
+  Users, DollarSign, Calendar,
   Target, Building2, Folder, Layers, ListTodo, Zap
 } from "lucide-react";
 import { usePermissions, PermissionKey } from "../helpers/usePermissions";
@@ -19,6 +19,7 @@ export const CoreActLayout = ({ children }: { children?: React.ReactNode }) => {
     { path: "/coreact/iniciativas", label: "Iniciativas", icon: Target, permission: "coreact_iniciativas" },
     { path: "/coreact/projetos", label: "Projetos", icon: Folder, permission: "coreact_projetos" },
     { path: "/coreact/etapas", label: "Etapas", icon: Layers, permission: "coreact_etapas" },
+    { path: "/coreact/cronograma", label: "Cronograma", icon: Calendar, permission: "coreact_cronograma" },
     { path: "/coreact/tarefas", label: "Tarefas", icon: ListTodo, permission: "coreact_tarefas" },
     { path: "/coreact/acoes", label: "Ações", icon: Zap, permission: "coreact_acoes" },
     { path: "/coreact/orcamento", label: "Orçamento", icon: DollarSign, permission: "coreact_orcamento" },
