@@ -9,33 +9,7 @@ dns.setDefaultResultOrder('ipv4first');
 
 const app = new Hono();
 
-app.get('/_api/debug-env', async c => {
-  return c.json({
-    urlMatch: process.env.FLOOT_DATABASE_URL,
-    keysMatching: Object.keys(process.env).filter(k => k.includes('FLOOT')),
-    allKeysLength: Object.keys(process.env).length
-  });
-});
 
-app.get('/_api/migrate-db-magic', async c => {
-  try {
-    const process = await import("process");
-    const postgres = (await import("postgres")).default;
-    const path = await import("path");
-    
-    const dbUrl = process.env.FLOOT_DATABASE_URL;
-    if (!dbUrl) return c.text("No FLOOT_DATABASE_URL found in environment variables", 500);
-    
-    const sql = postgres(dbUrl, { max: 1 });
-    await sql.file(path.resolve('db-fixed.sql'));
-    await sql.file(path.resolve('db-inserts.sql'));
-    await sql.end();
-    
-    return c.text("MIGRATION COMPLETE 🎉! The database tables and seed data were created successfully. You can now close this tab and refresh the Core Studio.");
-  } catch (e) {
-    return c.text("ERROR: " + String(e), 500);
-  }
-});
 
 app.get('_api/brand',async c => {
   try {
