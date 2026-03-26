@@ -35,38 +35,23 @@ const inProgressList = [
 ];
 
 const timelineNodes = [
-  { date: "01.09.2023", title: "Asana Integration", desc: "Line height for baselines is 10%", pos: "top" },
+  { date: "01.09.2023", title: "Asana Integration", desc: "Line height for baselines is 10%", pos: "bottom" },
   { date: "14.09.2023", title: "Github Integration", desc: "Line height for baselines is 10%", pos: "bottom" },
-  { date: "24.09.2023", title: "Slack Bot", desc: "Line height for baselines is 10%", pos: "top" },
+  { date: "24.09.2023", title: "Slack Bot", desc: "Line height for baselines is 10%", pos: "bottom" },
   { date: "02.10.2023", title: "Release V2.3.0", desc: "Line height for baselines is 10%", pos: "bottom" },
 ];
 
 export function CoreactExecutiveHome({ userName }: { userName: string }) {
-  // Simple gauge logic
+  // Pure SVG gauge for maximum performance (avoids heavy Recharts instances)
   const renderGauge = (value: number, color: string) => {
-    const data = [{ name: 'A', value }, { name: 'B', value: 100 - value }];
+    const dash = `${value}, 100`;
     return (
-      <div style={{ position: 'relative', width: 80, height: 80 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={data}
-              innerRadius={25}
-              outerRadius={35}
-              startAngle={90}
-              endAngle={-270}
-              dataKey="value"
-              stroke="none"
-              isAnimationActive={false}
-            >
-              <Cell key="cell-0" fill={color} />
-              <Cell key="cell-1" fill="rgba(120,120,120,0.1)" />
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span className={styles.metricValue} style={{ fontSize: '0.85rem' }}>{value}K</span>
-        </div>
+      <div style={{ position: 'relative', width: 60, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <svg viewBox="0 0 36 36" style={{ width: '100%', height: '100%', position: 'absolute', transform: 'rotate(-90deg)' }}>
+          <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--border)" strokeWidth="3" />
+          <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={color} strokeWidth="3" strokeDasharray={dash} />
+        </svg>
+        <span className={styles.metricValue} style={{ fontSize: '0.75rem' }}>{value}K</span>
       </div>
     );
   };
@@ -93,21 +78,13 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-tertiary)' }} dy={5} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--text-tertiary)' }} />
-                  <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }} />
-                  <Bar dataKey="projectA" stackId="a" fill={barColors[0]} radius={[0, 0, 4, 4]} />
-                  <Bar dataKey="projectB" stackId="a" fill={barColors[1]} />
-                  <Bar dataKey="projectC" stackId="a" fill={barColors[2]} />
-                  <Bar dataKey="projectD" stackId="a" fill={barColors[3]} radius={[4, 4, 0, 0]} />
+                  <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border)', color: 'var(--text-primary)' }} itemStyle={{ color: 'var(--text-primary)' }} />
+                  <Bar dataKey="projectA" stackId="a" fill={barColors[0]} radius={[0, 0, 4, 4]} isAnimationActive={false} />
+                  <Bar dataKey="projectB" stackId="a" fill={barColors[1]} isAnimationActive={false} />
+                  <Bar dataKey="projectC" stackId="a" fill={barColors[2]} isAnimationActive={false} />
+                  <Bar dataKey="projectD" stackId="a" fill={barColors[3]} radius={[4, 4, 0, 0]} isAnimationActive={false} />
                 </BarChart>
               </ResponsiveContainer>
-              {/* Fake Avatars manually placed over bars for the visual effect */}
-              <div style={{ position: 'absolute', top: 0, left: 'calc(10% - 10px)', display: 'flex', gap: 'calc(20% - 12px)', width: '90%', pointerEvents: 'none' }}>
-                <Avatar style={{ width: 20, height: 20 }}><AvatarFallback style={{ fontSize: 9 }}>AM</AvatarFallback></Avatar>
-                <Avatar style={{ width: 20, height: 20, marginTop: -10 }}><AvatarFallback style={{ fontSize: 9 }}>CH</AvatarFallback></Avatar>
-                <Avatar style={{ width: 20, height: 20, marginTop: 15 }}><AvatarFallback style={{ fontSize: 9 }}>CR</AvatarFallback></Avatar>
-                <Avatar style={{ width: 20, height: 20, marginTop: -3 }}><AvatarFallback style={{ fontSize: 9 }}>EK</AvatarFallback></Avatar>
-                <Avatar style={{ width: 20, height: 20, marginTop: -15 }}><AvatarFallback style={{ fontSize: 9 }}>FA</AvatarFallback></Avatar>
-              </div>
             </div>
           </div>
 
@@ -120,11 +97,11 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
                 <div style={{ position: 'relative', width: 90, height: 90 }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={[{value:75}, {value:25}]} innerRadius={35} outerRadius={45} dataKey="value" stroke="none">
+                      <Pie data={[{value:75}, {value:25}]} innerRadius={35} outerRadius={45} dataKey="value" stroke="none" isAnimationActive={false}>
                         <Cell fill="var(--primary)" />
                         <Cell fill="var(--border)" />
                       </Pie>
-                      <Pie data={[{value:40}, {value:60}]} innerRadius={22} outerRadius={30} dataKey="value" stroke="none">
+                      <Pie data={[{value:40}, {value:60}]} innerRadius={22} outerRadius={30} dataKey="value" stroke="none" isAnimationActive={false}>
                         <Cell fill="var(--muted-foreground)" />
                         <Cell fill="rgba(120,120,120,0.05)" />
                       </Pie>
@@ -179,17 +156,18 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
             <div style={{ width: '100%', height: 90, position: 'relative', marginTop: '0.5rem' }}>
                <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
-                    data={[{value:1},{value:1},{value:1},{value:1},{value:1},{value:1},{value:1},{value:1}]}
-                    cy="80%"
-                    startAngle={180}
-                    endAngle={0}
-                    innerRadius={45}
-                    outerRadius={65}
-                    paddingAngle={3}
-                    dataKey="value"
-                    stroke="none"
-                  >
+                    <Pie
+                      data={[{value:1},{value:1},{value:1},{value:1},{value:1},{value:1},{value:1},{value:1}]}
+                      cy="80%"
+                      startAngle={180}
+                      endAngle={0}
+                      innerRadius={45}
+                      outerRadius={65}
+                      paddingAngle={3}
+                      dataKey="value"
+                      stroke="none"
+                      isAnimationActive={false}
+                    >
                     <Cell fill="var(--primary)" /><Cell fill="var(--primary)" /><Cell fill="var(--primary)" /><Cell fill="var(--muted-foreground)" />
                     <Cell fill="var(--muted-foreground)" /><Cell fill="var(--border)" /><Cell fill="var(--border)" /><Cell fill="var(--ring)" />
                   </Pie>
