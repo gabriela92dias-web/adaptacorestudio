@@ -57,6 +57,30 @@ export async function handle(request: Request) {
       teamMember = newMember;
     }
 
+    // Auto-provision sectors for Owner/Admin if they have none
+    if (user.id === 1 || user.role === "admin") {
+      const existingSectorMemberships = await db.selectFrom("sectorMembers as sm")
+        .select("sm.sectorId")
+        .where("sm.memberId", "=", teamMember.id)
+        .execute();
+      
+      if (existingSectorMemberships.length === 0) {
+        const allSectors = await db.selectFrom("sectors").select("id").execute();
+        if (allSectors.length > 0) {
+          await db.insertInto("sectorMembers").values(
+            allSectors.map(s => ({
+              id: crypto.randomUUID(),
+              sectorId: s.id,
+              memberId: teamMember!.id,
+              role: "responsavel" as const,
+              permissions: {},
+              createdAt: new Date(),
+            }))
+          ).execute();
+        }
+      }
+    }
+
     // Find all sector memberships for this team member
     const sectorMemberships = await db.selectFrom("sectorMembers as sm")
       .innerJoin("sectors as s", "sm.sectorId", "s.id")
