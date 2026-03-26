@@ -19,45 +19,50 @@ class GlobalErrorBoundary extends Component<{children: ReactNode}, {hasError: bo
 }
 import { GlobalContextProviders } from "./components/_globalContextProviders";
 import { DevBuilder } from "./components/DevBuilder";
-import Page_0 from "./pages/login";
-import PageLayout_0 from "./pages/login.pageLayout.tsx";
-import Page_1 from "./pages/_index.tsx";
-import PageLayout_1 from "./pages/_index.pageLayout.tsx";
-import Page_2 from "./pages/coreact.tsx";
-import PageLayout_2 from "./pages/coreact.pageLayout.tsx";
-import Page_3 from "./pages/campanhas.tsx";
-import PageLayout_3 from "./pages/campanhas.pageLayout.tsx";
-import Page_4 from "./pages/coreact.time.tsx";
-import PageLayout_4 from "./pages/coreact.time.pageLayout.tsx";
-import Page_5 from "./pages/configuracoes.tsx";
-import PageLayout_5 from "./pages/configuracoes.pageLayout.tsx";
-import Page_6 from "./pages/coreact.setores.tsx";
-import PageLayout_6 from "./pages/coreact.setores.pageLayout.tsx";
-import Page_7 from "./pages/coreact.orcamento.tsx";
-import PageLayout_7 from "./pages/coreact.orcamento.pageLayout.tsx";
-import Page_8 from "./pages/identidade-visual.tsx";
-import PageLayout_8 from "./pages/identidade-visual.pageLayout.tsx";
-import Page_9 from "./pages/coreact.cronograma.tsx";
-import PageLayout_9 from "./pages/coreact.cronograma.pageLayout.tsx";
-import Page_10 from "./pages/coreact.iniciativas.tsx";
-import PageLayout_10 from "./pages/coreact.iniciativas.pageLayout.tsx";
-import Page_11 from "./pages/marketing-comunicacao.tsx";
-import PageLayout_11 from "./pages/marketing-comunicacao.pageLayout.tsx";
-import Page_12 from "./pages/documentos-corporativos.tsx";
-import PageLayout_12 from "./pages/documentos-corporativos.pageLayout.tsx";
-import Page_13 from "./pages/forgot-password.tsx";
-import Page_14 from "./pages/tools.tsx";
-import PageLayout_14 from "./pages/tools.pageLayout.tsx";
-import Page_15 from "./pages/coreact.projetos.tsx";
-import PageLayout_15 from "./pages/coreact.projetos.pageLayout.tsx";
-import Page_16 from "./pages/coreact.etapas.tsx";
-import PageLayout_16 from "./pages/coreact.etapas.pageLayout.tsx";
-import Page_17 from "./pages/coreact.tarefas.tsx";
-import PageLayout_17 from "./pages/coreact.tarefas.pageLayout.tsx";
-import Page_18 from "./pages/coreact.acoes.tsx";
-import PageLayout_18 from "./pages/coreact.acoes.pageLayout.tsx";
+const Page_0 = React.lazy(() => import("./pages/login"));
+const PageLayout_0 = React.lazy(() => import("./pages/login.pageLayout.tsx"));
+const Page_1 = React.lazy(() => import("./pages/_index.tsx"));
+const PageLayout_1 = React.lazy(() => import("./pages/_index.pageLayout.tsx"));
+const Page_2 = React.lazy(() => import("./pages/coreact.tsx"));
+const PageLayout_2 = React.lazy(() => import("./pages/coreact.pageLayout.tsx"));
+const Page_3 = React.lazy(() => import("./pages/campanhas.tsx"));
+const PageLayout_3 = React.lazy(() => import("./pages/campanhas.pageLayout.tsx"));
+const Page_4 = React.lazy(() => import("./pages/coreact.time.tsx"));
+const PageLayout_4 = React.lazy(() => import("./pages/coreact.time.pageLayout.tsx"));
+const Page_5 = React.lazy(() => import("./pages/configuracoes.tsx"));
+const PageLayout_5 = React.lazy(() => import("./pages/configuracoes.pageLayout.tsx"));
+const Page_6 = React.lazy(() => import("./pages/coreact.setores.tsx"));
+const PageLayout_6 = React.lazy(() => import("./pages/coreact.setores.pageLayout.tsx"));
+const Page_7 = React.lazy(() => import("./pages/coreact.orcamento.tsx"));
+const PageLayout_7 = React.lazy(() => import("./pages/coreact.orcamento.pageLayout.tsx"));
+const Page_8 = React.lazy(() => import("./pages/identidade-visual.tsx"));
+const PageLayout_8 = React.lazy(() => import("./pages/identidade-visual.pageLayout.tsx"));
+const Page_9 = React.lazy(() => import("./pages/coreact.cronograma.tsx"));
+const PageLayout_9 = React.lazy(() => import("./pages/coreact.cronograma.pageLayout.tsx"));
+const Page_10 = React.lazy(() => import("./pages/coreact.iniciativas.tsx"));
+const PageLayout_10 = React.lazy(() => import("./pages/coreact.iniciativas.pageLayout.tsx"));
+const Page_11 = React.lazy(() => import("./pages/marketing-comunicacao.tsx"));
+const PageLayout_11 = React.lazy(() => import("./pages/marketing-comunicacao.pageLayout.tsx"));
+const Page_12 = React.lazy(() => import("./pages/documentos-corporativos.tsx"));
+const PageLayout_12 = React.lazy(() => import("./pages/documentos-corporativos.pageLayout.tsx"));
+const Page_13 = React.lazy(() => import("./pages/forgot-password.tsx"));
+const Page_14 = React.lazy(() => import("./pages/tools.tsx"));
+const PageLayout_14 = React.lazy(() => import("./pages/tools.pageLayout.tsx"));
+const Page_15 = React.lazy(() => import("./pages/coreact.projetos.tsx"));
+const PageLayout_15 = React.lazy(() => import("./pages/coreact.projetos.pageLayout.tsx"));
+const Page_16 = React.lazy(() => import("./pages/coreact.etapas.tsx"));
+const PageLayout_16 = React.lazy(() => import("./pages/coreact.etapas.pageLayout.tsx"));
+const Page_17 = React.lazy(() => import("./pages/coreact.tarefas.tsx"));
+const PageLayout_17 = React.lazy(() => import("./pages/coreact.tarefas.pageLayout.tsx"));
+const Page_18 = React.lazy(() => import("./pages/coreact.acoes.tsx"));
+const PageLayout_18 = React.lazy(() => import("./pages/coreact.acoes.pageLayout.tsx"));
 
-import { Colors, Gradients, Mascots, Analysis, LogoCores } from "./modules/tools/index";
+// Lazy load named exports
+const Colors = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.Colors })));
+const Gradients = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.Gradients })));
+const Mascots = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.Mascots })));
+const Analysis = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.Analysis })));
+const LogoCores = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.LogoCores })));
 
 if (!window.requestIdleCallback) {
   window.requestIdleCallback = (cb) => {
@@ -180,7 +185,7 @@ export default function ScrollManager() {
   return null;
 }
 
-import { Colors, Gradients, Mascots, Analysis } from "./modules/tools";
+// Removed redundant named imports
 
 import { AppLayout } from "./components/AppLayout";
 import { UserRoute } from "./components/ProtectedRoute";
@@ -191,7 +196,12 @@ export function App() {
       <BrowserRouter>
       <ScrollManager />
       <GlobalContextProviders>
-        <Routes>
+        <React.Suspense fallback={
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text-secondary)'}}>
+            Carregando interface...
+          </div>
+        }>
+          <Routes>
           {toElement({ trie: buildLayoutTrie({
 "./pages/login.tsx": PageLayout_0,
 "./pages/_index.tsx": PageLayout_1,
@@ -218,8 +228,9 @@ export function App() {
           <Route path="/tools/analysis" element={<UserRoute><AppLayout><Analysis /></AppLayout></UserRoute>} />
           <Route path="/tools/logo-cores" element={<UserRoute><AppLayout><LogoCores /></AppLayout></UserRoute>} />
           <Route path="/forgot-password" element={<Page_13 />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </React.Suspense>
         <DevBuilder />
       </GlobalContextProviders>
     </BrowserRouter>
