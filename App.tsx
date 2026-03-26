@@ -49,6 +49,8 @@ import Page_13 from "./pages/forgot-password.tsx";
 import Page_14 from "./pages/tools.tsx";
 import PageLayout_14 from "./pages/tools.pageLayout.tsx";
 
+import { Colors, Gradients, Mascots, Analysis, LogoCores } from "./modules/tools/index";
+
 if (!window.requestIdleCallback) {
   window.requestIdleCallback = (cb) => {
     setTimeout(cb, 1);
