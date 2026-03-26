@@ -8,23 +8,53 @@ export async function handle(request: Request) {
     const { user } = await getServerUserSession(request);
 
     // Find the team member linked to the current user
-    const teamMember = await db.selectFrom("teamMembers")
+    let teamMember = await db.selectFrom("teamMembers")
       .select(["id"])
       .where("userId", "=", user.id)
       .limit(1)
       .executeTakeFirst();
 
     if (!teamMember) {
-      // Automatically grant an admin role if the user isn't assigned to a team member yet
-      return new Response(superjson.stringify({
-        teamMemberId: String(user.id), // use their authentic auth id
-        sectorRoles: [{
-          sectorId: "override-admin",
-          sectorName: "Administração (Bypass)",
-          role: "responsavel",
-          permissions: {}
-        }]
-      } satisfies OutputType));
+      // Auto-provision a real teamMember record for this user
+      const newTeamMemberId = crypto.randomUUID();
+      const initials = user.displayName?.slice(0, 2).toUpperCase() || "NN";
+      
+      await db.insertInto("teamMembers").values({
+        id: newTeamMemberId,
+        userId: user.id,
+        name: user.displayName || user.email.split('@')[0],
+        email: user.email,
+        initials,
+        status: "active",
+        createdAt: new Date(),
+      }).execute();
+
+      // If this is the owner (ID 1) or an admin, automatically assign them to ALL existing sectors
+      if (user.id === 1 || user.role === "admin") {
+        const allSectors = await db.selectFrom("sectors").select("id").execute();
+        if (allSectors.length > 0) {
+          await db.insertInto("sectorMembers").values(
+            allSectors.map(s => ({
+              id: crypto.randomUUID(),
+              sectorId: s.id,
+              memberId: newTeamMemberId,
+              role: "responsavel" as const,
+              permissions: {},
+              createdAt: new Date(),
+            }))
+          ).execute();
+        }
+      }
+      
+      // Re-fetch the team member we just created
+      const newMember = await db.selectFrom("teamMembers")
+        .select(["id"])
+        .where("userId", "=", user.id)
+        .limit(1)
+        .executeTakeFirst();
+      
+      if (!newMember) throw new Error("Auto-provisioning failed");
+      teamMember = newMember;
     }
 
     // Find all sector memberships for this team member
