@@ -10,6 +10,10 @@ export const PERMISSION_KEYS = {
   },
   coreact: {
     coreactIniciativas: "Iniciativas",
+    coreactProjetos: "Projetos",
+    coreactEtapas: "Etapas",
+    coreactTarefas: "Tarefas",
+    coreactAcoes: "Ações",
     coreactCronograma: "Cronograma",
     coreactVisaoDiaria: "Visão Diária",
     coreactExecucoes: "Execuções",
