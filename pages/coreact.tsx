@@ -27,8 +27,8 @@ import { CoreActCreateProjectDialog } from "../components/CoreActCreateProjectDi
 import { CoreActProjectReportsMenu } from "../components/CoreActProjectReportsMenu";
 import { useMyRole } from "../helpers/useSectorMembers";
 import { useAuth } from "../helpers/useAuth";
-import { CoreActAgentDashboard } from "../components/CoreActAgentDashboard";
 import { useAdaptiveLevel } from "../helpers/useAdaptiveLevel";
+import { CoreactExecutiveHome } from "../components/CoreactExecutiveHome";
 import styles from "./coreact.module.css";
 
 function CoreActMacroDashboard({ userName }: { userName: string }) {
@@ -433,7 +433,7 @@ export default function CoreActOverview() {
   const isManager = roleData.sectorRoles.some(r => r.role === 'responsavel');
 
   if (isManager) {
-    return <CoreActMacroDashboard userName={authState.user.displayName} />;
+    return <CoreactExecutiveHome userName={authState.user.displayName} />;
   }
 
   return (

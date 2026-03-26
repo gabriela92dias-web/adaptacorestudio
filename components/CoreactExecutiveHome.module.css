@@ -1,0 +1,332 @@
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Left Column */
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.welcomeBanner {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcomeBanner::after {
+  content: '🚀';
+  font-size: 6rem;
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(15deg);
+  opacity: 0.8;
+}
+
+.welcomeText h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.welcomeText p {
+  font-size: 1rem;
+  opacity: 0.9;
+  max-width: 400px;
+}
+
+.projectsByOwnerCard {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.darkCardsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.darkCard {
+  background: #1e1e2d;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.darkCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.darkPanelsCombo {
+  background: #1e1e2d;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.metricRing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.metricValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.metricLabel {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  text-transform: uppercase;
+}
+
+/* Right Column */
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.scheduleCard {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.scheduleStrip {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.scheduleDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dayLabel {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.dayCirc {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.dayCircActive {
+  background: var(--primary);
+  color: white;
+}
+
+.dayCircLight {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.overallProgressCard {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.inProgressList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.progressItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progressRingCircle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.progressItemInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.progressItemTitle {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.progressItemSubtitle {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+/* Bottom Matrix Timeline */
+.timelineCard {
+  background: #0f172a; /* deeply dark blue/black */
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  min-height: 250px;
+  overflow-x: auto;
+}
+
+.timelineHeader {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+
+.timelineTrack {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.timelineLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  z-index: 1;
+}
+
+.timelineNode {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nodeDiamond {
+  width: 16px;
+  height: 16px;
+  background: #10b981;
+  transform: rotate(45deg);
+  border: 4px solid #0f172a;
+  outline: 2px solid #10b981;
+}
+
+.nodeContentTop {
+  position: absolute;
+  bottom: 24px;
+  text-align: center;
+  width: 200px;
+}
+
+.nodeContentBottom {
+  position: absolute;
+  top: 24px;
+  text-align: center;
+  width: 200px;
+}
+
+.nodeDate {
+  font-size: 0.75rem;
+  color: #10b981;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.nodeTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.nodeDesc {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+/* Recharts overrides to remove outlines */
+:global(.recharts-wrapper) {
+  outline: none;
+}
