@@ -10,10 +10,14 @@ import { BatchImportDialog } from "../components/BatchImportDialog";
 import { useAdaptiveLevel } from "../helpers/useAdaptiveLevel";
 import { CoreActInitiativeCreateForm } from "../components/CoreActInitiativeCreateForm";
 import { CoreActInitiativeDetailPanel } from "../components/CoreActInitiativeDetailPanel";
+import { CoreActInitiativeDocs } from "../components/CoreActInitiativeDocs";
 import { statusMap } from "../helpers/coreactInitiativesUtils";
 import styles from "./coreact.iniciativas.module.css";
 
+const CoreActInitiativeMindMap = React.lazy(() => import("../components/CoreActInitiativeMindMap"));
+
 export default function CoreActIniciativas() {
+  const [activeTab, setActiveTab] = useState<"operacional" | "mapa" | "docs">("operacional");
   const [filter, setFilter] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -70,7 +74,29 @@ export default function CoreActIniciativas() {
           </div>
         </div>
 
-        <div className={styles.filterBar}>
+        <div className={styles.tabsBar}>
+          <button 
+            className={`${styles.tabButton} ${activeTab === "operacional" ? styles.tabButtonActive : ""}`}
+            onClick={() => setActiveTab("operacional")}
+          >
+            Operacional
+          </button>
+          <button 
+            className={`${styles.tabButton} ${activeTab === "mapa" ? styles.tabButtonActive : ""}`}
+            onClick={() => setActiveTab("mapa")}
+          >
+            Mapa Mental
+          </button>
+          <button 
+            className={`${styles.tabButton} ${activeTab === "docs" ? styles.tabButtonActive : ""}`}
+            onClick={() => setActiveTab("docs")}
+          >
+            Documentação
+          </button>
+        </div>
+
+        {activeTab === "operacional" && (
+          <div className={styles.filterBar}>
           <button 
             className={`${styles.filterPill} ${filter === null ? styles.filterPillActive : ""}`}
             onClick={() => handleFilterClick(null)}
@@ -87,9 +113,11 @@ export default function CoreActIniciativas() {
             </button>
           ))}
         </div>
+        )}
       </header>
 
-      <div className={styles.mainContainer}>
+      {activeTab === "operacional" && (
+        <div className={styles.mainContainer}>
         {/* Left Panel - Master List */}
         <div className={styles.leftPanel}>
           {isCreating && (
@@ -191,6 +219,17 @@ export default function CoreActIniciativas() {
           )}
         </div>
       </div>
+      )}
+
+      {activeTab === "mapa" && (
+        <React.Suspense fallback={<div className={styles.emptyState}>Carregando Motor Gráfico...</div>}>
+          <CoreActInitiativeMindMap />
+        </React.Suspense>
+      )}
+
+      {activeTab === "docs" && (
+        <CoreActInitiativeDocs />
+      )}
     </div>
   );
 }
