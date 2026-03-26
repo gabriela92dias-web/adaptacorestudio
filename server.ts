@@ -2,6 +2,10 @@ import "./loadEnv.js";
 import { Hono } from 'hono'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { serve } from '@hono/node-server';
+import dns from 'node:dns';
+
+// Force IPv4 for Supabase Connection Pooler
+dns.setDefaultResultOrder('ipv4first');
 
 const app = new Hono();
 
