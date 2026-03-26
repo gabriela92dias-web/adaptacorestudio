@@ -24,6 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useAuth } from "../helpers/useAuth";
 import { useGoogleTranslate } from "../helpers/useTranslation";
 import { usePermissions } from "../helpers/usePermissions";
+import { CoreactHelpModal } from "./CoreactHelpModal";
 import styles from "./AppSidebar.module.css";
 
 type NavSubItem = {
@@ -457,15 +458,15 @@ export const AppSidebar = () => {
             )}
           </div>
 
-          {!isCollapsed && (
+          {!isCollapsed ? (
             <>
-              <Button variant="ghost" size="icon-sm" className={styles.iconButton} aria-label={"Ajuda"}>
-                <HelpCircle size={16} />
-              </Button>
+              <CoreactHelpModal isCollapsed={false} />
               <Button variant="ghost" size="icon-sm" className={styles.iconButton} aria-label={"Guia"}>
                 <BookOpen size={16} />
               </Button>
             </>
+          ) : (
+            <CoreactHelpModal isCollapsed={true} />
           )}
 
           {isCollapsed ? (
