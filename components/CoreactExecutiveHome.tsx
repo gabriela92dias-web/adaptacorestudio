@@ -139,15 +139,15 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
 
             <div className={styles.darkPanelsCombo}>
                <div className={styles.metricRing}>
-                 {renderGauge(68, "#ec4899")}
+                 {renderGauge(68, "var(--primary)")}
                  <span className={styles.metricLabel}>Aliqua</span>
                </div>
                <div className={styles.metricRing}>
-                 {renderGauge(33, "#fcd34d")}
+                 {renderGauge(33, "var(--muted-foreground)")}
                  <span className={styles.metricLabel}>Veniam</span>
                </div>
                <div className={styles.metricRing}>
-                 {renderGauge(21, "#818cf8")}
+                 {renderGauge(21, "var(--border)")}
                  <span className={styles.metricLabel}>Cillum</span>
                </div>
             </div>
@@ -210,7 +210,7 @@ export function CoreactExecutiveHome({ userName }: { userName: string }) {
               
               {inProgressList.map((item, i) => (
                 <div key={i} className={styles.progressItem}>
-                  <div className={styles.progressRingCircle} style={{ border: `3px solid ${item.color}40`, borderTopColor: item.color }}>
+                  <div className={styles.progressRingCircle} style={{ border: `3px solid var(--border)`, borderTopColor: item.color }}>
                     {item.value}
                   </div>
                   <div className={styles.progressItemInfo}>
