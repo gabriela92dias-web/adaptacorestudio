@@ -19,7 +19,7 @@ export default function CoreActIniciativas() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [collapsedSectors, setCollapsedSectors] = useState<Set<string>>(new Set());
 
-  const { data, isLoading } = useInitiatives(filter as any);
+  const { data, isLoading, error } = useInitiatives(filter as any);
   const { data: teamData } = useTeamMembers();
 
   const groupedInitiatives = useMemo(() => {
@@ -99,7 +99,11 @@ export default function CoreActIniciativas() {
             />
           )}
 
-          {isLoading ? (
+          {error ? (
+            <div className={styles.emptyState}>
+              <p style={{ color: 'red' }}>Error: {(error as Error).message}</p>
+            </div>
+          ) : isLoading ? (
             <div className={styles.listSkeleton}>
               {[1,2,3,4].map(i => (
                 <Skeleton key={i} style={{ height: "80px", marginBottom: "var(--spacing-2)" }} />
