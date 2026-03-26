@@ -14,7 +14,8 @@ import {
   ShoppingBag,
   Tag,
   Disc,
-  Bookmark
+  Bookmark,
+  UserCircle
 } from "lucide-react";
 import { motion } from "motion/react";
 import { Badge } from "../ui/badge";
@@ -28,7 +29,8 @@ import {
   Contract,
   Newsletter,
   Notice,
-  NoticeGenerator
+  NoticeGenerator,
+  AvatarGenerator
 } from "./materials";
 
 import { FlowerLabel } from "./materials/flower-label";
@@ -102,6 +104,12 @@ const CATEGORIES: Category[] = [
         label: "Newsletter", 
         icon: Mail,
         description: "Sistema de blocos modulares"
+      },
+      { 
+        id: "avatar-corporativo", 
+        label: "Foto de Perfil", 
+        icon: UserCircle,
+        description: "Padronizador de avatares com identidade visual"
       },
       { 
         id: "comunicado", 
@@ -284,6 +292,8 @@ function MaterialContent({
       return <Newsletter />;
     case "comunicado":
       return <NoticeGenerator />;
+    case "avatar-corporativo":
+      return <AvatarGenerator />;
     default:
       return <EmptyState />;
   }

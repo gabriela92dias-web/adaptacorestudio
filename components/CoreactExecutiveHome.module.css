@@ -22,7 +22,7 @@
 .welcomeBanner {
   background: var(--bg-primary);
   border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
+  padding: 0.8rem 1.25rem;
   color: var(--text-primary);
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@
 
 .welcomeBanner::after {
   content: '✦';
-  font-size: 8rem;
+  font-size: 6rem;
   position: absolute;
   right: -1rem;
   top: 50%;
@@ -52,9 +52,9 @@
 }
 
 .welcomeText h1 {
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
 }
 
 .welcomeText p {
@@ -73,10 +73,10 @@
 }
 
 .cardTitle {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .darkCardsRow {

@@ -11,3 +11,4 @@ export { LabelLibrary } from "./label-library";
 
 // Novos componentes
 export { NoticeGenerator } from "../notices/notice-generator";
+export { AvatarGenerator } from "./avatar-generator";
