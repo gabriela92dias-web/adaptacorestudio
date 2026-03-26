@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback } from "../components/Avatar";
 import { Progress } from "../components/Progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/Tabs";
 import { CoreActExecutionsTab } from "../components/CoreActExecutionsTab";
+import { CoreactGlobalPermissionsTab } from "../components/CoreactGlobalPermissionsTab";
 import { toast } from "sonner";
 import {
   Sheet,
@@ -145,6 +146,7 @@ export default function CoreActTime() {
             <TabsList>
               <TabsTrigger value="equipe">Equipe</TabsTrigger>
               <TabsTrigger value="execucoes">Execuções</TabsTrigger>
+              <TabsTrigger value="permissoes">Permissões</TabsTrigger>
             </TabsList>
             {activeTab === "equipe" && (
               <>
@@ -165,6 +167,10 @@ export default function CoreActTime() {
 
         <TabsContent value="execucoes" className={styles.tabContent}>
           <CoreActExecutionsTab />
+        </TabsContent>
+
+        <TabsContent value="permissoes" className={styles.tabContent}>
+          <CoreactGlobalPermissionsTab />
         </TabsContent>
       </Tabs>
 
