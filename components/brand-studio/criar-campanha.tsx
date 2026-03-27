@@ -7,6 +7,7 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useCreateCampaign } from "../../helpers/useApi";
+import styles from "./criar-campanha.module.css";
 
 interface CriarCampanhaProps {
   isOpen: boolean;
@@ -128,8 +129,7 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[150] flex items-center justify-center p-4"
-        style={{ backgroundColor: "var(--modal-backdrop)", backdropFilter: "blur(4px)" }}
+        className={styles.overlay}
         onClick={onClose}
       >
         <motion.div
@@ -137,90 +137,83 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="w-full h-full max-w-[1400px] max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
-          style={{ backgroundColor: "var(--site-bg)", border: "1px solid var(--border)" }}
+          className={styles.modal}
           onClick={(e) => e.stopPropagation()}
         >
           
           {/* LADO A: Jornada Mental do Usuário (Chat Agente) */}
-          <div className="w-full md:w-5/12 flex flex-col border-r border-white/10" style={{ backgroundColor: "var(--bg-secondary)" }}>
-             <div className="p-6 border-b border-white/10 flex items-center gap-3">
-               <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30">
-                  <Sparkles className="w-5 h-5 text-emerald-500" />
+          <div className={styles.sideA}>
+             <div className={styles.headerA}>
+               <div className={styles.iconA}>
+                  <Sparkles size={20} />
                </div>
                <div>
-                 <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>Agente Estratégico</h2>
-                 <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: "var(--text-tertiary)" }}>Coconstrutor Adapta</p>
+                 <h2 style={{ fontSize: '1.125rem', fontWeight: 'bold', margin: 0, color: "var(--text-primary)" }}>Agente Estratégico</h2>
+                 <p style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', margin: 0, color: "var(--text-tertiary)" }}>Coconstrutor Adapta</p>
                </div>
              </div>
 
-             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6" ref={scrollRef}>
+             <div className={styles.chatArea} ref={scrollRef}>
                 {messages.map((m, i) => (
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={i}
-                    className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`${styles.messageRow} ${m.role === 'user' ? styles.messageRowUser : styles.messageRowAgent}`}
                   >
-                     <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
-                        m.role === 'user' 
-                          ? 'bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tr-sm' 
-                          : 'bg-[var(--bg-primary)] border border-white/5 text-[var(--text-secondary)] rounded-tl-sm shadow-md'
-                     }`}>
+                     <div className={`${styles.messageBubble} ${m.role === 'user' ? styles.messageBubbleUser : styles.messageBubbleAgent}`}>
                         {m.text}
                      </div>
                   </motion.div>
                 ))}
                 {isTyping && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                     <div className="max-w-[85%] px-4 py-3 rounded-2xl bg-[var(--bg-primary)] border border-white/5 flex gap-1 items-center">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500/50 animate-bounce" />
-                        <span className="w-2 h-2 rounded-full bg-emerald-500/50 animate-bounce" style={{ animationDelay: '0.1s' }} />
-                        <span className="w-2 h-2 rounded-full bg-emerald-500/50 animate-bounce" style={{ animationDelay: '0.2s' }} />
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`${styles.messageRow} ${styles.messageRowAgent}`}>
+                     <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`} style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                        Digitando...
                      </div>
                   </motion.div>
                 )}
              </div>
 
-             <div className="p-4 bg-[var(--bg-primary)] border-t border-white/10">
-                <div className="flex items-center gap-3">
+             <div className={styles.footerA}>
+                <div className={styles.inputGroup}>
                    <Input 
                       value={currentInput}
                       onChange={e => setCurrentInput(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && handleSend()}
                       placeholder="Responda sem filtros ou julgamentos..."
-                      className="flex-1 bg-[var(--site-bg)] border-white/10"
+                      style={{ flex: 1, backgroundColor: 'var(--site-bg)', border: '1px solid rgba(255,255,255,0.1)' }}
                       autoFocus
                    />
-                   <Button variant="default" onClick={handleSend} size="icon-md" disabled={!currentInput.trim() || isTyping}>
-                      <Send className="w-4 h-4" />
+                   <Button variant="default" onClick={handleSend} disabled={!currentInput.trim() || isTyping}>
+                      <Send size={16} />
                    </Button>
                 </div>
-                <div className="mt-4 text-[10px] text-center uppercase tracking-widest font-bold text-zinc-500">
+                <div style={{ marginTop: '1rem', fontSize: '0.65rem', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', color: '#71717a' }}>
                    O agente não bloqueia. O agente transforma.
                 </div>
              </div>
           </div>
 
           {/* LADO B: Resposta Estratégica (Funil Adapta) */}
-          <div className="w-full md:w-7/12 flex flex-col relative" style={{ backgroundColor: "var(--site-bg)" }}>
-             <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-[var(--site-bg)] z-10">
+          <div className={styles.sideB}>
+             <div className={styles.headerB}>
                <div>
-                  <h2 className="text-xl font-bold text-[var(--text-primary)]">{campaignTitle || "Projeto sem título"}</h2>
-                  <p className="text-sm text-[var(--text-secondary)]">Mapa do Funil Institucional</p>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0, color: 'var(--text-primary)' }}>{campaignTitle || "Projeto sem título"}</h2>
+                  <p style={{ fontSize: '0.875rem', margin: 0, color: 'var(--text-secondary)' }}>Mapa do Funil Institucional</p>
                </div>
-               <div className="flex items-center gap-3">
-                 <Button variant="ghost" onClick={onClose}><X className="w-5 h-5" /></Button>
+               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                 <Button variant="ghost" onClick={onClose}><X size={20} /></Button>
                  {activeStage >= 9 && (
-                   <Button variant="default" onClick={handleFinish} className="gap-2">
-                     <FileText className="w-4 h-4" /> Homologar
+                   <Button variant="default" onClick={handleFinish} style={{ display: 'flex', gap: '0.5rem' }}>
+                     <FileText size={16} /> Homologar
                    </Button>
                  )}
                </div>
              </div>
 
-             <div className="flex-1 overflow-y-auto p-8 lg:p-12">
-                <div className="max-w-2xl mx-auto flex flex-col gap-3 relative">
+             <div className={styles.funnelArea}>
+                <div className={styles.funnelGrid}>
                    {/* Decorative connecting line */}
-                   <div className="absolute left-8 top-8 bottom-8 w-px bg-white/5" />
+                   <div className={styles.funnelLine} />
 
                    {FUNNEL_STAGES.map((stage, idx) => {
                       const isActive = activeStage === idx;
@@ -228,41 +221,36 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
                       const isPast = activeStage >= idx;
                       const Icon = stage.icon;
 
+                      const nodeClass = isActive ? styles.funnelNodeActive : (isPast ? styles.funnelNodePast : styles.funnelNodeFuture);
+                      const boxClass = isActive ? styles.funnelBoxActive : (data ? styles.funnelBoxPast : styles.funnelBoxFuture);
+
                       return (
-                        <div key={stage.id} className={`flex gap-6 items-start transition-opacity duration-700 ${isPast ? 'opacity-100' : 'opacity-30'}`}>
+                        <div key={stage.id} className={styles.funnelRow} style={{ opacity: isPast ? 1 : 0.4 }}>
                            
                            {/* Status Node */}
-                           <div className={`w-16 h-16 shrink-0 rounded-full flex flex-col items-center justify-center shrink-0 z-10 transition-all duration-500 ${
-                              isActive ? 'bg-[var(--primary)] text-white shadow-[0_0_20px_var(--primary)]' : 
-                              isPast ? 'bg-[var(--bg-secondary)] border-2 border-[var(--primary)] text-[var(--primary)]' : 
-                              'bg-[var(--bg-secondary)] border border-white/10 text-zinc-600'
-                           }`}>
-                              <Icon className="w-5 h-5 mb-1" />
+                           <div className={`${styles.funnelNode} ${nodeClass}`}>
+                              <Icon size={20} style={{ marginBottom: '4px' }} />
                            </div>
 
                            {/* Content Box */}
-                           <div className={`flex-1 flex flex-col justify-center rounded-xl p-5 border transition-all duration-500 ${
-                              isActive ? 'bg-[var(--bg-secondary)] border-[var(--primary)] shadow-lg' : 
-                              data ? 'bg-[var(--bg-secondary)] border-white/5' : 
-                              'bg-transparent border-dashed border-white/10'
-                           }`}>
-                              <div className="flex items-center justify-between mb-2">
-                                 <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ backgroundColor: stage.color + '20', color: stage.color }}>
+                           <div className={`${styles.funnelBox} ${boxClass}`}>
+                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                 <span style={{ fontSize: '0.625rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '2px 8px', borderRadius: '9999px', backgroundColor: stage.color + '20', color: stage.color }}>
                                     Ação: {stage.action}
                                  </span>
-                                 <span className="text-xs font-serif italic text-[var(--text-tertiary)]">
+                                 <span style={{ fontSize: '0.75rem', fontStyle: 'italic', color: 'var(--text-tertiary)' }}>
                                     "{stage.userMind}"
                                  </span>
                               </div>
-                              <p className="text-sm font-medium text-[var(--text-secondary)] leading-relaxed">
-                                 {data ? data.strategy : <span className="text-zinc-600">Aguardando mapeamento do agente...</span>}
+                              <p style={{ fontSize: '0.875rem', fontWeight: 500, margin: 0, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                                 {data ? data.strategy : <span style={{ color: '#52525b' }}>Aguardando mapeamento do agente...</span>}
                               </p>
                            </div>
                         </div>
                       )
                    })}
                    
-                   <div className="mt-8 text-center text-xs text-[var(--text-tertiary)] max-w-lg mx-auto leading-relaxed border-t border-white/10 pt-8">
+                   <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-tertiary)', maxWidth: '32rem', marginInline: 'auto', lineHeight: 1.7, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem' }}>
                      Este sistema acompanha a construção em tempo real, conectando a jornada do usuário às decisões estratégicas da Adapta. Priorizando educação, clareza e acolhimento sem fricção.
                    </div>
                 </div>
