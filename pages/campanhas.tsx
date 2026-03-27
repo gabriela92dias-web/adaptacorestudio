@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { CampaignStatus } from "../helpers/schema";
 import { useAdaptiveLevel } from "../helpers/useAdaptiveLevel";
 import styles from "./campanhas.module.css";
+import { CriarCampanha } from "../components/brand-studio/criar-campanha";
 
 const STATUS_MAP: Record<string, { label: string; variant: "default" | "success" | "warning" | "outline" | "secondary" }> = {
   draft: { label: "Rascunho", variant: "outline" },
@@ -31,6 +32,7 @@ const TYPE_MAP: Record<string, string> = {
 export default function Campanhas() {
   const { ref, level, className: adaptiveClass } = useAdaptiveLevel();
   const [activeTab, setActiveTab] = useState<"all" | CampaignStatus>("all");
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   
   const { data, isLoading, isError, refetch } = useCampaigns(
     activeTab !== "all" ? { status: activeTab as CampaignStatus } : {}
@@ -75,9 +77,14 @@ export default function Campanhas() {
             </Badge>
           )}
         </div>
-        <Button variant="outline" onClick={() => refetch()} size="icon-md">
-          <RefreshCw size={16} />
-        </Button>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <Button variant="outline" onClick={() => refetch()} size="icon-md">
+            <RefreshCw size={16} />
+          </Button>
+          <Button onClick={() => setIsCreateOpen(true)} style={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)', fontWeight: 'bold' }}>
+            <Megaphone size={16} style={{ marginRight: '8px' }} /> Nova Campanha
+          </Button>
+        </div>
       </div>
 
       <div className={styles.filters}>
@@ -203,6 +210,8 @@ export default function Campanhas() {
           </div>
         )}
       </div>
+
+      <CriarCampanha isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
     </div>
   );
 }
