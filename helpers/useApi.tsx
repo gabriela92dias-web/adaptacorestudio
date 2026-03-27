@@ -5,6 +5,7 @@ import { getCampaignsList, InputType as ListCampaignsInput } from "../endpoints/
 import { postCreateCampaign, InputType as CreateCampaignInput } from "../endpoints/campaigns/create_POST.schema";
 import { postUpdateCampaign, InputType as UpdateCampaignInput } from "../endpoints/campaigns/update_POST.schema";
 import { postDeleteCampaign, InputType as DeleteCampaignInput } from "../endpoints/campaigns/delete_POST.schema";
+import { postGenerateBlueprint, InputType as GenerateBlueprintInput } from "../endpoints/assistant/generate_POST.schema";
 
 export function useBrand() {
   return useQuery({
@@ -61,5 +62,11 @@ export function useDeleteCampaign() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
     },
+  });
+}
+
+export function useGenerateBlueprint() {
+  return useMutation({
+    mutationFn: (data: GenerateBlueprintInput) => postGenerateBlueprint(data),
   });
 }
