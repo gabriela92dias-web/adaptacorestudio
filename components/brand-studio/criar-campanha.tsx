@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useCampaigns } from "../../contexts/campaigns-context";
+import { useCreateCampaign } from "../../helpers/useApi";
 
 interface CriarCampanhaProps {
   isOpen: boolean;
@@ -28,7 +28,7 @@ const FUNNEL_STAGES = [
 ];
 
 export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
-  const { saveCampaign } = useCampaigns();
+  const { mutate: saveCampaign } = useCreateCampaign();
   
   // Agente Conversation
   const [messages, setMessages] = useState<{role: 'agent'|'user', text: string}[]>([]);
@@ -111,10 +111,9 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
   const handleFinish = () => {
     saveCampaign({
       name: campaignTitle || "Nova Campanha Estratégica",
-      type: "Estratégica",
+      type: "awareness",
       duration: 30,
       channels: ["Portal", "Redes Educativas", "Apoio Clínico"],
-      posts: [],
       objective: "Descoberta ao Acolhimento",
       status: "draft",
     });
