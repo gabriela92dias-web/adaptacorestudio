@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { X, Wand2, ArrowRight, Lightbulb, PackageOpen, LayoutTemplate, Settings2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, ArrowRight, PackageOpen, LayoutTemplate, Activity } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useCreateCampaign, useGenerateBlueprint } from "../../helpers/useApi";
@@ -15,30 +15,47 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
   const { mutate: saveCampaign } = useCreateCampaign();
   const { mutate: generateBlueprint, isPending: isGenerating, data: blueprintData, isError, error } = useGenerateBlueprint();
   
-  // Caderneta State
+  // Refactored Caderneta State for Checkboxes
   const [form, setForm] = useState({
     title: "",
-    what: "",
-    why: "",
-    how: "",
-    when: "",
-    quantitative: "",
-    rawInput: ""
+    category: "",
+    audience: "",
+    format: "",
+    goals: [] as string[],
+    budgetLevel: ""
   });
 
   const [viewMode, setViewMode] = useState<"maximalist" | "minimalist">("maximalist");
+  const [isTyping, setIsTyping] = useState(false);
 
-  const handleGenerate = () => {
-    if (!form.title) {
-        alert("Dê um título para sua campanha!");
-        return;
+  // Auto-generate hook
+  useEffect(() => {
+    // Only fire if essential fields are selected to avoid unnecessary calls
+    if (form.title && form.category && form.audience && form.format) {
+      const timer = setTimeout(() => {
+         generateBlueprint({
+            what: `Categoria: ${form.category}`,
+            how: `Formato: ${form.format}. Público alvo: ${form.audience}`,
+            why: `Objetivos chave: ${form.goals.join(", ")}`,
+            quantitative: `Custo especulado: ${form.budgetLevel}`,
+            rawInput: `O título do projeto é: ${form.title}`
+         });
+      }, 1000); // 1 second debounce
+      return () => clearTimeout(timer);
     }
-    generateBlueprint(form);
+  }, [form.title, form.category, form.audience, form.format, form.goals, form.budgetLevel]);
+
+  const toggleGoal = (goal: string) => {
+    setForm(prev => {
+      if (prev.goals.includes(goal)) return { ...prev, goals: prev.goals.filter(g => g !== goal) };
+      if (prev.goals.length >= 3) return prev; // max 3 selections
+      return { ...prev, goals: [...prev.goals, goal] };
+    });
   };
 
   const handleFinish = () => {
     saveCampaign({
-      name: form.title || "Campanha Estratégica",
+      name: form.title || "Projeto Base",
       type: "awareness",
       duration: 30,
       channels: blueprintData ? blueprintData.suggestedAssets : [],
@@ -68,26 +85,31 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
           onClick={(e) => e.stopPropagation()}
         >
           
-          {/* LADO A: A Caderneta (Dia Zero) */}
+          {/* LADO A: Seletores (Zero Digitação) */}
           <div className={styles.sideA}>
              <div className={styles.headerA}>
                <div className={styles.iconA}>
                   <LayoutTemplate size={20} />
                </div>
                <div>
-                 <h2 className={styles.titleA}>A Caderneta (Dia Zero)</h2>
-                 <p className={styles.subtitleA}>Mapeamento de intenções cruas.</p>
+                 <h2 className={styles.titleA}>Menu de Ação</h2>
+                 <p className={styles.subtitleA}>Construção por seletores (Automático)</p>
                </div>
              </div>
 
              <div className={styles.cadernetaArea}>
                 <div className={styles.cadernetaPaper}>
+                   
                    <div className={styles.inputField}>
-                      <label>Nome do Projeto</label>
+                      <label>Nome do Projeto (Obrigatório)</label>
                       <Input 
-                        placeholder="Ex: Programa de Camisas..."
+                        placeholder="Ex: Lançamento Q3..."
                         value={form.title}
-                        onChange={e => setForm({...form, title: e.target.value})}
+                        onChange={e => {
+                          setForm({...form, title: e.target.value});
+                          setIsTyping(true);
+                          setTimeout(() => setIsTyping(false), 800);
+                        }}
                         className={styles.cleanInput}
                       />
                    </div>
@@ -95,83 +117,79 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
                    <div className={styles.divider} />
 
                    <div className={styles.inputField}>
-                      <label>1. O que vamos fazer?</label>
-                      <textarea 
-                        rows={2}
-                        placeholder="Descreva a ação nua e crua..."
-                        value={form.what}
-                        onChange={e => setForm({...form, what: e.target.value})}
-                        className={styles.cleanTextarea}
-                      />
-                   </div>
-
-                   <div className={styles.inputField}>
-                      <label>2. Por que estamos fazendo isso?</label>
-                      <textarea 
-                        rows={2}
-                        placeholder="A verdadeira razão de ser..."
-                        value={form.why}
-                        onChange={e => setForm({...form, why: e.target.value})}
-                        className={styles.cleanTextarea}
-                      />
-                   </div>
-
-                   <div className={styles.inputField}>
-                      <label>3. Como e para quem?</label>
-                      <textarea 
-                        rows={2}
-                        placeholder="Canais, tom de voz, público alvo..."
-                        value={form.how}
-                        onChange={e => setForm({...form, how: e.target.value})}
-                        className={styles.cleanTextarea}
-                      />
-                   </div>
-
-                   <div className={styles.rowInputs}>
-                      <div className={styles.inputField} style={{ flex: 1 }}>
-                         <label>4. Quando?</label>
-                         <Input 
-                           placeholder="Datas, sazonalidade..."
-                           value={form.when}
-                           onChange={e => setForm({...form, when: e.target.value})}
-                           className={styles.cleanInput}
-                         />
+                      <label>1. Foco Principal</label>
+                      <div className={styles.pillContainer}>
+                        {["Endomarketing", "Lançamento", "Institucional", "Sazonal"].map(pill => (
+                           <button 
+                             key={pill} 
+                             className={form.category === pill ? styles.pillActive : styles.pill}
+                             onClick={() => setForm({...form, category: pill})}
+                           >{pill}</button>
+                        ))}
                       </div>
-                      <div className={styles.inputField} style={{ flex: 1 }}>
-                         <label>5. Orçamento / Volume</label>
-                         <Input 
-                           placeholder="Budgets ou escalas..."
-                           value={form.quantitative}
-                           onChange={e => setForm({...form, quantitative: e.target.value})}
-                           className={styles.cleanInput}
-                         />
+                   </div>
+
+                   <div className={styles.inputField}>
+                      <label>2. Público / Alcance</label>
+                      <div className={styles.pillContainer}>
+                        {["Membros Internos", "Clientes Atuais", "Mercado Externo"].map(pill => (
+                           <button 
+                             key={pill} 
+                             className={form.audience === pill ? styles.pillActive : styles.pill}
+                             onClick={() => setForm({...form, audience: pill})}
+                           >{pill}</button>
+                        ))}
+                      </div>
+                   </div>
+
+                   <div className={styles.inputField}>
+                      <label>3. Formato Predominante</label>
+                      <div className={styles.pillContainer}>
+                        {["100% Digital", "Presencial", "Híbrido"].map(pill => (
+                           <button 
+                             key={pill} 
+                             className={form.format === pill ? styles.pillActive : styles.pill}
+                             onClick={() => setForm({...form, format: pill})}
+                           >{pill}</button>
+                        ))}
                       </div>
                    </div>
 
                    <div className={styles.divider} />
 
                    <div className={styles.inputField}>
-                      <label>Anotações Livres Adicionais</label>
-                      <textarea 
-                        rows={3}
-                        placeholder="Tem mais alguma ideia solta? Jogue aqui."
-                        value={form.rawInput}
-                        onChange={e => setForm({...form, rawInput: e.target.value})}
-                        className={styles.cleanTextarea}
-                      />
+                      <label>4. Sentimentos a Gerar (Multi-Seleção máx 3)</label>
+                      <div className={styles.pillContainer} style={{ flexWrap: 'wrap' }}>
+                        {["Pertencimento", "Urgência", "Autoridade", "Acolhimento", "Exclusividade", "Confiança"].map(pill => (
+                           <button 
+                             key={pill} 
+                             className={form.goals.includes(pill) ? styles.pillActiveCheck : styles.pill}
+                             onClick={() => toggleGoal(pill)}
+                           >{pill}</button>
+                        ))}
+                      </div>
                    </div>
+
+                   <div className={styles.inputField} style={{ marginTop: '0.5rem' }}>
+                      <label>5. Escala Especulada</label>
+                      <div className={styles.pillContainer}>
+                        {["Esforço Orgânico", "Baixo Custo", "Alto Impacto Financeiro"].map(pill => (
+                           <button 
+                             key={pill} 
+                             className={form.budgetLevel === pill ? styles.pillActive : styles.pill}
+                             onClick={() => setForm({...form, budgetLevel: pill})}
+                           >{pill}</button>
+                        ))}
+                      </div>
+                   </div>
+
                 </div>
              </div>
 
              <div className={styles.footerA}>
-                <Button 
-                   onClick={handleGenerate} 
-                   disabled={isGenerating || !form.title}
-                   className={styles.generateBtn}
-                   style={{ width: '100%' }}
-                >
-                   {isGenerating ? "Mapeando Arquitetura..." : "Revelar Estratégia"} <Wand2 size={16} style={{ marginLeft: '8px' }} />
-                </Button>
+                <div className={styles.autoSaveStatus}>
+                   {isTyping ? "Digitando..." : (isGenerating ? <><Activity size={12} className={styles.spinIcon}/> Processando LLM...</> : "Mecanismo em Escuta (Autosave)")}
+                </div>
              </div>
           </div>
 
@@ -186,7 +204,7 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
                  <Button variant="ghost" onClick={onClose}><X size={20} /></Button>
                  {blueprintData && (
                    <Button variant="default" onClick={handleFinish} style={{ display: 'flex', gap: '0.5rem' }}>
-                     <ArrowRight size={16} /> Homologar
+                     <ArrowRight size={16} /> Homologar Projeto
                    </Button>
                  )}
                </div>
@@ -195,39 +213,39 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
              <div className={styles.blueprintArea}>
                 {!blueprintData && !isGenerating && !isError && (
                    <div className={styles.emptyState}>
-                      <Lightbulb size={48} color="rgba(255,255,255,0.1)" />
-                      <p>Preencha a caderneta e clique em Revelar para transformar suas anotações rasas em um funil profissional.</p>
+                      <Activity size={48} color="rgba(255,255,255,0.1)" />
+                      <p>Sua matriz estratégica reagirá aqui. Selecione o PÚBLICO, o FORMATO e o FOCO no painel esquerdo para iniciar.</p>
                    </div>
                 )}
 
-                {isGenerating && (
+                {isGenerating && !blueprintData && (
                    <div className={styles.loadingState}>
                       <div className={styles.pulseNode} />
-                      <p>Analisando vetores estratégicos...</p>
+                      <p>Renderizando planta baixa estrutural...</p>
                    </div>
                 )}
 
                 {isError && (
                    <div className={styles.errorState}>
-                      <p>Erro ao conectar com o motor LLM: {(error as any)?.message}</p>
+                      <p>Erro no construtor IA: {(error as any)?.message}</p>
                    </div>
                 )}
 
-                {blueprintData && !isGenerating && (
-                   <div className={styles.blueprintContainer}>
+                {blueprintData && (
+                   <div className={styles.blueprintContainer} style={{ opacity: isGenerating ? 0.5 : 1, transition: 'opacity 0.5s' }}>
                       
                       {/* Dashboard Header */}
                       <div className={styles.bpDashboard}>
                          <div className={styles.bpCard}>
-                            <span className={styles.bpLabel}>Classe Operacional</span>
+                            <span className={styles.bpLabel}>Natureza Operacional</span>
                             <span className={styles.bpValue}>{blueprintData.category}</span>
                          </div>
                          <div className={styles.bpCard}>
-                            <span className={styles.bpLabel}>Valor Imaterial Gerado</span>
+                            <span className={styles.bpLabel}>Impacto Imaterial</span>
                             <span className={styles.bpValue}>{blueprintData.coreValue}</span>
                          </div>
                          <div className={styles.bpCard}>
-                            <span className={styles.bpLabel}>Especulação de Escala</span>
+                            <span className={styles.bpLabel}>Orçamento Sugerido</span>
                             <span className={styles.bpValue}>{blueprintData.budgetSpeculation}</span>
                          </div>
                       </div>
@@ -238,28 +256,26 @@ export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
                             className={viewMode === "maximalist" ? styles.toggleBtnActive : styles.toggleBtn}
                             onClick={() => setViewMode("maximalist")}
                          >
-                            Potencial Máximo (Maximalista)
+                            Potencial Pleno 
                          </button>
                          <button 
                             className={viewMode === "minimalist" ? styles.toggleBtnActive : styles.toggleBtn}
                             onClick={() => setViewMode("minimalist")}
                          >
-                            Operação Enxuta (Minimalista)
+                            Visão Enxuta
                          </button>
                       </div>
 
                       <div className={styles.dividerB} />
 
                       {/* The 2D Architectural Funnel */}
-                      <h3 className={styles.sectionTitle}>Planta Baixa (Funil de Impacto)</h3>
+                      <h3 className={styles.sectionTitle}>Planta Mestra de {viewMode === "maximalist" ? "10 Fases" : "4 Fases"}</h3>
                       <div className={styles.funnelArchitectural}>
                          <div className={styles.archLine} />
                          {blueprintData.funnelSteps.map((step, idx) => {
-                            // In Minimalist mode, we only render key strategic pillars to keep it lean
                             if (viewMode === "minimalist" && !["atrair", "explicar", "converter", "reter"].includes(step.id)) {
                                return null;
                             }
-
                             return (
                                <div key={idx} className={styles.archRow}>
                                   <div className={styles.archStatus}>
