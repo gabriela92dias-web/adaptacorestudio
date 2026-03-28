@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { X, ArrowRight, PackageOpen, LayoutTemplate, Activity } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Sparkles, Activity } from "lucide-react";
 import { useCreateCampaign, useGenerateBlueprint } from "../../helpers/useApi";
 import styles from "./criar-campanha.module.css";
-import { AnimatePresence, motion } from "motion/react";
 
 interface CriarCampanhaProps {
   isOpen: boolean;
@@ -12,306 +12,308 @@ interface CriarCampanhaProps {
 }
 
 export function CriarCampanha({ isOpen, onClose }: CriarCampanhaProps) {
-  const { mutate: saveCampaign } = useCreateCampaign();
-  const { mutate: generateBlueprint, isPending: isGenerating, data: blueprintData, isError, error } = useGenerateBlueprint();
+  const { mutateAsync: saveCampaign } = useCreateCampaign();
+  const { mutateAsync: generateBlueprintAsync, isPending: isGenerating, data: blueprintData, isError, error } = useGenerateBlueprint();
   
-  // Refactored Caderneta State for Checkboxes
-  const [form, setForm] = useState({
-    title: "",
-    category: "",
-    audience: "",
-    format: "",
-    goals: [] as string[],
-    budgetLevel: ""
-  });
+  const [magicInput, setMagicInput] = useState("");
+  const [activeLevers, setActiveLevers] = useState<Record<string, any>>({});
+  
+  // Phase States
+  const [phase, setPhase] = useState<"ignition" | "scoping" | "scenarios" | "blueprinting" | "cockpit">("ignition");
+  const [scopingSteps, setScopingSteps] = useState<string[]>([]);
+  const [visibleSteps, setVisibleSteps] = useState<string[]>([]);
+  const [scenarios, setScenarios] = useState<any[]>([]);
+  const [selectedScenario, setSelectedScenario] = useState<string>("");
 
-  const [viewMode, setViewMode] = useState<"maximalist" | "minimalist">("maximalist");
-  const [isTyping, setIsTyping] = useState(false);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-generate hook
-  useEffect(() => {
-    // Only fire if essential fields are selected to avoid unnecessary calls
-    if (form.title && form.category && form.audience && form.format) {
-      const timer = setTimeout(() => {
-         generateBlueprint({
-            what: `Categoria: ${form.category}`,
-            how: `Formato: ${form.format}. Público alvo: ${form.audience}`,
-            why: `Objetivos chave: ${form.goals.join(", ")}`,
-            quantitative: `Custo especulado: ${form.budgetLevel}`,
-            rawInput: `O título do projeto é: ${form.title}`
-         });
-      }, 1000); // 1 second debounce
-      return () => clearTimeout(timer);
+  const handleIgnitionClick = async () => {
+    if (!magicInput.trim()) return;
+    setActiveLevers({});
+    setPhase("scoping");
+    setVisibleSteps([]);
+    
+    // Simulate instant intelligence while waiting for network
+    const fakeSteps = [
+       "Decodificando a intenção base e variáveis ocultas...",
+       "Cruzando restrições de orçamento, tempo e sazonalidade...",
+       "Simulando atrito de conversão nos funis de aquisição...",
+       "Estruturando hipóteses táticas para os 3 cenários de guerra..."
+    ];
+    
+    let stepCount = 0;
+    const interval = setInterval(() => {
+       if (stepCount < fakeSteps.length) {
+          setVisibleSteps(prev => [...prev, fakeSteps[stepCount]]);
+          stepCount++;
+       }
+    }, 1200);
+
+    try {
+       const res = await generateBlueprintAsync({ magicInput, phase: "scoping" });
+       clearInterval(interval);
+       
+       if (res.scenarios) {
+          setScenarios(res.scenarios);
+          // Auto reveal all remaining fake steps immediately to close the loop
+          setVisibleSteps(fakeSteps);
+          setTimeout(() => setPhase("scenarios"), 600);
+       }
+    } catch(e) {
+       clearInterval(interval);
     }
-  }, [form.title, form.category, form.audience, form.format, form.goals, form.budgetLevel]);
-
-  const toggleGoal = (goal: string) => {
-    setForm(prev => {
-      if (prev.goals.includes(goal)) return { ...prev, goals: prev.goals.filter(g => g !== goal) };
-      if (prev.goals.length >= 3) return prev; // max 3 selections
-      return { ...prev, goals: [...prev.goals, goal] };
-    });
   };
 
-  const handleFinish = () => {
-    saveCampaign({
-      name: form.title || "Projeto Base",
-      type: "awareness",
-      duration: 30,
-      channels: blueprintData ? blueprintData.suggestedAssets : [],
-      objective: blueprintData ? blueprintData.coreValue : "",
-      status: "draft",
-    });
-    onClose();
+  const handleScenarioSelect = async (scenarioData: any) => {
+    setSelectedScenario(scenarioData.title);
+    setPhase("blueprinting");
+    try {
+       await generateBlueprintAsync({ magicInput, phase: "blueprinting", selectedScenario: scenarioData.title });
+       setPhase("cockpit");
+    } catch(e) {}
   };
+
+  const handleLeverChange = (id: string, value: any) => {
+    const newLevers = { ...activeLevers, [id]: value };
+    setActiveLevers(newLevers);
+    
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+       const formattedLevers = Object.entries(newLevers).map(([k, v]) => ({ id: k, value: v as string | number | boolean }));
+       generateBlueprintAsync({ magicInput, phase: "blueprinting", selectedScenario, activeLevers: formattedLevers });
+    }, 1200);
+  };
+
+  useEffect(() => {
+    if (!isOpen) { 
+      setMagicInput(""); setActiveLevers({}); setPhase("ignition"); setVisibleSteps([]); setScopingSteps([]); setScenarios([]); setSelectedScenario("");
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className={styles.overlay}
-        onClick={onClose}
+      <motion.div 
+         initial={{ opacity: 0 }} 
+         animate={{ opacity: 1 }} 
+         exit={{ opacity: 0 }} 
+         className={styles.overlay}
       >
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.95, opacity: 0, y: 20 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className={styles.modal}
-          onClick={(e) => e.stopPropagation()}
-        >
-          
-          {/* LADO A: Seletores (Zero Digitação) */}
-          <div className={styles.sideA}>
-             <div className={styles.headerA}>
-               <div className={styles.iconA}>
-                  <LayoutTemplate size={20} />
+         <motion.div 
+            initial={{ y: "100%" }} 
+            animate={{ y: 0 }} 
+            exit={{ y: "100%" }} 
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className={styles.containerV8}
+         >
+            <div className={styles.header}>
+               <div className={styles.headerLeft}>
+                  <h1 className={styles.title}>Motor de Campanhas V8</h1>
+                  <span className={styles.subtitle}>COCKPIT AUTÔNOMO DE GROWTH</span>
                </div>
-               <div>
-                 <h2 className={styles.titleA}>Menu de Ação</h2>
-                 <p className={styles.subtitleA}>Construção por seletores (Automático)</p>
-               </div>
-             </div>
+               <button className={styles.closeBtn} onClick={onClose}>✕</button>
+            </div>
 
-             <div className={styles.cadernetaArea}>
-                <div className={styles.cadernetaPaper}>
-                   
-                   <div className={styles.inputField}>
-                      <label>Nome do Projeto (Obrigatório)</label>
-                      <Input 
-                        placeholder="Ex: Lançamento Q3..."
-                        value={form.title}
-                        onChange={e => {
-                          setForm({...form, title: e.target.value});
-                          setIsTyping(true);
-                          setTimeout(() => setIsTyping(false), 800);
-                        }}
-                        className={styles.cleanInput}
-                      />
-                   </div>
-
-                   <div className={styles.divider} />
-
-                   <div className={styles.inputField}>
-                      <label>1. Foco Principal</label>
-                      <div className={styles.pillContainer}>
-                        {["Endomarketing", "Lançamento", "Institucional", "Sazonal"].map(pill => (
-                           <button 
-                             key={pill} 
-                             className={form.category === pill ? styles.pillActive : styles.pill}
-                             onClick={() => setForm({...form, category: pill})}
-                           >{pill}</button>
-                        ))}
-                      </div>
-                   </div>
-
-                   <div className={styles.inputField}>
-                      <label>2. Público / Alcance</label>
-                      <div className={styles.pillContainer}>
-                        {["Membros Internos", "Clientes Atuais", "Mercado Externo"].map(pill => (
-                           <button 
-                             key={pill} 
-                             className={form.audience === pill ? styles.pillActive : styles.pill}
-                             onClick={() => setForm({...form, audience: pill})}
-                           >{pill}</button>
-                        ))}
-                      </div>
-                   </div>
-
-                   <div className={styles.inputField}>
-                      <label>3. Formato Predominante</label>
-                      <div className={styles.pillContainer}>
-                        {["100% Digital", "Presencial", "Híbrido"].map(pill => (
-                           <button 
-                             key={pill} 
-                             className={form.format === pill ? styles.pillActive : styles.pill}
-                             onClick={() => setForm({...form, format: pill})}
-                           >{pill}</button>
-                        ))}
-                      </div>
-                   </div>
-
-                   <div className={styles.divider} />
-
-                   <div className={styles.inputField}>
-                      <label>4. Sentimentos a Gerar (Multi-Seleção máx 3)</label>
-                      <div className={styles.pillContainer} style={{ flexWrap: 'wrap' }}>
-                        {["Pertencimento", "Urgência", "Autoridade", "Acolhimento", "Exclusividade", "Confiança"].map(pill => (
-                           <button 
-                             key={pill} 
-                             className={form.goals.includes(pill) ? styles.pillActiveCheck : styles.pill}
-                             onClick={() => toggleGoal(pill)}
-                           >{pill}</button>
-                        ))}
-                      </div>
-                   </div>
-
-                   <div className={styles.inputField} style={{ marginTop: '0.5rem' }}>
-                      <label>5. Escala Especulada</label>
-                      <div className={styles.pillContainer}>
-                        {["Esforço Orgânico", "Baixo Custo", "Alto Impacto Financeiro"].map(pill => (
-                           <button 
-                             key={pill} 
-                             className={form.budgetLevel === pill ? styles.pillActive : styles.pill}
-                             onClick={() => setForm({...form, budgetLevel: pill})}
-                           >{pill}</button>
-                        ))}
-                      </div>
-                   </div>
-
-                </div>
-             </div>
-
-             <div className={styles.footerA}>
-                <div className={styles.autoSaveStatus}>
-                   {isTyping ? "Digitando..." : (isGenerating ? <><Activity size={12} className={styles.spinIcon}/> Processando LLM...</> : "Mecanismo em Escuta (Autosave)")}
-                </div>
-             </div>
-          </div>
-
-          {/* LADO B: Funil Arquitetônico */}
-          <div className={styles.sideB}>
-             <div className={styles.headerB}>
-               <div>
-                  <h2 className={styles.titleB}>{form.title || "Blueprint Arquitetônico"}</h2>
-                  <p className={styles.subtitleB}>Tradução estratégica em tempo real</p>
-               </div>
-               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                 <Button variant="ghost" onClick={onClose}><X size={20} /></Button>
-                 {blueprintData && (
-                   <Button variant="default" onClick={handleFinish} style={{ display: 'flex', gap: '0.5rem' }}>
-                     <ArrowRight size={16} /> Homologar Projeto
-                   </Button>
-                 )}
-               </div>
-             </div>
-
-             <div className={styles.blueprintArea}>
-                {!blueprintData && !isGenerating && !isError && (
-                   <div className={styles.emptyState}>
-                      <Activity size={48} color="rgba(255,255,255,0.1)" />
-                      <p>Sua matriz estratégica reagirá aqui. Selecione o PÚBLICO, o FORMATO e o FOCO no painel esquerdo para iniciar.</p>
-                   </div>
-                )}
-
-                {isGenerating && !blueprintData && (
-                   <div className={styles.loadingState}>
-                      <div className={styles.pulseNode} />
-                      <p>Renderizando planta baixa estrutural...</p>
-                   </div>
-                )}
-
-                {isError && (
-                   <div className={styles.errorState}>
-                      <p>Erro no construtor IA: {(error as any)?.message}</p>
-                   </div>
-                )}
-
-                {blueprintData && (
-                   <div className={styles.blueprintContainer} style={{ opacity: isGenerating ? 0.5 : 1, transition: 'opacity 0.5s' }}>
-                      
-                      {/* Dashboard Header */}
-                      <div className={styles.bpDashboard}>
-                         <div className={styles.bpCard}>
-                            <span className={styles.bpLabel}>Natureza Operacional</span>
-                            <span className={styles.bpValue}>{blueprintData.category}</span>
-                         </div>
-                         <div className={styles.bpCard}>
-                            <span className={styles.bpLabel}>Impacto Imaterial</span>
-                            <span className={styles.bpValue}>{blueprintData.coreValue}</span>
-                         </div>
-                         <div className={styles.bpCard}>
-                            <span className={styles.bpLabel}>Orçamento Sugerido</span>
-                            <span className={styles.bpValue}>{blueprintData.budgetSpeculation}</span>
-                         </div>
-                      </div>
-
-                      {/* View Mode Toggle */}
-                      <div className={styles.toggleContainer}>
-                         <button 
-                            className={viewMode === "maximalist" ? styles.toggleBtnActive : styles.toggleBtn}
-                            onClick={() => setViewMode("maximalist")}
-                         >
-                            Potencial Pleno 
-                         </button>
-                         <button 
-                            className={viewMode === "minimalist" ? styles.toggleBtnActive : styles.toggleBtn}
-                            onClick={() => setViewMode("minimalist")}
-                         >
-                            Visão Enxuta
-                         </button>
-                      </div>
-
-                      <div className={styles.dividerB} />
-
-                      {/* The 2D Architectural Funnel */}
-                      <h3 className={styles.sectionTitle}>Planta Mestra de {viewMode === "maximalist" ? "10 Fases" : "4 Fases"}</h3>
-                      <div className={styles.funnelArchitectural}>
-                         <div className={styles.archLine} />
-                         {blueprintData.funnelSteps.map((step, idx) => {
-                            if (viewMode === "minimalist" && !["atrair", "explicar", "converter", "reter"].includes(step.id)) {
-                               return null;
-                            }
-                            return (
-                               <div key={idx} className={styles.archRow}>
-                                  <div className={styles.archStatus}>
-                                     <div className={styles.archDot} />
-                                  </div>
-                                  <div className={styles.archBox}>
-                                     <div className={styles.archBoxHeader}>
-                                        <span className={styles.archBoxTag}>_{step.action.toUpperCase()}</span>
-                                        <span className={styles.archBoxId}>node_0{idx + 1}</span>
+            <div className={styles.contentAndSides}>
+               {/* LADO A: THE COCKPIT */}
+               <div className={styles.sideA}>
+                 <div className={styles.magicContainerV8}>
+                    <div className={styles.magicHeader}><Sparkles size={16}/> NÚCLEO COGNITIVO V8</div>
+                    <Input 
+                       placeholder="Qual a missão tática? Ex: Dia das Mães..." 
+                       value={magicInput} 
+                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMagicInput(e.target.value)}
+                       onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter' && phase === 'ignition') handleIgnitionClick(); }}
+                       disabled={phase !== 'ignition' && phase !== 'cockpit'}
+                    />
+                    {phase === 'ignition' && (
+                       <Button onClick={handleIgnitionClick} disabled={!magicInput.trim()}>
+                          INICIAR MAPEAMENTO LOGICO
+                       </Button>
+                    )}
+                 </div>
+                    
+                    {phase === 'cockpit' && blueprintData?.dynamicLevers && (
+                       <div className={styles.leversArea}>
+                          <h3 className={styles.sectionTitle}>Controles Táticos (Calibrados via IA)</h3>
+                          {blueprintData.dynamicLevers.map(lever => {
+                              const val = activeLevers[lever.id] !== undefined ? activeLevers[lever.id] : lever.currentValue;
+                              
+                              if (lever.type === 'slider') {
+                                  return (
+                                     <div key={lever.id} className={styles.leverBlock}>
+                                        <div className={styles.leverHeader}>
+                                            <span className={styles.leverTitle}>{lever.label}</span>
+                                            <span className={styles.leverValue}>{val}</span>
+                                        </div>
+                                        <p className={styles.leverDesc}>{lever.description}</p>
+                                        <input 
+                                           type="range" 
+                                           className={styles.customSlider} 
+                                           min={lever.min||0} 
+                                           max={lever.max||100} 
+                                           step={lever.step||1} 
+                                           value={val as number} 
+                                           onChange={e => handleLeverChange(lever.id, Number(e.target.value))} 
+                                        />
                                      </div>
-                                     <p className={styles.archBoxText}>{step.strategy}</p>
-                                  </div>
-                               </div>
-                            )
-                         })}
-                      </div>
+                                  );
+                              }
+                              if (lever.type === 'toggle') {
+                                  return (
+                                     <div key={lever.id} className={styles.leverBlockSwitch}>
+                                        <div style={{flex: 1}}>
+                                            <span className={styles.leverTitle}>{lever.label}</span>
+                                            <p className={styles.leverDesc}>{lever.description}</p>
+                                        </div>
+                                        <div className={`${styles.dynamicSwitch} ${val ? styles.switchOn : ''}`} onClick={() => handleLeverChange(lever.id, !val)}>
+                                            <div className={styles.switchHandle} />
+                                        </div>
+                                     </div>
+                                  );
+                              }
+                              return null;
+                          })}
+                          
+                          <div className={styles.cadernetaV1}>
+                             <h4>📙 Caderneta de Decisões</h4>
+                             <ul>
+                                <li><strong>Missão:</strong> {magicInput}</li>
+                                <li><strong>Cenário:</strong> {selectedScenario}</li>
+                             </ul>
+                          </div>
+                       </div>
+                    )}
+                    {isError && <div style={{color:'red', marginTop:'1rem', fontSize:'0.8rem'}}>{(error as Error)?.message || "Erro."}</div>}
+                  </div>
 
-                      <div className={styles.dividerB} />
+                  {/* LADO B: THE CAUSAL CHAIN E SCOPING */}
+                  <div className={styles.sideB}>
+                     <div className={styles.headerB}>
+                        <h2 className={styles.titleB}>O Funil Estratégico</h2>
+                        <p className={styles.subtitleB}>Mapeamento Ativo e Execução</p>
+                     </div>
+                     
+                     {phase === 'ignition' && (
+                        <div className={styles.emptyState}>
+                           <Activity size={48} style={{ opacity: 0.5, marginBottom: '1rem' }} />
+                           <p>O Motor V8 está aguardando sua instrução no painel esquerdo.</p>
+                           <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>Digite seu objetivo para mapearmos os cenários possíveis.</p>
+                        </div>
+                     )}
 
-                      {/* Expanded Needs */}
-                      <h3 className={styles.sectionTitle}>Checklist Operacional Resultante</h3>
-                      <div className={styles.assetsGrid}>
-                         {blueprintData.suggestedAssets.map((asset, i) => (
-                           <div key={i} className={styles.assetCard}>
-                              <PackageOpen size={16} />
-                              <span>{asset}</span>
+                     {(phase === 'scoping' || phase === 'scenarios' || phase === 'blueprinting') && (
+                        <div className={styles.scopingArea}>
+                           <h3 className={styles.scopingTitle}>Desconstruindo a Intenção (Scoping)</h3>
+                           
+                           <div className={styles.stepsList}>
+                              {visibleSteps.map((step, i) => (
+                                 <motion.div 
+                                    key={i} 
+                                    className={styles.scopingStepItem}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                 >
+                                    <Sparkles size={14} className={styles.stepIcon} />
+                                    <span>{step}</span>
+                                 </motion.div>
+                              ))}
+                              {phase === 'scoping' && (
+                                <div className={styles.thinkingPill}><Activity size={14} className={styles.spinIcon} /> Mapeando correlações ocultas...</div>
+                              )}
                            </div>
-                         ))}
-                      </div>
+                           
+                           {phase === 'scenarios' && (
+                              <motion.div className={styles.scenariosGrid} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+                                 <h4 className={styles.scenariosHeadline}>Com base no contexto, encontramos 3 caminhos viáveis:</h4>
+                                 <p className={styles.scenariosSub}>Acione o cenário desejado para construir o Cockpit final.</p>
+                                 <div className={styles.scenariosWrapper}>
+                                    {scenarios.map((cen: any, i) => (
+                                       <div key={i} className={styles.scenarioCard} onClick={() => handleScenarioSelect(cen)}>
+                                          <div className={styles.cenHeader}>
+                                             <span className={styles.cenBadge}>{cen.investmentMode}</span>
+                                          </div>
+                                          <h5 className={styles.cenTitle}>{cen.title}</h5>
+                                          <p className={styles.cenDesc}>{cen.description}</p>
+                                          <button className={styles.cenBtn}>Calibrar Painel V8</button>
+                                       </div>
+                                    ))}
+                                 </div>
+                              </motion.div>
+                           )}
 
-                   </div>
-                )}
-             </div>
-          </div>
-          
-        </motion.div>
+                           {phase === 'blueprinting' && (
+                              <div className={styles.blueprintingLoading}>
+                                 <Activity size={32} className={styles.spinIcon} />
+                                 <p>Construindo Geometria Dribbble e Alavancas para o cenário: <strong>{selectedScenario}</strong></p>
+                              </div>
+                           )}
+                        </div>
+                     )}
+
+                     {phase === 'cockpit' && blueprintData?.dribbbleFunnel && (
+                        <div className={styles.blueprintArea}>
+                           {/* Info Header */}
+                           <div className={styles.blueprintDetails}>
+                              <div className={styles.detailPill}><strong>Cat:</strong> {blueprintData.category}</div>
+                              <div className={styles.detailPill}><strong>Valor Raiz:</strong> {blueprintData.coreValue}</div>
+                              <div className={styles.detailPill}><strong>Grau de Custos:</strong> {blueprintData.budgetSpeculation}</div>
+                           </div>
+
+                           <div className={styles.dribbbleFunnelContainer}>
+                           {blueprintData.dribbbleFunnel.map((step: any, idx: number) => {
+                              const wA = idx === 0 ? 300 : idx === 1 ? 230 : 160;
+                              const wB = idx === 0 ? 230 : idx === 1 ? 160 : 90;
+                              const color = idx === 0 ? '#6AC4D1' : idx === 1 ? '#34B0E0' : '#024D7F';
+                              
+                              return (
+                                 <div key={step.id} className={styles.dribbbleRow}>
+                                     {/* LEFT: Metrics */}
+                                     <div className={styles.dribbbleLeft}>
+                                         <h3 className={styles.dribbblePercent}>{step.metricsPercent}</h3>
+                                         <div className={styles.dribbbleProgBg}>
+                                            <div className={styles.dribbbleProgFill} style={{ width: step.metricsPercent, background: color }} />
+                                         </div>
+                                         <span className={styles.dribbbleProgLabel}>{step.metricsLabel}</span>
+                                     </div>
+
+                                     {/* CENTER: 3D Funnel SVG Map */}
+                                     <div className={styles.dribbbleCenter}>
+                                        <svg width={wA} height={120} viewBox={`0 0 ${wA} 120`} className={styles.svgClean}>
+                                            {/* Fake 3D Rim only on ToFu */}
+                                            {idx === 0 && <ellipse cx={wA/2} cy={20} rx={wA/2} ry={15} fill="#4fa8b5" />}
+                                            <path 
+                                              d={`M 0 20 Q ${wA/2} 40 ${wA} 20 L ${wA - (wA-wB)/2} 120 Q ${wA/2} 140 ${(wA-wB)/2} 120 Z`} 
+                                              fill={color} 
+                                            />
+                                            <text x="50%" y="70%" textAnchor="middle" fill="#ffffff" fontWeight="bold" fontSize="1.25rem" dominantBaseline="middle" style={{ letterSpacing: '2px' }}>
+                                               {step.id.toUpperCase()}
+                                            </text>
+                                        </svg>
+                                     </div>
+
+                                     {/* RIGHT: Tactic & Pedagogical Nuance */}
+                                     <div className={styles.dribbbleRight}>
+                                        <div className={styles.dribbbleStageEyebrow}>
+                                            <Sparkles size={12} />
+                                            {step.stage}
+                                        </div>
+                                        <h4 className={styles.dribbbleTactic}>{step.tactic}</h4>
+                                        <div className={styles.dribbbleNuance}>
+                                            <span>Por que usar essa tática?</span>
+                                            <p>{step.nuance}</p>
+                                        </div>
+                                     </div>
+                                 </div>
+                              )
+                           })}
+                        </div>
+                     </div>
+                     )}
+                  </div>
+               </div>
+         </motion.div>
       </motion.div>
     </AnimatePresence>
   );

@@ -107,3 +107,41 @@
 .assetsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
 .assetCard { display: flex; items-center: center; gap: 0.75rem; padding: 1rem; background-color: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); transition: all 0.2s; }
 .assetCard:hover { border-color: var(--primary); color: var(--primary); background-color: rgba(16, 185, 129, 0.05); }
+.scopingArea { display: flex; flex-direction: column; gap: 1.5rem; padding: 1rem 0; }
+.scopingTitle { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #34d399; }
+.stepsList { display: flex; flex-direction: column; gap: 0.8rem; }
+.scopingStepItem { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; color: #a1a1aa; font-size: 0.85rem; }
+.stepIcon { color: #10b981; }
+.thinkingPill { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: #a1a1aa; margin-top: 0.5rem; padding-left: 1rem; font-style: italic; }
+.spinIcon { animation: spin 2s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.scenariosGrid { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+.scenariosHeadline { font-size: 1.1rem; font-weight: bold; color: white; }
+.scenariosSub { font-size: 0.8rem; color: #a1a1aa; }
+.scenariosWrapper { display: flex; gap: 1rem; }
+.scenarioCard { background: #18181b; border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; flex: 1; cursor: pointer; transition: all 0.3s ease; }
+.scenarioCard:hover { border-color: #34d399; box-shadow: 0 0 20px rgba(16,185,129,0.1); transform: translateY(-2px); }
+.cenHeader { display: flex; margin-bottom: 1rem; }
+.cenBadge { background: rgba(16,185,129,0.1); color: #34d399; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; }
+.cenTitle { font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem; color: white; }
+.cenDesc { font-size: 0.75rem; color: #a1a1aa; margin-bottom: 1.5rem; line-height: 1.5; }
+.cenBtn { width: 100%; padding: 0.5rem; background: #27272a; border: none; color: white; border-radius: 6px; font-size: 0.75rem; transition: background 0.3s; }
+.scenarioCard:hover .cenBtn { background: #10b981; }
+.blueprintingLoading { display: flex; align-items: center; gap: 1rem; padding: 2rem; background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; color: #34d399; }
+.leversArea { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+.sectionTitle { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #34d399; margin-bottom: 1rem; }
+.leverBlock { background: #09090b; border: 1px solid #27272a; border-radius: 8px; padding: 1.25rem; }
+.leverHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.leverTitle { font-size: 0.9rem; font-weight: 600; color: white; }
+.leverValue { background: #18181b; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-family: monospace; color: #a1a1aa; }
+.leverDesc { font-size: 0.75rem; color: #71717a; margin-bottom: 1rem; line-height: 1.4; }
+.customSlider { width: 100%; accent-color: #10b981; }
+.cadernetaV1 { margin-top: 1.5rem; background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 8px; border-left: 2px solid #52525b; }
+.cadernetaV1 h4 { font-size: 0.8rem; color: #a1a1aa; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+.cadernetaV1 ul { list-style: none; padding: 0; margin: 0; color: white; font-size: 0.85rem; }
+.cadernetaV1 li { margin-bottom: 0.25rem; }
+.leverBlockSwitch { display: flex; justify-content: space-between; align-items: center; background: #09090b; border: 1px solid #27272a; border-radius: 8px; padding: 1.25rem; }
+.dynamicSwitch { width: 44px; height: 24px; background: #27272a; border-radius: 24px; position: relative; cursor: pointer; transition: background 0.3s; }
+.switchOn { background: #10b981; }
+.switchHandle { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.3s; }
+.switchOn .switchHandle { transform: translateX(20px); }

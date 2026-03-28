@@ -67,6 +67,6 @@ export function useDeleteCampaign() {
 
 export function useGenerateBlueprint() {
   return useMutation({
-    mutationFn: (data: GenerateBlueprintInput) => postGenerateBlueprint(data),
+    mutationFn: (data: { magicInput: string; phase?: string; selectedScenario?: string; activeLevers?: any[] }) => postGenerateBlueprint(data as any),
   });
 }
