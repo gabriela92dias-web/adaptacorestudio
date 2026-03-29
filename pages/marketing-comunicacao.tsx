@@ -463,7 +463,7 @@ export default function MarketingComunicacao() {
   const shelfGroups = CATEGORIES.filter((c) => c.value !== "todos").map((cat) => ({
     ...cat,
     docs: filteredDocs.filter((d) => d.category === cat.value),
-  })).filter((g) => g.docs.length > 0 || activeCategory === cat.value);
+  })).filter((g) => g.docs.length > 0 || activeCategory === g.value);
 
   const visibleGroups = activeCategory === "todos"
     ? shelfGroups.filter((g) => g.docs.length > 0)
