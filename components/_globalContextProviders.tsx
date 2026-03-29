@@ -7,7 +7,7 @@ import { TooltipProvider } from "./Tooltip";
 import { SonnerToaster } from "./SonnerToaster";
 import { ScrollToHashElement } from "./ScrollToHashElement";
 import { LanguageProvider as AdvancedLanguageProvider } from "../contexts/language-context";
-
+import { BrandProvider } from "../contexts/brand-context";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -27,11 +27,13 @@ export const GlobalContextProviders = ({
         <ThemeModeProvider>
           <GoogleTranslateProvider>
             <AdvancedLanguageProvider>
-              <ScrollToHashElement />
-              <TooltipProvider>
-                {children}
-                <SonnerToaster />
-              </TooltipProvider>
+              <BrandProvider>
+                <ScrollToHashElement />
+                <TooltipProvider>
+                  {children}
+                  <SonnerToaster />
+                </TooltipProvider>
+              </BrandProvider>
             </AdvancedLanguageProvider>
           </GoogleTranslateProvider>
         </ThemeModeProvider>
