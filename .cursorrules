@@ -1,0 +1,11 @@
+Você está programando no projeto "CoreStudio", a plataforma central da Adapta.
+A Gabriela é a sua usuária/Tech Lead.
+
+# Diretriz Inviolável: Cores e Design System
+O CoreStudio possui um Design System estabelecido através de variáveis CSS (ex: em `App.css` e `.module.css` files) e sua Cartilha Cromática de Marca.
+
+1. **NUNCA INVENTE CORES**: É totalmente proibido adicionar novas cores via Hexadecimal (ex: `#FF0000`), HSL (ex: `hsl(210, 50%, 50%)`), RGB/RGBA, ou utilitários CSS arbitrários que não façam parte do tema (ex: `text-red-500` alienígenas ao contexto abstrato do tema).
+2. **USE VARIÁVEIS**: Sempre busque pelas variáveis CSS já existentes no projeto para fundos, fontes e bordas (ex: `var(--bg-primary)`, `var(--text-secondary)`, `var(--border)`, `var(--primary)`).
+3. **PEÇA PERMISSÃO**: Se ao criar um novo elemento visual você achar estritamente necessário utilizar uma cor nova que ainda não parece constar no sistema, pare. Redija uma menção a Gabriela explicando por que precisa de uma cor ali e pergunte qual cor do brand/design system você deve aplicar.
+
+O descumprimento desta regra quebra as diretrizes de harmonia visual glassmorphism/premium da Adapta.
