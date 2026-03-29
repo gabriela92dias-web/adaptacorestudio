@@ -141,11 +141,9 @@ export const AppSidebar = () => {
       label: "Marketing",
       icon: Megaphone,
       subItems: [
-        { label: "Visão Geral", path: "/campanhas" },
-        { label: "Campanhas Ativas", path: "/campanhas?filter=active" },
-        { label: "Campanhas Futuras", path: "/campanhas?filter=future" },
-        { label: "Histórico", path: "/campanhas?filter=past" },
-        { label: "Marketing & Comunicação", path: "/marketing-comunicacao" },
+        { label: "Campanhas", path: "/campanhas" },
+        { label: "Relatórios", disabled: true, badge: { text: "Em breve", variant: "outline" } },
+        { label: "Biblioteca Oficial", path: "/marketing-comunicacao" },
       ],
     },
     {

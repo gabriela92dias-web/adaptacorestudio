@@ -49,7 +49,7 @@ export default function MarketingComunicacao() {
   return (
     <div ref={ref} className={`${styles.pageContainer} ${adaptiveClass} ${styles[`level${level}`]}`}>
       <Helmet>
-        <title>Marketing & Comunicação | Adapta Studio</title>
+        <title>Biblioteca Oficial | Adapta Studio</title>
       </Helmet>
 
       <div className={styles.header}>
@@ -58,7 +58,7 @@ export default function MarketingComunicacao() {
             <Megaphone size={32} />
           </div>
           <div>
-            <h1 className={styles.title}>Marketing & Comunicação</h1>
+            <h1 className={styles.title}>Biblioteca Oficial</h1>
             <p className={styles.subtitle}>
               Gere posts para redes sociais, e-mail marketing, anúncios e apresentações.
             </p>
