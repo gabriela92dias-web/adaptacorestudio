@@ -28,6 +28,8 @@ const Page_2 = React.lazy(() => import("./pages/coreact.tsx"));
 import PageLayout_2 from "./pages/coreact.pageLayout.tsx";
 const Page_3 = React.lazy(() => import("./pages/campanhas.tsx"));
 import PageLayout_3 from "./pages/campanhas.pageLayout.tsx";
+const Page_19 = React.lazy(() => import("./pages/relatorios.tsx"));
+import PageLayout_19 from "./pages/relatorios.pageLayout.tsx";
 const Page_4 = React.lazy(() => import("./pages/coreact.time.tsx"));
 import PageLayout_4 from "./pages/coreact.time.pageLayout.tsx";
 const Page_5 = React.lazy(() => import("./pages/configuracoes.tsx"));
@@ -73,7 +75,7 @@ if (!window.requestIdleCallback) {
 
 import "./base.css";
 
-const fileNameToRoute = new Map([["./pages/login.tsx","/login"],["./pages/_index.tsx","/"],["./pages/coreact.tsx","/coreact"],["./pages/campanhas.tsx","/campanhas"],["./pages/coreact.time.tsx","/coreact/time"],["./pages/configuracoes.tsx","/configuracoes"],["./pages/coreact.setores.tsx","/coreact/setores"],["./pages/coreact.orcamento.tsx","/coreact/orcamento"],["./pages/identidade-visual.tsx","/identidade-visual"],["./pages/coreact.cronograma.tsx","/coreact/cronograma"],["./pages/coreact.projetos.tsx","/coreact/projetos"],["./pages/coreact.etapas.tsx","/coreact/etapas"],["./pages/coreact.tarefas.tsx","/coreact/tarefas"],["./pages/coreact.acoes.tsx","/coreact/acoes"],["./pages/coreact.iniciativas.tsx","/coreact/iniciativas"],["./pages/marketing-comunicacao.tsx","/marketing-comunicacao"],["./pages/documentos-corporativos.tsx","/documentos-corporativos"],["./pages/tools.tsx","/tools"]]);
+const fileNameToRoute = new Map([["./pages/login.tsx","/login"],["./pages/_index.tsx","/"],["./pages/coreact.tsx","/coreact"],["./pages/campanhas.tsx","/campanhas"],["./pages/coreact.time.tsx","/coreact/time"],["./pages/configuracoes.tsx","/configuracoes"],["./pages/coreact.setores.tsx","/coreact/setores"],["./pages/coreact.orcamento.tsx","/coreact/orcamento"],["./pages/identidade-visual.tsx","/identidade-visual"],["./pages/coreact.cronograma.tsx","/coreact/cronograma"],["./pages/coreact.projetos.tsx","/coreact/projetos"],["./pages/coreact.etapas.tsx","/coreact/etapas"],["./pages/coreact.tarefas.tsx","/coreact/tarefas"],["./pages/coreact.acoes.tsx","/coreact/acoes"],["./pages/coreact.iniciativas.tsx","/coreact/iniciativas"],["./pages/marketing-comunicacao.tsx","/marketing-comunicacao"],["./pages/documentos-corporativos.tsx","/documentos-corporativos"],["./pages/tools.tsx","/tools"],["./pages/relatorios.tsx","/relatorios"]]);
 const fileNameToComponent = new Map([
     ["./pages/login.tsx", Page_0],
 ["./pages/_index.tsx", Page_1],
@@ -89,6 +91,7 @@ const fileNameToComponent = new Map([
 ["./pages/marketing-comunicacao.tsx", Page_11],
 ["./pages/documentos-corporativos.tsx", Page_12],
 ["./pages/tools.tsx", Page_14],
+["./pages/relatorios.tsx", Page_19],
 ["./pages/coreact.projetos.tsx", Page_15],
 ["./pages/coreact.etapas.tsx", Page_16],
 ["./pages/coreact.tarefas.tsx", Page_17],
@@ -242,6 +245,7 @@ export function App() {
 "./pages/marketing-comunicacao.tsx": PageLayout_11,
 "./pages/documentos-corporativos.tsx": PageLayout_12,
 "./pages/tools.tsx": PageLayout_14,
+"./pages/relatorios.tsx": PageLayout_19,
 "./pages/coreact.projetos.tsx": PageLayout_15,
 "./pages/coreact.etapas.tsx": PageLayout_16,
 "./pages/coreact.tarefas.tsx": PageLayout_17,

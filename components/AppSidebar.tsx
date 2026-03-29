@@ -142,7 +142,7 @@ export const AppSidebar = () => {
       icon: Megaphone,
       subItems: [
         { label: "Campanhas", path: "/campanhas" },
-        { label: "Relatórios", disabled: true, badge: { text: "Em breve", variant: "outline" } },
+        { label: "Relatórios", path: "/relatorios" },
         { label: "Biblioteca Oficial", path: "/marketing-comunicacao" },
       ],
     },
