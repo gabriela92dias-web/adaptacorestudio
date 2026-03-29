@@ -1,0 +1,299 @@
+@layer base {
+  .detailSheet {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sheetHeader {
+    padding-bottom: var(--spacing-4);
+  }
+
+  .calendarLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    font-size: var(--font-size-xs);
+    color: var(--muted-foreground);
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin-top: var(--spacing-2);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .calendarLink:hover {
+    text-decoration: underline;
+    color: var(--foreground);
+  }
+
+  .tabsContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    padding: 0 var(--spacing-6);
+  }
+
+  .tabContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-4) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+
+  .detailRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .detailLabel {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    color: var(--muted-foreground);
+  }
+
+  .detailValue {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    color: var(--foreground);
+  }
+
+  .priority-critical {
+    border-color: var(--priority-critical);
+    color: var(--priority-critical);
+    background-color: color-mix(in srgb, var(--priority-critical) 10%, transparent);
+  }
+
+  .priority-high {
+    border-color: var(--priority-high);
+    color: var(--priority-high);
+    background-color: color-mix(in srgb, var(--priority-high) 10%, transparent);
+  }
+
+  .priority-medium {
+    border-color: var(--priority-medium);
+    color: var(--priority-medium);
+    background-color: color-mix(in srgb, var(--priority-medium) 10%, transparent);
+  }
+
+  .priority-low {
+    border-color: var(--priority-low);
+    color: var(--priority-low);
+    background-color: color-mix(in srgb, var(--priority-low) 10%, transparent);
+  }
+
+  .fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .sheetFooter {
+    padding: var(--spacing-6);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  /* Participants */
+  .participantsSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    margin-top: var(--spacing-2);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--border);
+  }
+
+  .sectionTitle {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    margin: 0;
+    color: var(--foreground);
+  }
+
+  .participantsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .participantItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2);
+    background-color: var(--surface);
+    border-radius: var(--radius);
+  }
+
+  .participantInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .participantName {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+  }
+
+  .roleBadge {
+    align-self: flex-start;
+    font-size: var(--font-size-2xs);
+    padding: 0 var(--spacing-1);
+    height: auto;
+    min-height: 1.25rem;
+  }
+
+  .addParticipant {
+    display: flex;
+    gap: var(--spacing-2);
+    align-items: center;
+  }
+
+  /* Actions Tab */
+  .actionsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .actionItem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background-color: var(--surface);
+  }
+
+  .actionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .actionTitleGroup {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  .actionTitle {
+    font-weight: 500;
+    font-size: var(--font-size-base);
+  }
+
+  .actionMeta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-xs);
+    color: var(--muted-foreground);
+  }
+
+  .actionControls {
+    display: flex;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-2);
+    justify-content: flex-end;
+  }
+
+  .newActionForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .formRow {
+    display: flex;
+    gap: var(--spacing-3);
+  }
+
+  .formRow > * {
+    flex: 1;
+  }
+
+  .datePickerBtn {
+    width: 100%;
+    justify-content: flex-start;
+    font-weight: 400;
+  }
+
+  /* History Tab */
+  .historyTimeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    position: relative;
+    padding-left: var(--spacing-4);
+  }
+
+  .historyTimeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--border);
+  }
+
+  .historyItem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .historyDot {
+    position: absolute;
+    left: calc(-1 * var(--spacing-4) - 4px);
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    border: 2px solid var(--card);
+  }
+
+  .historyContent {
+    background-color: var(--surface);
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+
+  .historyAction {
+    margin: 0;
+    font-size: var(--font-size-base);
+    color: var(--foreground);
+  }
+
+  .historyDate {
+    font-size: var(--font-size-xs);
+    color: var(--muted-foreground);
+  }
+
+  .emptyText {
+    font-size: var(--font-size-base);
+    color: var(--muted-foreground);
+    text-align: center;
+    padding: var(--spacing-4);
+  }
+}

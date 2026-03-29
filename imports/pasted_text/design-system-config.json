@@ -1,0 +1,831 @@
+{
+  "name": "Adapta Design System",
+  "version": "2026.1.0",
+  "governance": {
+    "established": "2026-03-11T03:45:00Z",
+    "lastUpdated": "2026-03-11T04:00:00Z",
+    "enforcementLevel": "ABSOLUTE",
+    "scope": "ALL_APPLICATIONS_CURRENT_NEW_AND_LEGACY",
+    "updateLog": [
+      {
+        "timestamp": "2026-03-11T04:00:00Z",
+        "change": "Implementação Obrigatória de Cores de Estado Padronizadas",
+        "authority": "Design System Governance Board",
+        "status": "ACTIVE",
+        "retroactiveApplication": true,
+        "applicableTo": "ALL_LEGACY_CURRENT_FUTURE"
+      }
+    ]
+  },
+  "stateColors": {
+    "STATUS_ERROR": {
+      "name": "Estado de Erro",
+      "wcag": "AAA",
+      "primary": {
+        "hex": "#E84545",
+        "rgb": [232, 69, 69],
+        "hsl": [0, 73, 59],
+        "cssVar": "--status-error-primary",
+        "contrast": {"ratio": 4.78, "level": "AAA"}
+      },
+      "light": {
+        "hex": "#FDE2DD",
+        "rgb": [253, 226, 221],
+        "hsl": [9, 89, 93],
+        "cssVar": "--status-error-light",
+        "contrast": {"ratio": 1.23, "level": "AAA"}
+      },
+      "dark": {
+        "hex": "#8B2C2C",
+        "rgb": [139, 44, 44],
+        "hsl": [0, 51, 36],
+        "cssVar": "--status-error-dark",
+        "contrast": {"ratio": 8.45, "level": "AAA"}
+      },
+      "border": {
+        "hex": "#D94C4C",
+        "rgb": [217, 76, 76],
+        "hsl": [0, 68, 57],
+        "cssVar": "--status-error-border"
+      },
+      "usage": [
+        "Mensagens de erro",
+        "Validações inválidas",
+        "Estados críticos",
+        "Alerts destrutivos",
+        "Ícones de erro",
+        "Borders de erro"
+      ],
+      "fallback": "Usar ALEGRIA spectrum se paleta erro indisponível",
+      "neverUseBecause": "Cores não devem ser derivadas ou supostas"
+    },
+    "STATUS_SUCCESS": {
+      "name": "Estado de Sucesso",
+      "wcag": "AAA",
+      "primary": {
+        "hex": "#2D7A4F",
+        "rgb": [45, 122, 79],
+        "hsl": [147, 46, 33],
+        "cssVar": "--status-success-primary",
+        "contrast": {"ratio": 6.89, "level": "AAA"}
+      },
+      "light": {
+        "hex": "#E8F5E9",
+        "rgb": [232, 245, 233],
+        "hsl": [130, 35, 95],
+        "cssVar": "--status-success-light",
+        "contrast": {"ratio": 1.08, "level": "AAA"}
+      },
+      "dark": {
+        "hex": "#1B4D31",
+        "rgb": [27, 77, 49],
+        "hsl": [146, 48, 20],
+        "cssVar": "--status-success-dark",
+        "contrast": {"ratio": 9.12, "level": "AAA"}
+      },
+      "border": {
+        "hex": "#4A9D6F",
+        "rgb": [74, 157, 111],
+        "hsl": [147, 37, 45],
+        "cssVar": "--status-success-border"
+      },
+      "usage": [
+        "Mensagens de sucesso",
+        "Validações aprovadas",
+        "Estados completados",
+        "Confirmações positivas",
+        "Checkmarks",
+        "Notificações confirmadas"
+      ],
+      "fallback": "Usar LUZ spectrum se paleta sucesso indisponível",
+      "neverUseBecause": "Cores não devem ser derivadas ou supostas"
+    },
+    "STATUS_WARNING": {
+      "name": "Estado de Aviso",
+      "wcag": "AAA",
+      "primary": {
+        "hex": "#D97706",
+        "rgb": [217, 119, 6],
+        "hsl": [38, 95, 44],
+        "cssVar": "--status-warning-primary",
+        "contrast": {"ratio": 4.54, "level": "AAA"}
+      },
+      "light": {
+        "hex": "#FEF3C7",
+        "rgb": [254, 243, 199],
+        "hsl": [45, 97, 89],
+        "cssVar": "--status-warning-light",
+        "contrast": {"ratio": 1.14, "level": "AAA"}
+      },
+      "dark": {
+        "hex": "#92400E",
+        "rgb": [146, 64, 14],
+        "hsl": [29, 82, 31],
+        "cssVar": "--status-warning-dark",
+        "contrast": {"ratio": 7.89, "level": "AAA"}
+      },
+      "border": {
+        "hex": "#F59E0B",
+        "rgb": [245, 158, 11],
+        "hsl": [38, 92, 50],
+        "cssVar": "--status-warning-border"
+      },
+      "usage": [
+        "Mensagens de aviso",
+        "Estados atenção",
+        "Advertências operacionais",
+        "Informações críticas",
+        "Ícones de alerta",
+        "Notificações pendentes"
+      ],
+      "fallback": "Usar ENERGIA spectrum se paleta aviso indisponível",
+      "neverUseBecause": "Cores não devem ser derivadas ou supostas"
+    },
+    "STATUS_INFO": {
+      "name": "Estado Informativo",
+      "wcag": "AAA",
+      "primary": {
+        "hex": "#0EA5E9",
+        "rgb": [14, 165, 233],
+        "hsl": [198, 93, 48],
+        "cssVar": "--status-info-primary",
+        "contrast": {"ratio": 3.87, "level": "AA"}
+      },
+      "light": {
+        "hex": "#E0F2FE",
+        "rgb": [224, 242, 254],
+        "hsl": [206, 100, 94],
+        "cssVar": "--status-info-light",
+        "contrast": {"ratio": 1.05, "level": "AAA"}
+      },
+      "dark": {
+        "hex": "#0369A1",
+        "rgb": [3, 105, 161],
+        "hsl": [199, 96, 32],
+        "cssVar": "--status-info-dark",
+        "contrast": {"ratio": 8.76, "level": "AAA"}
+      },
+      "border": {
+        "hex": "#06B6D4",
+        "rgb": [6, 182, 212],
+        "hsl": [188, 94, 43],
+        "cssVar": "--status-info-border"
+      },
+      "usage": [
+        "Mensagens informativas",
+        "Dicas e sugestões",
+        "Informações contextuais",
+        "Helpers e tooltips",
+        "Ícones informativos",
+        "Notificações neutras"
+      ],
+      "fallback": "Usar SEGURANÇA spectrum se paleta info indisponível",
+      "neverUseBecause": "Cores não devem ser derivadas ou supostas"
+    }
+  },
+  "colorPalette": {
+    "LUZ": {
+      "sageMist": {
+        "hex": "#FAFBFA",
+        "rgb": [250, 251, 250],
+        "hsl": [120, 11, 98],
+        "cssVar": "--luz-sage-mist"
+      },
+      "hempCanvas": {
+        "hex": "#F7F9F8",
+        "rgb": [247, 249, 248],
+        "hsl": [150, 14, 97],
+        "cssVar": "--luz-hemp-canvas"
+      },
+      "sageWhisper": {
+        "hex": "#EDF1EF",
+        "rgb": [237, 241, 239],
+        "hsl": [150, 12, 94],
+        "cssVar": "--luz-sage-whisper"
+      }
+    },
+    "ALMA": {
+      "greenSmoke": {
+        "hex": "#8FA89B",
+        "rgb": [143, 168, 155],
+        "hsl": [149, 13, 61],
+        "cssVar": "--alma-green-smoke"
+      },
+      "emeraldHaze": {
+        "hex": "#6A8A7A",
+        "rgb": [106, 138, 122],
+        "hsl": [150, 13, 48],
+        "cssVar": "--alma-emerald-haze"
+      },
+      "deepPine": {
+        "hex": "#455A4F",
+        "rgb": [69, 90, 79],
+        "hsl": [149, 13, 31],
+        "cssVar": "--alma-deep-pine"
+      }
+    },
+    "FIRMEZA": {
+      "darkForest": {
+        "hex": "#1A231D",
+        "rgb": [26, 35, 29],
+        "hsl": [140, 15, 12],
+        "cssVar": "--firmeza-dark-forest"
+      },
+      "blackEarth": {
+        "hex": "#141A17",
+        "rgb": [20, 26, 23],
+        "hsl": [150, 13, 9],
+        "cssVar": "--firmeza-black-earth"
+      },
+      "deepShadow": {
+        "hex": "#0F1411",
+        "rgb": [15, 20, 17],
+        "hsl": [144, 14, 7],
+        "cssVar": "--firmeza-deep-shadow"
+      }
+    },
+    "CANDY": {
+      "marshmallow": {
+        "hex": "#F7FBF0",
+        "rgb": [247, 251, 240],
+        "hsl": [82, 58, 96],
+        "cssVar": "--candy-marshmallow"
+      },
+      "acucar": {
+        "hex": "#EFF7E0",
+        "rgb": [239, 247, 224],
+        "hsl": [81, 59, 92],
+        "cssVar": "--candy-acucar"
+      },
+      "baunilha": {
+        "hex": "#E5F2D0",
+        "rgb": [229, 242, 208],
+        "hsl": [83, 57, 88],
+        "cssVar": "--candy-baunilha"
+      }
+    },
+    "LEMON": {
+      "neblina": {
+        "hex": "#F5F9F2",
+        "rgb": [245, 249, 242],
+        "hsl": [94, 37, 96],
+        "cssVar": "--lemon-neblina"
+      },
+      "vapor": {
+        "hex": "#EAF3E5",
+        "rgb": [234, 243, 229],
+        "hsl": [99, 37, 93],
+        "cssVar": "--lemon-vapor"
+      },
+      "citrus": {
+        "hex": "#DFEDD8",
+        "rgb": [223, 237, 216],
+        "hsl": [100, 37, 89],
+        "cssVar": "--lemon-citrus"
+      }
+    },
+    "VENTURA": {
+      "nevoaClara": {
+        "hex": "#E8EFE0",
+        "rgb": [232, 239, 224],
+        "hsl": [88, 32, 91],
+        "cssVar": "--ventura-nevoa-clara"
+      },
+      "fumaca": {
+        "hex": "#D7E3CC",
+        "rgb": [215, 227, 204],
+        "hsl": [91, 29, 85],
+        "cssVar": "--ventura-fumaca"
+      },
+      "bruma": {
+        "hex": "#C1D4B2",
+        "rgb": [193, 212, 178],
+        "hsl": [94, 28, 76],
+        "cssVar": "--ventura-bruma"
+      }
+    },
+    "ENERGIA": {
+      "campoAlto": {
+        "hex": "#FFFAE0",
+        "rgb": [255, 250, 224],
+        "hsl": [50, 100, 94],
+        "cssVar": "--energia-campo-alto"
+      },
+      "campoVelado": {
+        "hex": "#FFE7A3",
+        "rgb": [255, 231, 163],
+        "hsl": [44, 100, 82],
+        "cssVar": "--energia-campo-velado"
+      },
+      "centro": {
+        "hex": "#FFE2C2",
+        "rgb": [255, 226, 194],
+        "hsl": [31, 100, 88],
+        "cssVar": "--energia-centro"
+      }
+    },
+    "ALEGRIA": {
+      "campoAlto": {
+        "hex": "#FDE2DD",
+        "rgb": [253, 226, 221],
+        "hsl": [9, 89, 93],
+        "cssVar": "--alegria-campo-alto"
+      },
+      "campoVelado": {
+        "hex": "#FFC8C2",
+        "rgb": [255, 200, 194],
+        "hsl": [6, 100, 88],
+        "cssVar": "--alegria-campo-velado"
+      },
+      "centro": {
+        "hex": "#FFA3B1",
+        "rgb": [255, 163, 177],
+        "hsl": [351, 100, 82],
+        "cssVar": "--alegria-centro"
+      }
+    },
+    "SEGURANCA": {
+      "campoAlto": {
+        "hex": "#F1E6F0",
+        "rgb": [241, 230, 240],
+        "hsl": [305, 28, 92],
+        "cssVar": "--seguranca-campo-alto"
+      },
+      "campoVelado": {
+        "hex": "#DEC7DE",
+        "rgb": [222, 199, 222],
+        "hsl": [300, 26, 83],
+        "cssVar": "--seguranca-campo-velado"
+      },
+      "centro": {
+        "hex": "#D0AEE0",
+        "rgb": [208, 174, 224],
+        "hsl": [281, 45, 78],
+        "cssVar": "--seguranca-centro"
+      }
+    }
+  },
+  "implementation": {
+    "scope": {
+      "legacy": "Todas as aplicações legado devem ser migradas",
+      "current": "Todas as aplicações atuais devem ser conformes",
+      "future": "Todas as novas aplicações devem começar conformes",
+      "wrapped": "Aplicações encapsuladas devem conformar-se"
+    },
+    "timeline": {
+      "immediate": "Implementação de componentes críticos",
+      "phase1": "Próximas 2 semanas",
+      "phase2": "Próximo mês",
+      "phase3": "Próximos 3 meses"
+    }
+  }
+}
+Copy
+2. CSS Raiz com Estados
+Copy/* adapta-root.css */
+/* CONFIDENCIAL • © 2026 Adapta */
+
+:root {
+  /* ========== CORES CORE ADAPTA ========== */
+  
+  /* LUZ - Brancura e Claridade */
+  --luz-sage-mist: #FAFBFA;
+  --luz-hemp-canvas: #F7F9F8;
+  --luz-sage-whisper: #EDF1EF;
+
+  /* ALMA - Meio-termo */
+  --alma-green-smoke: #8FA89B;
+  --alma-emerald-haze: #6A8A7A;
+  --alma-deep-pine: #455A4F;
+
+  /* FIRMEZA - Densidade Escura */
+  --firmeza-dark-forest: #1A231D;
+  --firmeza-black-earth: #141A17;
+  --firmeza-deep-shadow: #0F1411;
+
+  /* CANDY - Verde Limão Pastel */
+  --candy-marshmallow: #F7FBF0;
+  --candy-acucar: #EFF7E0;
+  --candy-baunilha: #E5F2D0;
+
+  /* LEMON - Verde Limão Suave */
+  --lemon-neblina: #F5F9F2;
+  --lemon-vapor: #EAF3E5;
+  --lemon-citrus: #DFEDD8;
+
+  /* VENTURA - Verde Acinzentado */
+  --ventura-nevoa-clara: #E8EFE0;
+  --ventura-fumaca: #D7E3CC;
+  --ventura-bruma: #C1D4B2;
+
+  /* ENERGIA - Luz Quente */
+  --energia-campo-alto: #FFFAE0;
+  --energia-campo-velado: #FFE7A3;
+  --energia-centro: #FFE2C2;
+
+  /* ALEGRIA - Rosa Vivo */
+  --alegria-campo-alto: #FDE2DD;
+  --alegria-campo-velado: #FFC8C2;
+  --alegria-centro: #FFA3B1;
+
+  /* SEGURANÇA - Lavanda Rosada */
+  --seguranca-campo-alto: #F1E6F0;
+  --seguranca-campo-velado: #DEC7DE;
+  --seguranca-centro: #D0AEE0;
+
+  /* ========== CORES DE ESTADO - OBRIGATÓRIAS ========== */
+  /* Estabelecidas: 2026-03-11T04:00:00Z */
+  
+  /* STATUS: ERRO */
+  --status-error-primary: #E84545;
+  --status-error-light: #FDE2DD;
+  --status-error-dark: #8B2C2C;
+  --status-error-border: #D94C4C;
+  
+  /* STATUS: SUCESSO */
+  --status-success-primary: #2D7A4F;
+  --status-success-light: #E8F5E9;
+  --status-success-dark: #1B4D31;
+  --status-success-border: #4A9D6F;
+  
+  /* STATUS: AVISO */
+  --status-warning-primary: #D97706;
+  --status-warning-light: #FEF3C7;
+  --status-warning-dark: #92400E;
+  --status-warning-border: #F59E0B;
+  
+  /* STATUS: INFORMAÇÃO */
+  --status-info-primary: #0EA5E9;
+  --status-info-light: #E0F2FE;
+  --status-info-dark: #0369A1;
+  --status-info-border: #06B6D4;
+
+  /* ========== TEMAS ========== */
+  
+  /* TEMA CLARO */
+  --theme-light-bg-primary: var(--luz-hemp-canvas);
+  --theme-light-bg-secondary: var(--luz-sage-whisper);
+  --theme-light-bg-tertiary: var(--luz-sage-mist);
+  --theme-light-text-primary: var(--alma-deep-pine);
+  --theme-light-text-secondary: var(--alma-green-smoke);
+  --theme-light-border: var(--alma-emerald-haze);
+
+  /* TEMA ESCURO */
+  --theme-dark-bg-primary: var(--firmeza-black-earth);
+  --theme-dark-bg-secondary: var(--firmeza-dark-forest);
+  --theme-dark-bg-tertiary: var(--firmeza-dark-forest);
+  --theme-dark-text-primary: var(--luz-hemp-canvas);
+  --theme-dark-text-secondary: var(--luz-sage-whisper);
+  --theme-dark-border: var(--alma-emerald-haze);
+}
+
+/* TEMA CLARO */
+[data-theme="light"],
+[data-theme=""],
+html:not([data-theme]) {
+  color-scheme: light;
+  
+  --bg-primary: var(--theme-light-bg-primary);
+  --bg-secondary: var(--theme-light-bg-secondary);
+  --bg-tertiary: var(--theme-light-bg-tertiary);
+  --text-primary: var(--theme-light-text-primary);
+  --text-secondary: var(--theme-light-text-secondary);
+  --border-color: var(--theme-light-border);
+}
+
+/* TEMA ESCURO */
+[data-theme="dark"] {
+  color-scheme: dark;
+  
+  --bg-primary: var(--theme-dark-bg-primary);
+  --bg-secondary: var(--theme-dark-bg-secondary);
+  --bg-tertiary: var(--theme-dark-bg-tertiary);
+  --text-primary: var(--theme-dark-text-primary);
+  --text-secondary: var(--theme-dark-text-secondary);
+  --border-color: var(--theme-dark-border);
+}
+
+/* Suportar preferência do SO */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    --bg-primary: var(--theme-dark-bg-primary);
+    --bg-secondary: var(--theme-dark-bg-secondary);
+    --bg-tertiary: var(--theme-dark-bg-tertiary);
+    --text-primary: var(--theme-dark-text-primary);
+    --text-secondary: var(--theme-dark-text-secondary);
+    --border-color: var(--theme-dark-border);
+  }
+}
+
+/* ========== COMPONENTES PADRÃO ========== */
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Mensagens de Estado */
+.alert-error,
+.alert-danger,
+[role="alert"][data-status="error"] {
+  background-color: var(--status-error-light);
+  color: var(--status-error-dark);
+  border: 2px solid var(--status-error-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.alert-error-icon {
+  color: var(--status-error-primary);
+}
+
+.alert-success,
+[role="alert"][data-status="success"] {
+  background-color: var(--status-success-light);
+  color: var(--status-success-dark);
+  border: 2px solid var(--status-success-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.alert-success-icon {
+  color: var(--status-success-primary);
+}
+
+.alert-warning,
+[role="alert"][data-status="warning"] {
+  background-color: var(--status-warning-light);
+  color: var(--status-warning-dark);
+  border: 2px solid var(--status-warning-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.alert-warning-icon {
+  color: var(--status-warning-primary);
+}
+
+.alert-info,
+[role="alert"][data-status="info"] {
+  background-color: var(--status-info-light);
+  color: var(--status-info-dark);
+  border: 2px solid var(--status-info-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.alert-info-icon {
+  color: var(--status-info-primary);
+}
+
+/* Validação de Formulário */
+.form-control {
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+.form-control:focus {
+  border-color: var(--status-info-primary);
+  box-shadow: 0 0 0 3px var(--status-info-light);
+}
+
+.form-control.is-invalid {
+  border-color: var(--status-error-primary);
+  background-color: var(--status-error-light);
+}
+
+.form-control.is-invalid:focus {
+  border-color: var(--status-error-primary);
+  box-shadow: 0 0 0 3px rgba(232, 69, 69, 0.1);
+}
+
+.form-control.is-valid {
+  border-color: var(--status-success-primary);
+  background-color: var(--status-success-light);
+}
+
+.form-control.is-valid:focus {
+  border-color: var(--status-success-primary);
+  box-shadow: 0 0 0 3px rgba(45, 122, 79, 0.1);
+}
+
+/* Feedback de Validação */
+.invalid-feedback {
+  color: var(--status-error-primary);
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.valid-feedback {
+  color: var(--status-success-primary);
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+/* Botões */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+  background-color: var(--alma-deep-pine);
+  border-color: var(--alma-deep-pine);
+  color: var(--luz-hemp-canvas);
+}
+
+.btn-primary:hover {
+  background-color: var(--alma-emerald-haze);
+  border-color: var(--alma-emerald-haze);
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 3px rgba(69, 90, 79, 0.2);
+}
+
+.btn-danger {
+  background-color: var(--status-error-primary);
+  border-color: var(--status-error-primary);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: var(--status-error-dark);
+  border-color: var(--status-error-dark);
+}
+
+.btn-success {
+  background-color: var(--status-success-primary);
+  border-color: var(--status-success-primary);
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: var(--status-success-dark);
+  border-color: var(--status-success-dark);
+}
+
+.btn-warning {
+  background-color: var(--status-warning-primary);
+  border-color: var(--status-warning-primary);
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: var(--status-warning-dark);
+  border-color: var(--status-warning-dark);
+}
+
+.btn-info {
+  background-color: var(--status-info-primary);
+  border-color: var(--status-info-primary);
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: var(--status-info-dark);
+  border-color: var(--status-info-dark);
+}
+
+/* Badges */
+.badge-error {
+  background-color: var(--status-error-primary);
+  color: white;
+}
+
+.badge-success {
+  background-color: var(--status-success-primary);
+  color: white;
+}
+
+.badge-warning {
+  background-color: var(--status-warning-primary);
+  color: white;
+}
+
+.badge-info {
+  background-color: var(--status-info-primary);
+  color: white;
+}
+
+/* Notificações */
+.notification {
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.notification.error {
+  background-color: var(--status-error-light);
+  border-left: 4px solid var(--status-error-primary);
+}
+
+.notification.success {
+  background-color: var(--status-success-light);
+  border-left: 4px solid var(--status-success-primary);
+}
+
+.notification.warning {
+  background-color: var(--status-warning-light);
+  border-left: 4px solid var(--status-warning-primary);
+}
+
+.notification.info {
+  background-color: var(--status-info-light);
+  border-left: 4px solid var(--status-info-primary);
+}
+
+/* Ícones de Estado */
+.icon-error {
+  color: var(--status-error-primary);
+}
+
+.icon-success {
+  color: var(--status-success-primary);
+}
+
+.icon-warning {
+  color: var(--status-warning-primary);
+}
+
+.icon-info {
+  color: var(--status-info-primary);
+}
+
+/* Links */
+a {
+  color: var(--alma-deep-pine);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--alma-emerald-haze);
+}
+
+a:focus {
+  outline: 2px solid var(--status-info-primary);
+  outline-offset: 2px;
+}
+
+/* Código */
+code, pre {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+/* Tabelas */
+table {
+  border-collapse: collapse;
+}
+
+table th {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+}
+
+table td {
+  border: 1px solid var(--border-color);
+  padding: 12px;
+}
+
+table tbody tr:hover {
+  background-color: var(--bg-secondary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--alma-green-smoke);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--alma-emerald-haze);
+}
+
+/* Seleção */
+::selection {
+  background-color: var(--status-info-primary);
+  color: white;
+}
+
+/* Placeholder */
+::placeholder {
+  color: var(--text-secondary);
+}

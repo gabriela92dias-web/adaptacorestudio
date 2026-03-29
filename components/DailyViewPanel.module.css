@@ -1,0 +1,306 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  width: 100%;
+}
+
+.summaryBar {
+  display: flex;
+  gap: var(--spacing-4);
+  background-color: var(--surface);
+  padding: var(--spacing-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  flex: 1;
+  border-right: 1px solid var(--border);
+}
+.summaryItem:last-child {
+  border-right: none;
+}
+
+.summaryLabel {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.summaryValue {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--foreground);
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+}
+
+.summarySub {
+  font-size: var(--font-size-md);
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.projectsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.projectSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.projectHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  cursor: pointer;
+  padding: var(--spacing-2) 0;
+  user-select: none;
+  transition: opacity var(--animation-duration-fast) ease;
+}
+
+.projectHeader:hover {
+  opacity: 0.8;
+}
+
+.projectTitle {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.tasksList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding-left: var(--spacing-4);
+  border-left: 2px solid var(--border);
+  margin-left: 9px;
+}
+
+.taskCard {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--animation-duration-fast) ease;
+}
+
+.taskCard:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.taskHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4);
+  cursor: pointer;
+  background-color: var(--card);
+  transition: background-color var(--animation-duration-fast) ease;
+}
+
+.taskHeader:hover {
+  background-color: var(--muted);
+}
+
+.taskInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  flex: 1;
+}
+
+.taskTitleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  color: var(--foreground);
+}
+
+.taskTitle {
+  font-weight: 600;
+  font-size: var(--font-size-md);
+}
+
+.priority-critical {
+  border-color: var(--priority-critical);
+  color: var(--priority-critical);
+  background-color: color-mix(in srgb, var(--priority-critical) 10%, transparent);
+}
+
+.priority-high {
+  border-color: var(--priority-high);
+  color: var(--priority-high);
+  background-color: color-mix(in srgb, var(--priority-high) 10%, transparent);
+}
+
+.priority-medium {
+  border-color: var(--priority-medium);
+  color: var(--priority-medium);
+  background-color: color-mix(in srgb, var(--priority-medium) 10%, transparent);
+}
+
+.priority-low {
+  border-color: var(--priority-low);
+  color: var(--priority-low);
+  background-color: color-mix(in srgb, var(--priority-low) 10%, transparent);
+}
+
+.taskProgress {
+  width: 100%;
+  max-width: 250px;
+  padding-left: 28px;
+}
+
+.taskMeta {
+  display: flex;
+  align-items: center;
+}
+
+.actionCount {
+  font-size: var(--font-size-base);
+  color: var(--muted-foreground);
+  background-color: var(--surface);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+}
+
+.taskBody {
+  border-top: 1px solid var(--border);
+  padding: var(--spacing-4);
+  background-color: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.actionItem {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  box-shadow: var(--shadow);
+}
+
+.actionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+.actionTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+.actionTitle {
+  font-weight: 500;
+  font-size: var(--font-size-md);
+  color: var(--foreground);
+}
+
+.actionBadges {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.actionControls {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.executionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  border-top: 1px dashed var(--border);
+  padding-top: var(--spacing-3);
+}
+
+.executionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  font-size: var(--font-size-base);
+  color: var(--muted-foreground);
+  padding: var(--spacing-2);
+  background-color: var(--surface);
+  border-radius: var(--radius-sm);
+}
+
+.executionDuration {
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.executionStatusBadge {
+  margin-left: auto;
+}
+
+.executionNotes {
+  font-style: italic;
+  color: var(--muted-foreground);
+  margin-left: var(--spacing-2);
+}
+
+.noActions {
+  font-size: var(--font-size-base);
+  color: var(--muted-foreground);
+  font-style: italic;
+  padding: var(--spacing-2) 0;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-16) var(--spacing-8);
+  text-align: center;
+  gap: var(--spacing-4);
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border);
+  color: var(--muted-foreground);
+  margin-top: var(--spacing-8);
+}
+
+.emptyIcon {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+
+.emptyState h3 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: var(--font-size-base);
+  max-width: 400px;
+}

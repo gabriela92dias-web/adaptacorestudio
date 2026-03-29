@@ -1,0 +1,167 @@
+.container {
+  padding: 2rem;
+  min-height: calc(100vh - 80px);
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.listContainer {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* List Header */
+.listHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1fr;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+}
+
+/* Row Item */
+.row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1fr;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row:hover {
+  background: var(--bg-primary);
+}
+
+/* Columns */
+.colName {
+  display: flex;
+  flex-direction: column;
+}
+
+.milestoneName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.milestoneProject {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+.colDate {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-family: monospace; /* technical feel for dates */
+}
+
+/* Progress Bar */
+.colProgress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-right: 2rem;
+}
+
+.progressTrack {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--text-primary);
+  border-radius: 999px;
+}
+
+.progressText {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  width: 32px;
+  text-align: right;
+}
+
+/* Health Badge */
+.colHealth {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.healthBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+
+/* Monochromatic health states using borders and dots instead of heavy colors */
+.health_OnTrack .statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+}
+
+.health_Delayed .statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid var(--text-primary); /* Empty dot for delayed */
+  background: transparent;
+}
+
+.health_AtRisk .statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 2px; /* Square for risk */
+  background-color: var(--text-tertiary);
+}
+
+@media (max-width: 1024px) {
+  .listHeader, .row {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+  .colProgress {
+    display: none;
+  }
+}

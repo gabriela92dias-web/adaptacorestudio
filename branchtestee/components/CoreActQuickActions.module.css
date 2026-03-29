@@ -1,0 +1,37 @@
+@layer base {
+  .menuIcon {
+    margin-right: var(--spacing-2);
+    height: 1rem;
+    width: 1rem;
+    opacity: 0.7;
+  }
+
+  .groupLabel {
+    padding-left: var(--spacing-2);
+    font-size: var(--font-size-xs);
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-1);
+    margin-top: var(--spacing-1);
+  }
+
+  .formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-4);
+  }
+}

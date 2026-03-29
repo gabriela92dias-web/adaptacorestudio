@@ -1,0 +1,45 @@
+ Running frontend commit 107bbd51e86fce9a104f472597b3e63a6aa8ffa6
+vendor-core-ade2edecaf4781c7.min.js.br:54 Statsig is not ready to log exposures, will retry in 1 seconds
+(anonymous) @ vendor-core-ade2edecaf4781c7.min.js.br:54
+vendor-core-ade2edecaf4781c7.min.js.br:54 Loaded 34 scripts (5985693b), 34 from cache (5985693b)
+vendor-core-ade2edecaf4781c7.min.js.br:54 [Livegraph] Connected 2026-03-15T22:16:17.639Z.
+vendor-core-ade2edecaf4781c7.min.js.br:54 [bootstrap_waiting_on_user_state] You appear to be logging a relative timestamp and not an epoch timestamp. Try adding performance.timeOrigin to the timestamp.
+(anonymous) @ vendor-core-ade2edecaf4781c7.min.js.br:54
+vendor-core-ade2edecaf4781c7.min.js.br:54 [import] git: 640e7c0c7a50f673af49d46032d102e256b5e667, stamp: 8E3CE7D760547CC6
+8245-61d61b2c2a415443.min.js.br:7 The powerPreference option is currently ignored when calling requestAdapter() on Windows. See https://crbug.com/369219127
+initialize @ 8245-61d61b2c2a415443.min.js.br:7
+vendor-core-ade2edecaf4781c7.min.js.br:54 Autosave Changes not available or already claimed by another tab undefined
+(index):1  Failed to load resource: net::ERR_FAILED
+vendor-core-ade2edecaf4781c7.min.js.br:54 [Fullscreen] Booting... (emscripten version 4.0.21)
+vendor-core-ade2edecaf4781c7.min.js.br:54 [GPU] graphicsAPI:"WebGPU", vendor:"Google Inc. (Intel)" renderer:"ANGLE (Intel, Intel(R) Iris(R) Xe Graphics (0x00009A49) Direct3D11 vs_5_0 ps_5_0, D3D11)" deviceArchitecture:"gen-12lp" deviceDescription:"" webGPUDevice:"" webGPUVendor:"intel" bindings:"emdawnwebgpu"
+vendor-core-ade2edecaf4781c7.min.js.br:54 [Fullscreen] Ready in 2176.3ms
+vendor-core-ade2edecaf4781c7.min.js.br:54 [FullscreenApp] calling setEditorTheme and setting preference light
+vendor-core-ade2edecaf4781c7.min.js.br:54 [MultiplayerSession] connecting to wss://www.figma.com/api/multiplayer/BSXw9DYgG0mbDY2678icaY?role=editor&tracking_session_id=mvv8JBPHcmjOzRIY&version=151&recentReload=0&file-load-streaming-compression&user-id=1606854682794033935&client_release=107bbd51e86fce9a104f472597b3e63a6aa8ffa6
+vendor-core-ade2edecaf4781c7.min.js.br:54 [FullscreenApp] calling setEditorTheme and setting preference light
+vendor-core-ade2edecaf4781c7.min.js.br:54 [Shadow read] 'rolesReducer.unhandledAction' has discrepancies ⚠️ Array(1)
+vendor-core-ade2edecaf4781c7.min.js.br:54 [MultiplayerSession] Joining file version 106 (initial load)
+vendor-core-ade2edecaf4781c7.min.js.br:54 Migration succeeded: context: fullscreen_migrate_SceneGraphManager, version: 106, duration: 0ms.
+vendor-core-ade2edecaf4781c7.min.js.br:54 [devtools] Initialized LS
+/api/make/fetch_ds_code_gen_status:1  Failed to load resource: the server responded with a status of 400 ()
+vendor-core-ade2edecaf4781c7.min.js.br:54 [devtools] Initialized LS
+/api/make/BSXw9DYgG0mbDY2678icaY/cached_preview_urls?source_code_hash=dbd4e8e3d2e427e193a1b4aaa8028e2938163bf9:1  Failed to load resource: the server responded with a status of 404 ()
+vendor-core-ade2edecaf4781c7.min.js.br:54 [Fullscreen] loadtime=16.47s maxmem=179730136
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [vite] connecting...
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [vite] connected.
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 🔐 Auth Mode: LOCAL
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [LoginPage] User state changed: null
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] Initializing auth...
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] Using LOCAL mode (localStorage)
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] Local user from storage: null
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] No user in localStorage
+13c1ecd1-1336-4b7f-8c5d-7fe5338e8dd2-v2-figmaiframepreview.figma.site/login:1 [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) <input type=​"password" data-slot=​"input" class=​"file:​text-foreground selection:​bg-primary selection:​text-primary-foreground dark:​bg-input/​30 flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base transition-[color,box-shadow]​ outline-none file:​inline-flex file:​h-7 file:​border-0 file:​bg-transparent file:​text-sm file:​font-medium disabled:​pointer-events-none disabled:​cursor-not-allowed disabled:​opacity-50 md:​text-sm focus-visible:​border-ring focus-visible:​ring-ring/​50 focus-visible:​ring-[3px]​ aria-invalid:​ring-destructive/​20 dark:​aria-invalid:​ring-destructive/​40 aria-invalid:​border-destructive bg-alma-midnightGarden border-alma-forestShadow text-luz-sageWhisper placeholder:​text-alma-emeraldHaze focus:​border-ventura-fumaca" id=​"password" placeholder=​"••••••••" required data-fg-cbz038=​"475.148:​508.240:​/​src/​app/​platform/​pages/​login.tsx:​146:​17:​5730:​446:​e:​Input:​:​:​:​:​s:​19W:​1" data-fgid-cbz038=​":​r16:​" data-fg-djqs0=​"374.735:​374.963:​/​src/​app/​components/​ui/​input.tsx:​7:​5:​158:​778:​e:​input:​:​1" data-fgid-djqs0=​":​r17:​" data-fg-callsite-cbz038 value=​"hjkkjh123">​
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] signIn called for: gabriela92dias@gmail.com
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] Signing in with LOCAL mode...
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] Found user, saving to localStorage and state...
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] LocalStorage updated, now updating React state...
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [AuthContext] Sign in successful, user state updated: Object
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [LoginPage] User state changed: Object
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [LoginPage] User is authenticated, redirecting to home...
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [ProtectedRoute] Auth state: Object
+code_components_preview_iframe-f4fd20809e153e7b.min.js.br:90 [ProtectedRoute] User authenticated, rendering children
+vendor-core-ade2edecaf4781c7.min.js.br:54 [Violation] 'requestAnimationFrame' handler took 81ms

@@ -1,0 +1,138 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: calc(-1 * var(--spacing-6));
+  background-color: var(--background);
+  overflow: hidden;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-6);
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+  flex-shrink: 0;
+    height: 4.5rem;
+  gap: var(--spacing-6);
+}
+
+.titleLink {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: 0;
+  color: var(--foreground);
+  text-decoration: none;
+  transition: opacity var(--animation-duration-fast) ease;
+}
+
+.titleLink:hover {
+  opacity: 0.8;
+}
+
+.titleActive {
+  opacity: 1;
+}
+
+.tabBar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  height: 100%;
+}
+
+.tabBar::-webkit-scrollbar {
+  display: none;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-full);
+  color: var(--muted-foreground);
+  text-decoration: none;
+  transition: all var(--animation-duration-fast) ease;
+  white-space: nowrap;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+}
+
+.navItem:hover {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+.navItemActive {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.navItemActive:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.navIcon {
+  flex-shrink: 0;
+}
+
+.quickActionsWrapper {
+  margin-left: auto;
+}
+
+.body {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-6);
+  gap: var(--spacing-6);
+  overflow: hidden;
+  background-color: var(--background);
+}
+
+/* Adaptive Level Declarations (required for CSS Modules export) */
+.level0 { }
+.level1 { }
+.level2 { }
+.level3 { }
+
+.level1 .header {
+  height: 3rem;
+}
+
+.level1 .navItem {
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-sm);
+}
+
+.level1 .main {
+  padding: var(--spacing-4);
+}
+
+.level2 .header {
+  height: 2.5rem;
+}
+
+.level2 .main {
+  padding: var(--spacing-3);
+}
+
+.level3 .header {
+  height: 2.5rem;
+}

@@ -1,0 +1,228 @@
+{
+  "name": "Adapta Design System",
+  "version": "2026.1.1",
+  "governance": {
+    "established": "2026-03-11T04:15:00Z",
+    "lastUpdated": "2026-03-11T04:30:00Z",
+    "enforcementLevel": "ABSOLUTE",
+    "scope": "ALL_APPLICATIONS_EXTERNAL_TOOLS_LIBRARIES"
+  },
+  "laws": {
+    "LAW_001_ABSOLUTE_COLOR_CONFORMITY": {
+      "title": "Lei da Conformidade Cromática Absoluta",
+      "established": "2026-03-11T04:15:00Z",
+      "description": "Nenhuma cor será usada fora da paleta definida em absolutamente nenhuma circunstância",
+      "enforcement": "CRÍTICO",
+      "violations": "Rejeição de código, bloqueio de build"
+    },
+    "LAW_002_NEW_IMPLEMENTATION_COMPLIANCE": {
+      "title": "Lei da Implementação com Conformidade",
+      "established": "2026-03-11T04:15:00Z",
+      "description": "Se algo novo for implantado, deve usar APENAS cores da paleta",
+      "enforcement": "CRÍTICO",
+      "violations": "Rejeição de PR, bloqueio de deploy"
+    },
+    "LAW_003_EXTERNAL_TOOLS_CONFIRMATION": {
+      "title": "Lei da Confirmação de Ferramentas Externas",
+      "established": "2026-03-11T04:15:00Z",
+      "description": "Ferramentas externas que usem cromática DEVEM ter cores confirmadas ANTES de conclusão",
+      "enforcement": "CRÍTICO",
+      "violations": "Bloqueio até confirmação com Design Lead",
+      "details": {
+        "requirement": "Confirmação obrigatória com editor/design lead",
+        "documentation": "Formulário assinado e arquivado",
+        "noExceptions": "Sem exceções, sem suposições"
+      }
+    },
+    "LAW_004_DOUBT_RESOLUTION": {
+      "title": "Lei da Resolução de Dúvidas",
+      "established": "2026-03-11T04:30:00Z",
+      "description": "Na dúvida sobre cores em aplicações, FABs, ferramentas - DEVE ser confirmada antes de conclusão",
+      "enforcement": "CRÍTICO",
+      "mandate": "NENHUMA implementação prosseguirá enquanto houver dúvida",
+      "procedure": [
+        "1. Identificar dúvida sobre cor",
+        "2. Documentar dúvida em formulário",
+        "3. Submeter para Design Lead",
+        "4. Aguardar confirmação escrita",
+        "5. SOMENTE DEPOIS implementar",
+        "6. Registrar confirmação em histórico"
+      ],
+      "whatCounts": [
+        "Dúvida se cor é a correta",
+        "Dúvida se ferramenta necessita cor especial",
+        "Dúvida se FAB (Floating Action Button) precisa de cor customizada",
+        "Dúvida sobre transparência ou variação",
+        "Dúvida sobre contraste",
+        "Dúvida de qualquer natureza"
+      ],
+      "consequences": "Bloqueio de merge, rejeição de build, não-deploy"
+    },
+    "LAW_005_ZERO_ASSUMPTION": {
+      "title": "Lei do Zero Assunção",
+      "established": "2026-03-11T04:30:00Z",
+      "description": "NUNCA assuma ou suponha qual cor usar. SEMPRE confirme.",
+      "enforcement": "CRÍTICO",
+      "violations": "Rejeição automática via validador",
+      "details": {
+        "forbidden": [
+          "Escolher cor 'parecida'",
+          "Herdar cor de biblioteca",
+          "Usar cor 'aproximada'",
+          "Supor intenção do designer",
+          "Adaptar cor para 'parecer bem'"
+        ]
+      }
+    },
+    "LAW_006_FAB_SPECIAL_HANDLING": {
+      "title": "Lei do Tratamento Especial de FAB",
+      "established": "2026-03-11T04:30:00Z",
+      "description": "FABs (Floating Action Buttons) devem ter cores confirmadas explicitamente",
+      "enforcement": "CRÍTICO",
+      "details": {
+        "why": "FABs são elementos chamadores de atenção que requerem cor semântica clara",
+        "requirement": "Cor de FAB SEMPRE mapeada para estado (error, success, warning, info)",
+        "neverDefault": "NUNCA usar cor 'padrão' ou 'tema' sem confirmação"
+      }
+    },
+    "LAW_007_EXTERNAL_LIBRARY_COLORS": {
+      "title": "Lei de Cores de Bibliotecas Externas",
+      "established": "2026-03-11T04:30:00Z",
+      "description": "Se biblioteca externa usar cores, DEVE ser confirmado qual cor Adapta mapeia",
+      "enforcement": "CRÍTICO",
+      "procedure": [
+        "Identificar cores que biblioteca externa usa",
+        "Documentar cada uma",
+        "Submeter para confirmação",
+        "Aguardar aprovação",
+        "SOMENTE ENTÃO usar biblioteca"
+      ]
+    }
+  },
+  "colorConfirmation": {
+    "name": "Sistema de Confirmação de Cores",
+    "version": "2026.1.1",
+    "established": "2026-03-11T04:30:00Z",
+    "purpose": "Garantir que TODA cor usada tenha sido confirmada por autoridade designada",
+    "requiredFor": [
+      "Aplicações novas",
+      "Aplicações existentes com mudanças",
+      "Ferramentas externas",
+      "Bibliotecas integradas",
+      "FABs e elementos chamadores",
+      "Componentes customizados",
+      "Estados especiais",
+      "Temas alternativos"
+    ],
+    "confirmationProcess": {
+      "step1_identification": {
+        "title": "Identificação",
+        "action": "Identificar todas as cores necessárias",
+        "document": "Lista de cores requeridas"
+      },
+      "step2_doubt_check": {
+        "title": "Verificação de Dúvida",
+        "action": "Se há QUALQUER dúvida sobre cor → PARAR",
+        "document": "Motivo da dúvida registrado"
+      },
+      "step3_documentation": {
+        "title": "Documentação",
+        "action": "Preencher formulário de confirmação",
+        "document": "Formulário assinado"
+      },
+      "step4_submission": {
+        "title": "Submissão",
+        "action": "Enviar para Design Lead/Editor",
+        "document": "Email com timestamp"
+      },
+      "step5_confirmation": {
+        "title": "Confirmação",
+        "action": "Design Lead confirma cores por escrito",
+        "document": "Resposta assinada e datada"
+      },
+      "step6_implementation": {
+        "title": "Implementação",
+        "action": "SOMENTE APÓS confirmação, implementar cores",
+        "document": "Referência da confirmação no commit"
+      },
+      "step7_archive": {
+        "title": "Arquivamento",
+        "action": "Guardar confirmação em histórico",
+        "document": "Arquivo permanente na documentação"
+      }
+    },
+    "confirmationForm": {
+      "title": "FORMULÁRIO DE CONFIRMAÇÃO DE CORES",
+      "subtitle": "Obrigatório para todas as aplicações, FABs e ferramentas",
+      "fields": {
+        "project": "Nome do Projeto/Aplicação",
+        "component": "Nome do Componente/FAB",
+        "description": "Descrição do propósito",
+        "colorsNeeded": "Cores necessárias",
+        "doubt": "Qual é a dúvida?",
+        "reason": "Por que tem dúvida?",
+        "proposedColors": "Cores propostas (se houver)",
+        "requester": "Quem está pedindo",
+        "requestDate": "Data da solicitação",
+        "deadline": "Deadline para resposta"
+      },
+      "designLeadApproval": {
+        "name": "Nome do Design Lead",
+        "signature": "Assinatura digital",
+        "date": "Data de confirmação",
+        "colors": "Cores aprovadas",
+        "rationale": "Justificativa de aprovação",
+        "constraints": "Restrições ou notas"
+      }
+    }
+  },
+  "validationGates": {
+    "preMerge": {
+      "title": "Gate de Merge",
+      "check1": "❌ Toda cor tem confirmação registrada?",
+      "check2": "❌ Formulário foi preenchido?",
+      "check3": "❌ Design Lead assinou?",
+      "check4": "❌ Nenhuma cor é suposição?"
+    },
+    "preBuild": {
+      "title": "Gate de Build",
+      "check1": "❌ Validador encontrou cores não-confirmadas?",
+      "check2": "❌ Há cores hardcoded?",
+      "check3": "❌ FABs têm cores confirmadas?"
+    },
+    "preDeploy": {
+      "title": "Gate de Deploy",
+      "check1": "❌ Todas as confirmações estão no histórico?",
+      "check2": "❌ Nenhuma cor foi alterada sem novo formulário?",
+      "check3": "❌ Tem relatório de validação?"
+    }
+  },
+  "specialCases": {
+    "FAB_FloatingActionButton": {
+      "title": "FAB (Floating Action Button)",
+      "requirement": "Cores de FAB DEVEM ser confirmadas",
+      "why": "FABs são elementos primários que requerem semântica cromática clara",
+      "mandatory": true,
+      "example": "FAB de 'novo item' → cor de sucesso? ou aviso? → CONFIRMAR"
+    },
+    "thirdPartyLibrary": {
+      "title": "Bibliotecas de Terceiros",
+      "requirement": "Se usa cores de biblioteca → confirmar cada uma",
+      "why": "Bibliotecas podem ter cores que não conformam",
+      "mandatory": true,
+      "example": "Material-UI usa cores próprias → mapear para Adapta antes de usar"
+    },
+    "customization": {
+      "title": "Customizações",
+      "requirement": "Qualquer cor customizada DEVE ser confirmada",
+      "why": "Customização pode quebrar padrão",
+      "mandatory": true
+    },
+    "darkMode": {
+      "title": "Tema Escuro",
+      "requirement": "Cores de dark mode DEVEM ser confirmadas",
+      "why": "Pode precisar de cores diferentes",
+      "mandatory": true
+    }
+  }
+}

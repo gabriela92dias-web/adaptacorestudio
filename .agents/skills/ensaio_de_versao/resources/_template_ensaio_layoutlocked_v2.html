@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ensaio de Versão — Layout-Locked v2 (Template)</title>
+  <style>
+    /* =========================================================
+      ENSAIO DE VERSÃO — LAYOUT-LOCKED v2 (CONTRATO)
+      Regra: NÃO alterar layout/estrutura entre versões
+      sem "EVOLUTION_MAP" explícito.
+    ========================================================== */
+
+    :root{
+      --bg: #fafafa;
+      --fg: #111;
+      --muted: #666;
+      --border: #2a2a2a;
+      --border-soft: #bdbdbd;
+      --panel: #fff;
+      --panel-2: #f2f2f2;
+
+      --pad-1: 10px;
+      --pad-2: 14px;
+      --pad-3: 18px;
+
+      --radius: 0px; /* wireframe */
+      --font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+      --h1: 18px;
+      --h2: 13px;
+      --h3: 12px;
+      --p: 11.5px;
+      --small: 10px;
+      --line: 1.45;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      line-height: var(--line);
+    }
+
+    /* Layout macro (fixo) */
+    .page{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 18px 40px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 18px;
+    }
+
+    .sidebar{
+      position: sticky;
+      top: 14px;
+      align-self: start;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .main{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card{
+      background: var(--panel);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--pad-2);
+    }
+
+    .card.soft{
+      border-color: var(--border-soft);
+      background: var(--panel-2);
+    }
+
+    .label{
+      display: inline-block;
+      border: 2px solid var(--border);
+      padding: 2px 8px;
+      font-size: var(--small);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      background: var(--bg);
+    }
+
+    h1, h2, h3{
+      margin: 0 0 6px 0;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+    h1{ font-size: var(--h1); }
+    h2{ font-size: var(--h2); }
+    h3{ font-size: var(--h3); }
+
+    p{
+      margin: 0 0 8px 0;
+      font-size: var(--p);
+      color: var(--fg);
+    }
+    .muted{ color: var(--muted); }
+
+    .row{ display:flex; gap: 10px; flex-wrap: wrap; }
+    .col{ display:flex; flex-direction: column; gap: 8px; }
+
+    .btn{
+      border: 2px solid var(--border);
+      background: #fff;
+      padding: 8px 10px;
+      font-family: var(--font);
+      font-size: var(--p);
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .select, .input, .textarea{
+      width: 100%;
+      border: 2px solid var(--border);
+      background: #fff;
+      padding: 8px 10px;
+      font-family: var(--font);
+      font-size: var(--p);
+    }
+    .textarea{ min-height: 88px; resize: vertical; }
+
+    .hr{
+      height: 2px;
+      background: var(--border);
+      opacity: .2;
+      margin: 8px 0;
+    }
+
+    .kv{
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap: 6px 10px;
+      font-size: var(--small);
+      color: var(--fg);
+    }
+    .kv b{ text-transform: uppercase; }
+
+    .mono{
+      font-size: var(--small);
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 2px dashed var(--border-soft);
+      padding: 10px;
+      background: #fff;
+    }
+
+    .pill{
+      border: 2px solid var(--border);
+      padding: 2px 8px;
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: var(--small);
+      background: #fff;
+      display:inline-block;
+    }
+
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+    /* Primitives wireframe (fixos) */
+    .wf-box{ border: 2px dashed var(--border-soft); background:#fff; padding: 10px; }
+    .wf-line{ height: 10px; background: #e0e0e0; border: 1px solid #cfcfcf; margin-bottom: 6px; }
+    .wf-img{ height: 72px; border: 2px dashed var(--border-soft); background: #f6f6f6; position: relative; overflow:hidden; }
+    .wf-img::before, .wf-img::after{
+      content:"";
+      position:absolute; inset:-20%;
+      border-top: 1px solid #cfcfcf;
+      transform-origin: top left;
+    }
+    .wf-img::before{ transform: rotate(45deg); }
+    .wf-img::after{ transform: rotate(-45deg); transform-origin: top right; }
+
+    /* Table (fixo) */
+    table{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--small);
+      background:#fff;
+      border: 2px solid var(--border);
+    }
+    th, td{
+      border: 1px solid var(--border-soft);
+      padding: 8px;
+      vertical-align: top;
+    }
+    th{
+      text-transform: uppercase;
+      font-weight: 900;
+      background: #f0f0f0;
+    }
+
+    /* Contenteditable */
+    [contenteditable="true"]{
+      outline: none;
+      border-bottom: 1px dashed #c0c0c0;
+      padding-bottom: 1px;
+    }
+
+    /* Helpers */
+    .hidden{ display:none !important; }
+    .right{ text-align:right; }
+
+    @media (max-width: 980px){
+      .page{ grid-template-columns: 1fr; }
+      .sidebar{ position: static; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <!-- METADADOS -->
+      <div class="card">
+        <div class="label">Ensaio de Versão</div>
+        <h1 contenteditable="true" data-copy="meta.context">[Contexto]</h1>
+        <p class="muted" contenteditable="true" data-copy="meta.scope">[Escopo / Tela / Componente]</p>
+
+        <div class="hr"></div>
+
+        <div class="kv">
+          <b>Versão</b><span contenteditable="true" data-copy="meta.version">v001</span>
+          <b>Data</b><span contenteditable="true" data-copy="meta.date">[dd/mm/aaaa]</span>
+          <b>Estágio</b>
+          <span>
+            <select class="select" id="stageSelect" aria-label="stage">
+              <option value="1">1 — Wireframe inteligente</option>
+              <option value="2">2 — Pré-frontend (Text-complete)</option>
+              <option value="3">3 — Projeção de front</option>
+            </select>
+          </span>
+          <b>Origem</b><span contenteditable="true" data-copy="meta.origin">[React/TSX/rota/etc]</span>
+          <b>Layout</b><span class="pill" id="layoutSig">LOCKED-v2</span>
+        </div>
+
+        <div class="hr"></div>
+
+        <h3>O que mudou</h3>
+        <div class="mono" contenteditable="true" data-copy="meta.changes">• [mudança 1]
+• [mudança 2]
+• [mudança 3]</div>
+
+        <div class="hr"></div>
+
+        <h3>O que testar</h3>
+        <div class="mono" contenteditable="true" data-copy="meta.tests">[checklist]
+- [ ] ...</div>
+
+        <div class="hr"></div>
+
+        <h3>Limitações assumidas</h3>
+        <div class="mono" contenteditable="true" data-copy="meta.limits">• Sem API real
+• Mock data local
+• Sem autenticação real</div>
+      </div>
+
+      <!-- CENÁRIOS -->
+      <div class="card">
+        <div class="label">Cenários</div>
+        <p class="muted">Troque cenários para validar regras e estados.</p>
+        <select class="select" id="scenarioSelect"></select>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn" id="btnApplyScenario">Aplicar</button>
+          <button class="btn" id="btnReset">Reset</button>
+        </div>
+      </div>
+
+      <!-- AÇÕES -->
+      <div class="card">
+        <div class="label">Ações</div>
+        <p class="muted">Ações simuladas (geram eventos + revalidação).</p>
+        <div class="col">
+          <button class="btn" data-action="TOGGLE_SAMPLE_MODULE">Toggle Módulo Exemplo</button>
+          <button class="btn" data-action="UPLOAD_SAMPLE_OK">Simular Upload de OK</button>
+          <button class="btn" data-action="TRY_PUBLISH">Tentar Publicar</button>
+          <button class="btn" data-action="SYNC_UI_TO_COPY">Sync UI → Copy Registry</button>
+          <button class="btn" data-action="APPLY_COPY_TO_UI">Aplicar Copy Registry → UI</button>
+        </div>
+      </div>
+
+      <!-- VALIDAR -->
+      <div class="card soft">
+        <div class="label">Validador</div>
+        <p class="muted">Lista bloqueadores/alertas + readiness.</p>
+        <div class="row">
+          <button class="btn" id="btnValidate">Rodar validação</button>
+        </div>
+        <div class="hr"></div>
+        <div class="mono" id="validationOut">[Aguardando...]</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- HUD -->
+      <section class="card">
+        <div class="label">HUD</div>
+        <div class="row">
+          <span class="pill">Estado: <span id="stateName">DRAFT</span></span>
+          <span class="pill">Publish: <span id="publishReady">NÃO</span></span>
+          <span class="pill">Text-Complete: <span id="textReady">NÃO</span></span>
+          <span class="pill">Pre-Front OK: <span id="prefrontOk">NÃO</span></span>
+          <span class="pill">Bloqueadores: <span id="blockCount">0</span></span>
+        </div>
+        <p class="muted" style="margin-top:8px;">
+          Este HUD é o termômetro do ensaio (offline), incluindo prontidão de texto e brief (Estágio 2).
+        </p>
+      </section>
+
+      <!-- UI PRINCIPAL -->
+      <section class="card" id="uiCard">
+        <div class="label">UI (Wireframe Editável)</div>
+        <h2 contenteditable="true" data-copy="ui.title">[Título da tela / feature]</h2>
+        <p class="muted" contenteditable="true" data-copy="ui.subtitle">[Descrição curta do objetivo do ensaio]</p>
+
+        <div class="grid2" style="margin-top:10px;">
+          <div class="wf-box">
+            <h3 contenteditable="true" data-copy="ui.blockA.title">[Bloco A]</h3>
+            <div class="wf-img"></div>
+            <div class="wf-line" style="width: 90%"></div>
+            <div class="wf-line" style="width: 70%"></div>
+            <div class="wf-line" style="width: 80%"></div>
+          </div>
+          <div class="wf-box">
+            <h3 contenteditable="true" data-copy="ui.blockB.title">[Bloco B]</h3>
+            <div class="wf-img"></div>
+            <div class="wf-line" style="width: 85%"></div>
+            <div class="wf-line" style="width: 60%"></div>
+            <div class="wf-line" style="width: 75%"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <h3 contenteditable="true" data-copy="ui.table.title">[Tabela / Lista]</h3>
+          <table>
+            <thead>
+              <tr>
+                <th contenteditable="true" data-copy="ui.table.h1">Campo</th>
+                <th contenteditable="true" data-copy="ui.table.h2">Status</th>
+                <th contenteditable="true" data-copy="ui.table.h3">Evidência</th>
+                <th contenteditable="true" data-copy="ui.table.h4">Owner</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- COPY REGISTRY (Stage 2) -->
+      <section class="card" id="copyRegistryCard">
+        <div class="label">Copy Registry (Stage 2A)</div>
+        <p class="muted">
+          Registro de textos finais com chaves estáveis. Ajuste aqui e aplique na UI.
+        </p>
+
+        <div class="row" style="margin-bottom:10px;">
+          <button class="btn" id="btnAddCopy">Adicionar item</button>
+          <button class="btn" id="btnExportCopy">Exportar Copy JSON</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Copy Key</th>
+              <th>Texto</th>
+              <th>Crítico</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="copyBody"></tbody>
+        </table>
+
+        <div class="hr"></div>
+        <div class="mono" id="copyExportOut">[Export JSON aparece aqui]</div>
+      </section>
+
+      <!-- FRONT BRIEF (Stage 2) -->
+      <section class="card" id="frontBriefCard">
+        <div class="label">Front Brief (Stage 2B)</div>
+        <p class="muted">
+          Diretrizes finais de design/estética para o frontend real. Aqui é documentação — não aplica CSS final.
+        </p>
+
+        <div class="grid2">
+          <div class="wf-box">
+            <h3>Direção visual</h3>
+            <textarea class="textarea" id="fbDirection" placeholder="[descreva]"></textarea>
+          </div>
+          <div class="wf-box">
+            <h3>Regras de componentes</h3>
+            <textarea class="textarea" id="fbComponents" placeholder="[mapeie wireframe → componente final]"></textarea>
+          </div>
+          <div class="wf-box">
+            <h3>Tokens/variáveis (nomes)</h3>
+            <textarea class="textarea" id="fbTokens" placeholder="[nomes de tokens; sem aplicar aqui]"></textarea>
+          </div>
+          <div class="wf-box">
+            <h3>Hierarquia / densidade / responsivo</h3>
+            <textarea class="textarea" id="fbLayout" placeholder="[regras]"></textarea>
+          </div>
+          <div class="wf-box">
+            <h3>Mídia (ícones/imagens) + restrições</h3>
+            <textarea class="textarea" id="fbMedia" placeholder="[regras]"></textarea>
+          </div>
+          <div class="wf-box">
+            <h3>Acessibilidade + “não fazer”</h3>
+            <textarea class="textarea" id="fbA11y" placeholder="[regras]"></textarea>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="row">
+          <label class="pill" style="display:flex; gap:8px; align-items:center;">
+            <input type="checkbox" id="fbOk" />
+            Pre-Front OK
+          </label>
+        </div>
+      </section>
+
+      <!-- ESTADO -->
+      <section class="card soft">
+        <div class="label">Estado (Mock Store)</div>
+        <p class="muted">Estado central do ensaio (somente leitura).</p>
+        <div class="mono" id="stateOut">{}</div>
+      </section>
+
+      <!-- EVENTOS -->
+      <section class="card soft">
+        <div class="label">Console de Eventos</div>
+        <p class="muted">Registro do que aconteceu (simulado).</p>
+        <div class="mono" id="eventOut">[Sem eventos ainda]</div>
+      </section>
+
+      <!-- EVOLUTION MAP -->
+      <section class="card">
+        <div class="label">Evolution Map (Pré-mapeado)</div>
+        <p class="muted">
+          Mudanças de layout/estrutura só podem ocorrer se registradas aqui antes.
+        </p>
+        <div class="mono" id="evolutionMap" contenteditable="true">- v001: layout locked (baseline)
+- v0XX: [mudança planejada] — [por quê]</div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Layout contract signature
+    const LAYOUT_SIGNATURE = "LOCKED-v2";
+    document.getElementById("layoutSig").textContent = LAYOUT_SIGNATURE;
+
+    // Mock store
+    const store = {
+      stateName: "DRAFT",
+      direction: "HÍBRIDA",
+      stage: 1, // 1,2,3
+      modules: {
+        sampleModule: { on: false, owner: "", cost: 0, due: "", ok: false, okTrigger: "Evidência anexada" }
+      },
+      gates: {
+        legal: { critical: true, ok: false, artifact: null },
+        finance: { critical: true, ok: false, artifact: null },
+        training: { critical: false, ok: false, artifact: null }
+      },
+      copyRegistry: [
+        { key:"ui.title", text:"[Título da tela / feature]", critical:true, status:"rascunho" },
+        { key:"ui.subtitle", text:"[Descrição curta do objetivo do ensaio]", critical:true, status:"rascunho" },
+        { key:"ui.blockA.title", text:"[Bloco A]", critical:false, status:"rascunho" },
+        { key:"ui.blockB.title", text:"[Bloco B]", critical:false, status:"rascunho" },
+      ],
+      frontBrief: {
+        direction:"", components:"", tokens:"", layout:"", media:"", a11y:"", ok:false
+      },
+      artifacts: [],
+      audit: []
+    };
+
+    // Scenarios
+    const scenarios = [
+      {
+        id: "baseline_draft",
+        name: "Baseline — Draft (sem OKs)",
+        hydrate: () => {
+          store.stateName = "DRAFT";
+          store.direction = "HÍBRIDA";
+          store.modules.sampleModule.on = false;
+          store.modules.sampleModule.owner = "";
+          store.modules.sampleModule.cost = 0;
+          store.modules.sampleModule.due = "";
+          store.modules.sampleModule.ok = false;
+          store.gates.legal.ok = false; store.gates.legal.artifact = null;
+          store.gates.finance.ok = false; store.gates.finance.artifact = null;
+          store.gates.training.ok = false; store.gates.training.artifact = null;
+          store.artifacts = [];
+          store.audit = [];
+        }
+      },
+      {
+        id: "waiting_ok_legal",
+        name: "Waiting OK — Jurídico pendente (crítico)",
+        hydrate: () => {
+          store.stateName = "WAITING_OK";
+          store.direction = "EXTERNA";
+          store.modules.sampleModule.on = true;
+          store.modules.sampleModule.owner = "Owner Exemplo";
+          store.modules.sampleModule.cost = 1500;
+          store.modules.sampleModule.due = "dd/mm";
+          store.modules.sampleModule.ok = true;
+          store.gates.legal.ok = false;
+          store.gates.finance.ok = true; store.gates.finance.artifact = { type:"pdf", name:"orcamento_aprovado.pdf" };
+          store.gates.training.ok = true; store.gates.training.artifact = { type:"doc", name:"kit_interno.pdf" };
+          store.artifacts = [{ ref:"finance", name:"orcamento_aprovado.pdf" }, { ref:"training", name:"kit_interno.pdf" }];
+        }
+      },
+      {
+        id: "ready_to_publish",
+        name: "Ready — tudo OK (publicável)",
+        hydrate: () => {
+          store.stateName = "READY_TO_PUBLISH";
+          store.direction = "HÍBRIDA";
+          store.modules.sampleModule.on = true;
+          store.modules.sampleModule.owner = "Owner Exemplo";
+          store.modules.sampleModule.cost = 3000;
+          store.modules.sampleModule.due = "dd/mm";
+          store.modules.sampleModule.ok = true;
+          store.gates.legal.ok = true; store.gates.legal.artifact = { type:"pdf", name:"parecer_assinado.pdf" };
+          store.gates.finance.ok = true; store.gates.finance.artifact = { type:"pdf", name:"orcamento_aprovado.pdf" };
+          store.gates.training.ok = true; store.gates.training.artifact = { type:"doc", name:"teste_pos_treinamento.csv" };
+          store.artifacts = [
+            { ref:"legal", name:"parecer_assinado.pdf" },
+            { ref:"finance", name:"orcamento_aprovado.pdf" },
+            { ref:"training", name:"teste_pos_treinamento.csv" }
+          ];
+        }
+      }
+    ];
+
+    // Event log
+    const eventLog = [];
+    function emit(type, payload){
+      const evt = { ts: new Date().toISOString(), type, payload };
+      eventLog.unshift(evt);
+      store.audit.unshift(evt);
+      render();
+    }
+
+    // Copy helpers
+    function getCopyItem(key){
+      return store.copyRegistry.find(x => x.key === key);
+    }
+    function ensureCopyItem(key, text=""){
+      let item = getCopyItem(key);
+      if(!item){
+        item = { key, text, critical:false, status:"rascunho" };
+        store.copyRegistry.push(item);
+      }
+      return item;
+    }
+
+    function applyCopyToUI(){
+      const nodes = document.querySelectorAll("[data-copy]");
+      nodes.forEach(n=>{
+        const key = n.getAttribute("data-copy");
+        const item = getCopyItem(key);
+        if(item && item.text !== undefined){
+          // Only replace if node is contenteditable or plain text container
+          if(n.isContentEditable){
+            n.textContent = item.text;
+          } else {
+            n.textContent = item.text;
+          }
+        }
+      });
+    }
+
+    function syncUIToCopy(){
+      const nodes = document.querySelectorAll("[data-copy]");
+      nodes.forEach(n=>{
+        const key = n.getAttribute("data-copy");
+        const text = (n.isContentEditable ? n.textContent : n.textContent) || "";
+        const item = ensureCopyItem(key, text);
+        item.text = text;
+      });
+    }
+
+    function exportCopyJSON(){
+      const out = store.copyRegistry.reduce((acc, x)=>{
+        acc[x.key] = { text: x.text, critical: x.critical, status: x.status };
+        return acc;
+      }, {});
+      document.getElementById("copyExportOut").textContent = JSON.stringify(out, null, 2);
+    }
+
+    function isTextComplete(){
+      // Text-complete only matters in Stage 2 (or higher)
+      if(store.stage < 2) return false;
+      const critical = store.copyRegistry.filter(x => x.critical);
+      if(!critical.length) return false;
+      return critical.every(x => x.status === "final" || x.status === "aprovado");
+    }
+
+    function isPreFrontOk(){
+      if(store.stage < 2) return false;
+      return !!store.frontBrief.ok;
+    }
+
+    // Rule engine (business readiness)
+    function validateBusiness(){
+      const blocks = [];
+      const alerts = [];
+
+      // Module rule master
+      Object.entries(store.modules).forEach(([k, m]) => {
+        if(!m.on) return;
+        const missing = [];
+        if(!m.owner || m.owner === "—") missing.push("owner");
+        if(!m.cost || m.cost <= 0) missing.push("cost_R$");
+        if(!m.due || m.due === "dd/mm") missing.push("due_date");
+        if(!m.okTrigger) missing.push("ok_trigger");
+        if(missing.length) blocks.push(`MÓDULO "${k}" ON incompleto: ${missing.join(", ")}`);
+        if(!m.ok) blocks.push(`MÓDULO "${k}" ON sem prova de pronto (OK)`);
+      });
+
+      // Critical gates
+      Object.entries(store.gates).forEach(([k, g]) => {
+        if(g.critical && !g.ok) blocks.push(`GATE crítico pendente: ${k}`);
+        if(!g.critical && !g.ok) alerts.push(`Gate não crítico pendente: ${k}`);
+      });
+
+      // Hybrid requires internal prep (simulated by training gate)
+      if(store.direction === "HÍBRIDA" && !store.gates.training.ok){
+        blocks.push(`Direção HÍBRIDA: preparação interna pendente (gate training)`);
+      }
+
+      return { ready: blocks.length === 0, blocks, alerts };
+    }
+
+    // Render UI table
+    function renderTable(){
+      const body = document.getElementById("tableBody");
+      body.innerHTML = "";
+
+      Object.entries(store.gates).forEach(([k,g])=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>Gate: ${k}${g.critical ? " (crítico)" : ""}</td>
+          <td>${g.ok ? "OK" : "Pendente"}</td>
+          <td>${g.artifact ? g.artifact.name : "-"}</td>
+          <td>${k === "legal" ? "Jurídico" : (k === "finance" ? "Financeiro" : "Operações")}</td>
+        `;
+        body.appendChild(tr);
+      });
+
+      Object.entries(store.modules).forEach(([k,m])=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>Módulo: ${k}${m.on ? " (ON)" : " (OFF)"}</td>
+          <td>${m.ok ? "OK" : (m.on ? "Em execução" : "—")}</td>
+          <td>${m.on ? m.okTrigger : "-"}</td>
+          <td>${m.owner || "-"}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    // Render copy registry
+    function renderCopyRegistry(){
+      const body = document.getElementById("copyBody");
+      body.innerHTML = "";
+
+      store.copyRegistry.forEach((item, idx)=>{
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td><input class="input" data-field="key" value="${escapeHtml(item.key)}" /></td>
+          <td><textarea class="textarea" data-field="text">${escapeHtml(item.text)}</textarea></td>
+          <td class="right"><input type="checkbox" data-field="critical" ${item.critical ? "checked" : ""} /></td>
+          <td>
+            <select class="select" data-field="status">
+              <option value="rascunho" ${item.status==="rascunho" ? "selected" : ""}>rascunho</option>
+              <option value="final" ${item.status==="final" ? "selected" : ""}>final</option>
+              <option value="aprovado" ${item.status==="aprovado" ? "selected" : ""}>aprovado</option>
+            </select>
+          </td>
+        `;
+
+        // bind handlers
+        tr.querySelectorAll("[data-field]").forEach(el=>{
+          el.addEventListener("change", ()=>{
+            const field = el.getAttribute("data-field");
+            if(field === "key") item.key = el.value.trim();
+            if(field === "text") item.text = el.value;
+            if(field === "critical") item.critical = !!el.checked;
+            if(field === "status") item.status = el.value;
+            render();
+          });
+          if(el.tagName === "TEXTAREA"){
+            el.addEventListener("input", ()=>{
+              item.text = el.value;
+            });
+          }
+        });
+
+        body.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // Stage visibility
+    function applyStageVisibility(){
+      const isStage2 = store.stage >= 2;
+      document.getElementById("copyRegistryCard").classList.toggle("hidden", !isStage2);
+      document.getElementById("frontBriefCard").classList.toggle("hidden", !isStage2);
+    }
+
+    // Render overall
+    function render(){
+      // stage sync
+      document.getElementById("stageSelect").value = String(store.stage);
+      applyStageVisibility();
+
+      // Apply copy to UI for stage 2 (registry-driven)
+      if(store.stage >= 2){
+        applyCopyToUI();
+      }
+
+      // front brief sync
+      document.getElementById("fbDirection").value = store.frontBrief.direction;
+      document.getElementById("fbComponents").value = store.frontBrief.components;
+      document.getElementById("fbTokens").value = store.frontBrief.tokens;
+      document.getElementById("fbLayout").value = store.frontBrief.layout;
+      document.getElementById("fbMedia").value = store.frontBrief.media;
+      document.getElementById("fbA11y").value = store.frontBrief.a11y;
+      document.getElementById("fbOk").checked = !!store.frontBrief.ok;
+
+      // business validation
+      const bus = validateBusiness();
+      const txt = isTextComplete();
+      const pre = isPreFrontOk();
+
+      document.getElementById("stateName").textContent = store.stateName;
+      document.getElementById("publishReady").textContent = bus.ready ? "SIM" : "NÃO";
+      document.getElementById("textReady").textContent = txt ? "SIM" : "NÃO";
+      document.getElementById("prefrontOk").textContent = pre ? "SIM" : "NÃO";
+      document.getElementById("blockCount").textContent = String(bus.blocks.length);
+
+      // validation output
+      const out = [
+        `PUBLISH READY: ${bus.ready ? "SIM" : "NÃO"}`,
+        `BLOQUEADORES (${bus.blocks.length}):`,
+        ...bus.blocks.map(x => `- ${x}`),
+        "",
+        `ALERTAS (${bus.alerts.length}):`,
+        ...bus.alerts.map(x => `- ${x}`),
+        "",
+        `TEXT-COMPLETE (Stage 2): ${txt ? "SIM" : "NÃO"}`,
+        `PRE-FRONT OK (Stage 2): ${pre ? "SIM" : "NÃO"}`
+      ].join("\n");
+      document.getElementById("validationOut").textContent = out;
+
+      // state + events
+      document.getElementById("stateOut").textContent = JSON.stringify(store, null, 2);
+      document.getElementById("eventOut").textContent = eventLog.length ? JSON.stringify(eventLog.slice(0, 15), null, 2) : "[Sem eventos ainda]";
+
+      renderTable();
+      renderCopyRegistry();
+    }
+
+    // Scenario select
+    function renderScenarioOptions(){
+      const sel = document.getElementById("scenarioSelect");
+      sel.innerHTML = "";
+      scenarios.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.id;
+        opt.textContent = s.name;
+        sel.appendChild(opt);
+      });
+    }
+
+    function applyScenario(id){
+      const s = scenarios.find(x => x.id === id);
+      if(!s) return;
+      s.hydrate();
+      emit("APPLY_SCENARIO", { id });
+    }
+
+    // Wiring
+    document.getElementById("stageSelect").addEventListener("change", (e)=>{
+      store.stage = Number(e.target.value || 1);
+      emit("SET_STAGE", { stage: store.stage });
+      render();
+    });
+
+    document.getElementById("btnApplyScenario").addEventListener("click", ()=>{
+      applyScenario(document.getElementById("scenarioSelect").value);
+    });
+
+    document.getElementById("btnReset").addEventListener("click", ()=>{
+      applyScenario("baseline_draft");
+      emit("RESET", {});
+    });
+
+    document.getElementById("btnValidate").addEventListener("click", ()=>{
+      const bus = validateBusiness();
+      emit("VALIDATE", { publishReady: bus.ready, blocks: bus.blocks.length });
+      render();
+    });
+
+    document.getElementById("btnAddCopy").addEventListener("click", ()=>{
+      store.copyRegistry.push({ key:"new.key", text:"[texto]", critical:false, status:"rascunho" });
+      emit("COPY_ADD", {});
+      render();
+    });
+
+    document.getElementById("btnExportCopy").addEventListener("click", ()=>{
+      exportCopyJSON();
+      emit("COPY_EXPORT", {});
+    });
+
+    // Front brief inputs
+    document.getElementById("fbDirection").addEventListener("input", e=>{ store.frontBrief.direction = e.target.value; });
+    document.getElementById("fbComponents").addEventListener("input", e=>{ store.frontBrief.components = e.target.value; });
+    document.getElementById("fbTokens").addEventListener("input", e=>{ store.frontBrief.tokens = e.target.value; });
+    document.getElementById("fbLayout").addEventListener("input", e=>{ store.frontBrief.layout = e.target.value; });
+    document.getElementById("fbMedia").addEventListener("input", e=>{ store.frontBrief.media = e.target.value; });
+    document.getElementById("fbA11y").addEventListener("input", e=>{ store.frontBrief.a11y = e.target.value; });
+    document.getElementById("fbOk").addEventListener("change", e=>{
+      store.frontBrief.ok = !!e.target.checked;
+      emit("FRONTBRIEF_OK", { ok: store.frontBrief.ok });
+      render();
+    });
+
+    // Sidebar action buttons
+    document.querySelectorAll("[data-action]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const action = btn.getAttribute("data-action");
+        if(action === "TOGGLE_SAMPLE_MODULE"){
+          const m = store.modules.sampleModule;
+          m.on = !m.on;
+          if(m.on){
+            m.owner = m.owner || "—";
+            m.due = m.due || "dd/mm";
+            m.cost = m.cost || 0;
+          }
+          emit("TOGGLE_MODULE", { module: "sampleModule", on: m.on });
+        }
+        if(action === "UPLOAD_SAMPLE_OK"){
+          store.gates.legal.ok = true;
+          store.gates.legal.artifact = { type:"pdf", name:"parecer_assinado.pdf" };
+          store.artifacts.push({ ref:"legal", name:"parecer_assinado.pdf" });
+          emit("UPLOAD_OK", { gate: "legal" });
+        }
+        if(action === "SYNC_UI_TO_COPY"){
+          syncUIToCopy();
+          emit("SYNC_UI_TO_COPY", {});
+          render();
+        }
+        if(action === "APPLY_COPY_TO_UI"){
+          applyCopyToUI();
+          emit("APPLY_COPY_TO_UI", {});
+          render();
+        }
+        if(action === "TRY_PUBLISH"){
+          const bus = validateBusiness();
+          if(bus.ready){
+            store.stateName = "PUBLISHED";
+            emit("PUBLISH", { snapshot: true });
+          }else{
+            emit("PUBLISH_BLOCKED", { blocks: bus.blocks });
+          }
+          render();
+        }
+      });
+    });
+
+    // Init
+    renderScenarioOptions();
+    applyScenario("baseline_draft");
+    render();
+  </script>
+</body>
+</html>

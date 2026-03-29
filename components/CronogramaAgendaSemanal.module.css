@@ -1,0 +1,427 @@
+@layer base {
+  .container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .navHeader {
+    padding: var(--spacing-2) var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+    background-color: var(--surface);
+    display: flex;
+    align-items: center;
+  }
+
+  .navControls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  .currentMonthLabel {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--foreground);
+    text-transform: capitalize;
+    margin-left: var(--spacing-2);
+  }
+
+  .boardWrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Core Board Content allows Horizontal Scroll at deep compression if needed */
+  .boardContent {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    overflow-y: hidden;
+    overflow-x: auto;
+    min-width: 600px;
+    gap: var(--spacing-4);
+    padding-right: var(--spacing-4);
+  }
+
+  .leftSection {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .fdsColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--card);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    min-width: 140px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  }
+
+  /* LEVEL OVERRIDES */
+  .level1 .rowHeader {
+    width: 50px;
+  }
+  .level1 .shiftLabel {
+    font-size: var(--font-size-2xs);
+  }
+
+  .level2 .rowHeader {
+    width: 40px;
+  }
+  .level2 .shiftLabel {
+    display: none;
+  }
+  .level2 .taskName {
+    font-size: 10px;
+  }
+  .level2 .assigneeAvatar {
+    display: none;
+  }
+
+  .level3 .boardContent {
+    /* At max compression, enforce horizontal scroll and tighter paddings */
+    min-width: 500px;
+  }
+  .level3 .rowHeader {
+    width: 32px;
+  }
+  .level3 .shiftLabel, .level3 .dayDate, .level3 .fdsMiniShiftLabel {
+    display: none;
+  }
+
+  /* HEADERS */
+  .columnsHeaderRow {
+    display: flex;
+    height: 40px;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--surface);
+    flex-shrink: 0;
+  }
+
+  .rowHeaderPlaceholder {
+    width: 60px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+  }
+
+  .monFriHeader {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .colHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+  }
+  .colHeader:last-child {
+    border-right: none;
+  }
+
+  .dayName {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+  }
+
+  .dayDate {
+    font-size: var(--font-size-2xs);
+    color: var(--muted-foreground);
+  }
+
+  .todayText .dayName,
+  .todayText .dayDate {
+    color: var(--info);
+    font-weight: 700;
+  }
+
+  /* SHIFT ROWS */
+  .shiftRow {
+    display: flex;
+    flex: 1;
+    min-height: 80px;
+    border-bottom: 1px solid var(--border);
+  }
+  .shiftRow:last-child {
+    border-bottom: none;
+  }
+
+  .rowHeader {
+    width: 60px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+    background-color: var(--surface);
+    color: var(--muted-foreground);
+    gap: var(--spacing-1);
+    transition: width var(--animation-duration-fast);
+  }
+
+  .shiftLabel {
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+  }
+
+  .shiftContent {
+    display: flex;
+    flex: 1;
+  }
+
+  /* MON-FRI AREA */
+  .monFriArea {
+    flex: 5;
+    position: relative;
+    border-right: 1px solid var(--border);
+  }
+
+  .monFriBg {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .monFriTasks {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: 24px;
+    padding: var(--spacing-1) 0;
+    gap: 4px 0;
+    pointer-events: none; /* Let clicks pass to drop zone if missing tasks */
+  }
+
+  /* FDS NEW COLUMN STYLES */
+  .fdsColumnHeader {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background-color: color-mix(in srgb, var(--surface) 60%, transparent);
+    flex-shrink: 0;
+  }
+
+  .fdsHeaderText {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+  }
+
+  .fdsColumnBody {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: color-mix(in srgb, var(--sidebar) 30%, transparent);
+  }
+
+  .fdsDaySection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .fdsDaySection:first-child {
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .fdsDayHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) 0;
+    background-color: color-mix(in srgb, var(--sidebar) 40%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .fdsMiniShift {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-bottom: 1px dashed color-mix(in srgb, var(--border) 50%, transparent);
+  }
+  .fdsMiniShift:last-child {
+    border-bottom: none;
+  }
+
+  .fdsMiniShiftLabel {
+    font-size: 9px;
+    font-style: italic;
+    color: var(--muted-foreground);
+    padding: 2px 4px;
+    opacity: 0.8;
+  }
+
+  .fdsMiniShiftContent {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fdsDropZone {
+    position: absolute;
+    inset: 0;
+    border-right: none;
+  }
+
+  .fdsTasks {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 20px;
+    padding: 2px 0;
+    gap: 2px 0;
+    pointer-events: none;
+  }
+
+  /* DROP ZONES */
+  .dropZone {
+    border-right: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+    cursor: pointer;
+    transition: background-color var(--animation-duration-fast);
+  }
+  .dropZone:last-child {
+    border-right: none;
+  }
+  .dropZone:hover {
+    background-color: color-mix(in srgb, var(--primary) 5%, transparent);
+  }
+  .todayBg {
+    background-color: color-mix(in srgb, var(--info) 5%, transparent);
+  }
+
+
+  /* TASKS */
+  .taskBlock {
+    margin: 0 4px;
+    background-color: var(--secondary);
+    border: 1px solid var(--border);
+    border-left-width: 3px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-1);
+    gap: var(--spacing-1);
+    font-size: var(--font-size-xs);
+    color: var(--foreground);
+    cursor: grab;
+    pointer-events: auto;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: var(--shadow);
+    transition: transform var(--animation-duration-fast), filter var(--animation-duration-fast);
+  }
+
+  .taskBlock:active {
+    cursor: grabbing;
+  }
+
+  .taskHovered {
+    filter: brightness(0.95);
+    transform: scale(1.02);
+    z-index: 20;
+  }
+  :global(.dark) .taskHovered {
+    filter: brightness(1.2);
+  }
+
+  .taskName {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+  }
+
+  .statusIcon {
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  .assigneeAvatar {
+    flex-shrink: 0;
+    background-color: var(--card);
+    color: var(--card-foreground);
+    font-size: 9px;
+    font-weight: 700;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+  }
+
+  /* PRIORITIES */
+  .priority-critical { border-left-color: var(--priority-critical); }
+  .priority-high { border-left-color: var(--priority-high); }
+  .priority-medium { border-left-color: var(--priority-medium); }
+  .priority-low { border-left-color: var(--priority-low); }
+
+  /* STATES */
+  .state-blocked {
+    opacity: 0.5;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 5px,
+      color-mix(in srgb, var(--muted-foreground) 10%, transparent) 5px,
+      color-mix(in srgb, var(--muted-foreground) 10%, transparent) 10px
+    );
+  }
+  .state-in_progress {
+    border-color: var(--primary);
+  }
+  .state-completed {
+    opacity: 0.65;
+  }
+  .state-completed .taskName {
+    text-decoration: line-through;
+  }
+
+  /* DEPENDENCIES */
+  .dependencyOverlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  .dependencyLine {
+    stroke: var(--primary);
+    stroke-width: 1.5px;
+    fill: none;
+    opacity: 0.6;
+  }
+
+  .dependencyArrowMarker {
+    fill: var(--primary);
+    opacity: 0.6;
+  }
+}

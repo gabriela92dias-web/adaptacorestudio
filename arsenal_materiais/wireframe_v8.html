@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe Técnico - Motor V8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #fafafa;
+            color: #333333;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .wireframe-block {
+            border: 2px solid #333;
+            background-color: #ffffff;
+            position: relative;
+        }
+        .wireframe-label {
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: #fafafa;
+            padding: 0 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-left: 2px solid #333;
+            border-right: 2px solid #333;
+        }
+        .placeholder-image {
+            position: relative;
+            border: 2px solid #999;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+        .placeholder-image::before, .placeholder-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-top: 1px solid #ccc;
+            transform-origin: top left;
+        }
+        /* Forma clássica do wireframe low-fi (X no meio) */
+        .placeholder-image::before {
+            transform: rotate(45deg) scaleX(1.5);
+            margin-top: -10%; 
+        }
+        .placeholder-image::after {
+            transform-origin: top right;
+            transform: rotate(-45deg) scaleX(1.5);
+        }
+        .placeholder-text {
+            height: 12px;
+            background-color: #ddd;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="p-8 max-w-4xl mx-auto space-y-12">
+
+    <div class="text-center mb-12">
+        <h1 class="text-2xl font-bold uppercase tracking-wider border-b-2 border-gray-300 inline-block pb-2">Wireframe Estrutural: Motor V8</h1>
+        <p class="text-sm mt-4 font-sans text-gray-600">Edite os títulos e as descrições (textos entre colchetes ou em cinza) preenchendo com sua distribuição lógica de funcionalidades.</p>
+    </div>
+
+    <!-- BLOCO 1 -->
+    <div class="wireframe-block p-6">
+        <div class="wireframe-label">BLOCO 1: HUB OMNICANAL (RADIAL)</div>
+        
+        <h2 class="text-lg font-bold mb-2 uppercase" contenteditable="true">[ Digite o pilar ou estratégia aqui ]</h2>
+        <p class="text-gray-500 text-sm font-sans" contenteditable="true">Descreva a arquitetura de informação e utilidade tática deste bloco...</p>
+        
+        <div class="mt-6 flex flex-col items-center justify-center h-48 border border-gray-300 bg-gray-50">
+            <!-- Representação Mockada Hub -->
+            <div class="w-24 h-24 border-2 border-dashed border-gray-400 rounded-full flex items-center justify-center relative bg-white">
+                <span class="text-xs text-gray-500 font-bold">NODE</span>
+                <!-- Fios conectores -->
+                <div class="absolute w-16 h-0 border-t-2 border-gray-400" style="top: 50%; left: -66px;"></div>
+                <div class="absolute w-16 h-0 border-t-2 border-gray-400" style="top: 50%; right: -66px;"></div>
+                <div class="absolute h-16 w-0 border-l-2 border-gray-400" style="left: 50%; top: -66px;"></div>
+                <div class="absolute h-16 w-0 border-l-2 border-gray-400" style="left: 50%; bottom: -66px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BLOCO 2 -->
+    <div class="wireframe-block p-6">
+        <div class="wireframe-label">BLOCO 2: ESTRUTURA PROGRESSIVA (FUNIL)</div>
+        
+        <h2 class="text-lg font-bold mb-2 uppercase" contenteditable="true">[ Digite o pilar ou estratégia aqui ]</h2>
+        <p class="text-gray-500 text-sm font-sans" contenteditable="true">Descreva a arquitetura de informação e utilidade tática deste bloco...</p>
+        
+        <div class="mt-6 flex flex-col items-center gap-2 border border-gray-300 bg-gray-50 p-6 relative">
+            <div class="w-full max-w-md h-12 border-2 border-gray-400 bg-white flex items-center justify-center"><span class="text-sm font-bold text-gray-500 tracking-widest">LAYER 1</span></div>
+            <div class="w-full max-w-sm h-12 border-2 border-gray-400 bg-white flex items-center justify-center"><span class="text-sm font-bold text-gray-500 tracking-widest">LAYER 2</span></div>
+            <div class="w-full max-w-xs h-12 border-2 border-gray-400 bg-white flex items-center justify-center"><span class="text-sm font-bold text-gray-500 tracking-widest">LAYER 3</span></div>
+        </div>
+    </div>
+
+    <!-- BLOCO 3 -->
+    <div class="wireframe-block p-6">
+        <div class="wireframe-label">BLOCO 3: PAINEL DIVIDIDO (SPLIT L/R)</div>
+        
+        <h2 class="text-lg font-bold mb-2 uppercase" contenteditable="true">[ Digite o pilar ou estratégia aqui ]</h2>
+        <p class="text-gray-500 text-sm font-sans" contenteditable="true">Descreva a arquitetura de informação e utilidade tática deste bloco...</p>
+        
+        <div class="mt-6 flex justify-between gap-8 py-4 px-2 border border-gray-300 bg-gray-50">
+            <!-- Mock Lado A -->
+            <div class="w-1/2 border-2 border-gray-400 bg-white p-4 h-64 flex flex-col shadow-sm">
+                <div class="border-b-2 border-gray-300 pb-2 mb-4 text-center text-sm font-bold">MÓDULO A</div>
+                <div class="placeholder-image h-24 w-full mb-4"></div>
+                <div class="placeholder-text w-full"></div>
+                <div class="placeholder-text w-5/6"></div>
+                <div class="placeholder-text w-4/6"></div>
+            </div>
+            <!-- Mock Lado B -->
+            <div class="w-1/2 border-2 border-gray-400 bg-white p-4 h-64 flex flex-col shadow-sm">
+                <div class="border-b-2 border-gray-300 pb-2 mb-4 text-center text-sm font-bold">MÓDULO B</div>
+                <div class="placeholder-image h-24 w-full mb-4"></div>
+                <div class="placeholder-text w-full"></div>
+                <div class="placeholder-text w-3/4"></div>
+                <div class="placeholder-text w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BLOCO 4 -->
+    <div class="wireframe-block p-6">
+        <div class="wireframe-label">BLOCO 4: COMPONENTES FLUTUANTES / LÚDICO</div>
+        
+        <h2 class="text-lg font-bold mb-2 uppercase" contenteditable="true">[ Digite o pilar ou estratégia aqui ]</h2>
+        <p class="text-gray-500 text-sm font-sans" contenteditable="true">Descreva a arquitetura de informação e utilidade tática deste bloco...</p>
+        
+        <div class="mt-6 p-6 flex flex-wrap justify-center items-center gap-6 border border-gray-300 bg-white shadow-inner h-48 overflow-hidden">
+            <div class="w-32 h-32 rounded-full border-2 border-gray-400 bg-white flex items-center justify-center p-4 text-center">
+                <span class="text-[10px] font-bold text-gray-400">VARIAVEL ORGÂNICA</span>
+            </div>
+            <div class="w-48 h-24 border-2 border-gray-400 flex flex-col justify-center items-center p-2 bg-gray-50">
+                <div class="placeholder-text w-full mb-2"></div>
+                <div class="placeholder-text w-1/2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BLOCO 5 -->
+    <div class="wireframe-block p-6">
+        <div class="wireframe-label">BLOCO 5: FLUXOGRAMA DE DECISÃO (DECISION TREE)</div>
+        
+        <h2 class="text-lg font-bold mb-2 uppercase" contenteditable="true">[ Digite o pilar ou estratégia aqui ]</h2>
+        <p class="text-gray-500 text-sm font-sans" contenteditable="true">Descreva a arquitetura de informação e utilidade tática deste bloco...</p>
+        
+        <div class="mt-6 flex flex-col items-center py-6 border border-gray-300 bg-gray-50">
+            <div class="w-32 h-12 border-2 border-gray-500 bg-white text-center text-xs p-2 flex items-center justify-center font-bold">TRIGGER</div>
+            <div class="w-0 h-6 border-l-2 border-gray-500"></div>
+            <!-- Losango UI -->
+            <div class="w-12 h-12 border-2 border-gray-500 bg-white transform rotate-45 flex items-center justify-center"><span class="transform -rotate-45 text-[9px] font-bold">IF</span></div>
+            <div class="flex w-64 justify-between -mt-[1px]">
+                <div class="w-1/2 h-8 border-t-2 border-l-2 border-gray-500"></div>
+                <div class="w-1/2 h-8 border-t-2 border-r-2 border-gray-500"></div>
+            </div>
+            <div class="flex w-80 justify-between">
+                <div class="w-24 h-16 border-2 border-gray-500 bg-white flex items-center justify-center"><span class="text-[10px] font-bold">AÇÃO A</span></div>
+                <div class="w-24 h-16 border-2 border-dashed border-gray-500 bg-white flex items-center justify-center"><span class="text-[10px] font-bold text-gray-500">AÇÃO B</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BLOCO 6 -->
+    <div class="wireframe-block p-6 mb-12">
+        <div class="wireframe-label">BLOCO 6: DASHBOARD DE DADOS (CARDS E TABELAS)</div>
+        
+        <h2 class="text-lg font-bold mb-2 uppercase" contenteditable="true">[ Digite o pilar ou estratégia aqui ]</h2>
+        <p class="text-gray-500 text-sm font-sans" contenteditable="true">Descreva a arquitetura de informação e utilidade tática deste bloco...</p>
+        
+        <div class="mt-6 border border-gray-300 bg-gray-50 p-6 flex flex-col gap-6">
+            <!-- KPIs -->
+            <div class="flex gap-4 border-b-2 border-gray-300 pb-6">
+                <div class="w-1/3 h-20 border-2 border-gray-400 bg-white flex flex-col p-2">
+                    <span class="text-[10px] font-bold text-gray-400">METRICA PRINCIPAL</span>
+                    <span class="text-2xl font-bold mt-auto"># 000</span>
+                </div>
+                <div class="w-1/3 h-20 border-2 border-gray-400 bg-white flex flex-col p-2">
+                    <span class="text-[10px] font-bold text-gray-400">KPI SECUNDARIO</span>
+                    <span class="text-2xl font-bold mt-auto">0.00%</span>
+                </div>
+                <div class="w-1/3 h-20 border-2 border-gray-400 bg-white flex items-center justify-center shadow-inner pt-2">
+                    <div class="flex gap-1 items-end h-[60%] w-[80%]">
+                        <div class="w-1/4 h-[30%] bg-gray-400"></div>
+                        <div class="w-1/4 h-[60%] bg-gray-400"></div>
+                        <div class="w-1/4 h-[100%] bg-gray-400"></div>
+                        <div class="w-1/4 h-[80%] bg-gray-400"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Linhas de listagem -->
+            <div class="w-full">
+                <div class="flex text-xs font-bold text-gray-500 border-b-2 border-gray-300 pb-2 mb-2">
+                    <div class="w-1/2">PARÂMETRO</div>
+                    <div class="w-1/4 text-center">STATUS</div>
+                    <div class="w-1/4 text-right">VALOR</div>
+                </div>
+                <div class="flex items-center text-sm py-2 border-b border-gray-300 border-dashed">
+                    <div class="w-1/2"><div class="placeholder-text w-3/4 mb-0"></div></div>
+                    <div class="w-1/4 flex justify-center"><div class="w-8 h-4 bg-gray-600 rounded"></div></div>
+                    <div class="w-1/4 text-right font-mono font-bold">120</div>
+                </div>
+                <div class="flex items-center text-sm py-2">
+                    <div class="w-1/2"><div class="placeholder-text w-1/2 mb-0"></div></div>
+                    <div class="w-1/4 flex justify-center"><div class="w-8 h-4 border-2 border-gray-400 rounded"></div></div>
+                    <div class="w-1/4 text-right font-mono font-bold">45</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

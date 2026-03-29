@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe UX - Motor V8 (PRD Sync)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #fafafa;
+            color: #111111;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        .wireframe-block {
+            border: 2px solid #333;
+            background-color: #ffffff;
+            position: relative;
+            box-shadow: 4px 4px 0px #333;
+            transition: all 0.5s ease;
+        }
+        .wireframe-label {
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: #fafafa;
+            padding: 0 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-left: 2px solid #333;
+            border-right: 2px solid #333;
+            letter-spacing: 0.05em;
+        }
+        .locked-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            transition: opacity 0.4s ease;
+        }
+        
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Typography utils for UX Wireframe */
+        .ux-h2 { font-size: 1.15rem; font-weight: bold; margin-bottom: 0.25rem; }
+        .ux-p { font-size: 0.85rem; color: #555; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body class="p-8 max-w-5xl mx-auto space-y-12 pb-24">
+
+    <div class="mb-12 border-b-2 border-dashed border-gray-300 pb-6">
+        <h1 class="text-3xl font-black tracking-tight uppercase">Motor V8: Setup de Campanha</h1>
+        <p class="text-gray-600 mt-2">Visão do Usuário Final (UX Sketch) | Workflow Assíncrono Orientado a Eventos.</p>
+    </div>
+
+    <!-- START ENGINE (IGNITION) -->
+    <div class="wireframe-block p-6">
+        <div class="wireframe-label">Injeção Inteligente</div>
+        <div class="flex flex-col md:flex-row gap-4 mt-2 relative z-10">
+            <input type="text" id="dna-input" placeholder="Descreva sua campanha. Ex: Lançamento online para B2B..." class="w-full border-2 border-gray-800 p-4 outline-none focus:bg-gray-50 text-base font-medium">
+            <button id="activate-btn" onclick="startEngine()" class="bg-black text-white px-8 py-4 font-bold uppercase hover:bg-gray-800 transition-colors shrink-0 flex items-center justify-center gap-2">
+                <i data-lucide="zap" class="w-5 h-5" id="btn-icon"></i>
+                <span id="btn-text">GERAR ARQUITETURA</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- WIREFRAME CONTAINER (TODA A ABA ABERTA, UNLOCK ASSINCRONO) -->
+    <div id="output-blocks" class="space-y-10">
+
+        <!-- 1. DNA DA CAMPANHA -->
+        <div class="wireframe-block p-6">
+            <div class="wireframe-label">Regras do Jogo</div>
+            <div class="locked-overlay" id="lock-b1">
+                <i data-lucide="lock" class="w-6 h-6 text-gray-400"></i><span class="text-xs font-bold text-gray-500 uppercase">Processando DNA...</span>
+            </div>
+            
+            <h2 class="ux-h2">DNA Extraído da Campanha</h2>
+            <p class="ux-p">Variáveis orgânicas que definem todo o comportamento posterior do sistema (Árvore-Mãe).</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                <div class="border border-gray-300 p-4 text-center bg-gray-50"><div class="text-[10px] text-gray-500 font-bold mb-1">AUDIÊNCIA</div><div class="font-black uppercase" id="out-pub">-</div></div>
+                <div class="border border-gray-300 p-4 text-center bg-gray-50"><div class="text-[10px] text-gray-500 font-bold mb-1">DIREÇÃO</div><div class="font-black uppercase" id="out-direcao">-</div></div>
+                <div class="border border-gray-300 p-4 text-center bg-gray-50"><div class="text-[10px] text-gray-500 font-bold mb-1">EXPERIÊNCIA</div><div class="font-black uppercase" id="out-exp">-</div></div>
+                <div class="border border-gray-300 p-4 text-center bg-gray-50"><div class="text-[10px] text-gray-500 font-bold mb-1">JANELA</div><div class="font-black uppercase" id="out-janela">-</div></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+            <!-- 2. SOFT GATES (ASSÍNCRONO, NÃO CASCATA) -->
+            <div class="md:col-span-5 wireframe-block p-6 relative">
+                <div class="wireframe-label">Validações Críticas</div>
+                <div class="locked-overlay" id="lock-b2">
+                    <i data-lucide="lock" class="w-6 h-6 text-gray-400"></i><span class="text-xs font-bold text-gray-500 uppercase">Gerando Soft Gates...</span>
+                </div>
+
+                <h2 class="ux-h2">Workflow Assíncrono (Soft Gates)</h2>
+                <p class="ux-p">Dependências mapeadas que não travam a produção, mas bloqueiam a publicação final.</p>
+                
+                <div class="flex flex-col gap-3">
+                    <!-- Gate 1 -->
+                    <div class="border-2 border-gray-300 p-3 flex items-start gap-3 bg-white">
+                        <div class="w-8 h-8 border border-gray-400 rounded-full flex items-center justify-center shrink-0 mt-1"><i data-lucide="circle" class="w-4 h-4 text-gray-300"></i></div>
+                        <div>
+                            <div class="font-bold text-sm">Gate Financeiro</div>
+                            <div class="text-[10px] text-gray-500 mt-1 uppercase" id="l1-hook">Exige: Orçamento Aprovado</div>
+                        </div>
+                    </div>
+                    <!-- Gate 2 -->
+                    <div class="border-2 border-gray-300 p-3 flex items-start gap-3 bg-white">
+                        <div class="w-8 h-8 border border-gray-400 rounded-full flex items-center justify-center shrink-0 mt-1"><i data-lucide="circle" class="w-4 h-4 text-gray-300"></i></div>
+                        <div>
+                            <div class="font-bold text-sm" id="l2-title">Gate Operacional / Jurídico</div>
+                            <div class="text-[10px] text-gray-500 mt-1 uppercase" id="l2-hook">Exige: Evidência Pendente</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 e 4. TRILHAS E MÓDULOS -->
+            <div class="md:col-span-7 flex flex-col gap-10">
+                
+                <div class="wireframe-block p-6 relative">
+                    <div class="wireframe-label">Execução Tática</div>
+                    <div class="locked-overlay" id="lock-b3">
+                        <i data-lucide="lock" class="w-6 h-6 text-gray-400"></i><span class="text-xs font-bold text-gray-500 uppercase">Distribuindo Lados...</span>
+                    </div>
+
+                    <h2 class="ux-h2">Trilhas Paralelas de Operação</h2>
+                    <p class="ux-p">O Lado A (Interno) prepara a casa; o Lado B ataca o mercado.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="border border-gray-300 bg-gray-50 p-4" id="ladoA-container">
+                            <div class="font-bold border-b-2 border-gray-800 pb-1 mb-3 uppercase text-sm">Lado A (Int. & Operações)</div>
+                            <ul class="text-xs space-y-2 text-gray-600 min-h-[60px]" id="m-ladoA-tasks"></ul>
+                        </div>
+                        <div class="border border-gray-300 bg-gray-50 p-4" id="ladoB-container">
+                            <div class="font-bold border-b-2 border-gray-800 pb-1 mb-3 uppercase text-sm">Lado B (Audiência Final)</div>
+                            <ul class="text-xs space-y-2 text-gray-600 min-h-[60px]" id="m-ladoB-tasks"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. BIBLIOTECA DE MÓDULOS ACTIVOS (4 CAMPOS!) -->
+                <div class="wireframe-block p-6 relative">
+                    <div class="wireframe-label">Features Ativas</div>
+                    <div class="locked-overlay" id="lock-b4">
+                        <i data-lucide="lock" class="w-6 h-6 text-gray-400"></i><span class="text-xs font-bold text-gray-500 uppercase">Acionando Biblioteca...</span>
+                    </div>
+
+                    <h2 class="ux-h2" id="b4-title">Módulo: Operativa Customizada</h2>
+                    <p class="ux-p">Todo módulo "ON" exige as 4 variáveis documentais obrigatórias da Adapta.</p>
+                    
+                    <div class="border-2 border-black p-4 bg-white relative">
+                        <div class="absolute -top-3 right-4 bg-black text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest">Módulo ON</div>
+                        <div class="font-bold mb-4" id="b4-desc">Nome da Operativa</div>
+                        
+                        <!-- OS 4 CAMPOS DO PRD -->
+                        <div class="grid grid-cols-2 gap-y-4 gap-x-6 text-sm">
+                            <div>
+                                <div class="text-[10px] text-gray-500 font-bold mb-1">I. DONO (OWNER)</div>
+                                <div class="border-b border-gray-300 pb-1" id="b4-campo-owner">-</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-gray-500 font-bold mb-1">II. CUSTO (R$)</div>
+                                <div class="border-b border-gray-300 pb-1" id="b4-campo-custo">-</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-gray-500 font-bold mb-1">III. PRAZO LIMITE</div>
+                                <div class="border-b border-gray-300 pb-1" id="b4-campo-prazo">-</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-gray-500 font-bold mb-1">IV. OK TRIGGER (EVIDÊNCIA)</div>
+                                <div class="border-b border-gray-300 pb-1 font-mono text-[10px] bg-gray-100 p-1 truncate" id="b4-campo-ok">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. PAINEL ANALÍTICO E PRONTIDÃO -->
+        <div class="wireframe-block p-6">
+            <div class="wireframe-label">Checklist de Publicação</div>
+            <div class="locked-overlay" id="lock-b6">
+                <i data-lucide="lock" class="w-6 h-6 text-gray-400"></i><span class="text-xs font-bold text-gray-500 uppercase">Mapeando Hard Gate...</span>
+            </div>
+
+            <div class="flex justify-between items-end mb-4 border-b border-gray-300 pb-4">
+                <div>
+                    <h2 class="ux-h2">Painel de Readiness / Bloqueadores Reais</h2>
+                    <p class="ux-p mb-0">Auditoria transparente antes do "Hard Gate". Status das evidências de Soft Gates e Módulos.</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-3xl font-black">PENDING</div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Status Hard Gate</div>
+                </div>
+            </div>
+
+            <div class="w-full mt-4">
+                <div class="flex text-xs font-bold text-gray-500 border-b border-gray-800 pb-2 mb-2 uppercase">
+                    <div class="w-1/2">Bloqueador / Evidência Restante</div>
+                    <div class="w-1/4 text-center">Domínio</div>
+                    <div class="w-1/4 text-right">Ação Direta</div>
+                </div>
+                <!-- Injetar via JS -->
+                <div id="table-logs" class="space-y-1"></div>
+            </div>
+            
+            <button class="w-full mt-6 bg-gray-200 text-gray-400 font-bold py-4 text-sm uppercase cursor-not-allowed border-2 border-gray-300 border-dashed">
+                Publicar e Gerar Snapshot Imutável (Bloqueado)
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function startEngine() {
+            const input = document.getElementById('dna-input').value;
+            if (input.trim() === '') return;
+
+            const btnText = document.getElementById('btn-text');
+            const icon = document.getElementById('btn-icon');
+            
+            btnText.innerText = "ÁRVORE ATIVA";
+            icon.setAttribute('data-lucide', 'check');
+            lucide.createIcons();
+
+            // Destrave Cascata
+            setTimeout(() => { document.getElementById('lock-b1').style.opacity = '0'; setTimeout(() => { document.getElementById('lock-b1').style.display = 'none'; }, 400); populateHub(input); }, 300);
+            setTimeout(() => { document.getElementById('lock-b2').style.opacity = '0'; setTimeout(() => { document.getElementById('lock-b2').style.display = 'none'; }, 400); populateGov(input); }, 900);
+            setTimeout(() => { document.getElementById('lock-b3').style.opacity = '0'; setTimeout(() => { document.getElementById('lock-b3').style.display = 'none'; }, 400); populateTrails(input); }, 1500);
+            setTimeout(() => { document.getElementById('lock-b4').style.opacity = '0'; setTimeout(() => { document.getElementById('lock-b4').style.display = 'none'; }, 400); populateSpecific(input); }, 2100);
+            setTimeout(() => { document.getElementById('lock-b6').style.opacity = '0'; setTimeout(() => { document.getElementById('lock-b6').style.display = 'none'; }, 400); populateDashboard(input); }, 2700);
+        }
+
+        let isFisico = false;
+        let isInterno = false;
+
+        function populateHub(text) {
+            const val = text.toLowerCase();
+            isFisico = val.includes('presencial') || val.includes('evento') || val.includes('físico');
+            isInterno = val.includes('interno') || val.includes('colaborador');
+
+            document.getElementById('out-direcao').innerText = isInterno ? 'INTERNA' : (val.includes('b2b') ? 'MERCADO B2B' : 'MERCADO B2C');
+            document.getElementById('out-exp').innerText = isFisico ? 'FÍSICA' : 'DIGITAL';
+            document.getElementById('out-pub').innerText = 'MATRIZ / GENÉRICO';
+            document.getElementById('out-janela').innerText = val.includes('continuo') ? 'ALWAYS ON' : 'PONTUAL (1 MÊS)';
+        }
+
+        function populateGov(text) {
+            document.getElementById('l1-hook').innerText = "Exige: Aprovação Financeira & Escopo";
+            document.getElementById('l2-title').innerText = isFisico ? "Gate: Responsabilidade Física" : "Gate: Compliance Digital";
+            document.getElementById('l2-hook').innerText = isFisico ? "Exige: Evidência de Alvará / Vistoria" : "Exige: Evidência Regras LGPD/Opt-in";
+        }
+
+        function populateTrails(text) {
+            const ladoA = document.getElementById('m-ladoA-tasks');
+            const ladoB = document.getElementById('m-ladoB-tasks');
+            
+            if(isInterno) {
+                ladoA.innerHTML = "<li>• Operacional: Briefing Squads</li><li>• Disparo Intranet Matriz</li>";
+                ladoB.innerHTML = "<li class='text-gray-400 italic'>Ocioso (Foco Interno)</li>";
+                document.getElementById('ladoB-container').style.opacity = '0.5';
+            } else {
+                ladoA.innerHTML = "<li>• Mandatário: Treinar Vendas antes do Release</li>";
+                ladoB.innerHTML = "<li>• Configurar Régua de Performance</li><li>• Distribuição de Press Release</li>";
+                document.getElementById('ladoB-container').style.opacity = '1';
+            }
+        }
+
+        function populateSpecific(text) {
+            if(isFisico) {
+                document.getElementById('b4-title').innerText = "Módulo de Eventos Presenciais";
+                document.getElementById('b4-desc').innerText = "Gestão Operacional de Segurança de Locação";
+                document.getElementById('b4-campo-owner').innerText = "Vitor (Ops)";
+                document.getElementById('b4-campo-custo').innerText = "Sob Estimativa (Max)";
+                document.getElementById('b4-campo-prazo').innerText = "D-15 (Antes do Evento)";
+                document.getElementById('b4-campo-ok').innerText = "[Upload] Auto de Vistoria (PDF)";
+            } else {
+                document.getElementById('b4-title').innerText = "Módulo de Lançamento Digital";
+                document.getElementById('b4-desc').innerText = "Preparação de Nuvem e Servidores de Tráfego";
+                document.getElementById('b4-campo-owner').innerText = "Gabriel (Tech)";
+                document.getElementById('b4-campo-custo').innerText = "R$ 0,00 (Cloud Existente)";
+                document.getElementById('b4-campo-prazo').innerText = "D-2 (Antes do Go-Live)";
+                document.getElementById('b4-campo-ok').innerText = "[Link] Parecer de Load Balancing";
+            }
+        }
+
+        function populateDashboard(text) {
+            const t = document.getElementById('table-logs');
+            t.innerHTML = `
+                <div class="flex items-center text-sm py-3 border-b border-dashed border-gray-300 bg-gray-50 px-2 mt-1">
+                    <div class="w-1/2 font-bold text-gray-800 text-xs flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div> Budget / Orçamento</div>
+                    <div class="w-1/4 text-center text-xs">FINANCEIRO</div>
+                    <div class="w-1/4 text-right"><span class="underline text-blue-600 cursor-pointer font-bold text-[10px] uppercase tracking-wider">Enviar P/ Assinatura</span></div>
+                </div>
+                <div class="flex items-center text-sm py-3 border-b border-dashed border-gray-300 px-2">
+                    <div class="w-1/2 font-bold text-gray-800 text-xs flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div> ${isFisico ? 'Alvará Legal do Galpão' : 'Parecer de Privacidade'}</div>
+                    <div class="w-1/4 text-center text-xs">${isFisico ? 'OPERAÇÕES' : 'JURÍDICO'}</div>
+                    <div class="w-1/4 text-right"><span class="underline text-blue-600 cursor-pointer font-bold text-[10px] uppercase tracking-wider">Anexar Evidência</span></div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor V8 - Dashboard de Planejamento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-family: 'Inter', sans-serif;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+        .section-desc {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        /* Loading anim */
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Gradientes Sutis */
+        .bg-dna { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+        .bg-gov { background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); }
+        .bg-trails { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); }
+    </style>
+</head>
+<body class="p-6 md:p-12 max-w-5xl mx-auto space-y-10 pb-24">
+
+    <!-- HEADER / INPUT -->
+    <div class="text-center max-w-3xl mx-auto mb-12">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900 mb-4">Motor V8</h1>
+        <p class="text-slate-500 mb-8">Planeje sua campanha inteligente. O sistema vai extrair a intenção e montar toda a estrutura organizacional, logística e de módulos automaticamente.</p>
+        
+        <div class="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 flex items-center relative z-20">
+            <input type="text" id="dna-input" placeholder="Ex: Preciso fazer um evento presencial corporativo B2B..." class="w-full bg-transparent p-4 outline-none text-slate-700 text-lg">
+            <button id="activate-btn" onclick="startEngine()" class="bg-indigo-600 text-white rounded-xl py-4 px-8 font-semibold hover:bg-indigo-700 transition flex items-center gap-2 flex-shrink-0">
+                <i data-lucide="zap" class="w-5 h-5" id="btn-icon"></i>
+                <span id="btn-text">Gerar Plano</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- RENDER CONTAINER -->
+    <div id="output-blocks" class="space-y-8 opacity-0 transition-opacity duration-700 pointer-events-none transform translate-y-4">
+
+        <!-- 1. HUB DNA (Centro de Comando) -->
+        <div class="card p-8 bg-dna border-blue-100 relative">
+            <div class="mb-6 border-b border-blue-200 pb-4">
+                <h2 class="section-title text-blue-900">Configuração Extraída (DNA)</h2>
+                <p class="section-desc text-blue-700">Com base no seu pedido, o sistema parametrizou a campanha com as seguintes diretrizes centrais.</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Direção</span>
+                    <span class="text-base font-bold text-slate-800" id="out-direcao">...</span>
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Experiência</span>
+                    <span class="text-base font-bold text-slate-800" id="out-exp">...</span>
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Público</span>
+                    <span class="text-base font-bold text-slate-800" id="out-pub">...</span>
+                </div>
+                <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Duração</span>
+                    <span class="text-base font-bold text-slate-800" id="out-duracao">...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <!-- Coluna Esquerda: Governança Linear -->
+            <div class="md:col-span-5 space-y-8">
+                <!-- 2. GOVERNANÇA (Funil/Sequencial) -->
+                <div class="card p-6 bg-gov border-fuchsia-100 h-full">
+                    <div class="mb-6">
+                        <h2 class="section-title text-fuchsia-900">Etapas de Liberação</h2>
+                        <p class="section-desc text-fuchsia-700">Aprovações obrigatórias antes da campanha entrar no ar.</p>
+                    </div>
+
+                    <div class="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                        
+                        <!-- Layer 1 -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-200 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-fuchsia-600"></i>
+                            </div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <div class="font-semibold text-slate-800 text-sm">Aprovação Orçamentária</div>
+                                <div class="text-xs text-slate-500 mt-1" id="l1-hook">Aguardando definição financeira</div>
+                            </div>
+                        </div>
+
+                        <!-- Layer 2 -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-200 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <i data-lucide="gavel" class="w-5 h-5 text-orange-500"></i>
+                            </div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <div class="font-semibold text-slate-800 text-sm" id="l2-title">Compliance Jurídico</div>
+                                <div class="text-xs text-slate-500 mt-1" id="l2-hook">Vistoria e documentação</div>
+                            </div>
+                        </div>
+
+                        <!-- Layer 3 -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-200 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <i data-lucide="send" class="w-5 h-5 text-slate-400"></i>
+                            </div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <div class="font-semibold text-slate-800 text-sm">Disparo Oficial</div>
+                                <div class="text-xs text-slate-500 mt-1">Gatilho ativado pós check</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna Direita: Trilhas e Modulos -->
+            <div class="md:col-span-7 space-y-8">
+                <!-- 3. TRILHAS AÇÕES (Lado A/B) -->
+                <div class="card p-6 bg-trails border-green-100">
+                    <div class="mb-6">
+                        <h2 class="section-title text-green-900">Módulos de Ação</h2>
+                        <p class="section-desc text-green-700">Tarefas geradas e divididas pelos setores responsáveis (Interno vs. Externo).</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Trilha Interna -->
+                        <div class="bg-white rounded-xl border border-green-200 p-4 shadow-sm flex flex-col">
+                            <div class="flex items-center gap-2 mb-4 pb-2 border-b border-slate-100">
+                                <i data-lucide="building-2" class="text-green-600 w-4 h-4"></i>
+                                <span class="font-semibold text-sm text-slate-700">Equipe Interna</span>
+                            </div>
+                            <ul class="text-sm text-slate-600 space-y-3 mb-4 flex-grow" id="m-ladoA-tasks">
+                                <li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Treinamento de Equipe</span></li>
+                            </ul>
+                            <div class="mt-auto bg-slate-50 rounded p-2 text-xs text-slate-500 border border-slate-100 flex justify-between items-center">
+                                <span>Dependência:</span>
+                                <span class="font-semibold text-slate-700" id="m-ladoA-hook">Material Finalizado</span>
+                            </div>
+                        </div>
+
+                        <!-- Trilha Externa -->
+                        <div class="bg-white rounded-xl border border-green-200 p-4 shadow-sm flex flex-col">
+                            <div class="flex items-center gap-2 mb-4 pb-2 border-b border-slate-100">
+                                <i data-lucide="globe-2" class="text-indigo-600 w-4 h-4"></i>
+                                <span class="font-semibold text-sm text-slate-700">Público Externo</span>
+                            </div>
+                            <ul class="text-sm text-slate-600 space-y-3 mb-4 flex-grow" id="m-ladoB-tasks">
+                                <li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Campanha Redes Sociais</span></li>
+                            </ul>
+                            <div class="mt-auto bg-slate-50 rounded p-2 text-xs text-slate-500 border border-slate-100 flex justify-between items-center">
+                                <span>Dependência:</span>
+                                <span class="font-semibold text-slate-700" id="m-ladoB-hook">Aprovação Budget Media</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. MODULOS ESPECÍFICOS (Flutuantes na arquitetura anterior) -->
+                <div class="card p-6 border-amber-100 bg-amber-50/50" id="especifico-container">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h2 class="section-title text-amber-900" id="m-especifico-title">Módulo de Logística Física</h2>
+                            <p class="section-desc text-amber-700" id="m-especifico-desc">Operacional necessário para a execução do evento físico.</p>
+                        </div>
+                        <div class="p-2 bg-amber-100 rounded-lg text-amber-600">
+                            <i data-lucide="map-pin" class="w-5 h-5" id="m-especifico-icon"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 bg-white p-4 rounded-xl border border-amber-100 flex items-center gap-4">
+                        <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center shrink-0">
+                            <i data-lucide="file-warning" class="w-5 h-5 text-amber-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-800">Alvará Obrigatório</h4>
+                            <p class="text-xs text-slate-500" id="m-especifico-obs">Licença da prefeitura para operar em local público/fechado.</p>
+                        </div>
+                        <button class="ml-auto text-xs font-semibold bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 text-slate-600">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. DASHBOARD KPIs E LOGS -->
+        <div class="card p-6">
+            <div class="mb-6 flex justify-between items-end border-b border-slate-100 pb-4">
+                <div>
+                    <h2 class="section-title">Painel de Acompanhamento (Status)</h2>
+                    <p class="section-desc">Monitore os gargalos ("Hooks") pendentes do ecossistema.</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-3xl font-bold text-slate-800" id="kpi-progresso">0%</span>
+                    <span class="text-xs text-slate-500 block uppercase font-semibold">Progresso Global</span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-slate-500 uppercase bg-slate-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 rounded-tl-lg font-semibold">Dependência (Hook)</th>
+                            <th scope="col" class="px-6 py-3 font-semibold">Setor Responsável</th>
+                            <th scope="col" class="px-6 py-3 font-semibold">Status Atual</th>
+                            <th scope="col" class="px-6 py-3 rounded-tr-lg font-semibold text-right">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-logs">
+                        <!-- Injetado via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const input = document.getElementById('dna-input');
+        const btn = document.getElementById('activate-btn');
+        const icon = document.getElementById('btn-icon');
+        const btnText = document.getElementById('btn-text');
+        const outputBlocks = document.getElementById('output-blocks');
+
+        // Permitir Enter
+        input.addEventListener('keydown', (e) => {
+            if(e.key === 'Enter' && input.value.trim() !== '') startEngine();
+        });
+
+        function startEngine() {
+            if (input.value.trim() === '') return;
+
+            // Reset UI
+            outputBlocks.classList.remove('opacity-100', 'translate-y-0');
+            outputBlocks.classList.add('opacity-0', 'translate-y-4');
+            outputBlocks.style.pointerEvents = 'none';
+
+            input.disabled = true;
+            btn.disabled = true;
+            btnText.innerText = "Analisando DNA...";
+            icon.setAttribute('data-lucide', 'loader-2');
+            icon.classList.add('spin');
+            lucide.createIcons();
+
+            // Simulate Intelligence Engine
+            setTimeout(() => {
+                input.disabled = false;
+                btn.disabled = false;
+                btnText.innerText = "Atualizar Plano";
+                icon.setAttribute('data-lucide', 'refresh-cw');
+                icon.classList.remove('spin');
+                lucide.createIcons();
+
+                processLogic(input.value);
+
+                outputBlocks.classList.remove('opacity-0', 'translate-y-4');
+                outputBlocks.classList.add('opacity-100', 'translate-y-0');
+                outputBlocks.style.pointerEvents = 'auto';
+
+            }, 1200);
+        }
+
+        function processLogic(text) {
+            const val = text.toLowerCase();
+            
+            // Simulação de Inteligência LLM -> Atributos JSON
+            let direcao = "Híbrida (Omnicanal)";
+            let exp = "Híbrida";
+            let pub = "B2C e B2B";
+            let duracao = "Pontual";
+
+            // Detecção Básica
+            if (val.includes("interno") || val.includes("colaborador")) direcao = "Interna (Endomarketing)";
+            if (val.includes("externo") || val.includes("mercado")) direcao = "Externa (Go-to-Market)";
+            if (val.includes("presencial") || val.includes("físico") || val.includes("evento")) exp = "Física";
+            if (val.includes("online") || val.includes("digital") || val.includes("webinar")) exp = "Digital";
+            if (val.includes("b2b") || val.includes("corporativo")) pub = "B2B (Empresarial)";
+            if (val.includes("b2c") || val.includes("varejo")) pub = "B2C (Consumidor Final)";
+            if (val.includes("contínua") || val.includes("frequente")) duracao = "Contínua (Always On)";
+
+            // 1. DADOS DO DNA
+            document.getElementById('out-direcao').innerText = direcao;
+            document.getElementById('out-exp').innerText = exp;
+            document.getElementById('out-pub').innerText = pub;
+            document.getElementById('out-duracao').innerText = duracao;
+
+            // 2. LÓGICA GOVERNANÇA (Funil Layers)
+            document.getElementById('l1-hook').innerText = "Visto do Diretor/Orçamentário";
+            if(exp === "Física") {
+                document.getElementById('l2-title').innerText = "Compliance Segurança / Local";
+                document.getElementById('l2-hook').innerText = "Responsabilidade Civil & Alvará";
+            } else {
+                document.getElementById('l2-title').innerText = "Compliance LGPD";
+                document.getElementById('l2-hook').innerText = "Termos de Privacidade de Dados";
+            }
+
+            // 3. LÓGICA DE TRILHAS
+            const taskA = document.getElementById('m-ladoA-tasks');
+            const taskB = document.getElementById('m-ladoB-tasks');
+            taskA.innerHTML = ''; taskB.innerHTML = '';
+
+            if (direcao.includes("Interna")) {
+                taskA.innerHTML += `<li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Comunicado Intranet</span></li>`;
+                taskA.innerHTML += `<li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Workshop Equipe</span></li>`;
+                taskB.innerHTML += `<li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span class="text-slate-400 italic">Nenhuma ação externa prevista.</span></li>`;
+                document.getElementById('m-ladoA-hook').innerText = "Disparo E-mail HR";
+                document.getElementById('m-ladoB-hook').innerText = "N/A";
+            } else if (direcao.includes("Externa")) {
+                taskA.innerHTML += `<li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Briefing Vendas</span></li>`;
+                taskB.innerHTML += `<li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Ads e Performance</span></li>`;
+                taskB.innerHTML += `<li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Régua de E-mail Mkt</span></li>`;
+                document.getElementById('m-ladoA-hook').innerText = "Alinhamento Comercial";
+                document.getElementById('m-ladoB-hook').innerText = "Aprovação Verba Mídia";
+            } else {
+                taskA.innerHTML += `<li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Engajamento Equipe</span></li>`;
+                taskB.innerHTML += `<li class="flex items-start gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5"></div><span>Campanha Lançamento</span></li>`;
+                document.getElementById('m-ladoA-hook').innerText = "Conclusão Treinamento";
+                document.getElementById('m-ladoB-hook').innerText = "Ativos Criativos Aprovados";
+            }
+
+            // 4. MÓDULOS ESPECÍFICOS (Flutuantes lúdicos transacionados para UX)
+            const moduloEsp = document.getElementById('especifico-container');
+            if (exp === "Física" || exp === "Híbrida") {
+                moduloEsp.style.display = 'block';
+                document.getElementById('m-especifico-title').innerText = "Logística Presencial";
+                document.getElementById('m-especifico-desc').innerText = "Gestão física necessária para o evento acontecer.";
+                icon.setAttribute('data-lucide', 'map-pin');
+                document.getElementById('m-especifico-obs').innerText = "Alvará da Prefeitura e Laudo Bombeiros.";
+            } else {
+                moduloEsp.style.display = 'block';
+                document.getElementById('m-especifico-title').innerText = "Infraestrutura Digital";
+                document.getElementById('m-especifico-desc').innerText = "Softwares e servidores mapeados.";
+                icon.setAttribute('data-lucide', 'cloud');
+                document.getElementById('m-especifico-obs').innerText = "Licenciamento de Ferramenta / Link Streaming.";
+            }
+            lucide.createIcons();
+
+            // 5. DASHBOARD FINAL (STATUS)
+            const tbody = document.getElementById('table-logs');
+            tbody.innerHTML = '';
+            const hooks = [
+                { name: "Aprovação Financeira inicial", setor: "Financeiro", status: "Pendente", color: "orange" },
+                { name: exp === "Física" ? "Vistoria Local/Alvará" : "Legalização LGPD", setor: "Jurídico", status: "Aguardando Visto", color: "slate" },
+                { name: direcao.includes("Interna") ? "Disparo E-mail HR" : "Ativos Mídia Final", setor: "Marketing", status: "Pronto p/ Uso", color: "green" }
+            ];
+
+            let countPend = 0;
+            hooks.forEach(h => {
+                let badgeClass = h.color === 'orange' ? 'bg-orange-100 text-orange-800' : 
+                                 h.color === 'slate' ? 'bg-slate-100 text-slate-800' : 'bg-green-100 text-green-800';
+                if(h.color !== 'green') countPend++;
+
+                tbody.innerHTML += `
+                    <tr class="bg-white border-b hover:bg-slate-50 last:border-0">
+                        <td class="px-6 py-4 font-medium text-slate-900">${h.name}</td>
+                        <td class="px-6 py-4 text-slate-500">${h.setor}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded-full ${badgeClass}">${h.status}</span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-indigo-600 hover:underline">Resolver</a>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            const perc = Math.round(((3 - countPend) / 3) * 100);
+            document.getElementById('kpi-progresso').innerText = `${perc}%`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+/* Adapta Design Tokens — CSS Custom Properties */
+
+:root {
+  /* ═══ CORES ═══ */
+  /* luz */
+  --adapta-luz-sageMist: #FAFBFA;
+  --adapta-luz-hempCanvas: #F7F9F8;
+  --adapta-luz-sageWhisper: #EDF1EF;
+  --adapta-luz-leafFrost: #D5E2D5;
+  --adapta-luz-forestDew: #B5C5BC;
+
+  /* alma */
+  --adapta-alma-greenSmoke: #8FA89B;
+  --adapta-alma-emeraldHaze: #6A8A7A;
+  --adapta-alma-deepPine: #455A4F;
+  --adapta-alma-forestShadow: #2E3E34;
+  --adapta-alma-midnightGarden: #1F2A23;
+
+  /* firmeza */
+  --adapta-firmeza-darkForest: #1A231D;
+  --adapta-firmeza-blackEarth: #141A17;
+  --adapta-firmeza-deepShadow: #0F1411;
+  --adapta-firmeza-voidGreen: #0A0D0B;
+  --adapta-firmeza-absolute: #000000;
+
+  /* candy */
+  --adapta-candy-marshmallow: #F7FBF0;
+  --adapta-candy-acucar: #EFF7E0;
+  --adapta-candy-baunilha: #E5F2D0;
+  --adapta-candy-pistache: #DBEDC2;
+  --adapta-candy-chantilly: #D1E8B4;
+
+  /* lemon */
+  --adapta-lemon-neblina: #F5F9F2;
+  --adapta-lemon-vapor: #EAF3E5;
+  --adapta-lemon-citrus: #DFEDD8;
+  --adapta-lemon-zeste: #D3E7CA;
+  --adapta-lemon-sumo: #C7E1BD;
+
+  /* ventura */
+  --adapta-ventura-nevoaclara: #E8EFE0;
+  --adapta-ventura-fumaca: #D7E3CC;
+  --adapta-ventura-bruma: #C1D4B2;
+  --adapta-ventura-veu: #A8BF9A;
+  --adapta-ventura-sombra: #8CA680;
+
+  /* energia */
+  --adapta-energia-campoAlto: #FFFAE0;
+  --adapta-energia-campoVelado: #FFE7A3;
+  --adapta-energia-centro: #FFE2C2;
+  --adapta-energia-marcaTexto: #FED376;
+  --adapta-energia-denso: #F58E72;
+
+  /* alegria */
+  --adapta-alegria-campoAlto: #FDE2DD;
+  --adapta-alegria-campoVelado: #FFC8C2;
+  --adapta-alegria-centro: #FFA3B1;
+  --adapta-alegria-marcaTexto: #FE86A4;
+  --adapta-alegria-denso: #CF6E9B;
+
+  /* seguranca */
+  --adapta-seguranca-campoAlto: #F1E6F0;
+  --adapta-seguranca-campoVelado: #DEC7DE;
+  --adapta-seguranca-centro: #D0AEE0;
+  --adapta-seguranca-marcaTexto: #D1B4FE;
+  --adapta-seguranca-denso: #9DA0EC;
+
+  /* ═══ TIPOGRAFIA ═══ */
+  --adapta-font-display: MuseoModerno, Montserrat, ui-sans-serif, system-ui, sans-serif;
+  --adapta-font-heading: Montserrat, ui-sans-serif, system-ui, sans-serif;
+  --adapta-font-body: Glacial Indifference, Raleway, ui-sans-serif, system-ui, sans-serif;
+  --adapta-font-editorial: Cormorant Garamond, ui-serif, Georgia, serif;
+  --adapta-font-energetic: All Caps, Montserrat, sans-serif;
+  --adapta-font-warm: Cause, cursive;
+  --adapta-font-bold: SUSE, sans-serif;
+  --adapta-font-regional: Ofissina, sans-serif;
+  --adapta-font-signature: Mayonice, cursive;
+  --adapta-font-crafted: Fomo, sans-serif;
+
+  --adapta-size-xs: 0.75rem;
+  --adapta-size-sm: 0.875rem;
+  --adapta-size-base: 1rem;
+  --adapta-size-lg: 1.125rem;
+  --adapta-size-xl: 1.25rem;
+  --adapta-size-2xl: 1.5rem;
+  --adapta-size-3xl: 1.875rem;
+  --adapta-size-4xl: 2.25rem;
+  --adapta-size-5xl: 3rem;
+  --adapta-size-6xl: 3.75rem;
+  --adapta-size-7xl: 4.5rem;
+  --adapta-size-8xl: 6rem;
+  --adapta-size-9xl: 8rem;
+
+  --adapta-weight-thin: 100;
+  --adapta-weight-extralight: 200;
+  --adapta-weight-light: 300;
+  --adapta-weight-regular: 400;
+  --adapta-weight-medium: 500;
+  --adapta-weight-semibold: 600;
+  --adapta-weight-bold: 700;
+  --adapta-weight-extrabold: 800;
+  --adapta-weight-black: 900;
+}

@@ -1,0 +1,317 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  background: transparent;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 0 var(--spacing-4) 0;
+  font-family: inherit;
+  gap: var(--spacing-6);
+}
+
+
+
+.initiativeColumn {
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  max-height: 100%;
+  transition: width var(--animation-duration-normal) cubic-bezier(0.25, 1, 0.5, 1), background var(--animation-duration-fast) ease;
+}
+
+.initiativeColumn.collapsed {
+  width: 64px;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--surface) 30%, transparent);
+}
+
+.initiativeColumn.collapsed:hover {
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  border-color: var(--primary);
+}
+
+.collapsedHeader {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-6) 0;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.verticalTitle {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--muted-foreground);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  transition: color var(--animation-duration-fast);
+}
+
+.initiativeColumn.collapsed:hover .verticalTitle {
+  color: var(--primary);
+}
+
+.initiativeHeader {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--foreground);
+  padding: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  opacity: 1;
+  transition: opacity var(--animation-duration-fast) ease;
+}
+
+.initiativeTitleText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.collapseInitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted-foreground);
+  border: none;
+  cursor: pointer;
+  transition: all var(--animation-duration-fast);
+  flex-shrink: 0;
+}
+
+.collapseInitBtn:hover {
+  background: var(--border);
+  color: var(--foreground);
+}
+
+.initiativeScrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.projectSection {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.projectHeader {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: var(--spacing-3);
+  display: flex;
+  align-items: center;
+  transition: color var(--animation-duration-fast);
+}
+
+.projectHeader:hover {
+  color: var(--primary);
+}
+
+.projectCountBadge {
+  background: var(--border);
+  color: var(--muted-foreground);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  margin-left: auto; /* Push to right edge */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timelineWrap {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  gap: var(--spacing-2);
+}
+
+/* The Vertical Dashed Line */
+.timelineWrap::before {
+  content: "";
+  position: absolute;
+  top: 14px; /* Offset to start below the first circle top */
+  bottom: 0;
+  left: 15px; /* Centers with a 32px circle (32/2 - 1) */
+  width: 0px;
+  border-left: 2px dashed var(--border);
+  z-index: 1;
+}
+
+.node {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  transition: transform var(--animation-duration-fast) ease;
+}
+
+.node:hover {
+  transform: translateX(4px);
+}
+
+.nodeCircleWrapper {
+  display: flex;
+  align-items: flex-start; /* Align to top */
+  padding-top: 0;
+  margin-right: var(--spacing-3);
+}
+
+.nodeCircle {
+  width: 32px;
+  height: 32px;
+  background: var(--card);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  transition: all var(--animation-duration-fast);
+}
+
+.node:hover .nodeCircle {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
+  color: var(--primary);
+}
+
+.nodeNumber {
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  color: var(--muted-foreground);
+  transition: color var(--animation-duration-fast);
+}
+
+.node:hover .nodeNumber {
+  color: var(--primary);
+}
+
+.nodeCard {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3) var(--spacing-4);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-1);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all var(--animation-duration-fast) ease;
+}
+
+.node:hover .nodeCard {
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge {
+  background: var(--sidebar);
+  color: var(--sidebar-foreground);
+  font-size: var(--font-size-2xs);
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+}
+
+.cardTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--foreground);
+  line-height: 1.3;
+}
+
+.cardSubtitle {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.addBtnWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  z-index: 3;
+  padding-left: 2px;
+  padding-top: var(--spacing-2);
+  flex-shrink: 0;
+}
+
+.addBtn {
+  width: 32px;
+  height: 32px;
+  background: var(--card);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--muted-foreground);
+  cursor: pointer;
+  color: var(--muted-foreground);
+  transition: all var(--animation-duration-fast) ease;
+}
+
+.addBtn:hover {
+  transform: scale(1.1);
+  border-color: var(--primary);
+  border-style: solid;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 5%, var(--surface));
+}
+
+.emptyState {
+  text-align: center;
+  margin: auto;
+  font-size: var(--font-size-base);
+  color: var(--muted-foreground);
+  font-weight: 500;
+  padding: var(--spacing-12) 0;
+}
+
+.emptyState {
+  text-align: center;
+  margin: auto;
+  font-size: var(--font-size-base);
+  color: var(--muted-foreground);
+  font-weight: 500;
+  padding: var(--spacing-12) 0;
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe Técnico Funcional - Motor V8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #fafafa;
+            color: #333333;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .wireframe-block {
+            border: 2px solid #333;
+            background-color: #ffffff;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+        .wireframe-label {
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: #fafafa;
+            padding: 0 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-left: 2px solid #333;
+            border-right: 2px solid #333;
+        }
+        .locked-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(250, 250, 250, 0.8);
+            backdrop-filter: blur(2px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* Loading anim */
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="p-8 max-w-4xl mx-auto space-y-12 pb-24">
+
+    <div class="text-center mb-12">
+        <h1 class="text-2xl font-bold uppercase tracking-wider border-b-2 border-gray-300 inline-block pb-2">Wireframe Funcional: Motor V8 (UX: Destrave Progressivo)</h1>
+        <p class="text-sm mt-4 font-sans text-gray-600">A estrutura nasce completa, mas os nós e dependências são destravados conforme o fluxo.</p>
+    </div>
+
+    <!-- START ENGINE (IGNITION) -->
+    <div class="wireframe-block p-6 shadow-sm">
+        <div class="wireframe-label">CÉREBRO V8 (INPUT)</div>
+        <div class="flex flex-col gap-4 mt-2 relative z-10">
+            <input type="text" id="dna-input" placeholder="[ Insira a intenção. Ex: evento presencial corporativo interno ]" class="w-full border-2 border-gray-400 p-3 font-sans outline-none focus:border-black text-sm">
+            <button id="activate-btn" onclick="startEngine()" class="border-2 border-333 py-3 px-6 flex justify-center items-center gap-2 font-bold uppercase hover:bg-black hover:text-white transition-colors">
+                <i data-lucide="cpu" class="w-5 h-5" id="btn-icon"></i>
+                <span id="btn-text">INJETAR INTELIGÊNCIA NOS BLOCOS</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- WIREFRAME CONTAINER (TODA A ABA ABERTA) -->
+    <div id="output-blocks" class="space-y-12">
+
+        <!-- BLOCO 1 -->
+        <div class="wireframe-block p-6">
+            <div class="wireframe-label">BLOCO 1: HUB OMNICANAL (RADIAL)</div>
+            
+            <div class="locked-overlay" id="lock-b1">
+                <i data-lucide="lock" class="w-6 h-6 text-gray-500"></i>
+                <span class="text-xs font-bold text-gray-500">Aguardando Injeção LLM</span>
+            </div>
+            
+            <h2 class="text-lg font-bold mb-2 uppercase" id="b1-title">[ HUB DNA CLASSIFIER ]</h2>
+            <div class="mt-6 flex flex-col items-center justify-center h-48 border border-gray-300 relative overflow-hidden">
+                <!-- Data Boxes -->
+                <div class="absolute top-4 left-4 border border-gray-400 p-1 text-[10px] font-bold bg-white" id="out-direcao">DIR: [Pendente]</div>
+                <div class="absolute bottom-4 left-4 border border-gray-400 p-1 text-[10px] font-bold bg-white" id="out-pub">PUB: [Pendente]</div>
+                <div class="absolute top-4 right-4 border border-gray-400 p-1 text-[10px] font-bold bg-white" id="out-exp">EXP: [Pendente]</div>
+                <div class="absolute bottom-4 right-4 border border-gray-400 p-1 text-[10px] font-bold bg-white" id="out-obj">OBJ: [Pendente]</div>
+
+                <!-- Hub Central -->
+                <div class="w-24 h-24 border-2 border-dashed border-gray-400 rounded-full flex flex-col items-center justify-center relative bg-white z-10 shadow-lg">
+                    <span class="text-[10px] font-bold">DNA</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 2 -->
+        <div class="wireframe-block p-6">
+            <div class="wireframe-label">BLOCO 2: ESTRUTURA PROGRESSIVA (FUNIL)</div>
+            
+            <div class="locked-overlay" id="lock-b2">
+                <i data-lucide="lock" class="w-6 h-6 text-gray-500"></i>
+                <span class="text-xs font-bold text-gray-500">Aguardando Definição de Governança</span>
+            </div>
+
+            <h2 class="text-lg font-bold mb-2 uppercase">[ GOVERNANÇA ROOT (LAYERED GOVERNANCE) ]</h2>
+            <div class="mt-6 flex flex-col items-center gap-2 border border-gray-300 p-6 relative">
+                <div class="w-full max-w-md min-h-12 border-2 border-gray-400 bg-white flex flex-col items-center justify-center p-2">
+                    <span class="text-xs font-bold text-gray-500 tracking-widest uppercase">LAYER 1 (Orçamento)</span>
+                    <span class="text-[10px] uppercase text-gray-700 font-bold border-t border-dashed mt-1 pt-1 w-full text-center" id="l1-hook">HOOK: ~~~</span>
+                </div>
+                <i data-lucide="arrow-down" class="w-4 h-4 text-gray-400"></i>
+                <div class="w-full max-w-sm min-h-12 border-2 border-gray-400 bg-white flex flex-col items-center justify-center p-2">
+                    <span class="text-xs font-bold text-gray-500 tracking-widest uppercase" id="l2-title">LAYER 2 (Compliance)</span>
+                    <span class="text-[10px] uppercase text-gray-700 font-bold border-t border-dashed mt-1 pt-1 w-full text-center" id="l2-hook">HOOK: ~~~</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 3 -->
+        <div class="wireframe-block p-6">
+            <div class="wireframe-label">BLOCO 3: PAINEL DIVIDIDO (SPLIT L/R)</div>
+            
+            <div class="locked-overlay" id="lock-b3">
+                <i data-lucide="lock" class="w-6 h-6 text-gray-500"></i>
+                <span class="text-xs font-bold text-gray-500">Aguardando Direcionamento (Interno/Externo)</span>
+            </div>
+
+            <h2 class="text-lg font-bold mb-2 uppercase">[ TRILHAS PARALELAS: LADO A / LADO B ]</h2>
+            <div class="mt-6 flex justify-between gap-8 py-4 px-2 border border-gray-300 bg-gray-50">
+                <div class="w-1/2 border-2 border-gray-400 bg-white p-4 flex flex-col shadow-sm">
+                    <div class="border-b-2 border-gray-300 pb-2 mb-4 text-center text-sm font-bold uppercase">LADO A (INTERNO)</div>
+                    <ul class="text-xs space-y-2 font-sans mb-4 min-h-[40px]" id="m-ladoA-tasks"></ul>
+                    <div class="w-full border-t border-dashed border-gray-400 pt-2 text-[10px] font-bold mt-auto" id="m-ladoA-hook">HOOK: ~~~</div>
+                </div>
+                <div class="w-1/2 border-2 border-gray-400 bg-white p-4 flex flex-col shadow-sm" id="ladoB-container">
+                    <div class="border-b-2 border-gray-300 pb-2 mb-4 text-center text-sm font-bold uppercase">LADO B (EXTERNO)</div>
+                    <ul class="text-xs space-y-2 font-sans mb-4 min-h-[40px]" id="m-ladoB-tasks"></ul>
+                    <div class="w-full border-t border-dashed border-gray-400 pt-2 text-[10px] font-bold mt-auto" id="m-ladoB-hook">HOOK: ~~~</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 4 -->
+        <div class="wireframe-block p-6">
+            <div class="wireframe-label">BLOCO 4: COMPONENTES FLUTUANTES / LÚDICO</div>
+            
+            <div class="locked-overlay" id="lock-b4">
+                <i data-lucide="lock" class="w-6 h-6 text-gray-500"></i>
+                <span class="text-xs font-bold text-gray-500">Oculto: Aguardando Gatilho de Experiência</span>
+            </div>
+
+            <h2 class="text-lg font-bold mb-2 uppercase" id="b4-title">[ MÓDULO ORGANICO DEPENDENTE ]</h2>
+            <div class="mt-6 p-6 flex flex-wrap justify-center items-center gap-6 border border-gray-300 h-32 relative">
+                <div class="w-48 border-2 border-gray-400 flex flex-col justify-center items-center p-4 bg-white z-10">
+                    <span class="font-bold text-xs mb-2 border-b border-gray-300 w-full text-center pb-1" id="b4-square-text">-- TIPO --</span>
+                    <span class="text-[10px] text-gray-500 uppercase text-center" id="b4-circle-text">-- EXIGENCIA --</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 6 -->
+        <div class="wireframe-block p-6 mb-12">
+            <div class="wireframe-label">BLOCO 6: DASHBOARD DE DADOS (CARDS E TABELAS)</div>
+            
+            <div class="locked-overlay" id="lock-b6">
+                <i data-lucide="lock" class="w-6 h-6 text-gray-500"></i>
+                <span class="text-xs font-bold text-gray-500">Aguardando Mapeamento dos Hooks</span>
+            </div>
+
+            <h2 class="text-lg font-bold mb-2 uppercase">[ MÓDULO RASTREIO E LOGÍSTICA ]</h2>
+            <div class="mt-6 border border-gray-300 p-6">
+                <div class="w-full">
+                    <div class="flex text-xs font-bold text-gray-500 border-b-2 border-gray-300 pb-2 mb-2">
+                        <div class="w-1/2">HOOK MAPEADO</div>
+                        <div class="w-1/4 text-center">SETOR</div>
+                    </div>
+                    <div id="table-logs" class="space-y-2">
+                        <!-- Injetado -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function startEngine() {
+            const input = document.getElementById('dna-input').value;
+            if (input.trim() === '') return;
+
+            const btnText = document.getElementById('btn-text');
+            const icon = document.getElementById('btn-icon');
+            
+            btnText.innerText = "SINTETIZANDO...";
+            icon.setAttribute('data-lucide', 'loader-2');
+            icon.classList.add('spin');
+            lucide.createIcons();
+
+            // Simula o Destrave em Cascata (Assíncrono)
+            setTimeout(() => { document.getElementById('lock-b1').style.opacity = '0'; setTimeout(() => document.getElementById('lock-b1').style.display = 'none';, 500); populateHub(input); }, 500);
+            setTimeout(() => { document.getElementById('lock-b2').style.opacity = '0'; setTimeout(() => document.getElementById('lock-b2').style.display = 'none';, 500); populateGov(input); }, 1500);
+            setTimeout(() => { document.getElementById('lock-b3').style.opacity = '0'; setTimeout(() => document.getElementById('lock-b3').style.display = 'none';, 500); populateTrails(input); }, 2500);
+            setTimeout(() => { document.getElementById('lock-b4').style.opacity = '0'; setTimeout(() => document.getElementById('lock-b4').style.display = 'none';, 500); populateSpecific(input); }, 3500);
+            setTimeout(() => { document.getElementById('lock-b6').style.opacity = '0'; setTimeout(() => document.getElementById('lock-b6').style.display = 'none';, 500); populateDashboard(input); 
+                btnText.innerText = "ARQUITETURA COMPLETA";
+                icon.setAttribute('data-lucide', 'check-circle');
+                icon.classList.remove('spin');
+                lucide.createIcons();
+            }, 4500);
+        }
+
+        function populateHub(text) {
+            const val = text.toLowerCase();
+            document.getElementById('out-direcao').innerText = `DIR: ${val.includes('interno') ? 'INTERNO' : (val.includes('b2b') ? 'B2B/EXTERNO' : 'B2C/EXTERNO')}`;
+            document.getElementById('out-exp').innerText = `EXP: ${val.includes('presencial') || val.includes('evento') ? 'FISICA' : 'ONLINE'}`;
+        }
+
+        function populateGov(text) {
+            document.getElementById('l1-hook').innerText = "HOOK: VISTO DA DIRETORIA";
+            const isFisico = text.toLowerCase().includes('presencial');
+            document.getElementById('l2-title').innerText = isFisico ? "LAYER 2 (Segurança Local)" : "LAYER 2 (Termos Web)";
+            document.getElementById('l2-hook').innerText = isFisico ? "HOOK: Seguro de Vida Eventos" : "HOOK: Aceite LGPD";
+        }
+
+        function populateTrails(text) {
+            const val = text.toLowerCase();
+            const ladoA = document.getElementById('m-ladoA-tasks');
+            const ladoB = document.getElementById('m-ladoB-tasks');
+            
+            if(val.includes('interno')) {
+                ladoA.innerHTML = "<li>- Disparo Intranet</li><li>- Treinamento Liderança</li>";
+                ladoB.innerHTML = "<li class='text-gray-400 italic'>Ocioso (Ação 100% Interna)</li>";
+                document.getElementById('ladoB-container').style.opacity = '0.4';
+                document.getElementById('m-ladoA-hook').innerText = "HOOK: MATERIAL RH APROVADO";
+            } else {
+                ladoA.innerHTML = "<li>- Alinhamento Comercial</li>";
+                ladoB.innerHTML = "<li>- Tráfego Pago</li><li>- Landing Page</li>";
+                document.getElementById('m-ladoB-hook').innerText = "HOOK: BUDGET DE MÍDIA APLICADO";
+            }
+        }
+
+        function populateSpecific(text) {
+            const val = text.toLowerCase();
+            if(val.includes('presencial') || val.includes('evento')) {
+                document.getElementById('b4-title').innerText = "[ MÓDULO ORGANICO: EVENTO PRESENCIAL ]";
+                document.getElementById('b4-square-text').innerText = "Váriavel: STAFF & LOCAL";
+                document.getElementById('b4-circle-text').innerText = "EXIGE ALVARÁ PREFEITURA";
+            } else {
+                document.getElementById('b4-title').innerText = "[ MÓDULO DIGITAL: WEBINAR/LIVE ]";
+                document.getElementById('b4-square-text').innerText = "Váriavel: PLATAFORMA STREAMING";
+                document.getElementById('b4-circle-text').innerText = "EXIGE LICENÇA DE SOFTWARE";
+            }
+        }
+
+        function populateDashboard(text) {
+            document.getElementById('table-logs').innerHTML = `
+                <div class="flex text-sm py-2 border-b border-gray-300 border-dashed">
+                    <div class="w-1/2 font-bold uppercase text-[10px]">VISTO DIRETORIA</div>
+                    <div class="w-1/4 text-center">FINANCEIRO</div>
+                </div>
+                <div class="flex text-sm py-2 border-b border-gray-300 border-dashed">
+                    <div class="w-1/2 font-bold uppercase text-[10px]">DOCUMENTAÇÃO COMPLIANCE</div>
+                    <div class="w-1/4 text-center">JURÍDICO</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
