@@ -81,12 +81,23 @@ export default function DocumentosCorporativos() {
   const generators = useDocumentGenerator();
   const { data: brandResponse } = useBrand();
 
-  const handleGeneratePdf = (key: GeneratorKey) => {
+  const handleGeneratePdf = (key: GeneratorKey, docName?: string) => {
     try {
       const generator = generators[key];
       if (generator) {
         generator(brandResponse?.brand);
-        toast.success("Documento gerado com sucesso!");
+        toast.success("Documento gerado com sucesso!", {
+          description: "Deseja salvar este documento na Biblioteca Oficial?",
+          action: {
+            label: "Adicionar à Biblioteca",
+            onClick: () => {
+              // Navega para a Biblioteca com contexto de upload
+              window.location.href = "/marketing-comunicacao";
+              toast.info("Abra a Biblioteca e faça o upload do arquivo gerado.");
+            },
+          },
+          duration: 8000,
+        });
       } else {
         toast.error("Gerador não encontrado para este template.");
       }
@@ -193,7 +204,7 @@ export default function DocumentosCorporativos() {
                   <h3 className={styles.cardTitle}>Assinatura de E-mail</h3>
                   <p className={styles.cardDescription}>Gerador HTML interativo com a identidade corporativa.</p>
                   <Link to="/tools/documentos" className={styles.btnFullWidth}>
-                    <Button variant="default" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>Acessar Gerador</Button>
+                    <Button variant="primary" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>Acessar Gerador</Button>
                   </Link>
                 </div>
               </div>
@@ -211,7 +222,7 @@ export default function DocumentosCorporativos() {
                   <h3 className={styles.cardTitle}>Foto de Perfil Corporativa</h3>
                   <p className={styles.cardDescription}>Crie avatares padronizados para o time.</p>
                   <Link to="/tools/visual" className={styles.btnFullWidth}>
-                    <Button variant="default" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>Personalizar</Button>
+                    <Button variant="primary" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>Personalizar</Button>
                   </Link>
                 </div>
               </div>
@@ -229,7 +240,7 @@ export default function DocumentosCorporativos() {
                   <h3 className={styles.cardTitle}>Produtos & Embalagens</h3>
                   <p className={styles.cardDescription}>Design de rótulos 3D, caixas e exportação de pedidos.</p>
                   <Link to="/tools/produtos" className={styles.btnFullWidth}>
-                    <Button variant="default" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>Abrir Ferramenta</Button>
+                    <Button variant="primary" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>Abrir Ferramenta</Button>
                   </Link>
                 </div>
               </div>
