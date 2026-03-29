@@ -20,8 +20,12 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [authState, setAuthState] = useState<AuthState>({ type: "loading" });
-  const [sbUser, setSbUser] = useState<any>(null);
+  // DEV MODE BYPASS
+  const [authState, setAuthState] = useState<AuthState>({ 
+    type: "authenticated",
+    user: { id: 1, email: "dev@adaptacorestudio.com", displayName: "Gabriela Dias (Dev Mode)", avatarUrl: null, role: "admin" }
+  });
+  const [sbUser, setSbUser] = useState<any>({ email: "dev@adaptacorestudio.com" });
 
   const mapSupabaseUser = (sessionUser: any): User => ({
     id: 1, 
@@ -32,28 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setSbUser(session.user);
-        setAuthState({ type: "authenticated", user: mapSupabaseUser(session.user) });
-      } else {
-        setAuthState({ type: "unauthenticated" });
-      }
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setSbUser(session.user);
-        setAuthState({ type: "authenticated", user: mapSupabaseUser(session.user) });
-      } else {
-        setSbUser(null);
-        setAuthState({ type: "unauthenticated" });
-      }
-    });
-
-    return () => {
-      try { subscription.unsubscribe(); } catch {}
-    };
+    // Auth bypassed for development agility
   }, []);
 
   const logout = async () => {
