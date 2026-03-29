@@ -229,18 +229,38 @@
   margin-top: 0;
 }
 
-/* Planta decorativa — fixada no canto direito da prateleira */
+/* Planta decorativa — descolada do canto direito da prateleira */
 .shelfPlant {
   position: absolute;
-  right: 0;
-  /* base alinhada com a tábua: altura da planta acima do shelfPlank */
-  bottom: 0;
-  height: clamp(80px, 14vw + 40px, 160px);
-  width: auto;
+  right: clamp(80px, 12vw, 160px);
+  /* base alinhada exatamente com o topo da tábua (tábua tem 12px) */
+  bottom: 12px;
+  height: clamp(180px, 24vw + 20px, 300px);
+  /* Proporção exata do SVG (519 de largura p/ 870 de altura) */
+  aspect-ratio: 519 / 870;
+  
+  /* Máscara dinâmica: transforma a planta numa silhueta colorizável */
+  -webkit-mask-image: url('/vasoprateleirabiblioteca.svg');
+  mask-image: url('/vasoprateleirabiblioteca.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: bottom;
+  mask-position: bottom;
+  
+  /* Verde escuro natural no modo claro */
+  background-color: #2b3b20;
+
   pointer-events: none;
   user-select: none;
-  /* Garante que fica na frente dos livros mas não interfere no clique */
   z-index: 5;
+  transition: background-color 0.3s ease;
+}
+
+:global(.dark) .shelfPlant {
+  /* No modo escuro, usa o verde sálvia/médio da paleta (var(--muted-foreground)) */
+  background-color: var(--muted-foreground);
 }
 
 /* Some em telas pequenas (< 768px) */

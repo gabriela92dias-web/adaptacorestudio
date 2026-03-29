@@ -340,9 +340,7 @@ export default function MarketingComunicacao() {
             {/* A tábua da prateleira */}
             <div className={styles.shelfPlank} />
             {/* Planta decorativa — canto direito, some em telas pequenas */}
-            <img
-              src="/vasoprateleirabiblioteca.svg"
-              alt="Muda decorativa"
+            <div
               className={styles.shelfPlant}
               aria-hidden="true"
             />
