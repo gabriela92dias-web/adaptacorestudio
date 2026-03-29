@@ -186,6 +186,7 @@
 .shelfSection {
   display: flex;
   flex-direction: column;
+  position: relative; /* âncora para a planta absoluta */
 }
 
 .empty {
@@ -225,8 +226,28 @@
   box-shadow:
     0 4px 10px -3px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent);
-  /* Margem zero: plank toca imediatamente os livros */
   margin-top: 0;
+}
+
+/* Planta decorativa — fixada no canto direito da prateleira */
+.shelfPlant {
+  position: absolute;
+  right: 0;
+  /* base alinhada com a tábua: altura da planta acima do shelfPlank */
+  bottom: 0;
+  height: clamp(80px, 14vw + 40px, 160px);
+  width: auto;
+  pointer-events: none;
+  user-select: none;
+  /* Garante que fica na frente dos livros mas não interfere no clique */
+  z-index: 5;
+}
+
+/* Some em telas pequenas (< 768px) */
+@media (max-width: 768px) {
+  .shelfPlant {
+    display: none;
+  }
 }
 
 /* ═══════════════════════════════════════════════

@@ -239,11 +239,8 @@ export default function MarketingComunicacao() {
 
   // Intercala plantas entre os livros
   const shelfItems = React.useMemo(() => {
-    const items: { type: "book" | "plant" | "add"; doc?: LibraryDoc; key: string }[] = [];
-    filteredDocs.forEach((doc, i) => {
-      if (i > 0 && i % 7 === 0) {
-        items.push({ type: "plant", key: `plant-${i}` });
-      }
+    const items: { type: "book" | "add"; doc?: LibraryDoc; key: string }[] = [];
+    filteredDocs.forEach((doc) => {
       items.push({ type: "book", doc, key: `book-${doc.id}` });
     });
     if (isResponsavel) items.push({ type: "add", key: "add-slot" });
@@ -330,13 +327,6 @@ export default function MarketingComunicacao() {
           <>
             <div className={styles.booksRow}>
               {shelfItems.map((item) => {
-                if (item.type === "plant") {
-                  return (
-                    <div key={item.key} className={styles.plantSlot}>
-                      <CannabisPlant className={styles.plantSvg} />
-                    </div>
-                  );
-                }
                 if (item.type === "add") {
                   return (
                     <div key={item.key} className={styles.addSlot} onClick={handleUploadClick} title="Adicionar documento">
@@ -349,6 +339,13 @@ export default function MarketingComunicacao() {
             </div>
             {/* A tábua da prateleira */}
             <div className={styles.shelfPlank} />
+            {/* Planta decorativa — canto direito, some em telas pequenas */}
+            <img
+              src="/vasoprateleirabiblioteca.svg"
+              alt="Muda decorativa"
+              className={styles.shelfPlant}
+              aria-hidden="true"
+            />
           </>
         )}
       </div>
