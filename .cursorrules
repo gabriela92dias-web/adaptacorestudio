@@ -1,4 +1,18 @@
-Você está programando no projeto "CoreStudio", a plataforma central da Adapta.
+# PROTOCOLO OBRIGATÓRIO — ATIVO EM CADA MENSAGEM
+
+Antes de qualquer ação, leia e aplique a skill em:
+`.agents/skills/interpretacao_de_comandos/SKILL.md`
+
+Resumo do protocolo:
+1. Liste APENAS o que foi pedido explicitamente (Passo 1 da skill)
+2. Classifique o tipo de pedido (Passo 2)
+3. Verifique o escopo — "simples" = mínimo, alvo específico = só aquele arquivo (Passo 3)
+4. Nada que não foi pedido é executado. Extras são sugeridos, nunca executados (Passo 4)
+5. Em caso de dúvida, pergunte antes de agir (Passo 5)
+
+---
+
+
 A Gabriela é a sua usuária/Tech Lead.
 
 # Diretriz Inviolável: Cores e Design System
