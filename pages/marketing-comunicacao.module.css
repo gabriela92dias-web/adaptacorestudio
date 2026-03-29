@@ -1,6 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
    BIBLIOTECA VIRTUAL — marketing-comunicacao.module.css
-   Estética: flat illustration · design system do projeto
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Layout ── */
@@ -109,10 +108,7 @@
   border-color: color-mix(in srgb, var(--primary) 60%, transparent);
 }
 
-.searchIcon {
-  color: var(--muted-foreground);
-  flex-shrink: 0;
-}
+.searchIcon { color: var(--muted-foreground); flex-shrink: 0; }
 
 .searchInput {
   background: transparent;
@@ -124,9 +120,7 @@
   width: 100%;
 }
 
-.searchInput::placeholder {
-  color: var(--muted-foreground);
-}
+.searchInput::placeholder { color: var(--muted-foreground); }
 
 .filters {
   display: flex;
@@ -176,38 +170,22 @@
   background: color-mix(in srgb, var(--surface) 50%, transparent);
 }
 
-.dropZone:hover,
-.dropping {
+.dropZone:hover, .dropping {
   border-color: color-mix(in srgb, var(--primary) 60%, transparent);
   background: color-mix(in srgb, var(--primary) 5%, transparent);
 }
 
-.dropping {
-  transform: scale(1.01);
-}
+.dropping { transform: scale(1.01); }
+.dropIcon { color: var(--primary); }
+.dropText { font-size: var(--font-size-sm); font-weight: 500; color: var(--foreground); }
+.dropHint { font-size: var(--font-size-xs); color: var(--muted-foreground); }
 
-.dropIcon {
-  color: var(--primary);
-}
-
-.dropText {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--foreground);
-}
-
-.dropHint {
-  font-size: var(--font-size-xs);
-  color: var(--muted-foreground);
-}
-
-/* ═══════════════════════════════════════
-   ESTANTE
-   ═══════════════════════════════════════ */
-.shelving {
+/* ═══════════════════════════════════════════════
+   PRATELEIRA ÚNICA
+   ═══════════════════════════════════════════════ */
+.shelfSection {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-8);
 }
 
 .empty {
@@ -221,99 +199,41 @@
   font-size: var(--font-size-base);
 }
 
-.emptyIcon {
-  opacity: 0.3;
-}
+.emptyIcon { opacity: 0.3; }
 
-/* Rótulo da categoria */
-.shelfLabel {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-  font-size: var(--font-size-2xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted-foreground);
-  margin-bottom: var(--spacing-2);
-}
-
-.shelfCount {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  background: color-mix(in srgb, var(--primary) 14%, transparent);
-  color: var(--primary);
-  border-radius: var(--radius-full);
-  font-size: 10px;
-  padding: 0 4px;
-}
-
-/* A prateleira */
-.shelfOuter {
-  display: flex;
-  flex-direction: column;
-}
-
+/* Fila de livros — todos encostados na base */
 .booksRow {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-end;    /* livros crescem para cima, base alinhada */
   flex-wrap: wrap;
-  gap: clamp(2px, 0.4vw, 6px);
-  padding: var(--spacing-3) var(--spacing-2) 0;
-  background: color-mix(in srgb, var(--surface) 30%, transparent);
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  min-height: clamp(90px, 14vw + 50px, 155px);
+  gap: clamp(2px, 0.5vw, 8px);
+  padding: var(--spacing-4) var(--spacing-3) 0;
+  min-height: clamp(100px, 16vw + 60px, 160px);
+  /* Sem padding-bottom: os livros encostam no shelfPlank */
 }
 
-/* Tábua da prateleira — linha simples */
+/* Tábua da prateleira — linha simples e sólida logo abaixo dos livros */
 .shelfPlank {
-  height: 10px;
+  height: 12px;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--border) 70%, var(--surface)) 0%,
+    color-mix(in srgb, var(--foreground) 25%, var(--border)) 0%,
     color-mix(in srgb, var(--border) 30%, transparent) 100%
   );
-  border: 1px solid var(--border);
-  border-top: 2px solid color-mix(in srgb, var(--border) 80%, var(--foreground));
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-  box-shadow: 0 3px 8px -2px rgba(0, 0, 0, 0.25);
+  border-top: 2px solid color-mix(in srgb, var(--foreground) 20%, var(--border));
+  border-radius: 0 0 3px 3px;
+  box-shadow:
+    0 4px 10px -3px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent);
+  /* Margem zero: plank toca imediatamente os livros */
+  margin-top: 0;
 }
 
-/* ═══════════════════════════════════════
-   LIVRO — ilustração flat
-   ═══════════════════════════════════════ */
-.bookWrapper {
-  position: relative;
-  width: clamp(26px, 3vw + 10px, 50px);
-  height: calc(var(--hf, 1) * clamp(82px, 11vw + 32px, 130px));
-  transform: rotate(var(--tilt, 0deg));
-  transform-origin: bottom center;
-  cursor: pointer;
-  transition:
-    transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1),
-    filter 0.22s ease;
-  filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.18));
-  flex-shrink: 0;
-}
+/* ═══════════════════════════════════════════════
+   LIVRO COM FLIP 3D
+   ═══════════════════════════════════════════════ */
 
-.bookWrapper:hover,
-.bookWrapperActive {
-  transform: rotate(var(--tilt, 0deg)) translateY(clamp(-10px, -1.4vw - 4px, -18px)) scale(1.06);
-  filter: drop-shadow(2px 6px 10px rgba(0, 0, 0, 0.38));
-  z-index: 10;
-}
-
-.bookSvg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  color: var(--foreground);
-}
-
-/* Variantes de cor dos livros (usando design system) */
+/* Variantes de cor (design system) */
 .fillV0 { --book-fill: color-mix(in srgb, var(--primary) 14%, var(--card)); }
 .fillV1 { --book-fill: var(--card); }
 .fillV2 { --book-fill: color-mix(in srgb, var(--primary) 7%, var(--card)); }
@@ -321,131 +241,153 @@
 .fillV4 { --book-fill: color-mix(in srgb, var(--muted) 35%, var(--card)); }
 .fillV5 { --book-fill: color-mix(in srgb, var(--primary) 20%, var(--surface)); }
 
-/* ── Popup de informação do livro ── */
-.bookPopup {
+/* Container do livro — perspectiva para o flip */
+.book {
+  width: clamp(28px, 3.5vw + 10px, 52px);
+  height: calc(var(--hf, 1) * clamp(85px, 12vw + 35px, 140px));
+  perspective: 700px;
+  cursor: pointer;
+  flex-shrink: 0;
+  /* Sem transform aqui: evita o visual de "flutuando" */
+  filter: drop-shadow(1px 0 1px rgba(0, 0, 0, 0.15));
+  transition: filter 0.2s ease;
+  position: relative;
+}
+
+.book:hover {
+  filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.35));
+  z-index: 10;
+}
+
+/* Invólucro interno com preserve-3d */
+.bookInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.book:hover .bookInner {
+  transform: rotateY(180deg);
+}
+
+/* Face frontal — lombada SVG */
+.bookFront {
   position: absolute;
-  bottom: 105%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(170px, 30vw, 210px);
-  background: var(--card);
-  border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
-  border-radius: var(--radius-md);
-  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3);
-  box-shadow: 0 12px 32px -6px rgba(0, 0, 0, 0.5);
-  z-index: 50;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Face traseira — capa/informações */
+.bookBack {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(180deg);
+  background: var(--book-fill);
+  border: 1.4px solid currentColor;
+  border-radius: 1.5px 3px 3px 1.5px;
+  color: var(--foreground);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
-  animation: popupIn 0.18s ease;
-}
-
-@keyframes popupIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(8px) scale(0.95); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0)   scale(1); }
-}
-
-.popupClose {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background: transparent;
-  border: none;
-  color: var(--muted-foreground);
-  cursor: pointer;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: var(--radius-sm);
-  transition: color 0.15s ease;
+  justify-content: space-between;
+  padding: clamp(4px, 0.8vw, 8px) clamp(3px, 0.5vw, 6px);
+  gap: 4px;
+  overflow: hidden;
+  /* Bordas sutis de capa de livro */
+  box-shadow:
+    inset 3px 0 6px rgba(0, 0, 0, 0.12),
+    inset -1px 0 2px rgba(255, 255, 255, 0.08);
 }
 
-.popupClose:hover {
-  color: var(--foreground);
+/* Topo da capa */
+.coverTop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
 }
 
-.popupTypeIcon {
-  color: var(--primary);
+.coverTypeIcon {
+  opacity: 0.8;
+  flex-shrink: 0;
 }
 
-.popupTitle {
+.coverTypeBadge {
+  font-size: clamp(6px, 1vw, 9px);
+  font-weight: 700;
+  font-family: var(--font-family-monospace);
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Título na capa */
+.coverTitle {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-xs);
+  font-size: clamp(6px, 1.1vw, 9px);
   font-weight: 700;
   color: var(--foreground);
-  line-height: 1.35;
-  padding-right: 16px;
-}
-
-.popupDesc {
-  font-size: 11px;
-  color: var(--muted-foreground);
-  line-height: 1.4;
+  text-align: center;
+  line-height: 1.3;
   margin: 0;
+  opacity: 0.85;
+  word-break: break-word;
+  hyphens: auto;
 }
 
-.popupMeta {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-}
-
-.popupBadge {
-  font-size: 9px;
-  padding: 1px 5px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.popupSize {
-  font-size: 10px;
-  color: var(--muted-foreground);
+/* Tamanho do arquivo */
+.coverSize {
+  font-size: clamp(5px, 0.9vw, 8px);
   font-family: var(--font-family-monospace);
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  opacity: 0.7;
 }
 
-.popupActions {
+/* Botões de ação na capa */
+.coverActions {
   display: flex;
-  gap: var(--spacing-2);
-  margin-top: var(--spacing-1);
-  padding-top: var(--spacing-2);
-  border-top: 1px solid var(--border);
+  gap: 4px;
+  width: 100%;
+  justify-content: center;
+  margin-top: auto;
 }
 
-.popupBtn {
+.coverBtn {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  font-weight: 500;
-  font-family: var(--font-family-body);
-  color: var(--muted-foreground);
-  background: color-mix(in srgb, var(--surface) 80%, transparent);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 4px 8px;
+  justify-content: center;
+  width: clamp(18px, 2.5vw, 26px);
+  height: clamp(18px, 2.5vw, 26px);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  color: var(--foreground);
   cursor: pointer;
   transition: all 0.14s ease;
-  flex: 1;
-  justify-content: center;
+  flex-shrink: 0;
 }
 
-.popupBtn:hover {
-  color: var(--primary-foreground);
+.coverBtn:hover {
   background: var(--primary);
+  color: var(--primary-foreground);
   border-color: var(--primary);
 }
 
-/* ═══════════════════════════════════════
-   PLANTA (muda de cannabis)
-   ═══════════════════════════════════════ */
+/* ── Planta decorativa ── */
 .plantSlot {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-end;  /* ancora junto com os livros */
   flex-shrink: 0;
-  width: clamp(36px, 5vw + 8px, 58px);
-  height: clamp(60px, 10vw + 30px, 110px);
+  width: clamp(36px, 5vw + 8px, 60px);
+  height: clamp(65px, 11vw + 35px, 120px);
   color: var(--foreground);
 }
 
@@ -454,13 +396,37 @@
   height: 100%;
 }
 
-/* ═══════════════════════════════════════
+/* ── Slot de adicionar livro ── */
+.addSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(28px, 3.5vw + 10px, 52px);
+  height: clamp(60px, 9vw + 30px, 110px);
+  border: 2px dashed color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 2px 4px 4px 2px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
+.addSlot:hover {
+  border-color: var(--primary);
+  opacity: 1;
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+
+.addIcon { color: var(--primary); }
+
+/* ═══════════════════════════════════════════════
    LISTA COMPACTA
-   ═══════════════════════════════════════ */
+   ═══════════════════════════════════════════════ */
 .listSection {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  margin-top: var(--spacing-4);
 }
 
 .listToggle {
@@ -480,10 +446,7 @@
   user-select: none;
 }
 
-.listTable {
-  display: flex;
-  flex-direction: column;
-}
+.listTable { display: flex; flex-direction: column; }
 
 .listRow {
   display: flex;
@@ -494,18 +457,9 @@
   transition: background 0.14s ease;
 }
 
-.listRow:last-child {
-  border-bottom: none;
-}
-
-.listRow:hover {
-  background: color-mix(in srgb, var(--primary) 4%, transparent);
-}
-
-.listRowIcon {
-  flex-shrink: 0;
-  color: var(--primary);
-}
+.listRow:last-child { border-bottom: none; }
+.listRow:hover { background: color-mix(in srgb, var(--primary) 4%, transparent); }
+.listRowIcon { flex-shrink: 0; color: var(--primary); }
 
 .listRowInfo {
   flex: 1;
@@ -537,11 +491,7 @@
   flex-shrink: 0;
 }
 
-.listRowActions {
-  display: flex;
-  gap: var(--spacing-1-5);
-  flex-shrink: 0;
-}
+.listRowActions { display: flex; gap: var(--spacing-1-5); flex-shrink: 0; }
 
 .listBtn {
   display: flex;
@@ -565,35 +515,15 @@
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
-  .header {
-    flex-direction: column;
-  }
-
-  .bookPopup {
-    left: 0;
-    right: 0;
-    transform: none;
-    width: 190px;
-  }
-
-  .listRowTitle {
-    font-size: var(--font-size-xs);
-  }
+  .header { flex-direction: column; }
 }
 
 @media (max-width: 480px) {
-  .filters {
-    gap: var(--spacing-1-5);
-  }
-
-  .filterBtn {
-    padding: 4px var(--spacing-2);
-    font-size: 10px;
-  }
+  .filterBtn { padding: 4px var(--spacing-2); font-size: 10px; }
 }
 
 /* ── Adaptive Levels ── */
-.level0 {}
-.level1 {}
-.level2 {}
-.level3 {}
+.level0 { --shelf-opacity: 1; }
+.level1 { --shelf-opacity: 1; }
+.level2 { --shelf-opacity: 1; }
+.level3 { --shelf-opacity: 1; }
