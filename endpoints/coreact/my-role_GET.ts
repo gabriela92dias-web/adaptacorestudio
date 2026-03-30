@@ -1,106 +1,28 @@
-import { schema, OutputType } from "./my-role_GET.schema";
 import superjson from 'superjson';
-import { db } from "../../helpers/db";
-import { getServerUserSession } from "../../helpers/getServerUserSession";
+import { supabase } from "../../helpers/supabase.js";
+
+const ADMIN_TEAM_MEMBER_ID = "membro-exemplo";
 
 export async function handle(request: Request) {
   try {
-    const { user } = await getServerUserSession(request);
+    const { data: sectorMemberships, error: smErr } = await supabase
+      .from("sector_members")
+      .select("sector_id, role, permissions, sectors(name)")
+      .eq("member_id", ADMIN_TEAM_MEMBER_ID);
 
-    // Find the team member linked to the current user
-    let teamMember = await db.selectFrom("teamMembers")
-      .select(["id"])
-      .where("userId", "=", user.id)
-      .limit(1)
-      .executeTakeFirst();
+    if (smErr) throw new Error(smErr.message);
 
-    if (!teamMember) {
-      // Auto-provision a real teamMember record for this user
-      const newTeamMemberId = crypto.randomUUID();
-      const initials = user.displayName?.slice(0, 2).toUpperCase() || "NN";
-      
-      await db.insertInto("teamMembers").values({
-        id: newTeamMemberId,
-        userId: user.id,
-        name: user.displayName || user.email.split('@')[0],
-        email: user.email,
-        initials,
-        status: "active",
-        createdAt: new Date(),
-      }).execute();
+    const sectorRoles = (sectorMemberships ?? []).map((sm: any) => ({
+      sectorId: sm.sector_id as string,
+      sectorName: (sm.sectors?.name ?? "") as string,
+      role: sm.role as string,
+      permissions: (sm.permissions ?? {}) as Record<string, boolean>,
+    }));
 
-      // If this is the owner (ID 1) or an admin, automatically assign them to ALL existing sectors
-      if (user.id === 1 || user.role === "admin") {
-        const allSectors = await db.selectFrom("sectors").select("id").execute();
-        if (allSectors.length > 0) {
-          await db.insertInto("sectorMembers").values(
-            allSectors.map(s => ({
-              id: crypto.randomUUID(),
-              sectorId: s.id,
-              memberId: newTeamMemberId,
-              role: "responsavel" as const,
-              permissions: {},
-              createdAt: new Date(),
-            }))
-          ).execute();
-        }
-      }
-      
-      // Re-fetch the team member we just created
-      const newMember = await db.selectFrom("teamMembers")
-        .select(["id"])
-        .where("userId", "=", user.id)
-        .limit(1)
-        .executeTakeFirst();
-      
-      if (!newMember) throw new Error("Auto-provisioning failed");
-      teamMember = newMember;
-    }
-
-    // Auto-provision sectors for Owner/Admin if they have none
-    if (user.id === 1 || user.role === "admin") {
-      const existingSectorMemberships = await db.selectFrom("sectorMembers as sm")
-        .select("sm.sectorId")
-        .where("sm.memberId", "=", teamMember.id)
-        .execute();
-      
-      if (existingSectorMemberships.length === 0) {
-        const allSectors = await db.selectFrom("sectors").select("id").execute();
-        if (allSectors.length > 0) {
-          await db.insertInto("sectorMembers").values(
-            allSectors.map(s => ({
-              id: crypto.randomUUID(),
-              sectorId: s.id,
-              memberId: teamMember!.id,
-              role: "responsavel" as const,
-              permissions: {},
-              createdAt: new Date(),
-            }))
-          ).execute();
-        }
-      }
-    }
-
-    // Find all sector memberships for this team member
-    const sectorMemberships = await db.selectFrom("sectorMembers as sm")
-      .innerJoin("sectors as s", "sm.sectorId", "s.id")
-      .select([
-        "sm.sectorId",
-        "s.name as sectorName",
-        "sm.role",
-        "sm.permissions"
-      ])
-      .where("sm.memberId", "=", teamMember.id)
-      .execute();
-
-        return new Response(superjson.stringify({
-      teamMemberId: teamMember.id,
-      sectorRoles: sectorMemberships.map(sm => ({
-        ...sm,
-        permissions: (sm.permissions ?? {}) as Record<string, boolean>,
-      }))
-    } satisfies OutputType));
-
+    return new Response(
+      superjson.stringify({ teamMemberId: ADMIN_TEAM_MEMBER_ID, sectorRoles }),
+      { headers: { "Content-Type": "application/json" } }
+    );
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Unknown error";
     return new Response(superjson.stringify({ error: msg }), { status: 400 });
