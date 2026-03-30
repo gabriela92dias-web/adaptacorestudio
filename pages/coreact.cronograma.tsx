@@ -14,6 +14,10 @@ import { filterTasksForDay } from "../helpers/cronogramaTaskUtils";
 import { useAdaptiveLevel } from "../helpers/useAdaptiveLevel";
 import { useGoogleTranslate } from "../helpers/useTranslation";
 import { useSwipeNavigation } from "../helpers/useSwipeNavigation";
+import { CronogramaGantt } from "../components/CronogramaGantt";
+import { CronogramaKanban } from "../components/CronogramaKanban";
+import { CronogramaLista } from "../components/CronogramaLista";
+import { CronogramaProcessos } from "../components/CronogramaProcessos";
 import styles from "./coreact.cronograma.module.css";
 
 const statusMap: Record<string, string> = {
@@ -295,19 +299,46 @@ export default function CoreActCronograma() {
         </div>
       </header>
 
-      <div ref={swipeNavRef as any} style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0, alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: "center", maxWidth: "420px", display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
-          <div style={{ background: "var(--fill)", padding: "2rem", borderRadius: "50%", marginBottom: "1rem", color: "var(--text-secondary)" }}>
-            <CalendarIcon size={48} strokeWidth={1} />
-          </div>
-          <h2 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>Nenhuma linha do tempo detectada</h2>
-          <p style={{ color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-            O Cronograma avançado foca na visualização de macros (Projetos e Etapas). Este módulo está passando por atualizações estruturais e será ativado em breve.
-          </p>
-          <Button variant="outline" style={{ marginTop: "1rem" }} onClick={() => setToday()}>
-            Voltar para Hoje
-          </Button>
-        </div>
+      <div ref={swipeNavRef as any} style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+        {viewMode === 'gantt' && (
+          <CronogramaGantt 
+            tasks={filteredTasks}
+            projects={projectsData?.projects || []}
+            initiatives={initiativesData?.initiatives || []}
+            sectors={sectorsData || []}
+            dependencies={dependenciesData?.dependencies || []}
+            teamMembers={teamData?.teamMembers || []}
+            onTaskClick={(id) => setSelectedTaskId(id)}
+            ganttZoom={ganttZoom}
+            currentDate={currentDate}
+            level={level as any}
+          />
+        )}
+        {viewMode === 'kanban' && (
+          <CronogramaKanban 
+            tasks={filteredTasks}
+            projects={projectsData?.projects || []}
+            onTaskClick={(id) => setSelectedTaskId(id)}
+            level={level as any}
+            ganttZoom={ganttZoom}
+            currentDate={currentDate}
+          />
+        )}
+        {viewMode === 'list' && (
+          <CronogramaLista 
+            tasks={filteredTasks}
+            projects={projectsData?.projects || []}
+            onTaskClick={(id) => setSelectedTaskId(id)}
+            level={level as any}
+          />
+        )}
+        {viewMode === 'process' && (
+          <CronogramaProcessos 
+            tasks={filteredTasks}
+            projects={projectsData?.projects || []}
+            onTaskClick={(id) => setSelectedTaskId(id)}
+          />
+        )}
 
       <CreateTaskModal 
         open={selectedTaskId === "new"} 

@@ -28,3 +28,22 @@ build/
 env.json
 .env
 .env.local
+
+# Arquivos de Midia e Gerados em Interacoes
+*.mp3
+*.mp4
+*.wav
+*.sqlite
+*.sql
+*.dmp
+*.bak
+dump/
+dumps/
+backups/
+/mockups/
+/podcasts/
+/temp/
+/tmp/
+/temp_build/
+/*.webm
+/*.mkv

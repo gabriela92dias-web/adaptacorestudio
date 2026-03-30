@@ -1,6 +1,23 @@
 import { schema, OutputType } from "./list_GET.schema";
 import superjson from 'superjson';
-import { db } from "../../../helpers/db";
+import { supabase } from "../../../helpers/supabase-client";
+
+function camelizeKeys(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(v => camelizeKeys(v));
+  } else if (obj !== null && obj.constructor === Object) {
+    return Object.keys(obj).reduce((result, key) => {
+      const camelKey = key.replace(/([-_][a-z])/ig, ($1) => {
+        return $1.toUpperCase()
+          .replace('-', '')
+          .replace('_', '');
+      });
+      result[camelKey] = camelizeKeys(obj[key]);
+      return result;
+    }, {} as any);
+  }
+  return obj;
+}
 
 export async function handle(request: Request) {
   try {
@@ -9,16 +26,29 @@ export async function handle(request: Request) {
     const json = inputStr ? superjson.parse(inputStr) : {};
     const input = schema.parse(json);
 
-    let query = db.selectFrom("budgetItems")
-      .leftJoin("projects", "budgetItems.projectId", "projects.id")
-      .selectAll("budgetItems")
-      .select(["projects.name as projectName"]);
+    let query = supabase
+      .from("budget_items")
+      .select(`
+        *,
+        projects ( name )
+      `);
 
     if (input.projectId) {
-      query = query.where("budgetItems.projectId", "=", input.projectId);
+      query = query.eq("project_id", input.projectId);
     }
 
-    const budgetItems = await query.execute();
+    const { data: rawData, error } = await query;
+
+    if (error) {
+       throw error;
+    }
+
+    const budgetItems = (rawData || []).map(item => {
+      const camelItem = camelizeKeys(item);
+      camelItem.projectName = item.projects?.name || null;
+      delete camelItem.projects;
+      return camelItem;
+    });
 
     return new Response(superjson.stringify({ budgetItems } satisfies OutputType));
   } catch (error: unknown) {

@@ -1,13 +1,20 @@
+import { schema, OutputType } from "./list_GET.schema";
 import superjson from 'superjson';
-import { supabase } from "../../../helpers/supabase.js";
+import { supabase } from "../../../helpers/supabase-client";
 
-function toCamel(str: string): string {
-  return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
-}
 function camelizeKeys(obj: any): any {
-  if (Array.isArray(obj)) return obj.map(camelizeKeys);
-  if (obj !== null && typeof obj === 'object') {
-    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [toCamel(k), camelizeKeys(v)]));
+  if (Array.isArray(obj)) {
+    return obj.map(v => camelizeKeys(v));
+  } else if (obj !== null && obj.constructor === Object) {
+    return Object.keys(obj).reduce((result, key) => {
+      const camelKey = key.replace(/([-_][a-z])/ig, ($1) => {
+        return $1.toUpperCase()
+          .replace('-', '')
+          .replace('_', '');
+      });
+      result[camelKey] = camelizeKeys(obj[key]);
+      return result;
+    }, {} as any);
   }
   return obj;
 }
@@ -16,34 +23,52 @@ export async function handle(request: Request) {
   try {
     const url = new URL(request.url);
     const inputStr = url.searchParams.get("input");
-    let projectId: string | null = null;
+    
+    // Parse input properly taking schema into account
+    let parsedInput: any = {};
     if (inputStr) {
-      try { projectId = (superjson.parse(inputStr) as any)?.projectId ?? null; } catch {}
+      try { parsedInput = superjson.parse(inputStr); } catch {}
+    }
+    
+    const projectId = parsedInput?.projectId ?? null;
+    const includeActions = parsedInput?.includeActions || parsedInput?.withActions || false;
+
+    let selectQuery = `
+      *,
+      assignee:team_members!tasks_assignee_id_fkey ( id, name, initials ),
+      project:projects ( id, name )
+    `;
+    
+    if (includeActions) {
+      selectQuery += ", actions:task_actions(*, executions(*))";
     }
 
     let query = supabase
       .from("tasks")
-      .select(`
-        *,
-        assignee:team_members!tasks_assignee_id_fkey ( id, name, initials ),
-        project:projects ( id, name )
-      `)
+      .select(selectQuery)
       .order("created_at", { ascending: false });
 
-    if (projectId) query = (query as any).eq("project_id", projectId);
+    if (projectId) {
+      query = query.eq("project_id", projectId);
+    }
 
     const { data: tasks, error } = await query;
-    if (error) throw new Error(error.message);
+    if (error) {
+       throw error;
+    }
 
-    const mapped = (tasks ?? []).map((t: any) => ({
-      ...camelizeKeys(t),
-      assigneeName: t.assignee?.name ?? null,
-      assigneeInitials: t.assignee?.initials ?? null,
-      projectName: t.project?.name ?? null,
-    }));
+    const mapped = (tasks ?? []).map((t: any) => {
+      const camelT = camelizeKeys(t);
+      camelT.assigneeName = t.assignee?.name ?? null;
+      camelT.assigneeInitials = t.assignee?.initials ?? null;
+      camelT.projectName = t.project?.name ?? null;
+      delete camelT.assignee;
+      delete camelT.project;
+      return camelT;
+    });
 
     return new Response(
-      superjson.stringify({ tasks: mapped }),
+      superjson.stringify({ tasks: mapped } satisfies OutputType),
       { headers: { "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
