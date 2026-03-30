@@ -27,7 +27,7 @@ export async function handle(request: Request) {
         *,
         project:projects ( id, name )
       `)
-      .order("position", { ascending: true });
+      .order("sort_order", { ascending: true });
 
     if (projectId) query = (query as any).eq("project_id", projectId);
 
