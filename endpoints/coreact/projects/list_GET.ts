@@ -1,31 +1,31 @@
 import { schema, OutputType } from "./list_GET.schema";
 import superjson from 'superjson';
-import { db } from "../../../helpers/db";
+import { supabase } from "../../../helpers/supabase";
 
 export async function handle(request: Request) {
   try {
-    const projects = await db.selectFrom("projects")
-      .leftJoin("teamMembers", "projects.ownerId", "teamMembers.id")
-      .leftJoin("initiatives", "projects.initiativeId", "initiatives.id")
-      .selectAll("projects")
-      .select([
-        "teamMembers.name as ownerName",
-        "initiatives.name as initiativeName",
-      ])
-      .execute();
+    const { data: projects, error: projectsError } = await supabase
+      .from("projects")
+      .select(`
+        *,
+        teamMembers:team_members(id, name),
+        initiatives(id, name)
+      `);
 
-    const tasks = await db.selectFrom("tasks")
-      .leftJoin("teamMembers", "tasks.assigneeId", "teamMembers.id")
-      .selectAll("tasks")
-      .select([
-        "teamMembers.name as assigneeName",
-        "teamMembers.initials as assigneeInitials"
-      ])
-      .execute();
+    if (projectsError) throw projectsError;
 
-    const projectsWithTasks = projects.map(p => ({
+    const { data: tasks, error: tasksError } = await supabase
+      .from("tasks")
+      .select(`
+        *,
+        teamMembers:team_members(id, name, initials)
+      `);
+
+    if (tasksError) throw tasksError;
+
+    const projectsWithTasks = (projects ?? []).map(p => ({
       ...p,
-      tasks: tasks.filter(t => t.projectId === p.id)
+      tasks: (tasks ?? []).filter(t => t.project_id === p.id)
     }));
 
     return new Response(superjson.stringify({ projects: projectsWithTasks } satisfies OutputType));
