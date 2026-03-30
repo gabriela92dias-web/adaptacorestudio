@@ -1,6 +1,5 @@
 import svgPaths from "./svg-slmhaolkan";
-import imgRectangle from "figma:asset/1164b539a3c00366faedd0f6abc2738e830e3c3e.png";
-import imgRectangle1 from "figma:asset/e75639ca75fdc57034902c8f2b54f2f212594bf7.png";
+
 
 function Group() {
   return (
@@ -20,7 +19,7 @@ function B54Ea0C() {
     <div className="absolute contents inset-[3.14%_42.4%_76.79%_43.08%]" data-name="b54ea0c589">
       <div className="absolute inset-[3.14%_42.4%_76.79%_43.08%]" data-name="Rectangle">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgRectangle} />
+          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={""} />
         </div>
       </div>
     </div>
@@ -40,7 +39,7 @@ function Group2() {
     <div className="absolute contents inset-[3.14%_42.4%_76.79%_43.08%]" data-name="Group">
       <div className="absolute inset-[3.14%_42.4%_76.79%_43.08%]" data-name="Rectangle">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgRectangle1} />
+          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={""} />
         </div>
       </div>
     </div>

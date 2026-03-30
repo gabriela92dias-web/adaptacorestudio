@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { ScenePlayback } from "../../../components/brand-studio/scene-playback";
 import { SCENE_PRESETS, ScenePreset } from "../../../components/brand-studio/scene-presets";
 import { useBrandStudio } from "../../../contexts/brand-context";
-import { useTheme } from "next-themes";
 import { PlayCircle, Download, CheckCircle2, Film } from "lucide-react";
 import { downloadSceneGIF } from "../../../utils/export-logo";
 import { toast } from "sonner";
 
 export function CenasMascotes() {
   const { layers } = useBrandStudio();
-  const { theme } = useTheme();
 
   const [activeSceneId, setActiveSceneId] = useState<string>(SCENE_PRESETS[0].id);
   const [isExporting, setIsExporting] = useState(false);

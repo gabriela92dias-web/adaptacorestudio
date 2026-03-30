@@ -1,5 +1,5 @@
-import imgRectangle from "figma:asset/3ad0baf5415d5e4ceafff7614343c2f40770811b.png";
-import imgRectangle1 from "figma:asset/7e9ac71b05c24a80e3d10960ada7ee4354fbd3b4.png";
+
+
 import { imgVector, imgRectangle2 } from "./svg-xedgc";
 
 function Group3() {
@@ -7,7 +7,7 @@ function Group3() {
     <div className="absolute contents inset-[0_0.96%_1.92%_0.96%]" data-name="Group">
       <div className="absolute inset-[0_0.96%_1.92%_0.96%] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-0.001px_0px] mask-size-[15.693px_17.654px]" data-name="Rectangle" style={{ maskImage: `url('${imgVector}')` }}>
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgRectangle} />
+          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={""} />
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@ function Group5() {
     <div className="absolute contents inset-[0_0.96%_1.92%_0.96%]" data-name="Group">
       <div className="absolute inset-[0_0.96%_1.92%_0.96%] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-0.001px_0px] mask-size-[15.693px_17.654px]" data-name="Rectangle" style={{ maskImage: `url('${imgVector}')` }}>
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgRectangle1} />
+          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={""} />
         </div>
       </div>
     </div>
@@ -85,7 +85,7 @@ function Group9() {
     <div className="absolute contents inset-[0.13%_0.96%_1.79%_0.96%]" data-name="Group">
       <div className="absolute inset-[0.13%_0.96%_1.79%_0.96%] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-0.001px_0px] mask-size-[15.693px_17.631px]" data-name="Rectangle" style={{ maskImage: `url('${imgRectangle2}')` }}>
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgRectangle} />
+          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={""} />
         </div>
       </div>
     </div>
@@ -113,7 +113,7 @@ function Group11() {
     <div className="absolute contents inset-[0.13%_0.96%_1.79%_0.96%]" data-name="Group">
       <div className="absolute inset-[0.13%_0.96%_1.79%_0.96%] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-0.001px_0px] mask-size-[15.693px_17.631px]" data-name="Rectangle" style={{ maskImage: `url('${imgRectangle2}')` }}>
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgRectangle1} />
+          <img alt="" className="absolute left-0 max-w-none size-full top-0" src={""} />
         </div>
       </div>
     </div>
