@@ -1,144 +1,62 @@
-import { schema, OutputType } from "./contexts_GET.schema";
 import superjson from 'superjson';
-import { db } from "../../../helpers/db";
+import { supabase } from "../../../helpers/supabase.js";
 
 export async function handle(request: Request) {
   try {
-    // 1. Fetch all teams with their sector names
-    const teams = await db
-      .selectFrom("teams")
-      .leftJoin("sectors", "teams.sectorId", "sectors.id")
-      .select([
-        "teams.id",
-        "teams.name",
-        "teams.sectorId",
-        "sectors.name as sectorName"
-      ])
-      .orderBy("teams.createdAt", "asc")
-      .execute();
+    const [
+      { data: teams, error: tErr },
+      { data: groupMembers, error: gmErr },
+      { data: initiatives, error: iErr },
+      { data: projects, error: pErr },
+      { data: tasks, error: tkErr },
+    ] = await Promise.all([
+      supabase.from("teams").select("id, name, sector_id, sectors(name)").order("created_at", { ascending: true }),
+      supabase.from("team_group_members").select("team_id, member_id, team_members(id, name, initials)"),
+      supabase.from("initiatives").select("id, name, assigned_team_id").not("assigned_team_id", "is", null),
+      supabase.from("projects").select("id, name, assigned_team_id").not("assigned_team_id", "is", null),
+      supabase.from("tasks").select("id, name, project_id, assigned_team_id, projects(name)").not("assigned_team_id", "is", null),
+    ]);
 
-    // 2. Fetch team members
-    const groupMembers = await db
-      .selectFrom("teamGroupMembers")
-      .innerJoin("teamMembers", "teamGroupMembers.memberId", "teamMembers.id")
-      .select([
-        "teamGroupMembers.teamId",
-        "teamMembers.id",
-        "teamMembers.name",
-        "teamMembers.initials",
-      ])
-      .execute();
+    if (tErr) throw new Error(tErr.message);
+    if (gmErr) throw new Error(gmErr.message);
 
-    // 3. Fetch contexts (initiatives, projects, stages, tasks) assigned to any team
-    const initiatives = await db
-      .selectFrom("initiatives")
-      .select(["id", "name", "assignedTeamId"])
-      .where("assignedTeamId", "is not", null)
-      .execute();
-
-    const projects = await db
-      .selectFrom("projects")
-      .select(["id", "name", "assignedTeamId"])
-      .where("assignedTeamId", "is not", null)
-      .execute();
-
-    const stages = await db
-      .selectFrom("projectStages")
-      .innerJoin("projects", "projectStages.projectId", "projects.id")
-      .select([
-        "projectStages.id",
-        "projectStages.name",
-        "projectStages.projectId",
-        "projects.name as projectName",
-        "projectStages.assignedTeamId"
-      ])
-      .where("projectStages.assignedTeamId", "is not", null)
-      .execute();
-
-    const tasks = await db
-      .selectFrom("tasks")
-      .innerJoin("projects", "tasks.projectId", "projects.id")
-      .select([
-        "tasks.id",
-        "tasks.name",
-        "tasks.projectId",
-        "projects.name as projectName",
-        "tasks.assignedTeamId"
-      ])
-      .where("tasks.assignedTeamId", "is not", null)
-      .execute();
-
-    // 4. Assemble the enriched payload
-    const resultTeams = teams.map((team) => {
-      const members = groupMembers
-        .filter((gm) => gm.teamId === team.id)
-        .map((gm) => ({
-          id: gm.id,
-          name: gm.name,
-          initials: gm.initials,
+    const resultTeams = (teams ?? []).map((team: any) => {
+      const members = (groupMembers ?? [])
+        .filter((gm: any) => gm.team_id === team.id)
+        .map((gm: any) => ({
+          id: gm.team_members?.id ?? gm.member_id,
+          name: gm.team_members?.name ?? null,
+          initials: gm.team_members?.initials ?? null,
         }));
 
-      const contexts: OutputType["teams"][number]["contexts"] = [];
+      const contexts: any[] = [];
 
-      // Attach Initiatives
-      initiatives
-        .filter((i) => i.assignedTeamId === team.id)
-        .forEach((i) => {
-          contexts.push({
-            entityType: "initiative",
-            entityId: i.id,
-            entityName: i.name,
-          });
-        });
+      (initiatives ?? []).filter((i: any) => i.assigned_team_id === team.id)
+        .forEach((i: any) => contexts.push({ entityType: "initiative", entityId: i.id, entityName: i.name }));
 
-      // Attach Projects
-      projects
-        .filter((p) => p.assignedTeamId === team.id)
-        .forEach((p) => {
-          contexts.push({
-            entityType: "project",
-            entityId: p.id,
-            entityName: p.name,
-          });
-        });
+      (projects ?? []).filter((p: any) => p.assigned_team_id === team.id)
+        .forEach((p: any) => contexts.push({ entityType: "project", entityId: p.id, entityName: p.name }));
 
-      // Attach Stages
-      stages
-        .filter((s) => s.assignedTeamId === team.id)
-        .forEach((s) => {
-          contexts.push({
-            entityType: "stage",
-            entityId: s.id,
-            entityName: s.name,
-            parentId: s.projectId,
-            parentName: s.projectName,
-          });
-        });
-
-      // Attach Tasks
-      tasks
-        .filter((t) => t.assignedTeamId === team.id)
-        .forEach((t) => {
-          contexts.push({
-            entityType: "task",
-            entityId: t.id,
-            entityName: t.name,
-            parentId: t.projectId,
-            parentName: t.projectName,
-          });
-        });
+      (tasks ?? []).filter((t: any) => t.assigned_team_id === team.id)
+        .forEach((t: any) => contexts.push({
+          entityType: "task", entityId: t.id, entityName: t.name,
+          parentId: t.project_id, parentName: t.projects?.name ?? null
+        }));
 
       return {
         id: team.id,
         name: team.name,
-        sectorId: team.sectorId,
-        sectorName: team.sectorName,
+        sectorId: team.sector_id,
+        sectorName: team.sectors?.name ?? null,
         members,
         contexts,
       };
     });
 
-    return new Response(superjson.stringify({ teams: resultTeams } satisfies OutputType));
+    return new Response(
+      superjson.stringify({ teams: resultTeams }),
+      { headers: { "Content-Type": "application/json" } }
+    );
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Unknown error";
     return new Response(superjson.stringify({ error: msg }), { status: 400 });
