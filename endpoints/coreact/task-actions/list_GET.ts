@@ -1,44 +1,45 @@
-import { schema, OutputType } from "./list_GET.schema";
-import superjson from "superjson";
-import { db } from "../../../helpers/db";
+import superjson from 'superjson';
+import { supabase } from "../../../helpers/supabase.js";
+
+function toCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+}
+function camelizeKeys(obj: any): any {
+  if (Array.isArray(obj)) return obj.map(camelizeKeys);
+  if (obj !== null && typeof obj === 'object') {
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [toCamel(k), camelizeKeys(v)]));
+  }
+  return obj;
+}
 
 export async function handle(request: Request) {
   try {
     const url = new URL(request.url);
     const inputStr = url.searchParams.get("input");
-    const json = inputStr ? superjson.parse(inputStr) : {};
-    const input = schema.parse(json);
-
-    let query = db
-      .selectFrom("taskActions")
-      .leftJoin("teamMembers as reqTeam", "taskActions.requestedBy", "reqTeam.id")
-      .leftJoin("teamMembers as assTeam", "taskActions.assignedTo", "assTeam.id")
-      .leftJoin("teamMembers as opTeam", "taskActions.operatorId", "opTeam.id")
-      .selectAll("taskActions")
-      .select([
-        "reqTeam.name as requestedByName",
-        "reqTeam.initials as requestedByInitials",
-        "assTeam.name as assignedToName",
-        "assTeam.initials as assignedToInitials",
-        "opTeam.name as operatorName",
-        "opTeam.initials as operatorInitials",
-      ])
-      .orderBy("taskActions.createdAt", "asc");
-
-    if (input.taskId) {
-      query = query.where("taskActions.taskId", "=", input.taskId);
-    }
-    if (input.assignedTo) {
-      query = query.where("taskActions.assignedTo", "=", input.assignedTo);
-    }
-    if (input.status) {
-      query = query.where("taskActions.status", "=", input.status);
+    let taskId: string | null = null;
+    if (inputStr) {
+      try { taskId = (superjson.parse(inputStr) as any)?.taskId ?? null; } catch {}
     }
 
-    const taskActions = await query.execute();
+    let query = supabase
+      .from("task_actions")
+      .select("*, team_members(id, name, initials)")
+      .order("created_at", { ascending: false });
+
+    if (taskId) query = (query as any).eq("task_id", taskId);
+
+    const { data: actions, error } = await query;
+    if (error) throw new Error(error.message);
+
+    const mapped = (actions ?? []).map((a: any) => ({
+      ...camelizeKeys(a),
+      memberName: a.team_members?.name ?? null,
+      memberInitials: a.team_members?.initials ?? null,
+    }));
 
     return new Response(
-      superjson.stringify({ taskActions } satisfies OutputType)
+      superjson.stringify({ taskActions: mapped }),
+      { headers: { "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Unknown error";

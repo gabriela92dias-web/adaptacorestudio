@@ -1,38 +1,50 @@
-import { schema, OutputType } from "./list_GET.schema";
-import superjson from "superjson";
-import { db } from "../../../helpers/db";
+import superjson from 'superjson';
+import { supabase } from "../../../helpers/supabase.js";
+
+function toCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+}
+function camelizeKeys(obj: any): any {
+  if (Array.isArray(obj)) return obj.map(camelizeKeys);
+  if (obj !== null && typeof obj === 'object') {
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [toCamel(k), camelizeKeys(v)]));
+  }
+  return obj;
+}
 
 export async function handle(request: Request) {
   try {
     const url = new URL(request.url);
     const inputStr = url.searchParams.get("input");
-    const json = inputStr ? superjson.parse(inputStr) : {};
-    const input = schema.parse(json);
-
-    let query = db
-      .selectFrom("activityLogs")
-      .leftJoin("teamMembers", "activityLogs.performedBy", "teamMembers.id")
-      .selectAll("activityLogs")
-      .select(["teamMembers.name as performerName"])
-      .orderBy("activityLogs.performedAt", "desc");
-
-    if (input.projectId) {
-      query = query.where("activityLogs.projectId", "=", input.projectId);
-    }
-    if (input.entityType) {
-      query = query.where("activityLogs.entityType", "=", input.entityType);
-    }
-    if (input.entityId) {
-      query = query.where("activityLogs.entityId", "=", input.entityId);
+    let projectId: string | null = null;
+    if (inputStr) {
+      try { projectId = (superjson.parse(inputStr) as any)?.projectId ?? null; } catch {}
     }
 
-    const limit = input.limit ?? 50;
-    query = query.limit(limit);
+    const { data: activity, error } = await supabase
+      .from("activity_logs")
+      .select("*, team_members(id, name, initials)")
+      .eq(projectId ? "related_id" : "id", projectId ?? "")
+      .order("created_at", { ascending: false })
+      .limit(100);
 
-    const activityLogs = await query.execute();
+    // If no projectId filter, get recent activity
+    const { data: allActivity, error: aErr } = projectId
+      ? { data: activity, error }
+      : await supabase.from("activity_logs").select("*, team_members(id, name, initials)").order("created_at", { ascending: false }).limit(50);
+
+    const finalError = projectId ? error : aErr;
+    if (finalError) throw new Error(finalError.message);
+
+    const mapped = (allActivity ?? []).map((a: any) => ({
+      ...camelizeKeys(a),
+      memberName: a.team_members?.name ?? null,
+      memberInitials: a.team_members?.initials ?? null,
+    }));
 
     return new Response(
-      superjson.stringify({ activityLogs } satisfies OutputType)
+      superjson.stringify({ activityLogs: mapped }),
+      { headers: { "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Unknown error";
