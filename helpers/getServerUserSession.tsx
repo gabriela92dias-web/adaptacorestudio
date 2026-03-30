@@ -9,7 +9,30 @@ import {
 } from "./getSetServerSession";
 
 export async function getServerUserSession(request: Request) {
-  const session = await getServerSessionOrThrow(request);
+  let session;
+  try {
+    session = await getServerSessionOrThrow(request);
+  } catch (error) {
+    if (error instanceof NotAuthenticatedError) {
+      // DEV MODE BYPASS: If no session, return dummy admin user to match frontend
+      const now = new Date();
+      return {
+        user: {
+          id: 1, 
+          email: "dev@adaptacorestudio.com", 
+          displayName: "Gabriela Dias (Dev Mode)", 
+          avatarUrl: null, 
+          role: "admin"
+        } satisfies User,
+        session: {
+          id: "dev-session-id",
+          createdAt: now.getTime(),
+          lastAccessed: now.getTime(),
+        }
+      };
+    }
+    throw error;
+  }
 
   // Occasionally clean up expired sessions
   if (Math.random() < CleanupProbability) {

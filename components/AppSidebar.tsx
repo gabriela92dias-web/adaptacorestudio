@@ -25,6 +25,7 @@ import { useAuth } from "../helpers/useAuth";
 import { useGoogleTranslate } from "../helpers/useTranslation";
 import { usePermissions } from "../helpers/usePermissions";
 import { CoreactHelpModal } from "./CoreactHelpModal";
+import { toast } from "sonner";
 import styles from "./AppSidebar.module.css";
 
 type NavSubItem = {
@@ -153,11 +154,12 @@ export const AppSidebar = () => {
       subItems: [
         { label: "Logo Studio", path: "/tools/logo-cores" },
         { label: "Documentos", path: "/documentos-corporativos" },
-        { label: "Produtos & Embalagens", disabled: true, badge: { text: "Em breve", variant: "outline" } },
+        { label: "Produtos & Embalagens", path: "/tools/produtos" },
         { label: "Comunicação Visual", disabled: true, badge: { text: "Em breve", variant: "outline" } },
         { label: "Cores", path: "/tools/colors" },
         { label: "Gradientes", path: "/tools/gradients" },
         { label: "Mascotes", path: "/tools/mascots" },
+        { label: "Cenas Conjuntas", path: "/tools/cenas-mascotes", badge: { text: "Novo!", variant: "success" } },
         { label: "Preview do Insta", disabled: true, badge: { text: "Em breve", variant: "outline" } },
         { label: "Análise Gráfica", path: "/tools/analysis" },
       ],
@@ -383,7 +385,11 @@ export const AppSidebar = () => {
               )}
             </Link>
           ) : (
-            <div className={isCollapsed ? styles.userInfoCollapsed : styles.userInfo}>
+            <div 
+              className={isCollapsed ? styles.userInfoCollapsed : styles.userInfo}
+              onClick={() => toast.info("Menu do perfil em desenvolvimento")}
+              style={{ cursor: "pointer" }}
+            >
               {isCollapsed ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -398,27 +404,32 @@ export const AppSidebar = () => {
                       </Avatar>
                     </div>
                   </TooltipTrigger>
-                  <TooltipContent side="right">{authState.user.displayName}</TooltipContent>
+                  <TooltipContent side="right">Menu do Usuário</TooltipContent>
                 </Tooltip>
               ) : (
-                <>
-                  <Avatar className={styles.avatar}>
-                    {authState.user.avatarUrl && (
-                      <AvatarImage src={authState.user.avatarUrl} alt={authState.user.displayName} />
-                    )}
-                    <AvatarFallback>
-                      {authState.user.displayName.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className={styles.userDetails}>
-                    <span className={styles.userName}>
-                      {authState.user.displayName.toUpperCase()}
-                    </span>
-                    <span className={styles.userEmail}>
-                      {authState.user.email}
-                    </span>
-                  </div>
-                </>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-3)", width: "100%" }}>
+                      <Avatar className={styles.avatar}>
+                        {authState.user.avatarUrl && (
+                          <AvatarImage src={authState.user.avatarUrl} alt={authState.user.displayName} />
+                        )}
+                        <AvatarFallback>
+                          {authState.user.displayName.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className={styles.userDetails}>
+                        <span className={styles.userName}>
+                          {authState.user.displayName.toUpperCase()}
+                        </span>
+                        <span className={styles.userEmail}>
+                          {authState.user.email}
+                        </span>
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>Opções da Conta</TooltipContent>
+                </Tooltip>
               )}
             </div>
           )}
@@ -462,12 +473,40 @@ export const AppSidebar = () => {
           {!isCollapsed ? (
             <>
               <CoreactHelpModal isCollapsed={false} />
-              <Button variant="ghost" size="icon-sm" className={styles.iconButton} aria-label={"Guia"}>
-                <BookOpen size={16} />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon-sm" 
+                    className={styles.iconButton} 
+                    aria-label={"Documentação"}
+                    onClick={() => toast.info("Central de Documentação em breve")}
+                  >
+                    <BookOpen size={16} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Documentação</TooltipContent>
+              </Tooltip>
             </>
           ) : (
-            <CoreactHelpModal isCollapsed={true} />
+            <>
+              <CoreactHelpModal isCollapsed={true} />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon-sm" 
+                    className={styles.iconButton} 
+                    aria-label={"Documentação"}
+                    onClick={() => toast.info("Central de Documentação em breve")}
+                    style={{ marginTop: "var(--spacing-2)" }}
+                  >
+                    <BookOpen size={16} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">Documentação</TooltipContent>
+              </Tooltip>
+            </>
           )}
 
           {isCollapsed ? (

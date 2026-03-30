@@ -67,8 +67,7 @@ export function useDeleteInitiative() {
 export function useStages(projectId?: string) {
   return useQuery({
     queryKey: ["coreact", "stages", projectId],
-    queryFn: () => getCoreactStagesList({ projectId: projectId! }),
-    enabled: !!projectId,
+    queryFn: () => getCoreactStagesList({ projectId }),
     placeholderData: (previousData) => previousData,
   });
 }

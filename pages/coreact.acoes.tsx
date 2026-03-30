@@ -1,84 +1,47 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 import { usePermissions } from "../helpers/usePermissions";
 import { PermissionWall } from "../components/PermissionWall";
+import { useTasks, useUpdateTaskAction } from "../helpers/useCoreActApi";
 import styles from "./coreact.acoes.module.css";
 import { Activity, Plus, Check } from "lucide-react";
 
-type ActionItem = {
-  id: string;
-  label: string;
-  checked: boolean;
-};
-
-type ActionCard = {
-  id: string;
-  title: string;
-  items: ActionItem[];
-};
-
-const MOCK_ACTIONS: ActionCard[] = [
-  {
-    id: "a1",
-    title: "Revisão de Qualidade: Landing Page",
-    items: [
-      { id: "i1", label: "Verificar contraste de cores W3C.", checked: true },
-      { id: "i2", label: "Testar responsividade em dispositivos mobile.", checked: true },
-      { id: "i3", label: "Comprimir imagens WebP e SVG.", checked: false },
-      { id: "i4", label: "Revisar cópia contra guidelines da marca.", checked: false },
-    ]
-  },
-  {
-    id: "a2",
-    title: "Onboarding Novo Cliente",
-    items: [
-      { id: "i5", label: "Criar pasta no Drive.", checked: false },
-      { id: "i6", label: "Enviar forms de briefing.", checked: false },
-      { id: "i7", label: "Agendar kickoff meeting.", checked: false },
-    ]
-  }
-];
-
 export default function CoreactAcoes() {
   const { hasPermission } = usePermissions();
-  const [cards, setCards] = useState<ActionCard[]>(MOCK_ACTIONS);
-  const [clicksToday, setClicksToday] = useState(2); // Fake base value for demo
+  const { data: tasksData, isLoading } = useTasks({ includeActions: true });
+  const updateAction = useUpdateTaskAction();
+
+  const [localClicksToday, setLocalClicksToday] = useState(0); 
 
   if (!hasPermission("coreactAcoes")) {
     return <PermissionWall moduleName="Ações" />;
   }
 
-  const toggleItem = (cardId: string, itemId: string) => {
-    setCards(prevCards => 
-      prevCards.map(c => {
-        if (c.id === cardId) {
-          return {
-            ...c,
-            items: c.items.map(i => {
-              if (i.id === itemId) {
-                const newChecked = !i.checked;
-                // Add to tracker when checked
-                if (newChecked) setClicksToday(prev => Math.min(prev + 1, 10));
-                // Remove from tracker if unchecked (optional realism)
-                else setClicksToday(prev => Math.max(prev - 1, 0));
-                return { ...i, checked: newChecked };
-              }
-              return i;
-            })
-          };
-        }
-        return c;
-      })
-    );
+  const tasksWithActions = (tasksData?.tasks || []).filter(t => t.actions && t.actions.length > 0);
+
+  const toggleItem = (actionId: string, currentStatus: string) => {
+    const isCompleted = currentStatus === 'completed';
+    const newStatus = isCompleted ? 'pending' : 'completed';
+    
+    // Optimistic UI interaction Tracker
+    if (!isCompleted) setLocalClicksToday(prev => Math.min(prev + 1, 10));
+    else setLocalClicksToday(prev => Math.max(prev - 1, 0));
+
+    updateAction.mutate({
+      id: actionId,
+      status: newStatus,
+      completedAt: newStatus === 'completed' ? new Date() : null
+    });
   };
 
   // Matrix generation logic (7 days, 10 dots max height per day)
   const MAX_DOTS = 10;
   const days = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
-  // Fake weekly data structure: array of 7 integers (actions completed that day)
-  const weeklyData = [4, 6, 2, 8, 5, 0, clicksToday]; 
+  const weeklyData = [4, 6, 2, 8, 5, 0, localClicksToday]; 
 
   return (
     <div className={styles.container}>
+      <Helmet><title>CoreStudio | Ações</title></Helmet>
       <header className={styles.header}>
         <h1 className={styles.title}>Ações & Lembretes</h1>
         <button style={{
@@ -94,35 +57,44 @@ export default function CoreactAcoes() {
       <div className={styles.layout}>
         {/* Left Column: Checklist Cards */}
         <div className={styles.cardsList}>
-          {cards.map(card => {
-            const totalItems = card.items.length;
-            const completedItems = card.items.filter(i => i.checked).length;
+          {isLoading && <p>Carregando checklists...</p>}
+          {!isLoading && tasksWithActions.length === 0 && (
+            <p className={styles.emptyState}>Nenhuma ação pendente encontrada.</p>
+          )}
+          {tasksWithActions.map(task => {
+            const actions = task.actions || [];
+            const totalItems = actions.length;
+            const completedItems = actions.filter(a => a.status === 'completed').length;
             const isFullyCompleted = totalItems > 0 && completedItems === totalItems;
 
             return (
-              <div key={card.id} className={`${styles.actionCard} ${isFullyCompleted ? styles.collapsed : ''}`}>
+              <div key={task.id} className={`${styles.actionCard} ${isFullyCompleted ? styles.collapsed : ''}`}>
                 <div className={styles.cardHeader}>
-                  <h3 className={styles.cardTitle}>{card.title}</h3>
+                  <h3 className={styles.cardTitle}>{task.name}</h3>
                   <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)'}}>
                     {completedItems}/{totalItems}
                   </span>
                 </div>
 
                 <div className={styles.checklist}>
-                  {card.items.map(item => (
-                    <div 
-                      key={item.id} 
-                      className={styles.checklistItem}
-                      onClick={() => toggleItem(card.id, item.id)}
-                    >
-                      <div className={`${styles.checkbox} ${item.checked ? styles.checked : ''}`}>
-                        {item.checked && <Check size={14} />}
+                  {actions.map(action => {
+                    const isCompleted = action.status === 'completed';
+                    
+                    return (
+                      <div 
+                        key={action.id} 
+                        className={styles.checklistItem}
+                        onClick={() => toggleItem(action.id, action.status)}
+                      >
+                        <div className={`${styles.checkbox} ${isCompleted ? styles.checked : ''}`}>
+                          {isCompleted && <Check size={14} />}
+                        </div>
+                        <span className={`${styles.itemLabel} ${isCompleted ? styles.checked : ''}`}>
+                          {action.title}
+                        </span>
                       </div>
-                      <span className={`${styles.itemLabel} ${item.checked ? styles.checked : ''}`}>
-                        {item.label}
-                      </span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             );

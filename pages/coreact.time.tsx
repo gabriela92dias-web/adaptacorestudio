@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { UserPlus, Edit2, Trash2, CheckCircle2, Clock, PlayCircle, AlertCircle, Ban, Plus } from "lucide-react";
 import { useAdaptiveLevel } from "../helpers/useAdaptiveLevel";
 import { 
@@ -136,6 +137,7 @@ export default function CoreActTime() {
 
   return (
     <div ref={ref} className={`${styles.container} ${adaptiveClass} ${styles[`level${level}`]}`}>
+      <Helmet><title>CoreStudio | Time</title></Helmet>
       <Tabs value={activeTab} onValueChange={setActiveTab} className={styles.tabsContainer}>
         <header className={styles.header}>
           <div className={styles.headerText}>

@@ -16,8 +16,10 @@ import {
 } from "lucide-react";
 import { useBrandStudio } from "../../../contexts/brand-context";
 import { SampleLogo } from "../../../components/brand-studio/sample-logo";
+import { AnimatedLogo } from "../../../components/brand-studio/animated-logo";
+import { Player } from "@remotion/player";
 import { ColorControls } from "../../../components/brand-studio/color-controls";
-import { downloadLogoSVG, downloadLogoPNG, downloadLogoPDFVector } from "../../../utils/export-logo";
+import { downloadLogoSVG, downloadLogoPNG, downloadLogoPDFVector, downloadLogoGIF } from "../../../utils/export-logo";
 import { toast } from "sonner";
 import { InfoNote } from "../../../components/brand-studio/info-note";
 import { getAllDesignColors } from "../utils/cartilha-cromatica";
@@ -31,6 +33,8 @@ type BackgroundType = "white" | "black" | "gray" | "transparent";
 export function LogoCores() {
   const { layers, updateLayersWithHistory, undo, redo, canUndo, canRedo } = useBrandStudio();
   const [backgroundType, setBackgroundType] = useState<BackgroundType>("white");
+  const [viewMode, setViewMode] = useState<"static" | "animated">("static");
+  const [animationType, setAnimationType] = useState<"A01" | "A02" | "A03" | "A04">("A03");
   const previewRef = useRef<HTMLDivElement>(null);
   const { tGroup, language, t: rawT } = useTranslations();
   const tools = useMemo(() => tGroup('tools'), [tGroup, language]);
@@ -73,7 +77,7 @@ export function LogoCores() {
     });
   };
 
-  const handleDownload = async (format: "svg" | "png" | "pdf") => {
+  const handleDownload = async (format: "svg" | "png" | "pdf" | "gif") => {
     const logoElement = previewRef.current?.querySelector("svg");
     if (!logoElement) {
       toast.error("Erro ao exportar", {
@@ -91,6 +95,10 @@ export function LogoCores() {
         await downloadLogoPNG(logoElement);
       } else if (format === "pdf") {
         await downloadLogoPDFVector(logoElement);
+      } else if (format === "gif") {
+        // GIF requer renderização completa em background
+        const transparentBg = backgroundType === "transparent";
+        await downloadLogoGIF(layers, animationType, transparentBg);
       }
       
       toast.dismiss();
@@ -160,36 +168,89 @@ export function LogoCores() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* Background Selector */}
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Fundo:</span>
-                  <div className="flex gap-2">
-                    {(["white", "black", "gray", "transparent"] as BackgroundType[]).map((bg) => (
-                      <button
-                        key={bg}
-                        onClick={() => setBackgroundType(bg)}
-                        className={`px-3 py-1.5 rounded-lg border-2 text-xs font-medium transition-all ${
-                          backgroundType === bg
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-border bg-background hover:border-primary/50"
-                        }`}
-                      >
-                        {bg === "white" && "Branco"}
-                        {bg === "black" && "Preto"}
-                        {bg === "gray" && "Cinza"}
-                        {bg === "transparent" && "Transparente"}
-                      </button>
-                    ))}
+                {/* Control Bar: Background Selector & View Mode Toggle */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Fundo:</span>
+                    <div className="flex gap-2">
+                      {(["white", "black", "gray", "transparent"] as BackgroundType[]).map((bg) => (
+                        <button
+                          key={bg}
+                          onClick={() => setBackgroundType(bg)}
+                          className={`px-3 py-1.5 rounded-lg border-2 text-xs font-medium transition-all ${
+                            backgroundType === bg
+                              ? "border-primary bg-primary text-primary-foreground"
+                              : "border-border bg-background hover:border-primary/50"
+                          }`}
+                        >
+                          {bg === "white" && "Branco"}
+                          {bg === "black" && "Preto"}
+                          {bg === "gray" && "Cinza"}
+                          {bg === "transparent" && "Transparente"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* View Mode Toggle */}
+                  <div className="flex bg-secondary/50 p-1.5 rounded-xl border border-border/50 shadow-sm w-full sm:w-auto min-w-[280px]">
+                    <button
+                      onClick={() => setViewMode("static")}
+                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold rounded-lg transition-all ${viewMode === "static" ? "bg-background shadow-md text-foreground scale-[1.02]" : "text-muted-foreground hover:bg-black/5"}`}
+                    >
+                      Estático
+                    </button>
+                    <button
+                      onClick={() => setViewMode("animated")}
+                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold rounded-lg transition-all ${viewMode === "animated" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 scale-[1.02] ring-2 ring-primary/20" : "text-muted-foreground hover:bg-black/5"}`}
+                    >
+                      Animado ✨
+                    </button>
                   </div>
                 </div>
 
                 {/* Logo Preview */}
                 <div
                   ref={previewRef}
-                  className={`rounded-xl border-2 border-border p-8 flex items-center justify-center min-h-[400px] ${backgroundStyles[backgroundType]}`}
+                  className={`rounded-xl border-2 border-border p-8 flex flex-col items-center justify-center min-h-[400px] ${backgroundStyles[backgroundType]}`}
                 >
-                  <div className="w-full max-w-sm">
-                    <SampleLogo layers={layers} width={320} height={320} className="w-full h-auto" />
+
+                  {viewMode === "animated" && (
+                    <div className="flex gap-2 mb-8">
+                       {(["A01", "A02", "A03", "A04"] as const).map(type => (
+                         <button
+                           key={type}
+                           onClick={() => setAnimationType(type)}
+                           className={`px-3 py-1 text-xs font-semibold rounded-full border ${animationType === type ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"}`}
+                         >
+                           {type === "A01" && "Pulso"}
+                           {type === "A02" && "Gota"}
+                           {type === "A03" && "Coração"}
+                           {type === "A04" && "Folha"}
+                         </button>
+                       ))}
+                    </div>
+                  )}
+
+                  <div className="w-full max-w-sm flex items-center justify-center">
+                    {viewMode === "static" ? (
+                      <SampleLogo layers={layers} width={320} height={320} className="w-full h-auto" />
+                    ) : (
+                      <Player
+                        component={AnimatedLogo}
+                        inputProps={{ layers, width: 320, height: 320, animationType, className: "w-full h-auto" }}
+                        durationInFrames={150}
+                        fps={30}
+                        compositionWidth={320}
+                        compositionHeight={320}
+                        style={{
+                          width: 320,
+                          height: 320,
+                        }}
+                        autoPlay
+                        loop
+                      />
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -249,6 +310,17 @@ export function LogoCores() {
                   <FileText className="w-4 h-4" />
                   Baixar PDF (Vetor)
                 </Button>
+                
+                {viewMode === "animated" && (
+                  <Button
+                    onClick={() => handleDownload("gif")}
+                    className="w-full justify-start gap-2 bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary transition-all font-semibold"
+                    variant="outline"
+                  >
+                    <Download className="w-4 h-4" />
+                    Baixar GIF Animado (Alta Qualidade)
+                  </Button>
+                )}
                 <Separator className="my-4" />
                 <InfoNote
                   icon={<Info className="w-4 h-4" />}

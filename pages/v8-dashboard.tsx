@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 
 export default function V8Dashboard() {
   const [data, setData] = useState<any[]>([]);
@@ -83,6 +84,7 @@ export default function V8Dashboard() {
 
   return (
     <>
+      <Helmet><title>CoreStudio | v8 Dashboard</title></Helmet>
       <style dangerouslySetInnerHTML={{__html: `
         /* =========================================================
           ENSAIO DE VERSÃO — LAYOUT-LOCKED v2 (CONTRATO)

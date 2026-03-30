@@ -9,10 +9,9 @@ import { Label } from "../../ui/label";
 import { toast } from "sonner";
 import { ErrorBoundary } from "../../ui/error-boundary";
 
-// ✅ LAZY LOAD - Performance otimizada
-const RotuloCBD = lazy(() => import("../../../../imports/Rotulos011"));
-const RotuloTHC = lazy(() => import("../../../../imports/Rotulos021"));
-const RotuloHibrido = lazy(() => import("../../../../imports/Rotulos031"));
+const RotuloCBD = lazy(() => import("../../../imports/Rotulos011"));
+const RotuloTHC = lazy(() => import("../../../imports/Rotulos021"));
+const RotuloHibrido = lazy(() => import("../../../imports/Rotulos031"));
 
 // Tipos de arquivo aceitos
 const ACCEPTED_FILE_TYPES = {
@@ -398,7 +397,7 @@ function UploadModal({
       nome,
       tipo: tipo || categoria,
       categoria,
-      fileType: fileType === 'jpeg' ? 'jpg' : fileType,
+      fileType: fileType,
       fileData: preview
     });
 
@@ -620,7 +619,8 @@ export function LabelLibrary({ onAddToPedido, selectedIds = [] }: LabelLibraryPr
     // Criar preview
     const reader = new FileReader();
     reader.onloadend = () => {
-      const fileType = file.type.split('/')[1] as 'pdf' | 'png' | 'jpg' | 'svg';
+      const rawType = file.type.split('/')[1];
+      const fileType = rawType === 'jpeg' ? 'jpg' : rawType as 'pdf' | 'png' | 'jpg' | 'svg';
       const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove extensão
       const figmaRotulo = ROTULOS_FIGMA.find(r => r.id === figmaId);
       
@@ -634,7 +634,7 @@ export function LabelLibrary({ onAddToPedido, selectedIds = [] }: LabelLibraryPr
             ? {
                 ...l,
                 nome: fileName,
-                fileType: fileType === 'jpeg' ? 'jpg' : fileType as 'pdf' | 'png' | 'jpg' | 'svg',
+                fileType: fileType,
                 fileData: reader.result as string,
                 uploadedAt: new Date().toISOString()
               }
@@ -682,7 +682,7 @@ export function LabelLibrary({ onAddToPedido, selectedIds = [] }: LabelLibraryPr
         <div>
           <h2 className="text-lg font-semibold">Biblioteca de Rótulos</h2>
           <p className="text-xs text-muted-foreground">
-            {totalLabels} rótulo{totalLabels !== 1 ? 's' : ''} disponível{totalLabels !== 1 ? 'is' : ''} · Arraste seus arquivos para personalizar
+            {totalLabels} rótulos disponíveis · Arraste seus arquivos para personalizar
           </p>
         </div>
         <div className="flex items-center gap-2">

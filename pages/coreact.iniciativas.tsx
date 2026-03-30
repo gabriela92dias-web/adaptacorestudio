@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Helmet } from "react-helmet";
 import { Plus, Target, ChevronRight, Building } from "lucide-react";
 import { InitiativesAreaChart } from "../components/InitiativesAreaChart";
 import { useInitiatives, useTeamMembers } from "../helpers/useCoreActApi";
@@ -60,6 +61,7 @@ export default function CoreActIniciativas() {
 
   return (
     <div ref={ref} className={`${styles.pageWrapper} ${adaptiveClass} ${styles[`level${level}`]}`}>
+      <Helmet><title>CoreStudio | Iniciativas</title></Helmet>
       <header className={styles.header}>
         <div className={styles.headerTop}>
           <div>

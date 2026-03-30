@@ -15,8 +15,10 @@ import styles from "./configuracoes.module.css";
 
 export default function Configuracoes() {
   const { ref, level, className: adaptiveClass } = useAdaptiveLevel();
-  const { data: brandData, isLoading } = useBrand();
+  const { data: brandData, isLoading: isFetchingBrand, isError } = useBrand();
   const { mutateAsync: updateBrand, isPending } = useUpdateBrand();
+
+  const isLoading = isFetchingBrand && !isError;
 
   const form = useForm({
     schema: updateBrandSchema,
@@ -59,8 +61,8 @@ export default function Configuracoes() {
     try {
       await updateBrand(values);
       toast.success("Configurações atualizadas com sucesso!");
-    } catch (error) {
-      toast.error("Erro ao salvar configurações.");
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao salvar configurações.");
     }
   };
 

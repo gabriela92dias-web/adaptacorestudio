@@ -50,7 +50,7 @@ export function CoreActInitiativeCreateForm({
       toast.success("Iniciativa criada com sucesso!");
       onSuccess();
     } catch (err) {
-      toast.error("Erro ao criar iniciativa");
+      toast.error("Erro ao criar iniciativa: " + (err instanceof Error ? err.message : "Falha desconhecida"));
     }
   };
 

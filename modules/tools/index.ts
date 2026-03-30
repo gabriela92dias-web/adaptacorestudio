@@ -2,6 +2,7 @@
 export { ToolsHome } from "./pages/home";
 export { Colors } from "./components/colors";
 export { LogoCores } from "./components/logo-cores";
+export { CenasMascotes } from "./components/cenas-mascotes";
 export { Analysis } from "./components/analysis";
 export { Mascots } from "./mascots";
 export { Gradients } from "./components/gradients";

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Helmet } from "react-helmet";
 import { Plus, ChevronLeft, ChevronRight, Building2, Settings } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -97,7 +98,7 @@ export default function CoreActSetores() {
         setSelectedSectorId(result.sector.id);
       }
     } catch (err) {
-      toast.error("Erro ao criar setor");
+      toast.error("Erro ao criar setor: " + (err instanceof Error ? err.message : "Falha desconhecida"));
     }
   };
 
@@ -111,6 +112,7 @@ export default function CoreActSetores() {
 
   return (
     <div ref={ref} className={`${styles.layout} ${adaptiveClass} ${styles[`level${level}`]}`}>
+      <Helmet><title>CoreStudio | Setores</title></Helmet>
       {/* Left Sidebar / List */}
       <div 
         ref={sidebarRef}
@@ -269,11 +271,23 @@ export default function CoreActSetores() {
         ) : (
           <div className={styles.noSelection}>
             <Building2 size={48} className={styles.noSelectionIcon} />
-            <h3>Nenhum setor selecionado</h3>
-            <p>Selecione um setor na lista ao lado ou crie um novo.</p>
-            <Button onClick={() => setIsCreateModalOpen(true)} className={styles.mt4}>
-              <Plus size={16} /> Novo Setor
-            </Button>
+            {(!sectors || sectors.length === 0) ? (
+              <>
+                <h3>Nenhum setor cadastrado</h3>
+                <p>Crie o seu primeiro setor para começar a organizar sua hierarquia de departamentos no Adapta CoreStudio.</p>
+                <Button onClick={() => setIsCreateModalOpen(true)} className={styles.mt4}>
+                  <Plus size={16} /> Criar Primeiro Setor
+                </Button>
+              </>
+            ) : (
+              <>
+                <h3>Nenhum setor selecionado</h3>
+                <p>Selecione um setor na lista ao lado ou crie um novo.</p>
+                <Button onClick={() => setIsCreateModalOpen(true)} className={styles.mt4}>
+                  <Plus size={16} /> Novo Setor
+                </Button>
+              </>
+            )}
           </div>
         )}
       </div>

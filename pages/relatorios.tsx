@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
@@ -24,6 +25,7 @@ const comingSoon = [
 export default function Relatorios() {
   return (
     <div className="p-6 max-w-[1400px] mx-auto">
+      <Helmet><title>CoreStudio | Relatórios</title></Helmet>
       <div className="space-y-6">
 
         {/* Header */}

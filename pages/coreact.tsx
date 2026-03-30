@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { Helmet } from "react-helmet";
 import { 
   TrendingUp, 
   Clock, 
@@ -422,6 +423,7 @@ export default function CoreActOverview() {
   // FORCING EXECUTIVE HOME FOR VISUAL VALIDATION
   return (
     <div className={styles.coreactContainer}>
+      <Helmet><title>CoreStudio | Dashboard</title></Helmet>
       <CoreactExecutiveHome userName={authState.type === 'authenticated' ? authState.user.displayName : 'Usuário'} />
     </div>
   );

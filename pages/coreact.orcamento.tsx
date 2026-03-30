@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Helmet } from "react-helmet";
 import { Download, Plus, Filter, Pencil, Trash2, DollarSign, FileCheck, CheckCircle, Clock } from "lucide-react";
 import { useBudgetItems, useProjects, useDeleteBudgetItem } from "../helpers/useCoreActApi";
 import { Skeleton } from "../components/Skeleton";
@@ -24,8 +25,8 @@ const formatCurrency = (val: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
 
 export default function CoreActOrcamento() {
-  const { data: budgetData, isLoading: isLoadingBudget } = useBudgetItems();
-  const { data: projectsData, isLoading: isLoadingProjects } = useProjects();
+  const { data: budgetData, isLoading: isLoadingBudget, isError: isErrorBudget } = useBudgetItems();
+  const { data: projectsData, isLoading: isLoadingProjects, isError: isErrorProjects } = useProjects();
   const deleteBudget = useDeleteBudgetItem();
   
   const [activeFilter, setActiveFilter] = useState("all");
@@ -33,10 +34,10 @@ export default function CoreActOrcamento() {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [deletingItem, setDeletingItem] = useState<any>(null);
 
-  const isLoading = isLoadingBudget || isLoadingProjects;
+  const isLoading = (isLoadingBudget || isLoadingProjects) && !isErrorBudget && !isErrorProjects;
 
   const { stats, filteredItems, categoriesBreakdown, projectsBreakdown, categories, filterCounts } = useMemo(() => {
-    if (!budgetData || !projectsData) return { stats: null, filteredItems: [], categoriesBreakdown: [], projectsBreakdown: [], categories: [], filterCounts: { all: 0, proj: {}, cat: {} } };
+    if (!budgetData || !projectsData) return { stats: null, filteredItems: [], categoriesBreakdown: [], projectsBreakdown: [], categories: [], filterCounts: { all: 0, proj: {} as Record<string, number>, cat: {} as Record<string, number> } };
 
     const items = budgetData.budgetItems;
     let predicted = 0;
@@ -102,7 +103,7 @@ export default function CoreActOrcamento() {
     itemCount: filteredItems ? filteredItems.length : 0
   });
 
-  if (isLoading || !stats) {
+  if (isLoading) {
     return (
        <div ref={ref} className={`${styles.container} ${adaptiveClass} ${styles[`level${level}`]}`}>
          <div className={styles.header}>
@@ -118,6 +119,11 @@ export default function CoreActOrcamento() {
       </div>
     );
   }
+
+  const safeStats = stats || {
+    predicted: 0, contracted: 0, paid: 0, pendingAmount: 0, pendingPayments: 0,
+    itemCount: 0, contractedPct: 0, paidPct: 0
+  };
 
   const handleExport = () => {
     toast.success("Relatório exportado com sucesso (simulado)");
@@ -138,6 +144,7 @@ export default function CoreActOrcamento() {
 
   return (
     <div ref={ref} className={`${styles.container} ${adaptiveClass} ${styles[`level${level}`]}`}>
+      <Helmet><title>CoreStudio | Orçamento</title></Helmet>
       <header className={styles.header}>
         <div className={styles.headerText}>
           <h1 className={styles.title}>Controle de Orçamento</h1>
@@ -165,8 +172,8 @@ export default function CoreActOrcamento() {
             <span className={styles.kpiLabel}>Previsão Total</span>
             <div className={styles.kpiIconWrapper}><DollarSign size={16} /></div>
           </div>
-          <div className={styles.kpiValue}>{formatCurrency(stats.predicted)}</div>
-          <span className={styles.kpiSub}>{stats.itemCount} itens</span>
+          <div className={styles.kpiValue}>{formatCurrency(safeStats.predicted)}</div>
+          <span className={styles.kpiSub}>{safeStats.itemCount} itens</span>
         </div>
 
         <div className={styles.kpiCard}>
@@ -174,8 +181,8 @@ export default function CoreActOrcamento() {
             <span className={styles.kpiLabel}>Contratado</span>
             <div className={styles.kpiIconWrapper}><FileCheck size={16} /></div>
           </div>
-          <div className={styles.kpiValue}>{formatCurrency(stats.contracted)}</div>
-          <span className={styles.kpiSub}>{Math.round(stats.contractedPct)}% do previsto</span>
+          <div className={styles.kpiValue}>{formatCurrency(safeStats.contracted)}</div>
+          <span className={styles.kpiSub}>{Math.round(safeStats.contractedPct)}% do previsto</span>
         </div>
 
         <div className={styles.kpiCard}>
@@ -183,8 +190,8 @@ export default function CoreActOrcamento() {
             <span className={styles.kpiLabel}>Pago</span>
             <div className={styles.kpiIconWrapper}><CheckCircle size={16} /></div>
           </div>
-          <div className={styles.kpiValue}>{formatCurrency(stats.paid)}</div>
-          <span className={styles.kpiSub}>{Math.round(stats.paidPct)}% do contratado</span>
+          <div className={styles.kpiValue}>{formatCurrency(safeStats.paid)}</div>
+          <span className={styles.kpiSub}>{Math.round(safeStats.paidPct)}% do contratado</span>
         </div>
 
         <div className={styles.kpiCard}>
@@ -192,8 +199,8 @@ export default function CoreActOrcamento() {
             <span className={styles.kpiLabel}>Pendente</span>
             <div className={styles.kpiIconWrapper}><Clock size={16} /></div>
           </div>
-          <div className={styles.kpiValue}>{formatCurrency(stats.pendingAmount)}</div>
-          <span className={styles.kpiSub}>{stats.pendingPayments} pagamentos pendentes</span>
+          <div className={styles.kpiValue}>{formatCurrency(safeStats.pendingAmount)}</div>
+          <span className={styles.kpiSub}>{safeStats.pendingPayments} pagamentos pendentes</span>
         </div>
       </section>
 
@@ -228,6 +235,19 @@ export default function CoreActOrcamento() {
         </div>
       </section>
 
+      {(!stats || safeStats.itemCount === 0) ? (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
+          <div style={{ textAlign: "center", maxWidth: "420px", display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+            <div style={{ background: "var(--fill)", padding: "2rem", borderRadius: "50%", marginBottom: "1rem", color: "var(--text-secondary)" }}>
+              <DollarSign size={48} strokeWidth={1} />
+            </div>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>Módulo Financeiro</h2>
+            <p style={{ color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+              Nenhum item orçamentário encontrado. O módulo inteligente de Budgeting e Cash Flow está em estruturação para permitir integrações automatizadas.
+            </p>
+          </div>
+        </div>
+      ) : (
       <div className={styles.splitLayout}>
         <div className={styles.itemsListSection}>
           <div className={styles.listHeader}>
@@ -334,6 +354,7 @@ export default function CoreActOrcamento() {
           </div>
         </div>
       </div>
+      )}
 
       <Dialog open={!!deletingItem} onOpenChange={(open) => !open && setDeletingItem(null)}>
         <DialogContent>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 import { Filter, Calendar as CalendarIcon, Layout, Columns, LayoutList, ChevronLeft, ChevronRight, CalendarCheck, GitCommit } from "lucide-react";
-import type { GanttViewMode } from "../components/CronogramaGantt";
 import { useTasks, useProjects, useTeamMembers, useDependencies, useInitiatives, useSectors, useUpdateTask } from "../helpers/useCoreActApi";
 import { Skeleton } from "../components/Skeleton";
 import { Button } from "../components/Button";
@@ -8,13 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Popover, PopoverTrigger, PopoverContent } from "../components/Popover";
 import { Badge } from "../components/Badge";
 import { CoreActTaskDetailSheet } from "../components/CoreActTaskDetailSheet";
-import { CronogramaGantt } from "../components/CronogramaGantt";
-import { CronogramaKanban } from "../components/CronogramaKanban";
-import { CronogramaLista } from "../components/CronogramaLista";
-import { CronogramaProcessos } from "../components/CronogramaProcessos";
-import { CronogramaCalendario } from "../components/CronogramaCalendario";
-import { CronogramaAgendaSemanal } from "../components/CronogramaAgendaSemanal";
-import { CronogramaCalendarioDayView } from "../components/CronogramaCalendarioDayView";
 import { CreateTaskModal } from "../components/CoreActQuickActions";
 import { useCronogramaState } from "../helpers/useCronogramaState";
 import { filterTasksForDay } from "../helpers/cronogramaTaskUtils";
@@ -52,7 +45,7 @@ export default function CoreActCronograma() {
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   
   const {
-        viewMode,
+    viewMode,
     currentDate,
     setCurrentDate,
     ganttZoom,
@@ -69,7 +62,7 @@ export default function CoreActCronograma() {
     activeFilterCount,
     toolbarTitle,
     toolbarTitleShort,
-  } = useCronogramaState(tasksData?.tasks || [], locale);
+  } = useCronogramaState();
 
   const filteredTasks = tasksData?.tasks.filter(t => {
     if (filters.projectId !== "all" && t.projectId !== filters.projectId) return false;
@@ -145,6 +138,7 @@ export default function CoreActCronograma() {
 
   return (
     <div ref={ref} className={`${styles.container} ${adaptiveClass} ${styles[`level${level}`]}`}>
+      <Helmet><title>CoreStudio | Cronograma</title></Helmet>
       <header className={styles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.viewPills}>
@@ -301,96 +295,19 @@ export default function CoreActCronograma() {
         </div>
       </header>
 
-      <div ref={swipeNavRef as any} style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
-        {viewMode === 'gantt' && ['ano', 'semestre', 'trimestre'].includes(ganttZoom) && tasksData && projectsData && (
-        <CronogramaGantt 
-          level={level}
-          ganttZoom={ganttZoom as GanttViewMode}
-          currentDate={currentDate}
-          tasks={filteredTasks} 
-          projects={projectsData.projects} 
-          dependencies={dependenciesData?.dependencies || []} 
-          initiatives={initiativesData?.initiatives || []}
-          sectors={sectorsData || []}
-          teamMembers={teamData?.teamMembers || []}
-          onTaskClick={setSelectedTaskId} 
-          onNavigate={handleNavigateWithFeedback}
-          onDayClick={goToDay}
-        />
-      )}
-
-      {viewMode === 'gantt' && ganttZoom === 'mes' && tasksData && projectsData && (
-        <CronogramaCalendario
-          level={level}
-          tasks={filteredTasks}
-          projects={projectsData.projects}
-          onTaskClick={setSelectedTaskId}
-          calendarMode="month"
-          currentDate={currentDate}
-          onDateChange={setCurrentDate}
-          onModeChange={() => {}}
-          onDayClick={goToDay}
-          onTaskUpdate={(id, updates) => {
-            updateTaskMutation.mutate({ id, ...(updates as any) });
-          }}
-        />
-      )}
-
-      {viewMode === 'gantt' && ganttZoom === 'semana' && tasksData && projectsData && (
-        <CronogramaAgendaSemanal
-          level={level}
-          currentDate={currentDate}
-          tasks={filteredTasks}
-          projects={projectsData.projects}
-          dependencies={dependenciesData?.dependencies || []}
-          teamMembers={teamData?.teamMembers || []}
-          onTaskClick={setSelectedTaskId}
-          onCellClick={(date) => goToDay(date)}
-        />
-      )}
-
-      {viewMode === 'gantt' && ganttZoom === 'dia' && tasksData && projectsData && (() => {
-        const isOperatorMode = filters.assigneeId !== "all";
-        const dayFilteredTasks = filterTasksForDay(filteredTasks, currentDate);
-        
-        return (
-          <div className={styles.dayViewWrapper}>
-             <CronogramaCalendarioDayView
-                mode={isOperatorMode ? "operator" : "all"}
-                operatorId={isOperatorMode ? filters.assigneeId : undefined}
-                operatorName={isOperatorMode ? teamData?.teamMembers.find(m => m.id === filters.assigneeId)?.name : undefined}
-                tasks={dayFilteredTasks}
-                currentDate={currentDate}
-                onTaskClick={setSelectedTaskId}
-              />
+      <div ref={swipeNavRef as any} style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0, alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: "center", maxWidth: "420px", display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+          <div style={{ background: "var(--fill)", padding: "2rem", borderRadius: "50%", marginBottom: "1rem", color: "var(--text-secondary)" }}>
+            <CalendarIcon size={48} strokeWidth={1} />
           </div>
-        );
-      })()}
-
-      {viewMode === 'kanban' && tasksData && projectsData && (
-        <CronogramaKanban 
-          level={level} 
-          tasks={filteredTasks} 
-          projects={projectsData.projects} 
-          onTaskClick={setSelectedTaskId} 
-          ganttZoom={ganttZoom}
-          currentDate={currentDate}
-        />
-      )}
-
-      {viewMode === 'list' && tasksData && projectsData && (
-        <CronogramaLista level={level} tasks={filteredTasks} projects={projectsData.projects} onTaskClick={setSelectedTaskId} />
-      )}
-
-      {viewMode === 'process' && tasksData && projectsData && (
-        <CronogramaProcessos 
-          level={level} 
-          tasks={filteredTasks} 
-          projects={projectsData.projects} 
-          initiatives={initiativesData?.initiatives || []} 
-          onTaskClick={setSelectedTaskId} 
-        />
-      )}
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>Nenhuma linha do tempo detectada</h2>
+          <p style={{ color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+            O Cronograma avançado foca na visualização de macros (Projetos e Etapas). Este módulo está passando por atualizações estruturais e será ativado em breve.
+          </p>
+          <Button variant="outline" style={{ marginTop: "1rem" }} onClick={() => setToday()}>
+            Voltar para Hoje
+          </Button>
+        </div>
 
       <CreateTaskModal 
         open={selectedTaskId === "new"} 

@@ -4,7 +4,7 @@ import { Selectable } from "kysely";
 import { ProjectStages } from "../../../helpers/schema";
 
 export const schema = z.object({
-  projectId: z.string(),
+  projectId: z.string().optional(),
 });
 
 export type InputType = z.infer<typeof schema>;

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 277.86 319.99">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #dae2dd;
+      }
+
+      .cls-2 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-3 {
+        fill: url(#radial-gradient);
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="48.03" cy="160.9" fx="48.03" fy="160.9" r="34.35" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2e3f35"/>
+      <stop offset="1" stop-color="#233129"/>
+    </radialGradient>
+    <linearGradient id="linear-gradient" x1="65.12" y1="159.99" x2="202.56" y2="159.99" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2e3d34"/>
+      <stop offset="1" stop-color="#233129"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="154.08" y1="160" x2="257.69" y2="160" xlink:href="#linear-gradient"/>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1" data-fg-dwqa0="102.357:102.2950:/src/app/components/brand-studio/sample-logo.tsx:34:5:2098:845:e:svg:xtetxtetxte:1">
+    <g data-fg-dwqa2="102.357:102.2950:/src/app/components/brand-studio/sample-logo.tsx:43:7:2319:127:e:g:e">
+      <path class="cls-1" d="M277.86,85.28v149.42c0,3.8-2.02,7.32-5.31,9.23l-128.28,74.61c-3.32,1.93-7.42,1.93-10.74,0L5.31,243.95c-3.29-1.92-5.31-5.43-5.31-9.23V85.3c0-3.8,2.02-7.32,5.31-9.23L133.59,1.45c3.32-1.93,7.42-1.93,10.74,0l128.21,74.6c3.29,1.92,5.31,5.43,5.31,9.23h.01Z" data-fg-dwqa3="102.357:102.2950:/src/app/components/brand-studio/sample-logo.tsx:44:9:2397:38:e:path"/>
+    </g>
+    <g data-fg-dwqa5="102.357:102.2950:/src/app/components/brand-studio/sample-logo.tsx:48:7:2494:142:e:g:e">
+      <polygon class="cls-3" data-fg-dwqa6="102.357:102.2950:/src/app/components/brand-studio/sample-logo.tsx:49:9:2576:49:e:polygon" points="82.94 170.5 58.18 170.5 58.17 194.67 37.88 194.67 37.88 170.51 13.11 170.5 13.11 151.43 37.87 151.43 37.88 127.13 58.17 127.13 58.18 151.43 82.94 151.43 82.94 170.5"/>
+    </g>
+    <g data-fg-dwqa8="102.357:102.2950:/src/app/components/brand-studio/sample-logo.tsx:53:7:2709:223:e:g:xtetxte">
+      <path class="cls-4" d="M154.08,94.26h-21.5l-5.48.25c-3.4.7-6.57,1.94-9.52,3.71-4.85,2.92-8.34,7.25-10.46,12.97l-34.07,92.91-7.93,21.62h32.66l8.23-24.17h55.45l7.88,24.17h33.24l-48.49-131.45h0ZM114.04,175.6l17.74-52.09c.1-.62.38-1.11.81-1.47.43-.39.98-.57,1.61-.57s1.14.16,1.58.47c.45.31.79.83,1.03,1.58l16.62,52.09h-39.38Z" data-fg-dwqa10="102.357:102.2950:/src/app/components/brand-studio/sample-logo.tsx:55:9:2811:34:e:path"/>
+      <path class="cls-2" d="M210.52,225.73c4.37-1.11,8.63-2.59,12.74-4.54,13.47-6.24,23.88-17.18,29.28-31.02,3.23-7.78,4.49-15.9,5.16-24.39v-9.01c-.55-8.4-2-16.69-5.15-24.64-5.7-14.4-16.63-25.58-30.83-31.75-7.92-3.44-16.21-5.26-24.88-6.1h-42.76l48.49,131.44M228.86,173.82c-2.75,10.85-10.07,19.45-20.34,23.82-4.66,1.99-9.78,3.54-14.82,4.06l-30.03-81.42,25.44.47c6.47.01,12.64,1.21,18.55,3.58,10.65,4.27,18.25,13.01,21.13,24.13,2.16,8.33,2.18,17.01.07,25.35h0Z" data-fg-dwqa12="102.357:102.2950:/src/app/components/brand-studio/sample-logo.tsx:58:9:2887:34:e:path"/>
+    </g>
+  </g>
+</svg>

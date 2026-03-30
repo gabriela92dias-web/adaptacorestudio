@@ -106,11 +106,11 @@ export function CoreActQuickActions() {
           
           <DropdownMenuGroup>
             <DropdownMenuLabel className={styles.groupLabel}>Estratégia</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setActiveDialog("initiative")}>
+            <DropdownMenuItem onSelect={() => setActiveDialog("initiative")}>
               <Target className={styles.menuIcon} />
               Nova Iniciativa
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setActiveDialog("project")}>
+            <DropdownMenuItem onSelect={() => setActiveDialog("project")}>
               <FolderOpen className={styles.menuIcon} />
               Novo Projeto
             </DropdownMenuItem>
@@ -120,11 +120,11 @@ export function CoreActQuickActions() {
 
           <DropdownMenuGroup>
             <DropdownMenuLabel className={styles.groupLabel}>Operacional</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setActiveDialog("task")}>
+            <DropdownMenuItem onSelect={() => setActiveDialog("task")}>
               <CheckSquare className={styles.menuIcon} />
               Nova Tarefa
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setActiveDialog("stage")}>
+            <DropdownMenuItem onSelect={() => setActiveDialog("stage")}>
               <Layers className={styles.menuIcon} />
               Nova Etapa
             </DropdownMenuItem>
@@ -134,7 +134,7 @@ export function CoreActQuickActions() {
 
           <DropdownMenuGroup>
             <DropdownMenuLabel className={styles.groupLabel}>Importação</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setActiveDialog("import")}>
+            <DropdownMenuItem onSelect={() => setActiveDialog("import")}>
               <UploadIcon className={styles.menuIcon} />
               Importar em Lote
             </DropdownMenuItem>

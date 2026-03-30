@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/Badge";
 import { Button } from "../components/ui/button";
@@ -38,6 +39,7 @@ export default function Campanhas() {
 
   return (
     <div className="p-6 max-w-[1400px] mx-auto">
+      <Helmet><title>CoreStudio | Campanhas V8</title></Helmet>
       <div className="space-y-6">
 
         {/* Header */}

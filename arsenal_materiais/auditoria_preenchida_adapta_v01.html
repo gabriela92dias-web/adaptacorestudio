@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auditoria ADAPTA CoreStudio v01 — 2026-03-29</title>
+  <style>
+    :root{--bg:#fafafa;--paper:#ffffff;--ink:#333333;--muted:#666666;--line:#333333;--line-soft:#999999;--fill:#f0f0f0;--fill-2:#e7e7e7;--danger:#7a1f1f;}
+    *{box-sizing:border-box;}html,body{margin:0;padding:0;}
+    body{background:var(--bg);color:var(--ink);font-family:'Courier New',Courier,monospace;line-height:1.45;padding:24px;}
+    .page{max-width:1580px;margin:0 auto;display:grid;grid-template-columns:330px 1fr;gap:22px;align-items:start;}
+    .block{border:2px solid var(--line);background:var(--paper);position:relative;padding:18px;}
+    .label{position:absolute;top:-12px;left:14px;background:var(--bg);padding:0 8px;border-left:2px solid var(--line);border-right:2px solid var(--line);font-size:0.82rem;font-weight:bold;text-transform:uppercase;letter-spacing:.03em;}
+    .sidebar{position:sticky;top:16px;display:grid;gap:20px;}
+    .content{display:grid;gap:22px;}
+    .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap;}
+    .hero h1{margin:0 0 6px 0;font-size:1.65rem;text-transform:uppercase;letter-spacing:.04em;display:inline-block;border-bottom:2px solid #d7d7d7;padding-bottom:6px;}
+    .hero p{margin:0;color:var(--muted);font-family:Arial,Helvetica,sans-serif;font-size:0.92rem;max-width:720px;}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end;min-width:280px;}
+    button,select,input,textarea{font:inherit;}
+    button{border:2px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;cursor:pointer;transition:.12s ease;min-height:42px;}
+    button:hover{background:var(--fill);}button.primary{background:var(--ink);color:#fff;}button.primary:hover{background:#111;}
+    button.danger{color:var(--danger);border-color:var(--danger);}
+    .status{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 12px;border:2px solid var(--line);background:var(--fill);font-size:0.82rem;font-weight:bold;text-transform:uppercase;}
+    h2{margin:0 0 6px 0;font-size:1.06rem;text-transform:uppercase;letter-spacing:.03em;}
+    .desc{margin:0 0 14px 0;color:var(--muted);font-family:Arial,Helvetica,sans-serif;font-size:0.9rem;}
+    .muted{color:var(--muted);font-family:Arial,Helvetica,sans-serif;font-size:0.88rem;}
+    .grid-2,.grid-3{display:grid;gap:12px;}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr));}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .field{display:flex;flex-direction:column;gap:6px;}
+    .field label{font-size:0.8rem;font-weight:bold;text-transform:uppercase;color:var(--ink);letter-spacing:.03em;}
+    input[type="text"],input[type="date"],textarea,select{width:100%;border:2px solid var(--line-soft);background:var(--paper);color:var(--ink);padding:10px 12px;min-height:42px;outline:none;}
+    textarea{resize:vertical;min-height:120px;font-family:'Courier New',Courier,monospace;}
+    input:focus,textarea:focus,select:focus{border-color:var(--line);background:#fcfcfc;}
+    .listbox{border:2px solid var(--line-soft);background:var(--paper);min-height:220px;max-height:340px;overflow:auto;display:grid;gap:8px;padding:10px;}
+    .version-item{border:2px solid var(--line-soft);background:var(--paper);text-align:left;padding:10px;display:grid;gap:3px;min-height:auto;}
+    .version-item.active{border-color:var(--line);background:var(--fill);}
+    .version-item small{font-family:Arial,Helvetica,sans-serif;color:var(--muted);font-size:0.75rem;}
+    .dash{border-top:2px dashed #cfcfcf;margin:14px 0;}
+    .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+    .kpi{border:2px solid var(--line-soft);background:var(--paper);padding:12px;min-height:86px;}
+    .kpi .k{font-size:0.72rem;text-transform:uppercase;color:var(--muted);font-family:Arial,Helvetica,sans-serif;margin-bottom:8px;}
+    .kpi strong{font-size:1rem;word-break:break-word;}
+    .problem{border:2px dashed var(--line-soft);background:#fcfcfc;padding:14px;display:grid;gap:12px;}
+    .problem-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:6px;border-bottom:2px solid #dfdfdf;}
+    .problem-head strong{text-transform:uppercase;letter-spacing:.03em;}
+    .inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+    .wire-note{border:2px solid #bbbbbb;background:var(--fill);padding:8px 10px;font-size:0.76rem;text-transform:uppercase;font-weight:bold;display:inline-flex;align-items:center;justify-content:center;}
+    .footer-note{font-family:Arial,Helvetica,sans-serif;font-size:0.8rem;color:var(--muted);}
+    .mono{font-family:'Courier New',Courier,monospace;font-weight:bold;}
+    .preview-bars{display:grid;gap:8px;margin-top:12px;}
+    .preview-bar{height:12px;background:#dddddd;border:1px solid #c7c7c7;}
+    @media(max-width:1180px){.page{grid-template-columns:1fr;}.sidebar{position:relative;top:auto;}.grid-2,.grid-3,.kpis{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<script>
+// PRÉ-CARREGA OS DADOS DA AUDITORIA NO localStorage ANTES DO TEMPLATE INICIALIZAR
+(function(){
+  const KEY = "ux_audit_template_wireframe_versions_v1";
+  const data = {
+    versions:[{
+      id:"adapta-audit-2026-03-29-v01",
+      meta:{
+        name:"Auditoria Geral v01 — CoreAct",
+        createdAt:"2026-03-29T18:00:00.000Z",
+        updatedAt:"2026-03-29T18:15:00.000Z"
+      },
+      fields:{
+        siteName:"ADAPTA CoreStudio — CoreAct",
+        siteUrl:"https://adaptacorestudio.onrender.com/",
+        auditOwner:"Antigravity / Gabriela",
+        auditDate:"2026-03-29",
+        scopeType:"Site completo",
+        versionName:"Auditoria Geral v01 — CoreAct",
+        timeTotal:"2h15",
+        timeConfidence:"Média",
+        timeComplexity:"Alta",
+        timeBreakdown:"- mapeamento das rotas: 20 min\n- revisão visual / layout: 35 min\n- teste de botões e interações: 45 min\n- revisão responsiva: 15 min\n- consolidação do relatório: 20 min",
+        timeRisks:"Riscos:\n- Site em Render com cold start potencial\n- Possível autenticação bloqueando rotas\n- Número de módulos maior que o previsto\n\nPremissas:\n- Acesso total sem login (Dev Mode ativo)\n- Funcionalidades carregam normalmente",
+        routesMap:"/coreact — Dashboard principal\n/coreact/setores — Módulo de setores\n/coreact/iniciativas — Agrupamentos estratégicos (abas: Operacional, Mapa Mental, Documentação)\n/coreact/projetos — Cards de projetos\n/coreact/etapas — Milestones / Etapas\n/coreact/cronograma — Cronograma (estado vazio)\n/coreact/tarefas — Kanban de tarefas\n/coreact/acoes — Checklists e tracker de ações\n/coreact/orcamento — Orçamento (skeleton infinito — BUG)\n/configuracoes — Dados institucionais da marca\nModal: Nova Iniciativa (painel lateral)\nModal: Novo Setor\nModal: Importar em Lote\nDropdown global: + Ações (4 opções CRUD + Importar)",
+        generalQuality:"Visual: 8/10 — Design system sólido, dark theme bem executado, tipografia e ícones consistentes, hierarquia de informação clara.\n\nFuncional: 3/10 — Maioria dos fluxos de trabalho core não está conectada. 15 dead clicks confirmados nos CTAs mais proeminentes.\n\nO sistema comunica maturidade visual de produto pronto, mas não executa suas funções centrais. Padrão de 'maquete funcional'.",
+        generalRisk:"RISCO ALTO — Sistema não apto para uso confiável por usuários reais.\n\nO que representa risco hoje:\n- Funções core inacessíveis (criar tarefas, editar projetos, checkboxes)\n- 15 dead clicks confirmados incluindo o CTA principal (dropdown + Ações)\n- 2 módulos inteiros inacessíveis (Orçamento: skeleton infinito / Cronograma: vazio)\n- Sem feedback positivo/negativo em nenhuma ação\n- Usuário não tem como saber se suas ações foram executadas",
+        buttonSummary:"DEAD CLICKS CONFIRMADOS (15 total):\n1. Ícone ? (ajuda) — sidebar\n2. Ícone livro/docs — sidebar\n3. Avatar GA — sem menu de perfil ou logout\n4. Card Brand Studio Expansion — /projetos\n5-6. Todos os cards do Kanban + botão Criar Tarefa — /tarefas\n7. Nova Etapa (Virtualizada) — /etapas\n8-9. Badges On Track / At Risk — /etapas\n10. Novo Checklist — /acoes\n11. Checkboxes do checklist — /acoes\n12-15. Nova Iniciativa, Novo Projeto, Nova Tarefa, Nova Etapa — dropdown + Ações\nBonus: Item Equipe na topbar (sem rota)\n\nBOTÕES FUNCIONAIS CONFIRMADOS:\n✅ Toggle de tema | ✅ Collapse sidebar | ✅ Tabs de Iniciativas\n✅ Modal Nova Iniciativa (com bug no X) | ✅ Modal Novo Setor\n✅ Modal Importar em Lote | ✅ Dropdown Responsável | ✅ Navigação principal",
+        buttonPriority:"1. Conectar dropdown + Ações (4 handlers: Nova Iniciativa, Novo Projeto, Nova Tarefa, Nova Etapa)\n2. Implementar modal de Criar Tarefa em /tarefas\n3. Implementar drawer nos cards do Kanban\n4. Tornar checkboxes de ações funcionais com persistência\n5. Corrigir X do painel Nova Iniciativa (fechamento intermitente)\n6. Adicionar estado disabled + tooltip nos botões sem handler\n7. Implementar drawer de detalhes nos cards de /projetos",
+        brokenPatterns:"1. Botão visível ≠ botão funcional — padrão sistêmico de CTAs sem handlers\n2. Ícones decorativos sem tooltip na sidebar\n3. Empty states sem instrução (Cronograma, Timeline de Iniciativas, Setores)\n4. Loading sem timeout/fallback (Orçamento: skeleton infinito)\n5. Idioma misto — 'My Tasks Schedule' e dias da semana em inglês\n6. <title> HTML estático 'Configurações da Marca' em todas as rotas\n7. Sem confirmação em ações destrutivas\n8. Badge de status visualmente interativo mas não funcional\n9. Drawer com fechamento intermitente — X do painel Nova Iniciativa\n10. Módulo inacessível sem indicação de erro (Orçamento)",
+        topCritical:"1. Dropdown + Ações — 4 opções principais são dead clicks (CTA mais acessível)\n2. Cards de projeto sem drawer (Projetos inacessíveis)\n3. Botão Criar Tarefa sem handler\n4. Cards do kanban sem drawer (kanban somente leitura)\n5. Checkboxes de ações não funcionam\n6. Orçamento em skeleton infinito\n7. Botão de salvar não identificado em Configurações\n8. X do painel Nova Iniciativa intermitente\n9. Equipe sem rota (parece sistema quebrado)\n10. Lista de Setores sem dados carregados",
+        topVisual:"1. Tooltips nos ícones sem label da sidebar\n2. Badge 'Em breve' nos módulos futuros (Equipe, Cronograma)\n3. Hover distinto nos badges de status\n4. Empty states com ícone + texto (Cronograma, Timeline)\n5. Title dinâmico por rota\n6. Locale pt-BR no calendário (My Tasks Schedule)\n7. Estado disabled visual nos botões sem handler\n8. Esclarecer MILESTONE (TOTAL: 1500) com unidade de medida\n9. Toast de feedback em ações de formulário\n10. Botão Salvar sempre visível em Configurações",
+        topFunctional:"1. Handlers do dropdown + Ações (4 opções CRUD)\n2. Drawer de detalhes de Projeto\n3. Modal de Criar Tarefa\n4. Drawer de detalhes dos cards do Kanban\n5. Checkboxes funcionais com persistência\n6. Timeout + fallback do Orçamento\n7. Botão salvar em Configurações\n8. Corrigir X do painel Nova Iniciativa\n9. Handler em Nova Etapa (Virtualizada)\n10. Badges de status em Etapas como seletores funcionais",
+        roadmapFixes:"IMEDIATO (esta semana):\n- Dropdown + Ações — conectar 4 handlers\n- Criar Tarefa — modal mínimo funcional\n- Cards kanban — drawer mínimo de detalhes\n- Checkboxes — conectar estado com persistência\n- Orçamento — timeout + empty/error state\n- Configurações — verificar e fixar botão de salvar\n\nPRÓXIMA SPRINT:\n- Drawer de Projetos | X de Nova Iniciativa\n- Equipe → badge Em breve + disable\n- Title dinâmico por rota\n- Empty states (Cronograma, Timeline)\n- Badges de status interativos em Etapas\n- Locale pt-BR no calendário\n- Ícones da sidebar com tooltips\n\nMELHORIA FUTURA:\n- Menu de usuário no avatar GA\n- Módulo Equipe completo\n- Módulo Cronograma\n- Formulário de Setor expandido",
+        realPredicted:"2h00",
+        realSpent:"2h15",
+        realDifference:"+15 min",
+        realReason:"Orçamento com skeleton permanente exigiu tempo extra para confirmar o bug. Configurações demorou para carregar. Dead clicks exigiram múltiplas tentativas por rota para confirmar ausência de lógica vs erro de coordenada.",
+        realComplexity:"Sistema visualmente mais complexo do que funcionalmente. Muitas rotas têm estrutura visual completa sem dados ou lógica conectada. Sugere desenvolvimento em fase UI-first antes de conectar backend. Etapa que consumiu mais tempo: teste de botões e interações.",
+        finalConclusion:"O ADAPTA CoreStudio tem design system sólido e identidade visual profissional. Navegação funciona, hierarquia visual está clara e o dark mode é bem executado.\n\nO sistema NÃO está pronto para uso confiável. Funções core (criar/editar tarefas, projetos, checklists) não estão conectadas. 15 dead clicks confirmados, incluindo o CTA principal (dropdown + Ações). Dois módulos inacessíveis sem indicação de status.\n\nO que impede a confiança:\n→ Handlers não conectados nos CTAs principais\n→ Ausência de feedback visual em ações\n→ Módulos em skeleton infinito sem fallback\n\nSequência ideal:\n1. Sprint de conectividade funcional\n2. Sprint de empty states e loading/error states\n3. Sprint de completude de formulários\n4. Sprint de features avançadas (Cronograma, Equipe, Orçamento)\n5. Revisão de acessibilidade"
+      },
+      problems:[
+        {page:"/coreact — Dashboard",element:"Ícones ? e Livro (sidebar)",type:"Bug funcional",severity:"Alta",current:"Clique não dispara ação — dead click confirmado",expected:"Abrir modal de ajuda ou documentação inline",impact:"Usuário novo não consegue ajuda; sistema parece quebrado",cause:"Handlers de onClick não conectados ao componente de ícone",fix:"Conectar onClick ao modal de docs ou exibir tooltip 'Em breve'",priority:"Próxima sprint"},
+        {page:"/coreact — Dashboard",element:"Avatar GA (Gabriela Dias)",type:"Bug funcional",severity:"Média",current:"Clique no avatar não abre menu de perfil nem logout",expected:"Dropdown com perfil, configurações de conta e logout",impact:"Sem forma óbvia de ver dados do usuário logado ou fazer logout",cause:"Componente de avatar sem handler; menu de usuário não implementado",fix:"Adicionar dropdown com nome, email, link para configurações e logout",priority:"Próxima sprint"},
+        {page:"Global (todas as rotas)",element:"<title> da página",type:"Consistência",severity:"Média",current:"Título HTML exibe 'Configurações da Marca' em todas as rotas",expected:"Título dinâmico por rota (ex: 'Tarefas — CoreAct')",impact:"Confusão com múltiplas abas abertas; impacto em acessibilidade",cause:"Componente de layout com title estático sem atualização por rota",fix:"Usar react-helmet ou useEffect por rota para atualizar o title",priority:"Próxima sprint"},
+        {page:"/coreact — Dashboard",element:"My Tasks Schedule (calendário)",type:"UX",severity:"Baixa",current:"Dias da semana exibidos em inglês (Sat, Sun, Mon, Tue)",expected:"Locale pt-BR (Sáb, Dom, Seg, Ter)",impact:"Inconsistência de idioma quebrando a experiência do usuário brasileiro",cause:"Componente usando locale padrão en-US sem configuração de i18n",fix:"Configurar locale pt-BR no componente de calendário",priority:"Próxima sprint"},
+        {page:"/coreact/iniciativas",element:"Botão X do painel Nova Iniciativa",type:"Bug funcional",severity:"Alta",current:"X tem falha intermitente — às vezes fecha, às vezes não fecha",expected:"Clique no X fecha o painel consistentemente",impact:"Usuário preso com o painel aberto; precisa recarregar a página",cause:"Conflito de z-index ou área de clique sobreposta por outro elemento",fix:"Verificar z-index do botão X; garantir área de clique de 44x44px",priority:"Imediata"},
+        {page:"/coreact/iniciativas",element:"Painel Nova Iniciativa — formulário",type:"UX",severity:"Alta",current:"Formulário estreito com campos parcialmente visíveis; CTA possivelmente oculto",expected:"Formulário scrollável com botão 'Criar' sempre visível no rodapé",impact:"Usuário não sabe se há mais campos ou como submeter",cause:"Painel com altura fixa e overflow não tratado; CTA fora do viewport",fix:"Fixar botão 'Criar Iniciativa' no rodapé do painel independente do scroll",priority:"Imediata"},
+        {page:"/coreact/iniciativas",element:"Timeline de Projetos (aba Operacional)",type:"UX",severity:"Média",current:"Timeline aparece completamente vazia sem mensagem orientativa",expected:"Empty state com instrução: 'Crie uma iniciativa para visualizar projetos aqui'",impact:"Usuário não entende se é bug ou configuração pendente",cause:"Componente renderizando sem dados sem fallback de empty state",fix:"Adicionar empty state com ícone + texto + CTA para criar iniciativa",priority:"Próxima sprint"},
+        {page:"/coreact/projetos",element:"Card Brand Studio Expansion (e todos os cards)",type:"Bug funcional",severity:"Crítica",current:"Clique no card não navega e não abre drawer — dead click confirmado",expected:"Clicar abre drawer com detalhes: descrição, tarefas, equipe, status",impact:"Impossível acessar qualquer detalhe de projeto",cause:"Handler onClick ausente; drawer de projeto não implementado",fix:"Implementar onClick no card → abrir drawer/modal com detalhes do projeto",priority:"Imediata"},
+        {page:"/coreact/projetos",element:"Campo de busca 'Buscar projetos...'",type:"UX",severity:"Média",current:"Campo aceita digitação mas não há indicação visual de filtragem",expected:"Lista de cards filtrando em tempo real com feedback visual",impact:"Usuário não sabe se a busca está funcionando",cause:"Filtro não implementado ou sem feedback visual de resultado",fix:"Implementar filtro funcional com feedback de estado",priority:"Próxima sprint"},
+        {page:"/coreact/setores",element:"Lista de setores (painel esquerdo)",type:"UX",severity:"Alta",current:"Lista exibe skeletons que não resolvem — sem dados carregados",expected:"Lista com setores existentes ou empty state claro",impact:"Usuário não sabe se há setores ou se a página está travada",cause:"Dados não carregando ou estado vazio sem tratamento",fix:"Verificar chamada de dados; implementar empty state com botão destacado",priority:"Imediata"},
+        {page:"/coreact/tarefas",element:"Botão 'Criar Tarefa' (canto superior direito)",type:"Bug funcional",severity:"Crítica",current:"Dead click confirmado — nenhuma ação é disparada",expected:"Abre modal de criação com: título, descrição, status, responsável, prazo",impact:"Impossível criar novas tarefas. Funcionalidade core inacessível.",cause:"Handler de onClick não conectado ao componente",fix:"Implementar modal de criação de tarefa",priority:"Imediata"},
+        {page:"/coreact/tarefas",element:"Cards do Kanban (Project Management, Fintech App...)",type:"Bug funcional",severity:"Crítica",current:"Clique nos cards não abre drawer — dead click confirmado",expected:"Abre drawer com campos editáveis da tarefa",impact:"Kanban é somente leitura — impossível editar tarefas existentes",cause:"Drawer de detalhes da tarefa não implementado",fix:"Implementar drawer de detalhes com edição inline",priority:"Imediata"},
+        {page:"/coreact/etapas",element:"Botão 'Nova Etapa (Virtualizada)'",type:"Bug funcional",severity:"Alta",current:"Dead click — não abre formulário nem modal",expected:"Abre modal/drawer de criação de milestone",impact:"Impossível criar novas etapas pelo fluxo principal",cause:"Handler não conectado; feature em desenvolvimento",fix:"Conectar handler ou exibir tooltip 'Em breve' com estado disabled",priority:"Próxima sprint"},
+        {page:"/coreact/etapas",element:"Badges de status On Track / At Risk",type:"Bug funcional",severity:"Alta",current:"Badges não são clicáveis — não permitem alterar status",expected:"Clique abre dropdown com opções de status",impact:"Status de etapas não pode ser atualizado pela interface",cause:"Badge renderizado como texto puro sem handler",fix:"Converter badge em componente Select/Dropdown funcional",priority:"Próxima sprint"},
+        {page:"/coreact/etapas",element:"Cabeçalho 'MILESTONE (TOTAL: 1500)'",type:"UX / Consistência",severity:"Baixa",current:"'Total: 1500' aparece sem unidade de medida definida",expected:"Número com unidade explícita (ex: 1500 hrs ou R$ 1.500) ou removido",impact:"Confusão sobre o que o número representa",cause:"Dado hardcoded no componente",fix:"Especificar unidade ou remover",priority:"Próxima sprint"},
+        {page:"/coreact/acoes",element:"Checkboxes do checklist",type:"Bug funcional",severity:"Alta",current:"Checkboxes não respondem ao clique — não é possível marcar/desmarcar",expected:"Clique marca/desmarca e atualiza progresso (2/4 → 3/4)",impact:"Módulo de ações inutilizável",cause:"Estado hardcoded sem handler de onChange",fix:"Conectar estado ao componente checkbox com persistência",priority:"Imediata"},
+        {page:"/coreact/acoes",element:"Botão 'Novo Checklist'",type:"Bug funcional",severity:"Alta",current:"Dead click — não cria novo checklist",expected:"Criar novo checklist com título e campo para adicionar itens",impact:"Impossível criar novos checklists",cause:"Handler não implementado",fix:"Implementar modal/inline de criação de checklist",priority:"Próxima sprint"},
+        {page:"/coreact/cronograma",element:"Página inteira",type:"UX",severity:"Alta",current:"Página carrega estado vazio sem instrução de uso",expected:"Empty state orientativo com instrução ou rota marcada como 'Em breve'",impact:"Usuário não sabe o que fazer nessa tela",cause:"Feature não implementada; componente renderiza vazio sem fallback",fix:"Adicionar empty state explicativo com CTA ou badge 'Em breve' na nav",priority:"Próxima sprint"},
+        {page:"/coreact/orcamento",element:"Página inteira",type:"Bug funcional",severity:"Alta",current:"Tela exibe skeletons de loading que nunca resolvem — bloqueio permanente",expected:"Carregar dados ou exibir empty state/error state funcional",impact:"Módulo completamente inacessível — parece travado",cause:"Chamada de API sem resposta ou componente aguardando dados que não chegam",fix:"Implementar timeout de loading com fallback para estado de erro ou vazio",priority:"Imediata"},
+        {page:"/configuracoes",element:"Botão de salvar do formulário",type:"UX",severity:"Alta",current:"Botão de salvar não identificado na tela capturada",expected:"CTA 'Salvar alterações' fixo e sempre visível após edição",impact:"Usuário edita dados e não sabe como salvar; risco de perda de dados",cause:"Botão fora do viewport ou auto-save sem indicação visual",fix:"Adicionar botão fixo no rodapé ou toast de 'Salvo automaticamente'",priority:"Imediata"},
+        {page:"/configuracoes",element:"Tempo de carregamento da página",type:"UX",severity:"Média",current:"Skeletons persistem por período longo antes do conteúdo aparecer",expected:"Loading rápido com skeleton que desaparece assim que dados chegam",impact:"Sensação de lentidão; usuário pode sair achando que está quebrado",cause:"Carregamento sem cache; renderização aguardando fetch completo",fix:"Implementar SWR ou React Query com cache",priority:"Próxima sprint"},
+        {page:"Global — Topbar",element:"Item 'Equipe' na navbar",type:"UX / Bug funcional",severity:"Alta",current:"'Equipe' visível na navbar mas não clicável e sem rota associada",expected:"Link funcional ou badge 'Em breve' com tooltip explicativo",impact:"Parece sistema quebrado para o usuário que clica e não vê resposta",cause:"Link placeholder sem rota definida",fix:"Adicionar disabled + tooltip 'Em breve' ou implementar a rota",priority:"Próxima sprint"},
+        {page:"Global — Dropdown + Ações",element:"Opções: Nova Iniciativa, Novo Projeto, Nova Tarefa, Nova Etapa",type:"Bug funcional",severity:"Crítica",current:"As 4 opções principais do dropdown global são dead clicks",expected:"Cada opção abre o formulário de criação correspondente",impact:"O CTA mais visível do sistema não executa as ações principais",cause:"Opções do dropdown sem handlers implementados; só 'Importar em Lote' funciona",fix:"Conectar cada opção ao modal/drawer de criação correspondente",priority:"Imediata"},
+        {page:"/coreact — Dashboard",element:"'Dev Mode' no greeting",type:"UX",severity:"Baixa",current:"Boas-vindas exibe '(Dev Mode)' após o nome da usuária",expected:"'(Dev Mode)' não deve aparecer nem ser legível para usuários reais",impact:"Parece descuido; usuário real fica confuso com o label técnico",cause:"Variável de ambiente ou flag de dev não filtrada no componente de greeting",fix:"Condicionar exibição de Dev Mode ao ambiente de desenvolvimento",priority:"Próxima sprint"}
+      ]
+    }],
+    activeId:"adapta-audit-2026-03-29-v01"
+  };
+  localStorage.setItem("ux_audit_template_wireframe_versions_v1", JSON.stringify(data));
+})();
+</script>
+
+  <div class="block" style="margin-bottom:22px;">
+    <div class="label">Wireframe técnico — cabeçalho</div>
+    <div class="hero">
+      <div>
+        <h1>Auditoria UX/UI — ADAPTA CoreStudio</h1>
+        <p>Auditoria completa executada em 2026-03-29 · CoreAct · https://adaptacorestudio.onrender.com/ · Responsável: Antigravity / Gabriela · 25 problemas encontrados · 15 dead clicks confirmados</p>
+      </div>
+      <div class="toolbar">
+        <span id="saveStatus" class="status">Rascunho local</span>
+        <button id="newBlankVersionBtn">Nova auditoria</button>
+        <button id="saveVersionBtn" class="primary">Salvar nova versão</button>
+        <button id="duplicateVersionBtn">Duplicar</button>
+        <button id="exportJsonBtn">Exportar JSON</button>
+        <button id="exportHtmlBtn">Exportar HTML</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page">
+    <aside class="sidebar">
+      <section class="block">
+        <div class="label">Bloco 1 — versões</div>
+        <h2>Controle de versões</h2>
+        <p class="desc">Cada clique em "Salvar nova versão" cria um snapshot novo da auditoria atual.</p>
+        <div class="field">
+          <label for="versionSelector">Versão ativa</label>
+          <select id="versionSelector"></select>
+        </div>
+        <div class="inline" style="margin-top:10px;">
+          <button id="loadVersionBtn">Carregar</button>
+          <button id="renameVersionBtn">Renomear</button>
+          <button id="deleteVersionBtn" class="danger">Excluir</button>
+        </div>
+        <div class="dash"></div>
+        <div class="kpis">
+          <div class="kpi"><div class="k">Site / módulo</div><strong id="sideSiteName">—</strong></div>
+          <div class="kpi"><div class="k">Versão</div><strong id="sideVersion">—</strong></div>
+          <div class="kpi"><div class="k">Data</div><strong id="sideDate">—</strong></div>
+        </div>
+        <div class="dash"></div>
+        <div class="field">
+          <label>Histórico</label>
+          <div id="versionList" class="listbox"></div>
+        </div>
+        <div class="dash"></div>
+        <div class="footer-note">As versões ficam no <span class="mono">localStorage</span> do navegador. Para arquivar, exporte em JSON ou HTML.</div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 2 — leitura rápida</div>
+        <h2>Legenda de uso</h2>
+        <p class="desc">Arquivo estrutural para lógica, preenchimento e rastreabilidade.</p>
+        <div class="inline">
+          <span class="wire-note">ESTÉTICA LOW-FI</span>
+          <span class="wire-note">PREENCHIMENTO RÁPIDO</span>
+          <span class="wire-note">VERSIONAMENTO LOCAL</span>
+        </div>
+        <div class="preview-bars">
+          <div class="preview-bar" style="width:100%;"></div>
+          <div class="preview-bar" style="width:84%;"></div>
+          <div class="preview-bar" style="width:66%;"></div>
+        </div>
+      </section>
+    </aside>
+
+    <main class="content">
+      <section class="block">
+        <div class="label">Bloco 3 — dados base</div>
+        <h2>1. Dados da auditoria</h2>
+        <p class="desc">Base fixa para qualquer revisão de site, produto, sistema ou módulo interno.</p>
+        <div class="grid-2">
+          <div class="field"><label for="siteName">Nome do site / módulo</label><input type="text" id="siteName" /></div>
+          <div class="field"><label for="siteUrl">URL auditada</label><input type="text" id="siteUrl" /></div>
+          <div class="field"><label for="auditOwner">Responsável pela auditoria</label><input type="text" id="auditOwner" /></div>
+          <div class="field"><label for="auditDate">Data da auditoria</label><input type="date" id="auditDate" /></div>
+          <div class="field"><label for="scopeType">Tipo de escopo</label><select id="scopeType"><option value="">Selecione</option><option>Site completo</option><option>Módulo específico</option><option>Fluxo específico</option><option>Revisão visual</option><option>Revisão funcional</option></select></div>
+          <div class="field"><label for="versionName">Nome da versão atual</label><input type="text" id="versionName" /></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 4 — estimativa</div>
+        <h2>2. Estimativa inicial</h2>
+        <p class="desc">Bloco para prever tempo, confiança da estimativa e fatores que podem ampliar o esforço real.</p>
+        <div class="grid-3">
+          <div class="field"><label for="timeTotal">Tempo total previsto</label><input type="text" id="timeTotal" /></div>
+          <div class="field"><label for="timeConfidence">Confiança da estimativa</label><select id="timeConfidence"><option value="">Selecione</option><option>Alta</option><option>Média</option><option>Baixa</option></select></div>
+          <div class="field"><label for="timeComplexity">Complexidade esperada</label><select id="timeComplexity"><option value="">Selecione</option><option>Baixa</option><option>Média</option><option>Alta</option></select></div>
+        </div>
+        <div class="grid-2" style="margin-top:12px;">
+          <div class="field"><label for="timeBreakdown">Quebra por etapas</label><textarea id="timeBreakdown"></textarea></div>
+          <div class="field"><label for="timeRisks">Riscos e premissas</label><textarea id="timeRisks"></textarea></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 5 — cobertura</div>
+        <h2>3. Mapeamento de rotas / telas</h2>
+        <p class="desc">Mapa textual de páginas, modais, drawers e estados necessários para uma auditoria completa.</p>
+        <div class="field"><label for="routesMap">Rotas, telas, modais e estados mapeados</label><textarea id="routesMap" style="min-height:180px;"></textarea></div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 6 — panorama</div>
+        <h2>4. Panorama geral</h2>
+        <p class="desc">Leitura macro da qualidade do layout, clareza da interface e nível geral de risco.</p>
+        <div class="grid-2">
+          <div class="field"><label for="generalQuality">Qualidade geral do layout e da experiência</label><textarea id="generalQuality"></textarea></div>
+          <div class="field"><label for="generalRisk">Nível geral de risco</label><textarea id="generalRisk"></textarea></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 7 — problemas</div>
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;">
+          <div>
+            <h2>5. Problemas encontrados</h2>
+            <p class="desc">Registro acionável por problema, com tipo, severidade, impacto, causa e correção.</p>
+          </div>
+          <div class="inline">
+            <span class="wire-note">DIAGNÓSTICO DETALHADO</span>
+            <button id="addProblemBtn">Adicionar problema</button>
+          </div>
+        </div>
+        <div id="problemsContainer" style="display:grid;gap:12px;"></div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 8 — interações</div>
+        <h2>6. Bloco exclusivo — botões e elementos clicáveis</h2>
+        <p class="desc">Consolidação específica para CTAs, tabs, toggles, FABs, icon buttons e links acionáveis.</p>
+        <div class="grid-2">
+          <div class="field"><label for="buttonSummary">Diagnóstico consolidado</label><textarea id="buttonSummary"></textarea></div>
+          <div class="field"><label for="buttonPriority">Correções prioritárias</label><textarea id="buttonPriority"></textarea></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 9 — padrões quebrados</div>
+        <h2>7. Padrões quebrados no sistema</h2>
+        <p class="desc">Mapa de inconsistências recorrentes entre telas, componentes, estados e fluxos.</p>
+        <div class="field"><label for="brokenPatterns">Lista de padrões quebrados</label><textarea id="brokenPatterns"></textarea></div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 10 — priorização</div>
+        <h2>8. Priorização executiva</h2>
+        <p class="desc">Síntese final por impacto visual, funcional e urgência de correção.</p>
+        <div class="grid-2">
+          <div class="field"><label for="topCritical">10 problemas mais graves</label><textarea id="topCritical"></textarea></div>
+          <div class="field"><label for="topVisual">10 ajustes de maior impacto visual</label><textarea id="topVisual"></textarea></div>
+          <div class="field"><label for="topFunctional">10 ajustes de maior impacto funcional</label><textarea id="topFunctional"></textarea></div>
+          <div class="field"><label for="roadmapFixes">Sequência ideal de correção</label><textarea id="roadmapFixes"></textarea></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 11 — tempo real</div>
+        <h2>9. Controle de tempo — previsto vs. real</h2>
+        <p class="desc">Fechamento da auditoria com comparação entre estimativa inicial e esforço real.</p>
+        <div class="grid-3">
+          <div class="field"><label for="realPredicted">Tempo previsto inicialmente</label><input type="text" id="realPredicted" /></div>
+          <div class="field"><label for="realSpent">Tempo real gasto</label><input type="text" id="realSpent" /></div>
+          <div class="field"><label for="realDifference">Diferença</label><input type="text" id="realDifference" /></div>
+        </div>
+        <div class="grid-2" style="margin-top:12px;">
+          <div class="field"><label for="realReason">Motivo da diferença</label><textarea id="realReason"></textarea></div>
+          <div class="field"><label for="realComplexity">Observações sobre complexidade real</label><textarea id="realComplexity"></textarea></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="label">Bloco 12 — conclusão</div>
+        <h2>10. Conclusão final</h2>
+        <p class="desc">Veredito resumido para orientar decisão e sequência de correções.</p>
+        <div class="field"><label for="finalConclusion">Conclusão</label><textarea id="finalConclusion" style="min-height:160px;"></textarea></div>
+      </section>
+    </main>
+  </div>
+
+  <template id="problemTemplate">
+    <div class="problem">
+      <div class="problem-head">
+        <strong>Problema <span class="problem-index"></span></strong>
+        <button class="danger remove-problem-btn" type="button">Remover</button>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Página / rota</label><input type="text" data-key="page" placeholder="/rota ou nome da tela" /></div>
+        <div class="field"><label>Elemento</label><input type="text" data-key="element" placeholder="Botão, card, dropdown, FAB..." /></div>
+        <div class="field"><label>Tipo</label><select data-key="type"><option value="">Selecione</option><option>Bug funcional</option><option>Layout</option><option>UX</option><option>Acessibilidade</option><option>Consistência</option><option>UX / Bug funcional</option><option>UX / Consistência</option><option>Melhoria opcional</option></select></div>
+        <div class="field"><label>Severidade</label><select data-key="severity"><option value="">Selecione</option><option>Crítica</option><option>Alta</option><option>Média</option><option>Baixa</option></select></div>
+        <div class="field"><label>Comportamento atual</label><textarea data-key="current"></textarea></div>
+        <div class="field"><label>Comportamento esperado</label><textarea data-key="expected"></textarea></div>
+        <div class="field"><label>Impacto para o usuário</label><textarea data-key="impact"></textarea></div>
+        <div class="field"><label>Causa provável</label><textarea data-key="cause"></textarea></div>
+        <div class="field"><label>Correção recomendada</label><textarea data-key="fix"></textarea></div>
+        <div class="field"><label>Prioridade de correção</label><select data-key="priority"><option value="">Selecione</option><option>Imediata</option><option>Próxima sprint</option><option>Melhoria futura</option></select></div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const STORAGE_KEY = "ux_audit_template_wireframe_versions_v1";
+    const defaultProblem = () => ({page:"",element:"",type:"",severity:"",current:"",expected:"",impact:"",cause:"",fix:"",priority:""});
+    const defaultVersionData = () => ({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),meta:{name:"Auditoria Geral v01",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},fields:{siteName:"",siteUrl:"",auditOwner:"",auditDate:"",scopeType:"",versionName:"Auditoria Geral v01",timeTotal:"",timeConfidence:"",timeComplexity:"",timeBreakdown:"",timeRisks:"",routesMap:"",generalQuality:"",generalRisk:"",buttonSummary:"",buttonPriority:"",brokenPatterns:"",topCritical:"",topVisual:"",topFunctional:"",roadmapFixes:"",realPredicted:"",realSpent:"",realDifference:"",realReason:"",realComplexity:"",finalConclusion:""},problems:[defaultProblem()]});
+    let state = {versions:[],activeId:null};
+    const formFieldIds = ["siteName","siteUrl","auditOwner","auditDate","scopeType","versionName","timeTotal","timeConfidence","timeComplexity","timeBreakdown","timeRisks","routesMap","generalQuality","generalRisk","buttonSummary","buttonPriority","brokenPatterns","topCritical","topVisual","topFunctional","roadmapFixes","realPredicted","realSpent","realDifference","realReason","realComplexity","finalConclusion"];
+    const el = (id) => document.getElementById(id);
+    function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));updateSideSummary();}
+    function loadState(){const raw=localStorage.getItem(STORAGE_KEY);if(!raw){const first=defaultVersionData();state={versions:[first],activeId:first.id};saveState();return;}try{state=JSON.parse(raw);if(!state.versions?.length)throw new Error("empty");if(!state.activeId)state.activeId=state.versions[0].id;}catch{const first=defaultVersionData();state={versions:[first],activeId:first.id};saveState();}}
+    function getActiveVersion(){return state.versions.find(v=>v.id===state.activeId);}
+    function renderVersionList(){const selector=el("versionSelector");const list=el("versionList");selector.innerHTML="";list.innerHTML="";state.versions.sort((a,b)=>new Date(b.meta.updatedAt)-new Date(a.meta.updatedAt)).forEach(version=>{const option=document.createElement("option");option.value=version.id;option.textContent=version.meta.name;selector.appendChild(option);const item=document.createElement("button");item.className="version-item"+(version.id===state.activeId?" active":"");item.type="button";item.innerHTML=`<strong>${escapeHtml(version.meta.name)}</strong><small>Criado: ${formatDateTime(version.meta.createdAt)}</small><small>Atualizado: ${formatDateTime(version.meta.updatedAt)}</small>`;item.addEventListener("click",()=>{state.activeId=version.id;renderAll();});list.appendChild(item);});selector.value=state.activeId;}
+    function renderForm(){const version=getActiveVersion();if(!version)return;formFieldIds.forEach(id=>{const node=el(id);if(node)node.value=version.fields[id]??"";});renderProblems(version.problems||[]);}
+    function renderProblems(problems){const container=el("problemsContainer");const template=el("problemTemplate");container.innerHTML="";(problems.length?problems:[defaultProblem()]).forEach((problem,index)=>{const clone=template.content.firstElementChild.cloneNode(true);clone.querySelector(".problem-index").textContent=index+1;clone.querySelectorAll("[data-key]").forEach(input=>{const key=input.dataset.key;input.value=problem[key]??"";input.addEventListener("input",persistCurrentFormSilently);input.addEventListener("change",persistCurrentFormSilently);});clone.querySelector(".remove-problem-btn").addEventListener("click",()=>{const version=getActiveVersion();if((version.problems||[]).length<=1){version.problems=[defaultProblem()];}else{version.problems.splice(index,1);}version.meta.updatedAt=new Date().toISOString();saveState();renderAll();});container.appendChild(clone);});}
+    function readProblemsFromDom(){return[...document.querySelectorAll("#problemsContainer .problem")].map(item=>{const obj={};item.querySelectorAll("[data-key]").forEach(input=>{obj[input.dataset.key]=input.value;});return obj;});}
+    function persistCurrentFormSilently(){const version=getActiveVersion();if(!version)return;formFieldIds.forEach(id=>{const node=el(id);if(node)version.fields[id]=node.value;});version.meta.name=version.fields.versionName||version.meta.name||"Auditoria sem nome";version.meta.updatedAt=new Date().toISOString();version.problems=readProblemsFromDom();saveState();renderVersionList();flashStatus("Rascunho atualizado");}
+    function createBlankVersion(){const v=defaultVersionData();const count=state.versions.length+1;v.meta.name=`Auditoria Geral v${String(count).padStart(2,"0")}`;v.fields.versionName=v.meta.name;state.versions.push(v);state.activeId=v.id;saveState();renderAll();flashStatus("Nova auditoria criada");}
+    function nextVersionName(name){const match=name.match(/v(\d+)$/i);if(match){const n=String(Number(match[1])+1).padStart(match[1].length,"0");return name.replace(/v\d+$/i,`v${n}`);}return`${name} v02`;}
+    function saveAsNewVersion(){persistCurrentFormSilently();const current=getActiveVersion();if(!current)return;const copy=JSON.parse(JSON.stringify(current));copy.id=crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random());copy.meta.createdAt=new Date().toISOString();copy.meta.updatedAt=new Date().toISOString();copy.meta.name=nextVersionName(current.meta.name||"Auditoria");copy.fields.versionName=copy.meta.name;state.versions.push(copy);state.activeId=copy.id;saveState();renderAll();flashStatus("Nova versão salva");}
+    function duplicateCurrentVersion(){const current=getActiveVersion();if(!current)return;const copy=JSON.parse(JSON.stringify(current));copy.id=crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random());copy.meta.createdAt=new Date().toISOString();copy.meta.updatedAt=new Date().toISOString();copy.meta.name=`${current.meta.name} — cópia`;copy.fields.versionName=copy.meta.name;state.versions.push(copy);state.activeId=copy.id;saveState();renderAll();flashStatus("Versão duplicada");}
+    function deleteCurrentVersion(){if(state.versions.length===1){alert("Você precisa manter pelo menos uma versão.");return;}const version=getActiveVersion();if(!version)return;const ok=confirm(`Excluir a versão "${version.meta.name}"?`);if(!ok)return;state.versions=state.versions.filter(v=>v.id!==version.id);state.activeId=state.versions[0].id;saveState();renderAll();flashStatus("Versão excluída");}
+    function renameCurrentVersion(){const version=getActiveVersion();if(!version)return;const name=prompt("Novo nome da versão:",version.meta.name);if(!name)return;version.meta.name=name;version.fields.versionName=name;version.meta.updatedAt=new Date().toISOString();saveState();renderAll();flashStatus("Versão renomeada");}
+    function loadSelectedVersion(){state.activeId=el("versionSelector").value;renderAll();flashStatus("Versão carregada");}
+    function updateSideSummary(){const version=getActiveVersion();if(!version)return;el("sideSiteName").textContent=version.fields.siteName||"—";el("sideVersion").textContent=version.meta.name||"—";el("sideDate").textContent=version.fields.auditDate||"—";}
+    function renderAll(){renderVersionList();renderForm();updateSideSummary();saveState();}
+    function flashStatus(text){const node=el("saveStatus");node.textContent=text;clearTimeout(window.__timer);window.__timer=setTimeout(()=>{node.textContent="Rascunho local";},1600);}
+    function formatDateTime(iso){try{return new Date(iso).toLocaleString("pt-BR");}catch{return iso||"—";}}
+    function escapeHtml(str){return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
+    function slugify(str){return String(str).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");}
+    function downloadBlob(blob,filename){const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);flashStatus("Arquivo exportado");}
+    function exportJson(){persistCurrentFormSilently();const version=getActiveVersion();if(!version)return;const blob=new Blob([JSON.stringify(version,null,2)],{type:"application/json"});downloadBlob(blob,`${slugify(version.meta.name||"auditoria")}.json`);}
+    function exportCurrentHtml(){persistCurrentFormSilently();const blob=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});const version=getActiveVersion();downloadBlob(blob,`${slugify(version.meta.name||"auditoria")}.html`);}
+    function bindEvents(){formFieldIds.forEach(id=>{const node=el(id);if(!node)return;node.addEventListener("input",persistCurrentFormSilently);node.addEventListener("change",persistCurrentFormSilently);});el("addProblemBtn").addEventListener("click",()=>{const version=getActiveVersion();version.problems=version.problems||[];version.problems.push(defaultProblem());version.meta.updatedAt=new Date().toISOString();saveState();renderAll();flashStatus("Bloco de problema adicionado");});el("newBlankVersionBtn").addEventListener("click",createBlankVersion);el("saveVersionBtn").addEventListener("click",saveAsNewVersion);el("duplicateVersionBtn").addEventListener("click",duplicateCurrentVersion);el("deleteVersionBtn").addEventListener("click",deleteCurrentVersion);el("renameVersionBtn").addEventListener("click",renameCurrentVersion);el("loadVersionBtn").addEventListener("click",loadSelectedVersion);el("exportJsonBtn").addEventListener("click",exportJson);el("exportHtmlBtn").addEventListener("click",exportCurrentHtml);}
+    loadState();bindEvents();renderAll();flashStatus("Auditoria carregada ✓");
+  </script>
+</body>
+</html>

@@ -9,11 +9,11 @@ export async function handle(request: Request) {
     const json = inputStr ? superjson.parse(inputStr) : {};
     const input = schema.parse(json);
 
-    const stages = await db.selectFrom("projectStages")
-      .selectAll()
-      .where("projectId", "=", input.projectId)
-      .orderBy("sortOrder", "asc")
-      .execute();
+    let query = db.selectFrom("projectStages").selectAll();
+    if (input.projectId) {
+      query = query.where("projectId", "=", input.projectId);
+    }
+    const stages = await query.orderBy("sortOrder", "asc").execute();
 
     return new Response(superjson.stringify({ stages } satisfies OutputType));
   } catch (error: unknown) {
