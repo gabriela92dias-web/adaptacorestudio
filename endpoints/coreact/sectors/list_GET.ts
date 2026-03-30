@@ -1,20 +1,30 @@
-import { schema, OutputType } from "./list_GET.schema";
 import superjson from 'superjson';
-import { db } from "../../../helpers/db";
+import { supabase } from "../../../helpers/supabase.js";
+
+function toCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+}
+function camelizeKeys(obj: any): any {
+  if (Array.isArray(obj)) return obj.map(camelizeKeys);
+  if (obj !== null && typeof obj === 'object') {
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [toCamel(k), camelizeKeys(v)]));
+  }
+  return obj;
+}
 
 export async function handle(request: Request) {
   try {
-    const url = new URL(request.url);
-    const inputStr = url.searchParams.get("input");
-    const json = inputStr ? superjson.parse(inputStr) : {};
-    const input = schema.parse(json);
+    const { data: sectors, error } = await supabase
+      .from("sectors")
+      .select("*")
+      .order("name", { ascending: true });
 
-    const sectors = await db.selectFrom("sectors")
-      .selectAll()
-      .orderBy("name", "asc")
-      .execute();
+    if (error) throw new Error(error.message);
 
-    return new Response(superjson.stringify({ sectors } satisfies OutputType));
+    return new Response(
+      superjson.stringify({ sectors: camelizeKeys(sectors ?? []) }),
+      { headers: { "Content-Type": "application/json" } }
+    );
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Unknown error";
     return new Response(superjson.stringify({ error: msg }), { status: 400 });
