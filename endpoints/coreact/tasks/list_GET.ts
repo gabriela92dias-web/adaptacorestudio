@@ -1,6 +1,6 @@
 import { schema, OutputType } from "./list_GET.schema";
 import superjson from 'superjson';
-import { supabase } from "../../../helpers/supabase-client";
+import { supabase } from "../../../helpers/supabase.js";
 
 function camelizeKeys(obj: any): any {
   if (Array.isArray(obj)) {
@@ -71,7 +71,8 @@ export async function handle(request: Request) {
       superjson.stringify({ tasks: mapped } satisfies OutputType),
       { headers: { "Content-Type": "application/json" } }
     );
-  } catch (error: unknown) {
+  } catch (error: any) {
+    console.error("TASKS LIST GET ERROR:", error);
     const msg = error instanceof Error ? error.message : "Unknown error";
     return new Response(superjson.stringify({ error: msg }), { status: 400 });
   }

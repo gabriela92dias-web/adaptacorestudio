@@ -1,5 +1,5 @@
 import superjson from 'superjson';
-import { supabase } from "../../../helpers/supabase-client";
+import { supabase } from "../../../helpers/supabase.js";
 
 function toCamel(str: string): string {
   return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());

@@ -1,6 +1,6 @@
 import { schema, OutputType } from "./list_GET.schema";
 import superjson from 'superjson';
-import { supabase } from "../../../helpers/supabase-client";
+import { supabase } from "../../../helpers/supabase.js";
 
 function camelizeKeys(obj: any): any {
   if (Array.isArray(obj)) {
