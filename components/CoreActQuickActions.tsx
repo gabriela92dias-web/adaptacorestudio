@@ -106,11 +106,11 @@ export function CoreActQuickActions() {
           
           <DropdownMenuGroup>
             <DropdownMenuLabel className={styles.groupLabel}>Estratégia</DropdownMenuLabel>
-            <DropdownMenuItem onSelect={() => setActiveDialog("initiative")}>
+            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setActiveDialog("initiative"); }}>
               <Target className={styles.menuIcon} />
               Nova Iniciativa
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setActiveDialog("project")}>
+            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setActiveDialog("project"); }}>
               <FolderOpen className={styles.menuIcon} />
               Novo Projeto
             </DropdownMenuItem>
@@ -120,11 +120,11 @@ export function CoreActQuickActions() {
 
           <DropdownMenuGroup>
             <DropdownMenuLabel className={styles.groupLabel}>Operacional</DropdownMenuLabel>
-            <DropdownMenuItem onSelect={() => setActiveDialog("task")}>
+            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setActiveDialog("task"); }}>
               <CheckSquare className={styles.menuIcon} />
               Nova Tarefa
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setActiveDialog("stage")}>
+            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setActiveDialog("stage"); }}>
               <Layers className={styles.menuIcon} />
               Nova Etapa
             </DropdownMenuItem>
@@ -134,7 +134,7 @@ export function CoreActQuickActions() {
 
           <DropdownMenuGroup>
             <DropdownMenuLabel className={styles.groupLabel}>Importação</DropdownMenuLabel>
-            <DropdownMenuItem onSelect={() => setActiveDialog("import")}>
+            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setActiveDialog("import"); }}>
               <UploadIcon className={styles.menuIcon} />
               Importar em Lote
             </DropdownMenuItem>

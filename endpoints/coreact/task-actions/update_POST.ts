@@ -1,6 +1,6 @@
 import { schema, OutputType } from "./update_POST.schema";
 import superjson from "superjson";
-import { db } from "../../../helpers/db";
+import { supabase } from "../../../helpers/supabase";
 import { logActivity } from "../../../helpers/activityLogger";
 
 export async function handle(request: Request) {
@@ -13,19 +13,23 @@ export async function handle(request: Request) {
       completedAt = new Date();
     }
 
-    const updatedAction = await db
-      .updateTable("taskActions")
-      .set({
-        ...(input.status !== undefined && { status: input.status }),
-        ...(input.assignedTo !== undefined && { assignedTo: input.assignedTo }),
-        ...(input.title !== undefined && { title: input.title }),
-        ...(input.description !== undefined && { description: input.description }),
-        ...(completedAt !== undefined && { completedAt }),
-        updatedAt: new Date(),
-      })
-      .where("id", "=", input.id)
-      .returningAll()
-      .executeTakeFirstOrThrow();
+    const updates: any = {
+        updatedAt: new Date().toISOString()
+    };
+    if (input.status !== undefined) updates.status = input.status;
+    if (input.assignedTo !== undefined) updates.assignedTo = input.assignedTo;
+    if (input.title !== undefined) updates.title = input.title;
+    if (input.description !== undefined) updates.description = input.description;
+    if (completedAt !== undefined) updates.completedAt = completedAt ? completedAt.toISOString() : null;
+
+    const { data: updatedAction, error } = await supabase
+      .from("taskActions")
+      .update(updates)
+      .eq("id", input.id)
+      .select()
+      .single();
+
+    if (error) throw error;
 
     if (input.status) {
       await logActivity({
@@ -41,7 +45,10 @@ export async function handle(request: Request) {
       superjson.stringify({ taskAction: updatedAction } satisfies OutputType)
     );
   } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : "Unknown error";
-    return new Response(superjson.stringify({ error: msg }), { status: 400 });
+    console.error("Internal Server Error in coreact task-actions/update:", error);
+    return new Response(
+      superjson.stringify({ error: "Ocorreu um erro interno ao processar a requisição." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 }
