@@ -14,6 +14,7 @@ import { filterTasksForDay } from "../helpers/cronogramaTaskUtils";
 import { useAdaptiveLevel } from "../helpers/useAdaptiveLevel";
 import { useGoogleTranslate } from "../helpers/useTranslation";
 import { useSwipeNavigation } from "../helpers/useSwipeNavigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { CronogramaGantt } from "../components/CronogramaGantt";
 import { CronogramaKanban } from "../components/CronogramaKanban";
 import { CronogramaLista } from "../components/CronogramaLista";
@@ -68,13 +69,13 @@ export default function CoreActCronograma() {
     toolbarTitleShort,
   } = useCronogramaState();
 
-  const filteredTasks = tasksData?.tasks.filter(t => {
+  const filteredTasks = (tasksData?.tasks || []).filter(t => {
     if (filters.projectId !== "all" && t.projectId !== filters.projectId) return false;
     if (filters.assigneeId !== "all" && t.assigneeId !== filters.assigneeId) return false;
     if (filters.statuses.length > 0 && (!t.status || !filters.statuses.includes(t.status))) return false;
     if (filters.priorities.length > 0 && (!t.priority || !filters.priorities.includes(t.priority))) return false;
     return true;
-  }) || [];
+  });
 
   const isLoading = isLoadingTasks || isLoadingProjects;
 
@@ -102,29 +103,11 @@ export default function CoreActCronograma() {
     { threshold: 120, enabled: needsDateNav }
   );
 
-  const handleNavigateWithFeedback = (dir: 1 | -1) => {
-    shiftDate(dir);
-    if ((swipeNavRef as any).current) {
-      const el = (swipeNavRef as any).current as HTMLElement;
-      // Start slightly pushed
-      el.style.transition = 'none';
-      el.style.transform = `translateX(${dir === 1 ? '-30px' : '30px'}) scale(0.98)`;
-      el.style.filter = dir === 1 
-        ? 'saturate(140%) brightness(105%) hue-rotate(-15deg)'
-        : 'sepia(40%) grayscale(20%)';
-      
-      // trigger reflow
-      void el.offsetHeight;
-      
-      // snap back
-      el.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease';
-      el.style.transform = 'translateX(0) scale(1)';
-      el.style.filter = 'none';
+  const [navDir, setNavDir] = useState<number>(0);
 
-      setTimeout(() => {
-        el.style.transition = '';
-      }, 400);
-    }
+  const handleNavigateWithFeedback = (dir: 1 | -1) => {
+    setNavDir(dir);
+    shiftDate(dir);
   };
 
   if (isLoading) {
@@ -218,7 +201,18 @@ export default function CoreActCronograma() {
                 {activeFilterCount > 0 && <span className={styles.filterDot} />}
               </button>
             </PopoverTrigger>
-            <PopoverContent align="end" side="bottom" sideOffset={8}>
+            <PopoverContent 
+              align="end" 
+              side="bottom" 
+              sideOffset={8}
+              onInteractOutside={(e) => {
+                const target = e.target as HTMLElement;
+                // Previne que clicar nas opções do Select (que ficam num portal) fechem o popover inteiro
+                if (target.closest('[role="listbox"]') || target.closest('[data-radix-select-content]') || document.body.contains(target) === false) {
+                  e.preventDefault();
+                }
+              }}
+            >
               <div className={styles.filterPanel}>
                 <div className={styles.filterSection}>
                   <span className={styles.filterSectionTitle}>Projeto</span>
@@ -226,7 +220,7 @@ export default function CoreActCronograma() {
                     <SelectTrigger><SelectValue placeholder="Todos os projetos" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos</SelectItem>
-                      {projectsData?.projects.map(p => (
+                      {(projectsData?.projects || []).map(p => (
                         <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
                       ))}
                     </SelectContent>
@@ -283,7 +277,7 @@ export default function CoreActCronograma() {
                     <SelectTrigger><SelectValue placeholder="Todos os responsáveis" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos</SelectItem>
-                      {teamData?.teamMembers.map(m => (
+                      {(teamData?.teamMembers || []).map(m => (
                         <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                       ))}
                     </SelectContent>
@@ -300,45 +294,56 @@ export default function CoreActCronograma() {
       </header>
 
       <div ref={swipeNavRef as any} style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-        {viewMode === 'gantt' && (
-          <CronogramaGantt 
-            tasks={filteredTasks}
-            projects={projectsData?.projects || []}
-            initiatives={initiativesData?.initiatives || []}
-            sectors={sectorsData || []}
-            dependencies={dependenciesData?.dependencies || []}
-            teamMembers={teamData?.teamMembers || []}
-            onTaskClick={(id) => setSelectedTaskId(id)}
-            ganttZoom={ganttZoom}
-            currentDate={currentDate}
-            level={level as any}
-          />
-        )}
-        {viewMode === 'kanban' && (
-          <CronogramaKanban 
-            tasks={filteredTasks}
-            projects={projectsData?.projects || []}
-            onTaskClick={(id) => setSelectedTaskId(id)}
-            level={level as any}
-            ganttZoom={ganttZoom}
-            currentDate={currentDate}
-          />
-        )}
-        {viewMode === 'list' && (
-          <CronogramaLista 
-            tasks={filteredTasks}
-            projects={projectsData?.projects || []}
-            onTaskClick={(id) => setSelectedTaskId(id)}
-            level={level as any}
-          />
-        )}
-        {viewMode === 'process' && (
-          <CronogramaProcessos 
-            tasks={filteredTasks}
-            projects={projectsData?.projects || []}
-            onTaskClick={(id) => setSelectedTaskId(id)}
-          />
-        )}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={currentDate.toISOString() + viewMode + ganttZoom}
+            initial={{ opacity: 0, x: navDir === 1 ? 20 : navDir === -1 ? -20 : 0, scale: 0.98 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: navDir === 1 ? -20 : navDir === -1 ? 20 : 0, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
+          >
+            {viewMode === 'gantt' && (
+              <CronogramaGantt 
+                tasks={filteredTasks}
+                projects={projectsData?.projects || []}
+                initiatives={initiativesData?.initiatives || []}
+                sectors={sectorsData || []}
+                dependencies={dependenciesData?.dependencies || []}
+                teamMembers={teamData?.teamMembers || []}
+                onTaskClick={(id) => setSelectedTaskId(id)}
+                ganttZoom={ganttZoom}
+                currentDate={currentDate}
+                level={level as any}
+              />
+            )}
+            {viewMode === 'kanban' && (
+              <CronogramaKanban 
+                tasks={filteredTasks}
+                projects={projectsData?.projects || []}
+                onTaskClick={(id) => setSelectedTaskId(id)}
+                level={level as any}
+                ganttZoom={ganttZoom}
+                currentDate={currentDate}
+              />
+            )}
+            {viewMode === 'list' && (
+              <CronogramaLista 
+                tasks={filteredTasks}
+                projects={projectsData?.projects || []}
+                onTaskClick={(id) => setSelectedTaskId(id)}
+                level={level as any}
+              />
+            )}
+            {viewMode === 'process' && (
+              <CronogramaProcessos 
+                tasks={filteredTasks}
+                projects={projectsData?.projects || []}
+                onTaskClick={(id) => setSelectedTaskId(id)}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
 
       <CreateTaskModal 
         open={selectedTaskId === "new"} 

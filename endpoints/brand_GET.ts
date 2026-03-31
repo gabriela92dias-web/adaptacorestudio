@@ -1,16 +1,14 @@
 import { OutputType } from "./brand_GET.schema";
 import superjson from 'superjson';
-import { supabase } from "../helpers/supabase.js";
+import { db } from "../helpers/db";
 
 export async function handle(request: Request) {
   try {
-    const { data: brand, error } = await supabase
-      .from("brands")
-      .select("*")
+    const brand = await db
+      .selectFrom("brands")
+      .selectAll()
       .limit(1)
-      .maybeSingle();
-
-    if (error) throw new Error(error.message);
+      .executeTakeFirst();
 
     return new Response(superjson.stringify({ brand: brand ?? null } satisfies OutputType));
   } catch (error: unknown) {
