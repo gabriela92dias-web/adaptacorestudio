@@ -5,6 +5,8 @@
     overflow-x: auto;
     padding-bottom: var(--spacing-4);
     min-height: 500px;
+    scroll-snap-type: x mandatory;
+    scroll-padding: var(--spacing-4);
   }
 
   .column {
@@ -15,6 +17,18 @@
     border-radius: var(--radius);
     border: 1px solid var(--border);
     overflow: hidden;
+    scroll-snap-align: start;
+  }
+
+  @media (max-width: 768px) {
+    .board {
+      gap: var(--spacing-2);
+      scroll-padding: var(--spacing-2);
+    }
+    .column {
+      flex: 0 0 88vw;
+      max-width: 320px;
+    }
   }
 
   .columnHeader {

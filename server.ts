@@ -9,6 +9,30 @@ dns.setDefaultResultOrder('ipv4first');
 
 const app = new Hono();
 
+import { supabase } from './helpers/supabase.js';
+
+// ---- SECURE ROUTING: GLOBAL AUTH MIDDLEWARE FOR COREACT ----
+// BLOCK: CRITICO-002 - Impede acesso não autorizado (401) sem token válido
+// PREPARE: ALTO-001 - Injeta dados do usuário no contexto ('user') para Data Tenancy nos endpoints
+app.use('/_api/coreact/*', async (c, next) => {
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader) {
+    return c.json({ error: 'Unauthorized: Missing Authorization header' }, 401);
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+  const { data, error } = await supabase.auth.getUser(token);
+
+  if (error || !data?.user) {
+    return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+  }
+
+  // Injetando o usuário no request para isolamento de tenancy
+  c.set('user', data.user);
+  
+  await next();
+});
+
 app.post('_api/assistant/generate',async c => {
   try {
     const { handle } = await import("./endpoints/assistant/generate_POST.js");

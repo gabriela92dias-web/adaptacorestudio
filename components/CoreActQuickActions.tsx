@@ -56,6 +56,7 @@ import {
 } from "../helpers/schema";
 
 import { CoreActCreateProjectDialog } from "./CoreActCreateProjectDialog";
+import { CoreActCreateInitiativeDialog } from "./CoreActCreateInitiativeDialog";
 import { BatchImportDialog } from "./BatchImportDialog";
 
 import styles from "./CoreActQuickActions.module.css";
@@ -143,7 +144,7 @@ export function CoreActQuickActions() {
       </DropdownMenu>
 
       {/* Controlled Dialogs Rendered Outside Dropdown */}
-      <CreateInitiativeModal open={activeDialog === "initiative"} onOpenChange={(val) => !val && closeDialogs()} />
+      <CoreActCreateInitiativeDialog open={activeDialog === "initiative"} onOpenChange={(val) => !val && closeDialogs()} />
       <CreateTaskModal open={activeDialog === "task"} onOpenChange={(val) => !val && closeDialogs()} />
       <CreateStageModal open={activeDialog === "stage"} onOpenChange={(val) => !val && closeDialogs()} />
       <CoreActCreateProjectDialog open={activeDialog === "project"} onOpenChange={(val) => !val && closeDialogs()} />
@@ -154,81 +155,7 @@ export function CoreActQuickActions() {
 
 // --- Minimal Modals ---
 
-function CreateInitiativeModal({ open, onOpenChange }: { open: boolean; onOpenChange: (val: boolean) => void }) {
-  const createMutation = useCreateInitiative();
-  
-  const form = useForm({
-    schema: initiativeSchema,
-    defaultValues: {
-      name: "",
-      status: "solicitada",
-    },
-  });
 
-  const handleSubmit = async (values: z.infer<typeof initiativeSchema>) => {
-    try {
-      await createMutation.mutateAsync(values as any);
-      toast.success("Iniciativa criada com sucesso!");
-      onOpenChange(false);
-      form.setValues({ name: "", status: "solicitada" });
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Erro ao criar iniciativa");
-    }
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Nova Iniciativa</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className={styles.formContainer}>
-            <FormItem name="name">
-              <FormLabel>Nome da Iniciativa *</FormLabel>
-              <FormControl>
-                <Input
-                  value={form.values.name}
-                  onChange={(e) => form.setValues((prev) => ({ ...prev, name: e.target.value }))}
-                  placeholder="Ex: Expansão Q4"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-
-            <FormItem name="status">
-              <FormLabel>Status</FormLabel>
-              <FormControl>
-                <Select
-                  value={form.values.status}
-                  onValueChange={(val: any) => form.setValues((prev) => ({ ...prev, status: val }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="planning">Planejamento</SelectItem>
-                    <SelectItem value="active">Ativa</SelectItem>
-                    <SelectItem value="completed">Concluída</SelectItem>
-                    <SelectItem value="cancelled">Cancelada</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-
-            <div className={styles.formActions}>
-              <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>
-              <Button type="submit" disabled={createMutation.isPending}>
-                {createMutation.isPending ? "Criando..." : "Criar Iniciativa"}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 export function CreateTaskModal({ open, onOpenChange, defaultDate }: { open: boolean; onOpenChange: (val: boolean) => void; defaultDate?: Date }) {
   const createMutation = useCreateTask();

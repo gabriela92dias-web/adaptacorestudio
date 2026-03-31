@@ -158,13 +158,10 @@ export const AppSidebar = () => {
       icon: Wrench,
       subItems: [
         { label: "Logo Studio", path: "/tools/logo-cores" },
-        { label: "Documentos", path: "/documentos-corporativos" },
-        { label: "Produtos & Embalagens", path: "/tools/produtos" },
-        { label: "Comunicação Visual", disabled: true, badge: { text: "Em breve", variant: "outline" } },
+        { label: "Gerar Doc", path: "/tools/gerar-doc" },
         { label: "Cores", path: "/tools/colors" },
         { label: "Gradientes", path: "/tools/gradients" },
         { label: "Mascotes", path: "/tools/mascots" },
-        { label: "Preview do Insta", disabled: true, badge: { text: "Em breve", variant: "outline" } },
         { label: "Análise Gráfica", path: "/tools/analysis" },
         { label: "Roda Cromática", path: "/tools/color-wheel", badge: { text: "Novo!", variant: "success" } },
       ],
@@ -179,7 +176,7 @@ export const AppSidebar = () => {
           subItems: group.subItems.filter((sub) => {
             if (sub.disabled) return true;
             if (sub.label === "Logo Studio") return hasPermission("tools_logo_studio" as Parameters<typeof hasPermission>[0]);
-            if (sub.label === "Documentos") return hasPermission("tools_documentos" as Parameters<typeof hasPermission>[0]);
+            if (sub.label === "Gerar Doc") return hasPermission("tools_documentos" as Parameters<typeof hasPermission>[0]);
             return true;
           }),
         };

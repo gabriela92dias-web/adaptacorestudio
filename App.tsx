@@ -68,6 +68,7 @@ const Analysis = React.lazy(() => import("./modules/tools/index").then(m => ({ d
 const LogoCores = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.LogoCores })));
 const ColorWheelPage = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.ColorWheelPage })));
 const ProdutosEmbalagens = React.lazy(() => import("./components/brand-studio/produtos-embalagens").then(m => ({ default: m.ProdutosEmbalagens })));
+const GerarDoc = React.lazy(() => import("./pages/documentos-corporativos"));
 
 if (!window.requestIdleCallback) {
   window.requestIdleCallback = (cb) => {
@@ -262,6 +263,7 @@ export function App() {
           <Route path="/tools/analysis" element={<UserRoute><AppLayout><Analysis /></AppLayout></UserRoute>} />
           <Route path="/tools/logo-cores" element={<UserRoute><AppLayout><LogoCores /></AppLayout></UserRoute>} />
           <Route path="/tools/produtos" element={<UserRoute><AppLayout><ProdutosEmbalagens /></AppLayout></UserRoute>} />
+          <Route path="/tools/gerar-doc" element={<UserRoute><AppLayout><GerarDoc /></AppLayout></UserRoute>} />
           <Route path="/tools/color-wheel" element={<UserRoute><AppLayout><ColorWheelPage /></AppLayout></UserRoute>} />
           <Route path="/forgot-password" element={<Page_13 />} />
             <Route path="*" element={<NotFound />} />

@@ -13,7 +13,10 @@ export async function handle(request: Request) {
 
     return new Response(superjson.stringify({ success: true } satisfies OutputType));
   } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : "Unknown error";
-    return new Response(superjson.stringify({ error: msg }), { status: 400 });
+    console.error("Internal Server Error in coreact:", error);
+    return new Response(
+      superjson.stringify({ error: "Ocorreu um erro interno ao processar a requisição." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 }

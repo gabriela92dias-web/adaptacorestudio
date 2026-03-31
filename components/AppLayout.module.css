@@ -30,7 +30,9 @@
 
 .contentWrapper {
   width: 100%;
-  padding: var(--spacing-6);
+  max-width: 1440px; /* Cercadinho do Ultrawide de 34" */
+  margin-inline: auto; /* Centraliza a interface quando passar de 1440px */
+  padding: clamp(var(--spacing-4), 4vw, var(--spacing-8)); /* Fluidez desde celular até desktop */
   display: flex;
   flex-direction: column;
   flex: 1;

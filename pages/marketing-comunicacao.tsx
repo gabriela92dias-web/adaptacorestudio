@@ -3,7 +3,8 @@ import { Helmet } from "react-helmet";
 import {
   BookOpen, Upload, Search, FileText, FileImage,
   Presentation, FileSignature, BookMarked, Download,
-  Eye, Plus, FolderOpen, Lock,
+  Eye, Plus, FolderOpen, Lock, Building2, Megaphone,
+  DollarSign, Scale, Users, LayoutGrid, Briefcase,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../components/Button";
@@ -13,6 +14,7 @@ import { useAdaptiveLevel } from "../helpers/useAdaptiveLevel";
 import styles from "./marketing-comunicacao.module.css";
 
 // ── Tipos ────────────────────────────────────────────────────────────────
+type DocSetor = "todos-setores" | "marketing" | "financeiro" | "administrativo" | "juridico" | "rh" | "comunicacao";
 type DocCategory = "todos" | "contratos" | "apresentacoes" | "cartilhas" | "relatorios" | "outros";
 type DocType = "pdf" | "ppt" | "doc" | "img";
 
@@ -20,6 +22,7 @@ interface LibraryDoc {
   id: number;
   title: string;
   category: DocCategory;
+  setor: DocSetor;
   type: DocType;
   size: string;
   url: string;
@@ -34,14 +37,24 @@ interface LibraryDoc {
 
 // ── Dados iniciais ────────────────────────────────────────────────────────
 const INITIAL_LIBRARY: LibraryDoc[] = [
-  { id: 1, title: "Cartilha de Comunicação Adapta", category: "cartilhas", type: "pdf", size: "2.6 KB", url: "/biblioteca/cartilha_comunicacao_adapta.pdf", description: "Guia de comunicação institucional da marca Adapta.", uploadedBy: "Adapta", uploadedAt: "2026-03-01", fillVariant: 2, patternVariant: 2, tiltDeg: -1, heightFactor: 0.90 },
-  { id: 2, title: "Manual Comunicação v2", category: "cartilhas", type: "pdf", size: "6.8 KB", url: "/biblioteca/comunicacao_adapta_v2_manual.pdf", description: "Manual completo de comunicação corporativa versão 2.", uploadedBy: "Adapta", uploadedAt: "2026-03-01", fillVariant: 0, patternVariant: 0, tiltDeg: 1, heightFactor: 1.0 },
-  { id: 3, title: "Contrato Padrão de Prestação", category: "contratos", type: "doc", size: "890 KB", url: "#", description: "Modelo jurídico revisado para prestação de serviços.", uploadedBy: "Gabriela", uploadedAt: "2026-03-10", fillVariant: 3, patternVariant: 1, tiltDeg: 0, heightFactor: 0.88 },
-  { id: 4, title: "Pitch Deck Q1 2026", category: "apresentacoes", type: "ppt", size: "12.5 MB", url: "#", description: "Apresentação institucional para novos parceiros.", uploadedBy: "Gabriela", uploadedAt: "2026-03-15", fillVariant: 5, patternVariant: 3, tiltDeg: -1.5, heightFactor: 0.95 },
-  { id: 5, title: "Relatório de Marketing Mar/26", category: "relatorios", type: "pdf", size: "2.1 MB", url: "#", description: "Análise de campanhas e métricas do trimestre.", uploadedBy: "Gabriela", uploadedAt: "2026-03-20", fillVariant: 1, patternVariant: 4, tiltDeg: 0.5, heightFactor: 0.82 },
-  { id: 6, title: "NDA — Modelo Padrão", category: "contratos", type: "doc", size: "440 KB", url: "#", description: "Acordo de confidencialidade padrão.", uploadedBy: "Gabriela", uploadedAt: "2026-02-15", fillVariant: 4, patternVariant: 0, tiltDeg: 1.5, heightFactor: 0.76 },
-  { id: 7, title: "Proposta Comercial", category: "apresentacoes", type: "ppt", size: "8.3 MB", url: "#", description: "Template editável para propostas de novos clientes.", uploadedBy: "Gabriela", uploadedAt: "2026-01-20", fillVariant: 2, patternVariant: 2, tiltDeg: -0.5, heightFactor: 0.93 },
-  { id: 8, title: "Relatório Anual 2025", category: "relatorios", type: "pdf", size: "6.8 MB", url: "#", description: "Resultados consolidados do exercício 2025.", uploadedBy: "Gabriela", uploadedAt: "2025-12-30", fillVariant: 1, patternVariant: 1, tiltDeg: 0, heightFactor: 1.0 },
+  { id: 1, title: "Cartilha de Comunicação Adapta", category: "cartilhas", setor: "comunicacao", type: "pdf", size: "2.6 KB", url: "/biblioteca/cartilha_comunicacao_adapta.pdf", description: "Guia de comunicação institucional da marca Adapta.", uploadedBy: "Adapta", uploadedAt: "2026-03-01", fillVariant: 2, patternVariant: 2, tiltDeg: -1, heightFactor: 0.90 },
+  { id: 2, title: "Manual Comunicação v2", category: "cartilhas", setor: "comunicacao", type: "pdf", size: "6.8 KB", url: "/biblioteca/comunicacao_adapta_v2_manual.pdf", description: "Manual completo de comunicação corporativa versão 2.", uploadedBy: "Adapta", uploadedAt: "2026-03-01", fillVariant: 0, patternVariant: 0, tiltDeg: 1, heightFactor: 1.0 },
+  { id: 3, title: "Contrato Padrão de Prestação", category: "contratos", setor: "juridico", type: "doc", size: "890 KB", url: "#", description: "Modelo jurídico revisado para prestação de serviços.", uploadedBy: "Gabriela", uploadedAt: "2026-03-10", fillVariant: 3, patternVariant: 1, tiltDeg: 0, heightFactor: 0.88 },
+  { id: 4, title: "Pitch Deck Q1 2026", category: "apresentacoes", setor: "marketing", type: "ppt", size: "12.5 MB", url: "#", description: "Apresentação institucional para novos parceiros.", uploadedBy: "Gabriela", uploadedAt: "2026-03-15", fillVariant: 5, patternVariant: 3, tiltDeg: -1.5, heightFactor: 0.95 },
+  { id: 5, title: "Relatório de Marketing Mar/26", category: "relatorios", setor: "marketing", type: "pdf", size: "2.1 MB", url: "#", description: "Análise de campanhas e métricas do trimestre.", uploadedBy: "Gabriela", uploadedAt: "2026-03-20", fillVariant: 1, patternVariant: 4, tiltDeg: 0.5, heightFactor: 0.82 },
+  { id: 6, title: "NDA — Modelo Padrão", category: "contratos", setor: "juridico", type: "doc", size: "440 KB", url: "#", description: "Acordo de confidencialidade padrão.", uploadedBy: "Gabriela", uploadedAt: "2026-02-15", fillVariant: 4, patternVariant: 0, tiltDeg: 1.5, heightFactor: 0.76 },
+  { id: 7, title: "Proposta Comercial", category: "apresentacoes", setor: "marketing", type: "ppt", size: "8.3 MB", url: "#", description: "Template editável para propostas de novos clientes.", uploadedBy: "Gabriela", uploadedAt: "2026-01-20", fillVariant: 2, patternVariant: 2, tiltDeg: -0.5, heightFactor: 0.93 },
+  { id: 8, title: "Relatório Anual 2025", category: "relatorios", setor: "administrativo", type: "pdf", size: "6.8 MB", url: "#", description: "Resultados consolidados do exercício 2025.", uploadedBy: "Gabriela", uploadedAt: "2025-12-30", fillVariant: 1, patternVariant: 1, tiltDeg: 0, heightFactor: 1.0 },
+];
+
+const SECTORS: { value: DocSetor; label: string; icon: React.ElementType }[] = [
+  { value: "todos-setores", label: "Todos os Setores", icon: LayoutGrid },
+  { value: "marketing", label: "Marketing", icon: Megaphone },
+  { value: "comunicacao", label: "Comunicação", icon: Building2 },
+  { value: "financeiro", label: "Financeiro", icon: DollarSign },
+  { value: "administrativo", label: "Administrativo", icon: Briefcase },
+  { value: "juridico", label: "Jurídico", icon: Scale },
+  { value: "rh", label: "RH", icon: Users },
 ];
 
 const CATEGORIES: { value: DocCategory; label: string; icon: React.ElementType }[] = [
@@ -196,6 +209,7 @@ export default function MarketingComunicacao() {
   const { ref, level, className: adaptiveClass } = useAdaptiveLevel();
   const { isResponsavel } = usePermissions();
   const [docs, setDocs] = useState<LibraryDoc[]>(INITIAL_LIBRARY);
+  const [activeSetor, setActiveSetor] = useState<DocSetor>("todos-setores");
   const [activeCategory, setActiveCategory] = useState<DocCategory>("todos");
   const [searchQuery, setSearchQuery] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -203,11 +217,12 @@ export default function MarketingComunicacao() {
   const nextId = useRef(docs.length + 1);
 
   const filteredDocs = docs.filter((d) => {
+    const matchesSetor = activeSetor === "todos-setores" || d.setor === activeSetor;
     const matchesCat = activeCategory === "todos" || d.category === activeCategory;
     const matchesSearch =
       d.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCat && matchesSearch;
+    return matchesSetor && matchesCat && matchesSearch;
   });
 
   const addFile = (file: File) => {
@@ -216,7 +231,7 @@ export default function MarketingComunicacao() {
     const id = nextId.current++;
     setDocs((prev) => [...prev, {
       id, title: file.name.replace(/\.[^.]+$/, ""),
-      category: "outros", type,
+      category: "outros", setor: activeSetor === "todos-setores" ? "administrativo" : activeSetor, type,
       size: `${(file.size / 1024).toFixed(0)} KB`,
       url: URL.createObjectURL(file),
       uploadedBy: "Você",
@@ -274,6 +289,25 @@ export default function MarketingComunicacao() {
             style={{ display: "none" }}
             onChange={(e) => { const f = e.target.files?.[0]; if (f) addFile(f); }}
           />
+        </div>
+      </div>
+
+      {/* ── FILTRO POR SETOR ── */}
+      <div className={styles.sectorBar}>
+        <span className={styles.sectorLabel}>Setor</span>
+        <div className={styles.sectorFilters}>
+          {SECTORS.map((s) => {
+            const Icon = s.icon;
+            return (
+              <button
+                key={s.value}
+                className={`${styles.sectorBtn} ${activeSetor === s.value ? styles.sectorBtnActive : ""}`}
+                onClick={() => setActiveSetor(s.value)}
+              >
+                <Icon size={13} />{s.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

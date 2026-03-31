@@ -3,6 +3,12 @@ import { Helmet } from "react-helmet";
 import { usePermissions } from "../helpers/usePermissions";
 import { PermissionWall } from "../components/PermissionWall";
 import { useTasks, useUpdateTaskAction } from "../helpers/useCoreActApi";
+import { useCreateTaskAction } from "../helpers/useCoreactTaskQueries";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../components/Dialog";
+import { Input } from "../components/Input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../components/Select";
+import { Button } from "../components/Button";
+import { toast } from "sonner";
 import styles from "./coreact.acoes.module.css";
 import { Activity, Plus, Check } from "lucide-react";
 
@@ -10,14 +16,21 @@ export default function CoreactAcoes() {
   const { hasPermission } = usePermissions();
   const { data: tasksData, isLoading } = useTasks({ includeActions: true });
   const updateAction = useUpdateTaskAction();
+  const createAction = useCreateTaskAction();
 
   const [localClicksToday, setLocalClicksToday] = useState(0); 
+
+  // Modal states
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newActionTitle, setNewActionTitle] = useState("");
+  const [selectedTaskId, setSelectedTaskId] = useState("");
 
   if (!hasPermission("coreactAcoes")) {
     return <PermissionWall moduleName="Ações" />;
   }
 
-  const tasksWithActions = (tasksData?.tasks || []).filter(t => t.actions && t.actions.length > 0);
+  const allTasks = tasksData?.tasks || [];
+  const tasksWithActions = allTasks.filter(t => t.actions && t.actions.length > 0);
 
   const toggleItem = (actionId: string, currentStatus: string) => {
     const isCompleted = currentStatus === 'completed';
@@ -34,6 +47,25 @@ export default function CoreactAcoes() {
     });
   };
 
+  const handleCreateChecklist = () => {
+    if (!newActionTitle.trim() || !selectedTaskId) {
+      toast.error("Preencha o título e selecione uma tarefa correspondente.");
+      return;
+    }
+    createAction.mutate({
+      taskId: selectedTaskId,
+      title: newActionTitle.trim(),
+    }, {
+      onSuccess: () => {
+        toast.success("Checklist criado com sucesso!");
+        setIsDialogOpen(false);
+        setNewActionTitle("");
+        setSelectedTaskId("");
+      },
+      onError: (err) => toast.error("Erro: " + err.message)
+    });
+  };
+
   // Matrix generation logic (7 days, 10 dots max height per day)
   const MAX_DOTS = 10;
   const days = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
@@ -44,12 +76,14 @@ export default function CoreactAcoes() {
       <Helmet><title>CoreStudio | Ações</title></Helmet>
       <header className={styles.header}>
         <h1 className={styles.title}>Ações & Lembretes</h1>
-        <button style={{
-          display: "flex", alignItems: "center", gap: "0.5rem",
-          padding: "0.75rem 1.5rem", background: "var(--text-primary)", 
-          color: "var(--bg-primary)", borderRadius: "999px",
-          border: "none", fontWeight: 600, fontSize: "0.875rem", cursor: "pointer"
-        }}>
+        <button 
+          onClick={() => setIsDialogOpen(true)}
+          style={{
+           display: "flex", alignItems: "center", gap: "0.5rem",
+           padding: "0.75rem 1.5rem", background: "var(--text-primary)", 
+           color: "var(--bg-primary)", borderRadius: "999px",
+           border: "none", fontWeight: 600, fontSize: "0.875rem", cursor: "pointer"
+          }}>
           <Plus size={16} /> Novo Checklist
         </button>
       </header>
@@ -135,6 +169,38 @@ export default function CoreactAcoes() {
           </div>
         </aside>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Novo Checklist</DialogTitle>
+          </DialogHeader>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1rem" }}>
+            <Input 
+              placeholder="Ex: Revisar documentação" 
+              value={newActionTitle}
+              onChange={(e) => setNewActionTitle(e.target.value)}
+              autoFocus
+            />
+            <Select value={selectedTaskId} onValueChange={setSelectedTaskId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione a tarefa vinculada" />
+              </SelectTrigger>
+              <SelectContent>
+                {allTasks.map(t => (
+                  <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter style={{ marginTop: "1.5rem" }}>
+            <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
+            <Button onClick={handleCreateChecklist} disabled={createAction.isPending}>
+              {createAction.isPending ? "Criando..." : "Criar Checklist"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

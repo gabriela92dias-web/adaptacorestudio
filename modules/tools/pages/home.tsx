@@ -3,7 +3,6 @@ import {
   Wrench, 
   PenTool, 
   FileText, 
-  Package, 
   Image, 
   Palette, 
   Wand2, 
@@ -36,13 +35,7 @@ export function ToolsHome() {
       titleKey: "documentsTitle" as const,
       descKey: "documentsDescription" as const,
       icon: FileText,
-      href: "/tools/documentos",
-    },
-    {
-      titleKey: "productsTitle" as const,
-      descKey: "productsDescription" as const,
-      icon: Package,
-      href: "/tools/produtos",
+      href: "/tools/gerar-doc",
     },
     {
       titleKey: "visualTitle" as const,

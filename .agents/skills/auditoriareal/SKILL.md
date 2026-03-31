@@ -100,6 +100,11 @@ Premissas consideradas:
 - Clareza de rótulos: nomes vagos, duplicados ou ambíguos
 - Coerência entre posição do botão e expectativa do usuário
 
+### O que revisar sobre Integridade de Brand e Alucinações de IA:
+- Identificar distorções graves ou sutis em assets visuais (ex: mascotes com proporções erradas, membros extras, ou formas geométricas inventadas que não existem no `arsenal_materiais`).
+- Caçar textos ou placeholders tipicamente alucinados por IA ("Lorem Ipsum", texto em inglês onde deveria ser português, ou jargões fora do tom de voz da marca).
+- Checar fidelidade de paleta nas imagens geradas (qualquer cor que fuja do Brand Book original ou SVGs fornecidos).
+- Denunciar imediatamente peças gráficas/mockups que pareçam ter violado a Regra Soberana de Fidelidade de Mockup (AESTHETIC_RULES.md).
 ### O que revisar no funcionamento:
 - Clique/tap efetivo
 - Navegação correta acionada

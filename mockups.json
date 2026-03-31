@@ -1,0 +1,261 @@
+{
+  "data": [
+    {
+      "type": "classic",
+      "uuid": "b671b9f5-cfe1-4dc8-b67c-1804ae271bb0",
+      "name": "5413838",
+      "thumbnail": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263318/thumbnail.webp",
+      "smart_objects": [
+        {
+          "uuid": "b87f3fa3-c90f-4a88-b60f-b192129a0f8c",
+          "name": "Place your design here (Double click to edit)",
+          "size": {
+            "width": 1544,
+            "height": 1363
+          },
+          "position": {
+            "top": 2504,
+            "left": 994
+          },
+          "print_area_presets": [
+            {
+              "uuid": "1ee24340-5794-48b5-be9e-109df5e1fda1",
+              "name": "Default",
+              "thumbnails": [],
+              "size": {
+                "width": 1544,
+                "height": 1363
+              },
+              "position": {
+                "top": 0,
+                "left": 0
+              }
+            }
+          ]
+        }
+      ],
+      "text_layers": [],
+      "collections": [],
+      "thumbnails": [
+        {
+          "width": 720,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263318/thumbnails/dc2745773dbf89dbcccc0eb7ffeb2c8d_720.webp"
+        },
+        {
+          "width": 480,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263318/thumbnails/d08be2c96a7c94794b8a6387da750b8b_480.webp"
+        },
+        {
+          "width": 240,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263318/thumbnails/31b0f043e63bca3667533f13fe63167f_240.webp"
+        }
+      ]
+    },
+    {
+      "type": "classic",
+      "uuid": "e433acfd-2522-4329-9d0e-8ad26db74be2",
+      "name": "6568865",
+      "thumbnail": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263313/thumbnail.webp",
+      "smart_objects": [
+        {
+          "uuid": "8a83706a-7cff-4e32-8d69-110a1b1f8a7a",
+          "name": "Place your design here (Double click to edit)",
+          "size": {
+            "width": 4789,
+            "height": 2861
+          },
+          "position": {
+            "top": -1820,
+            "left": -196
+          },
+          "print_area_presets": [
+            {
+              "uuid": "bc7596f6-fbb6-4aac-bf2e-bd1b64eb31a3",
+              "name": "Default",
+              "thumbnails": [],
+              "size": {
+                "width": 4789,
+                "height": 2861
+              },
+              "position": {
+                "top": 0,
+                "left": 0
+              }
+            }
+          ]
+        }
+      ],
+      "text_layers": [],
+      "collections": [],
+      "thumbnails": [
+        {
+          "width": 720,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263313/thumbnails/7be1c6f5e7244c31577e98cb45d830dd_720.webp"
+        },
+        {
+          "width": 480,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263313/thumbnails/ebeead8775e94d0738a750c7d467378f_480.webp"
+        },
+        {
+          "width": 240,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263313/thumbnails/762a289404b9faca72188cf2bf037c97_240.webp"
+        }
+      ]
+    },
+    {
+      "type": "classic",
+      "uuid": "75d73d80-864f-4ffd-98ee-7d798bd3ef3a",
+      "name": "5413838",
+      "thumbnail": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263312/thumbnail.webp",
+      "smart_objects": [
+        {
+          "uuid": "54829c38-67b1-45a1-813f-fa0be474a1bb",
+          "name": "Place your design here (Double click to edit)",
+          "size": {
+            "width": 1544,
+            "height": 1363
+          },
+          "position": {
+            "top": 2504,
+            "left": 994
+          },
+          "print_area_presets": [
+            {
+              "uuid": "dd18bf01-f812-42e2-a7e1-c93d6edb7f7c",
+              "name": "Default",
+              "thumbnails": [],
+              "size": {
+                "width": 1544,
+                "height": 1363
+              },
+              "position": {
+                "top": 0,
+                "left": 0
+              }
+            }
+          ]
+        }
+      ],
+      "text_layers": [],
+      "collections": [],
+      "thumbnails": [
+        {
+          "width": 720,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263312/thumbnails/a50427a15c68328002e4f78f468b1da5_720.webp"
+        },
+        {
+          "width": 480,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263312/thumbnails/8c3116dd5a534783235d85d68751bc11_480.webp"
+        },
+        {
+          "width": 240,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263312/thumbnails/5c56cfe2843c38fb8ccf4d7b9e982d95_240.webp"
+        }
+      ]
+    },
+    {
+      "type": "classic",
+      "uuid": "3cd49952-062e-4a24-9a44-19652ec7806c",
+      "name": "483cb137-9959-4b72-aec7-bb8a0b2be5ff",
+      "thumbnail": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263311/thumbnail.webp",
+      "smart_objects": [
+        {
+          "uuid": "3f348320-2d19-4025-a002-e5dde11ae252",
+          "name": "DESIGN",
+          "size": {
+            "width": 1588,
+            "height": 1466
+          },
+          "position": {
+            "top": 1621,
+            "left": 1093
+          },
+          "print_area_presets": [
+            {
+              "uuid": "c4771dac-deae-493a-8bed-74c6c67cae36",
+              "name": "Default",
+              "thumbnails": [],
+              "size": {
+                "width": 1588,
+                "height": 1466
+              },
+              "position": {
+                "top": 0,
+                "left": 0
+              }
+            }
+          ]
+        }
+      ],
+      "text_layers": [],
+      "collections": [],
+      "thumbnails": [
+        {
+          "width": 720,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263311/thumbnails/34d080c178b73b6b9ebddd0f7a15dddb_720.webp"
+        },
+        {
+          "width": 480,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263311/thumbnails/5c93492209118453bbd98fd8cc1df33e_480.webp"
+        },
+        {
+          "width": 240,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263311/thumbnails/1803dc3756e7f6473f560781e438fb02_240.webp"
+        }
+      ]
+    },
+    {
+      "type": "classic",
+      "uuid": "0afd078a-f0ca-4be5-8ce9-0b668ea8ecf0",
+      "name": "483cb137-9959-4b72-aec7-bb8a0b2be5ff",
+      "thumbnail": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263310/thumbnail.webp",
+      "smart_objects": [
+        {
+          "uuid": "64af7470-4fde-4935-a6ef-66f9d6265540",
+          "name": "DESIGN",
+          "size": {
+            "width": 1588,
+            "height": 1466
+          },
+          "position": {
+            "top": 1621,
+            "left": 1093
+          },
+          "print_area_presets": [
+            {
+              "uuid": "978458db-9500-4c1b-8139-cede77a15019",
+              "name": "Default",
+              "thumbnails": [],
+              "size": {
+                "width": 1588,
+                "height": 1466
+              },
+              "position": {
+                "top": 0,
+                "left": 0
+              }
+            }
+          ]
+        }
+      ],
+      "text_layers": [],
+      "collections": [],
+      "thumbnails": [
+        {
+          "width": 720,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263310/thumbnails/ffbe620a2409ae9fabba538dec3d54e2_720.webp"
+        },
+        {
+          "width": 480,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263310/thumbnails/0dda3e9daddbe12a44f4fe01c8ff1c94_480.webp"
+        },
+        {
+          "width": 240,
+          "url": "https://app-dynamicmockups-production.s3.eu-central-1.amazonaws.com/mockup/263310/thumbnails/9ea9f543da962416169cf5c22e75910f_240.webp"
+        }
+      ]
+    }
+  ],
+  "success": true,
+  "message": ""
+}

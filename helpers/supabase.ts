@@ -1,7 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase REST client - works via HTTPS, no IPv6 issues
-const SUPABASE_URL = 'https://kshybgeyetkkufkmjugz.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzaHliZ2V5ZXRra3Vma21qdWd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjU1OTQsImV4cCI6MjA4OTg0MTU5NH0.bs6pHfjKnPAACxz9fVPR3sGw-2IsjQc4DrrW584wXiY';
+let SUPABASE_URL = '';
+let SUPABASE_ANON_KEY = '';
+
+if (typeof process !== 'undefined' && process.env.VITE_SUPABASE_URL) {
+  SUPABASE_URL = process.env.VITE_SUPABASE_URL;
+  SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || '';
+} else {
+  // @ts-ignore - Necessário para o Vite fazer o replacement estático no build
+  SUPABASE_URL = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_SUPABASE_URL : '';
+  // @ts-ignore
+  SUPABASE_ANON_KEY = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_SUPABASE_ANON_KEY : '';
+}
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

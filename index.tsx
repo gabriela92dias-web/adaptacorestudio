@@ -5,6 +5,27 @@ import {
   HelmetProvider,
 } from "react-helmet-async"
 
+import { supabase } from './helpers/supabase';
+
+// Monkeypatch fetch para injetar tokens em todas as chamadas `_api/coreact/*`.
+const originalFetch = window.fetch;
+window.fetch = async (...args) => {
+  const [resource, config] = args;
+  if (typeof resource === 'string' && resource.startsWith('/_api/coreact/')) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.access_token) {
+      const newConfig = config || {};
+      const newHeaders = new Headers(newConfig.headers || {});
+      if (!newHeaders.has("Authorization")) {
+        newHeaders.set("Authorization", `Bearer ${session.access_token}`);
+      }
+      newConfig.headers = newHeaders;
+      return originalFetch(resource, newConfig);
+    }
+  }
+  return originalFetch(...args);
+};
+
 console.log("🔥 ENTRYPOINT INDEX.TSX STARTING EXECUTION! 🔥");
 
 try {

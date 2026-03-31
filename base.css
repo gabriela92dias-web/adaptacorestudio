@@ -275,6 +275,42 @@
     margin: 0;
   }
 
+  /* --- INÍCIO: Responsividade Extrema (@responsividade_fluida) --- */
+  
+  /* Conforto de leitura: previne que textos ou parágrafos virem linguiças de ponta a ponta nas telas 34" */
+  .text-optimal-length {
+    max-width: 65ch;
+  }
+  
+  /* Sistema de Container Wrapper já aplicado via module, porém esta base global segura o estilo na veia */
+  /* Grids automágicos sem pesadelo de Media Queries */
+  .auto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(1rem, 3vw, 2rem);
+    width: 100%;
+  }
+
+  .auto-grid-large {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: clamp(1.5rem, 3.5vw, 2.5rem);
+    width: 100%;
+  }
+  
+  /* Tipografia Fluida Básica (Fallback) - Se precisar usar em headings massivos */
+  .text-fluid-h1 {
+    font-size: clamp(2rem, 1.5rem + 2.5vw, 4rem);
+    line-height: var(--line-height-tight);
+  }
+  
+  .text-fluid-h2 {
+    font-size: clamp(1.5rem, 1.25rem + 1.5vw, 2.5rem);
+    line-height: var(--line-height-snug);
+  }
+  
+  /* --- FIM: Responsividade Extrema --- */
+
 
   button {
     border: none;

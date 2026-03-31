@@ -17,3 +17,8 @@ Quando for desenvolver uma nova interface, compor um gerador de marketing, ou re
    - Sombras leves e limpas para elevação: `box-shadow: var(--shadow-sm);` ou `var(--shadow-md)`.
 2. O layout a ser desenvolvido deve se concentrar puramente na ergonomia e na estruturação visual através de paddings harmônicos (`gap`, `padding`), fontes elegantes e contraste cru entre branco, cinza e preto.
 3. Se um estado de erro, alerta ou progresso precisar de cor (Ex: Vermelho ou Verde), não use "Glows", use flags sólidos simples em áreas minúsculas e controladas.
+
+## 📸 REGRA DE GERAÇÃO DE MOCKUPS (BRAND FIDELITY):
+Qualquer imagem gerada, mockup vetorial ou fotográfico só está aprovado se não deixar NENHUMA dúvida de que pertence à marca Adapta. 
+- Se a geração apresentar: "alucinações" de novos shapes, modelos incorretos ou distorcidos dos mascotes, cores fora da paleta nativa vetorial ou qualquer inconsistência morfológica, **o mockup deve ser REFEITO imediatamente.**
+- A fidelidade absoluta aos SVGs e PNGs nativos e aprovados na pasta `arsenal_materiais` é inegociável.

@@ -85,6 +85,65 @@
   border: 1px solid var(--border);
 }
 
+/* ── Barra de Setores ── */
+.sectorBar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  background: color-mix(in srgb, var(--primary) 5%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+  border-radius: var(--radius-lg);
+  flex-wrap: wrap;
+}
+
+.sectorLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sectorFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-1-5);
+  flex: 1;
+}
+
+.sectorBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1-5);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  font-family: var(--font-family-body);
+  color: var(--muted-foreground);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 5px var(--spacing-3);
+  cursor: pointer;
+  transition: all 0.16s ease;
+  flex-shrink: 0;
+}
+
+.sectorBtn:hover {
+  color: var(--foreground);
+  border-color: color-mix(in srgb, var(--primary) 60%, transparent);
+  background: color-mix(in srgb, var(--primary) 8%, var(--surface));
+}
+
+.sectorBtnActive {
+  color: var(--primary-foreground);
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
 /* ── Controles ── */
 .controls {
   display: flex;
