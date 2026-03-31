@@ -235,16 +235,30 @@ export default function CoreActOrcamento() {
         </div>
       </section>
 
-      {(!stats || safeStats.itemCount === 0) ? (
+      {(isErrorBudget || isErrorProjects) ? (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
           <div style={{ textAlign: "center", maxWidth: "420px", display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+             <p style={{ color: 'var(--color-destructive)', fontSize: '1rem', fontWeight: 500 }}>
+                Não foi possível carregar os dados financeiros.
+              </p>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+                Verifique sua conexão ou a disponibilidade do banco de dados e tente novamente.
+              </p>
+          </div>
+        </div>
+      ) : (!stats || safeStats.itemCount === 0) ? (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
+          <div style={{ textAlign: "center", maxWidth: "450px", display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
             <div style={{ background: "var(--fill)", padding: "2rem", borderRadius: "50%", marginBottom: "1rem", color: "var(--text-secondary)" }}>
               <DollarSign size={48} strokeWidth={1} />
             </div>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>Módulo Financeiro</h2>
-            <p style={{ color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
-              Nenhum item orçamentário encontrado. O módulo inteligente de Budgeting e Cash Flow está em estruturação para permitir integrações automatizadas.
+            <h2 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>Nenhum item cadastrado</h2>
+            <p style={{ color: "var(--text-secondary)", lineHeight: 1.5, margin: 0, marginBottom: "1rem" }}>
+              Seu planejamento financeiro começa aqui. Adicione receitas, custos previstos e verbas de projetos para acompanhar a saúde financeira de suas iniciativas.
             </p>
+            <Button onClick={() => setIsCreateOpen(true)} size="lg">
+              <Plus size={16} /> Adicionar Primeiro Item
+            </Button>
           </div>
         </div>
       ) : (
@@ -256,7 +270,15 @@ export default function CoreActOrcamento() {
           </div>
           
           <div className={styles.itemsList}>
-            {filteredItems.map(item => {
+            {filteredItems.length === 0 ? (
+              <div style={{ padding: "3rem 1rem", textAlign: "center", color: "var(--text-secondary)", background: "var(--surface)", borderRadius: "var(--radius-md)", border: "1px dashed var(--border)" }}>
+                <Filter size={24} style={{ opacity: 0.5, marginBottom: "0.5rem" }} />
+                <p>Nenhum item do orçamento corresponde ao filtro selecionado.</p>
+                <Button variant="ghost" size="sm" onClick={() => setActiveFilter("all")} style={{ marginTop: "1rem" }}>
+                  Limpar filtro
+                </Button>
+              </div>
+            ) : filteredItems.map(item => {
               const contracted = Number(item.contractedAmount || 0);
               const paid = Number(item.paidAmount || 0);
               const progressPct = contracted > 0 ? (paid / contracted) * 100 : 0;
