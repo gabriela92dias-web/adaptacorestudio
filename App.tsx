@@ -66,7 +66,7 @@ const Gradients = React.lazy(() => import("./modules/tools/index").then(m => ({ 
 const Mascots = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.Mascots })));
 const Analysis = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.Analysis })));
 const LogoCores = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.LogoCores })));
-const CenasMascotes = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.CenasMascotes })));
+const ColorWheelPage = React.lazy(() => import("./modules/tools/index").then(m => ({ default: m.ColorWheelPage })));
 const ProdutosEmbalagens = React.lazy(() => import("./components/brand-studio/produtos-embalagens").then(m => ({ default: m.ProdutosEmbalagens })));
 
 if (!window.requestIdleCallback) {
@@ -258,10 +258,11 @@ export function App() {
           <Route path="/tools/colors" element={<UserRoute><AppLayout><Colors /></AppLayout></UserRoute>} />
           <Route path="/tools/gradients" element={<UserRoute><AppLayout><Gradients /></AppLayout></UserRoute>} />
           <Route path="/tools/mascots" element={<UserRoute><AppLayout><Mascots /></AppLayout></UserRoute>} />
-          <Route path="/tools/cenas-mascotes" element={<UserRoute><AppLayout><CenasMascotes /></AppLayout></UserRoute>} />
+          {/* <Route path="/tools/cenas-mascotes" element={<UserRoute><AppLayout><CenasMascotes /></AppLayout></UserRoute>} /> */}
           <Route path="/tools/analysis" element={<UserRoute><AppLayout><Analysis /></AppLayout></UserRoute>} />
           <Route path="/tools/logo-cores" element={<UserRoute><AppLayout><LogoCores /></AppLayout></UserRoute>} />
           <Route path="/tools/produtos" element={<UserRoute><AppLayout><ProdutosEmbalagens /></AppLayout></UserRoute>} />
+          <Route path="/tools/color-wheel" element={<UserRoute><AppLayout><ColorWheelPage /></AppLayout></UserRoute>} />
           <Route path="/forgot-password" element={<Page_13 />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

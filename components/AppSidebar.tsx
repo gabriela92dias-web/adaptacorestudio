@@ -144,8 +144,13 @@ export const AppSidebar = () => {
       subItems: [
         { label: "Campanhas", path: "/campanhas" },
         { label: "Relatórios", path: "/relatorios" },
-        { label: "Biblioteca Oficial", path: "/marketing-comunicacao" },
       ],
+    },
+    {
+      id: "biblioteca",
+      label: "Biblioteca",
+      icon: BookOpen,
+      path: "/marketing-comunicacao",
     },
     {
       id: "tools",
@@ -159,9 +164,9 @@ export const AppSidebar = () => {
         { label: "Cores", path: "/tools/colors" },
         { label: "Gradientes", path: "/tools/gradients" },
         { label: "Mascotes", path: "/tools/mascots" },
-        { label: "Cenas Conjuntas", path: "/tools/cenas-mascotes", badge: { text: "Novo!", variant: "success" } },
         { label: "Preview do Insta", disabled: true, badge: { text: "Em breve", variant: "outline" } },
         { label: "Análise Gráfica", path: "/tools/analysis" },
+        { label: "Roda Cromática", path: "/tools/color-wheel", badge: { text: "Novo!", variant: "success" } },
       ],
     },
   ];
@@ -185,6 +190,7 @@ export const AppSidebar = () => {
       if (group.id === "coreact") return hasPermission("module_coreact" as Parameters<typeof hasPermission>[0]);
       if (group.id === "brand") return hasPermission("module_brand" as Parameters<typeof hasPermission>[0]);
       if (group.id === "marketing") return hasPermission("module_marketing" as Parameters<typeof hasPermission>[0]);
+      if (group.id === "biblioteca") return hasPermission("module_marketing" as Parameters<typeof hasPermission>[0]);
       if (group.id === "tools") return hasPermission("module_tools" as Parameters<typeof hasPermission>[0]);
       return true;
     });

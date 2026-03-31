@@ -96,8 +96,6 @@ export async function downloadLogoPDFVector(svgElement: SVGElement): Promise<voi
 import { GIFEncoder, quantize, applyPalette } from 'gifenc';
 import React from 'react';
 import { AnimatedLogo } from '../components/brand-studio/animated-logo';
-import { RawSceneCompositor } from '../components/brand-studio/scene-playback';
-import { ScenePreset } from '../components/brand-studio/scene-presets';
 export async function downloadLogoGIF(
   layers: Record<string, { color: string; opacity: number; visible: boolean }>,
   animationType: "A01" | "A02" | "A03" | "A04",
@@ -189,111 +187,6 @@ export async function downloadLogoGIF(
   
   const link = document.createElement('a');
   link.download = `adapta-animated-${animationType}.gif`;
-  link.href = url;
-  link.click();
-  
-  URL.revokeObjectURL(url);
-}
-
-/**
- * Renderiza uma Cena Conjunta frame by frame e exporta como GIF
- */
-export async function downloadSceneGIF(
-  scene: ScenePreset,
-  layers: Record<string, { color: string; opacity: number; visible: boolean }>,
-  transparentBg: boolean = false
-): Promise<void> {
-  const size = 1080; // Resolução recomendada telão
-  const durationFrames = Math.ceil((scene.durationMs / 1000) * 30);
-  const skipFrames = 2; // Rende a 15fps para ser mais leve e rápido de exportar
-  const delayMs = Math.round((1000 / 30) * skipFrames); // Delay original é 30fps
-
-  const gif = GIFEncoder();
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const { renderToStaticMarkup } = await import('react-dom/server');
-
-  // Helper para renderizar SVG na string
-  const renderSvgString = (frame: number) => {
-    return renderToStaticMarkup(
-      React.createElement(RawSceneCompositor, {
-        scene,
-        layers,
-        frameOverride: frame
-      })
-    );
-  };
-
-  // Helper para desenhar SVG no Canvas
-  const renderSvgToCanvas = async (svgString: string): Promise<HTMLCanvasElement> => {
-    return new Promise((resolve, reject) => {
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
-      
-      const img = new window.Image();
-      img.onload = async () => {
-        try {
-          if (!transparentBg) {
-             const bgColors: Record<string, string> = {
-               white: "#FFFFFF",
-               black: "#000000",
-               gray: "#E5E5E5",
-               transparent: "transparent"
-             }
-             ctx.fillStyle = bgColors[scene.background] || "#FFFFFF";
-             ctx.fillRect(0, 0, size, size);
-          } else {
-             ctx.clearRect(0, 0, size, size);
-          }
-          ctx.drawImage(img, 0, 0, size, size);
-          URL.revokeObjectURL(img.src);
-          resolve(canvas);
-        } catch (err) {
-          URL.revokeObjectURL(img.src);
-          reject(err);
-        }
-      };
-      img.onerror = () => {
-        URL.revokeObjectURL(img.src);
-        reject(new Error("Failed to load SVG"));
-      };
-      
-      const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-      img.src = URL.createObjectURL(blob);
-    });
-  };
-
-  for (let i = 0; i < durationFrames; i += skipFrames) {
-    const svgString = renderSvgString(i);
-    const canvas = await renderSvgToCanvas(svgString);
-    const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
-    const imageData = ctx.getImageData(0, 0, size, size);
-    
-    // Se a cena for complexa e com cores diferentes a cada frame isso pode pesar muito.
-    // Mas 15fps e 4-6 segundos costuma ir bem.
-    const format = transparentBg ? "rgba4444" : "rgb565";
-    const palette = quantize(imageData.data, 256, { format });
-    const index = applyPalette(imageData.data, palette, format);
-    
-    gif.writeFrame(index, size, size, {
-      palette,
-      delay: delayMs,
-      transparent: transparentBg,
-      transparentIndex: 0,
-      dispose: 2
-    });
-  }
-
-  gif.finish();
-  const buffer = gif.bytes();
-  const blob = new Blob([buffer], { type: "image/gif" });
-  const url = URL.createObjectURL(blob);
-  
-  const link = document.createElement('a');
-  link.download = `adapta-scene-${scene.id}.gif`;
   link.href = url;
   link.click();
   
