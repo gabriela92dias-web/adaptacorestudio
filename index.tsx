@@ -7,17 +7,6 @@ import {
 
 import { supabase } from './helpers/supabase';
 
-// Recarregar a página caso haja erro de chunk falho ao buscar o módulo dinâmico após um novo deploy no Render.
-window.addEventListener('vite:preloadError', () => {
-  window.location.reload();
-});
-window.addEventListener('error', (e) => {
-  if (e.message && e.message.includes('Failed to fetch dynamically imported module')) {
-    e.preventDefault();
-    window.location.reload();
-  }
-});
-
 // Monkeypatch fetch para injetar tokens em todas as chamadas `_api/coreact/*`.
 const originalFetch = window.fetch;
 window.fetch = async (...args) => {
