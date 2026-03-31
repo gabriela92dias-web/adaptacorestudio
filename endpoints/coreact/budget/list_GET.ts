@@ -1,23 +1,7 @@
 import { schema, OutputType } from "./list_GET.schema";
 import superjson from 'superjson';
+import { camelizeKeys } from "../../../helpers/dataUtils.js";
 import { supabase } from "../../../helpers/supabase.js";
-
-function camelizeKeys(obj: any): any {
-  if (Array.isArray(obj)) {
-    return obj.map(v => camelizeKeys(v));
-  } else if (obj !== null && obj.constructor === Object) {
-    return Object.keys(obj).reduce((result, key) => {
-      const camelKey = key.replace(/([-_][a-z])/ig, ($1) => {
-        return $1.toUpperCase()
-          .replace('-', '')
-          .replace('_', '');
-      });
-      result[camelKey] = camelizeKeys(obj[key]);
-      return result;
-    }, {} as any);
-  }
-  return obj;
-}
 
 export async function handle(request: Request) {
   try {
@@ -52,7 +36,10 @@ export async function handle(request: Request) {
 
     return new Response(superjson.stringify({ budgetItems } satisfies OutputType));
   } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : "Unknown error";
-    return new Response(superjson.stringify({ error: msg }), { status: 400 });
+    console.error("Internal Server Error in coreact:", error);
+    return new Response(
+      superjson.stringify({ error: "Ocorreu um erro interno ao processar a requisição." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 }

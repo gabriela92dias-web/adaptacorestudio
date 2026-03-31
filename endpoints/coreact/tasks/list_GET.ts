@@ -1,23 +1,7 @@
 import { schema, OutputType } from "./list_GET.schema";
 import superjson from 'superjson';
+import { camelizeKeys } from "../../../helpers/dataUtils.js";
 import { supabase } from "../../../helpers/supabase.js";
-
-function camelizeKeys(obj: any): any {
-  if (Array.isArray(obj)) {
-    return obj.map(v => camelizeKeys(v));
-  } else if (obj !== null && obj.constructor === Object) {
-    return Object.keys(obj).reduce((result, key) => {
-      const camelKey = key.replace(/([-_][a-z])/ig, ($1) => {
-        return $1.toUpperCase()
-          .replace('-', '')
-          .replace('_', '');
-      });
-      result[camelKey] = camelizeKeys(obj[key]);
-      return result;
-    }, {} as any);
-  }
-  return obj;
-}
 
 export async function handle(request: Request) {
   try {
