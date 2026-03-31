@@ -1,51 +1,47 @@
 import { schema, OutputType } from "./create_POST.schema";
 import superjson from 'superjson';
-import { db } from "../../../helpers/db";
+import { supabase } from "../../../helpers/supabase.js";
 import { nanoid } from "nanoid";
-import { logActivity } from "../../../helpers/activityLogger";
 
 export async function handle(request: Request) {
   try {
     const json = superjson.parse(await request.text());
     const input = schema.parse(json);
 
-    // Auto-approve if no solicitante or solicitante is the same as responsible
     const resolvedStatus =
       !input.solicitanteId || input.solicitanteId === input.responsibleId
         ? "aprovada"
         : "solicitada";
 
-    const newInitiative = await db.insertInto("initiatives")
-      .values({
+    const { data: newInitiative, error } = await supabase
+      .from("initiatives")
+      .insert({
         id: nanoid(),
         name: input.name,
         description: input.description ?? null,
-        responsibleId: input.responsibleId ?? null,
-        sectorId: input.sectorId ?? null,
-        assignedTeamId: input.assignedTeamId ?? null,
-        solicitanteId: input.solicitanteId ?? null,
+        responsible_id: input.responsibleId ?? null,
+        sector_id: input.sectorId ?? null,
+        assigned_team_id: input.assignedTeamId ?? null,
+        solicitante_id: input.solicitanteId ?? null,
         type: input.type ?? null,
         context: input.context ?? null,
         status: resolvedStatus,
-        startDate: input.startDate ?? null,
-        endDate: input.endDate ?? null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        start_date: input.startDate ?? null,
+        end_date: input.endDate ?? null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       })
-      .returningAll()
-      .executeTakeFirstOrThrow();
+      .select()
+      .single();
 
-    await logActivity({
-      action: "created",
-      entityId: newInitiative.id,
-      entityType: "initiative",
-      performedBy: input.responsibleId,
-      newValue: newInitiative.name,
-    });
+    if (error) throw new Error(error.message);
 
     return new Response(superjson.stringify({ initiative: newInitiative } satisfies OutputType));
   } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : "Unknown error";
-    return new Response(superjson.stringify({ error: msg }), { status: 400 });
+    console.error("Internal Server Error in coreact/initiatives/create:", error);
+    return new Response(
+      superjson.stringify({ error: "Ocorreu um erro interno ao processar a requisição." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 }

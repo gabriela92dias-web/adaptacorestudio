@@ -131,7 +131,9 @@ export default function CoreActIniciativas() {
 
           {error ? (
             <div className={styles.emptyState}>
-              <p style={{ color: 'red' }}>Error: {(error as Error).message}</p>
+              <p style={{ color: 'var(--color-muted-foreground)', fontSize: '0.9rem' }}>
+                Não foi possível carregar as iniciativas. Verifique sua conexão e tente novamente.
+              </p>
             </div>
           ) : isLoading ? (
             <div className={styles.listSkeleton}>
@@ -177,7 +179,7 @@ export default function CoreActIniciativas() {
                                   {initiative.type}
                                 </Badge>
                               )}
-                              <Badge variant={statusMap[initiative.status as string]?.variant || "default"} className={styles.listItemBadge}>
+                              <Badge variant={statusMap[initiative.status as string]?.variant || "secondary"} className={styles.listItemBadge}>
                                 {statusMap[initiative.status as string]?.label || initiative.status}
                               </Badge>
                             </div>
