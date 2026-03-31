@@ -30,10 +30,7 @@
 
 .contentWrapper {
   width: 100%;
-  /* max-width só entra em telas ultrawide >1440px, notebook não chega nisso */
-  max-width: 1600px;
-  margin-inline: auto;
-  padding: var(--spacing-6) var(--spacing-6); /* padding fixo simples, sem clamp duplo */
+  padding: var(--spacing-6);
   display: flex;
   flex-direction: column;
   flex: 1;
