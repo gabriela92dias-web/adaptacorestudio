@@ -1,1 +1,0 @@
-Error loading endpoint code Cannot find module '/opt/render/project/helpers/supabase.js' imported from /opt/render/project/src/helpers/db.tsx
