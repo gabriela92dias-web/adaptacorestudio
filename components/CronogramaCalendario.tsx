@@ -9,10 +9,10 @@ interface ViewProps {
   tasks: TaskWithDetails[];
   projects: { id: string; name: string }[];
   onTaskClick: (taskId: string) => void;
-  calendarMode?: "year" | "month" | "week";
+  calendarMode?: "year" | "month" | "week" | "day";
   currentDate: Date;
   onDateChange?: (date: Date) => void;
-  onModeChange?: (mode: "year" | "month" | "week") => void;
+  onModeChange?: (mode: "year" | "month" | "week" | "day") => void;
   onDayClick?: (date: Date) => void;
   onTaskUpdate?: (taskId: string, updates: Partial<TaskWithDetails>) => void;
 }
@@ -207,6 +207,8 @@ export const CronogramaCalendario = ({
         current = addDays(current, 1);
       }
       return days;
+    } else if (calendarMode === "day") {
+      return [currentDate];
     }
     return [currentDate];
   }, [currentDate, calendarMode]);
@@ -222,9 +224,9 @@ export const CronogramaCalendario = ({
 
   const monthTasks = useMemo(() => calendarMode === "month" ? tasks : [], [tasks, calendarMode]);
 
-  const weekMultiTasks = useMemo(() => calendarMode === "week" ? tasks.filter((t) => isMultiDay(t)) : [], [tasks, calendarMode]);
-  const weekMultiSpanning = useMemo(() => calendarMode === "week" && gridDates.length === 7 ? getSpanningTasks(weekMultiTasks, gridDates) : [], [weekMultiTasks, gridDates, calendarMode]);
-  const weekSingleTasks = useMemo(() => calendarMode === "week" ? tasks.filter((t) => !isMultiDay(t)) : [], [tasks, calendarMode]);
+  const weekMultiTasks = useMemo(() => (calendarMode === "week" || calendarMode === "day") ? tasks.filter((t) => isMultiDay(t)) : [], [tasks, calendarMode]);
+  const weekMultiSpanning = useMemo(() => (calendarMode === "week" && gridDates.length === 7) || (calendarMode === "day" && gridDates.length === 1) ? getSpanningTasks(weekMultiTasks, gridDates) : [], [weekMultiTasks, gridDates, calendarMode]);
+  const weekSingleTasks = useMemo(() => (calendarMode === "week" || calendarMode === "day") ? tasks.filter((t) => !isMultiDay(t)) : [], [tasks, calendarMode]);
 
   return (
     <div className={styles.container}>
@@ -413,9 +415,9 @@ export const CronogramaCalendario = ({
           </div>
         )}
 
-        {calendarMode === "week" && (
+        {(calendarMode === "week" || calendarMode === "day") && (
           <div className={styles.weekContainer}>
-            <div className={styles.weekGridHeader}>
+            <div className={styles.weekGridHeader} style={calendarMode === "day" ? { gridTemplateColumns: 'minmax(0, 1fr)' } : undefined}>
               {gridDates.map((d, i) => (
                 <div key={i} className={`${styles.weekDayHeader} ${isSameDay(d, new Date()) ? styles.today : ""}`} onClick={() => onDayClick?.(d)} style={{ cursor: onDayClick ? "pointer" : "default" }}>
                   <div className={styles.dayName}>{weekDayFormatter.format(d)}</div>
@@ -425,8 +427,8 @@ export const CronogramaCalendario = ({
             </div>
             
             {weekMultiSpanning.length > 0 && (
-              <div className={styles.weekMultiDayGrid}>
-                <div className={styles.weekMultiDayBg}>
+              <div className={styles.weekMultiDayGrid} style={calendarMode === "day" ? { gridTemplateColumns: 'minmax(0, 1fr)' } : undefined}>
+                <div className={styles.weekMultiDayBg} style={calendarMode === "day" ? { gridTemplateColumns: 'minmax(0, 1fr)' } : undefined}>
                   {gridDates.map((_, i) => <div key={i} className={styles.multiDayCol} />)}
                 </div>
                 <div className={styles.weekMultiDayTasks}>
@@ -449,7 +451,7 @@ export const CronogramaCalendario = ({
               </div>
             )}
 
-            <div className={styles.weekDaysGrid}>
+            <div className={styles.weekDaysGrid} style={calendarMode === "day" ? { gridTemplateColumns: 'minmax(0, 1fr)' } : undefined}>
               {gridDates.map((d, i) => {
                 const dayTasks = weekSingleTasks.filter(t => isTaskOnDay(t, d));
                 return (

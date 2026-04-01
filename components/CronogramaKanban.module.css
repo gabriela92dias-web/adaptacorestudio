@@ -92,7 +92,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: var(--spacing-3);
-    cursor: pointer;
+    cursor: grab;
     transition:
       border-color var(--animation-duration-fast),
       transform var(--animation-duration-fast);
@@ -100,6 +100,10 @@
     flex-direction: column;
     gap: var(--spacing-2);
     box-shadow: var(--shadow);
+  }
+
+  .card:active {
+    cursor: grabbing;
   }
 
   .card:hover {
@@ -115,6 +119,7 @@
   .cardDragging {
     opacity: 0.5;
     border-style: dashed;
+    cursor: grabbing !important;
   }
 
   .cardHeader {

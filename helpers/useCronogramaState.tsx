@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 
-export type ViewMode = "gantt" | "kanban" | "list" | "process";
+export type ViewMode = "gantt" | "kanban" | "list" | "process" | "calendar";
 export type GanttZoom = "ano" | "semestre" | "trimestre" | "mes" | "quinzena1" | "quinzena2" | "semana" | "dia";
 export type CalendarMode = "year" | "month" | "week";
 
@@ -59,7 +59,7 @@ export function useCronogramaState() {
   const shiftDate = useCallback((dir: 1 | -1) => {
     setCurrentDate((prev) => {
       const d = new Date(prev);
-      if (viewMode === "gantt") {
+      if (viewMode === "gantt" || viewMode === "calendar") {
         if (ganttZoom === "ano") d.setFullYear(d.getFullYear() + dir);
         else if (ganttZoom === "semestre") d.setMonth(d.getMonth() + dir * 6);
         else if (ganttZoom === "trimestre") d.setMonth(d.getMonth() + dir * 3);
@@ -102,7 +102,7 @@ export function useCronogramaState() {
   }, [filters]);
 
   const toolbarTitle = useMemo(() => {
-    if (viewMode === "gantt") {
+    if (viewMode === "gantt" || viewMode === "calendar") {
       let startDate = new Date(currentDate);
       startDate.setHours(0, 0, 0, 0);
 
@@ -146,7 +146,7 @@ export function useCronogramaState() {
   }, [viewMode, currentDate, calendarMode, ganttZoom]);
 
   const toolbarTitleShort = useMemo(() => {
-    if (viewMode === "gantt" && ganttZoom === "semana") {
+    if ((viewMode === "gantt" || viewMode === "calendar") && ganttZoom === "semana") {
       const start = new Date(currentDate);
       const day = start.getDay();
       const diff = start.getDate() - day + (day === 0 ? -6 : 1);

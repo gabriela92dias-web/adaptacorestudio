@@ -372,30 +372,43 @@ opacity: 0.7;
 margin-right: 4px;
 }
 
-.taskBarContainer::before,
-.taskBarContainer::after {
-  content: '';
+.resizeHandle {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 6px;
-  z-index: 2;
-  cursor: col-resize;
-  background: transparent;
-  transition: background-color var(--animation-duration-fast) ease;
+  width: 14px;
+  cursor: ew-resize;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--animation-duration-fast) ease, background-color var(--animation-duration-fast) ease;
 }
 
-.taskBarContainer::before {
-  left: 0;
+.taskBarContainer:hover .resizeHandle,
+.taskBarContainer.dragging .resizeHandle {
+  opacity: 1;
 }
 
-.taskBarContainer::after {
-  right: 0;
+.resizeHandle:hover {
+  background-color: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
-.taskBarContainer:hover::before,
-.taskBarContainer:hover::after {
-  background-color: color-mix(in srgb, var(--foreground) 20%, transparent);
+.resizeHandleLeft {
+  left: -2px;
+}
+
+.resizeHandleRight {
+  right: -2px;
+}
+
+.resizeHandleLine {
+  width: 4px;
+  height: 40%;
+  background-color: var(--primary);
+  border-radius: 4px;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
 }
 
 .taskBarContainer:hover .taskBarBg {

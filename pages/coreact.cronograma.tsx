@@ -16,6 +16,7 @@ import { useGoogleTranslate } from "../helpers/useTranslation";
 import { useSwipeNavigation } from "../helpers/useSwipeNavigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { CronogramaGantt } from "../components/CronogramaGantt";
+import { CronogramaCalendario } from "../components/CronogramaCalendario";
 import { CronogramaKanban } from "../components/CronogramaKanban";
 import { CronogramaLista } from "../components/CronogramaLista";
 import { CronogramaProcessos } from "../components/CronogramaProcessos";
@@ -85,6 +86,7 @@ export default function CoreActCronograma() {
 
   const viewModes = [
     { id: 'gantt', label: 'Cronograma / Gráficos', icon: Layout },
+    { id: 'calendar', label: 'Calendário / Agenda', icon: CalendarIcon },
     { id: 'kanban', label: 'Kanban', icon: Columns },
     { id: 'list', label: 'Lista', icon: LayoutList },
     { id: 'process', label: 'Timeline', icon: GitCommit },
@@ -94,7 +96,7 @@ export default function CoreActCronograma() {
     setViewMode(id as any);
   };
 
-  const needsDateNav = viewMode === "gantt" || viewMode === "kanban";
+  const needsDateNav = viewMode === "gantt" || viewMode === "kanban" || viewMode === "calendar";
 
   const swipeNavRef = useSwipeNavigation(
     (dir) => {
@@ -160,27 +162,44 @@ export default function CoreActCronograma() {
         </div>
 
         <div className={styles.toolbarRight}>
-          {(viewMode === 'gantt' || viewMode === 'kanban') && (
+          {(viewMode === 'gantt' || viewMode === 'kanban' || viewMode === 'calendar') && (
             <>
               <div className={styles.zoomPills}>
-                {[
-                  { id: 'ano', label: locale === 'en' ? 'Year' : 'Ano', short: 'A' },
-                  { id: 'semestre', label: locale === 'en' ? 'Half' : 'Sem.', short: 'S' },
-                  { id: 'trimestre', label: locale === 'en' ? 'Qtr.' : 'Tri.', short: 'T' },
-                  { id: 'mes', label: locale === 'en' ? 'Month' : 'Mês', short: 'M' },
-                  { id: 'semana', label: locale === 'en' ? 'Wk.' : 'Sem.', short: 'W' },
-                  { id: 'dia', label: locale === 'en' ? 'Day' : 'Dia', short: 'D' }
-                ].map(zoom => (
-                  <button
-                    key={zoom.id}
-                    className={`${styles.zoomPill} ${zoom.id === ganttZoom ? styles.zoomPillActive : ''} notranslate`}
-                    onClick={() => setGanttZoom(zoom.id as any)}
-                    title={zoom.label}
-                    style={{ textTransform: 'capitalize' }}
-                  >
-                    {zoom.label}
-                  </button>
-                ))}
+                {viewMode === 'gantt' || viewMode === 'kanban' ? (
+                  [
+                    { id: 'ano', label: locale === 'en' ? 'Year' : 'Ano', short: 'A' },
+                    { id: 'semestre', label: locale === 'en' ? 'Half' : 'Sem.', short: 'S' },
+                    { id: 'trimestre', label: locale === 'en' ? 'Qtr.' : 'Tri.', short: 'T' },
+                    { id: 'mes', label: locale === 'en' ? 'Month' : 'Mês', short: 'M' },
+                    { id: 'semana', label: locale === 'en' ? 'Wk.' : 'Sem.', short: 'W' }
+                  ].map(zoom => (
+                    <button
+                      key={zoom.id}
+                      className={`${styles.zoomPill} ${zoom.id === ganttZoom ? styles.zoomPillActive : ''} notranslate`}
+                      onClick={() => setGanttZoom(zoom.id as any)}
+                      title={zoom.label}
+                      style={{ textTransform: 'capitalize' }}
+                    >
+                      {zoom.label}
+                    </button>
+                  ))
+                ) : (
+                  [
+                    { id: 'mes', label: locale === 'en' ? 'Month' : 'Mensal', short: 'M' },
+                    { id: 'semana', label: locale === 'en' ? 'Week' : 'Semanal', short: 'S' },
+                    { id: 'dia', label: locale === 'en' ? 'Day' : 'Diário', short: 'D' }
+                  ].map(zoom => (
+                    <button
+                      key={zoom.id}
+                      className={`${styles.zoomPill} ${zoom.id === ganttZoom ? styles.zoomPillActive : ''} notranslate`}
+                      onClick={() => setGanttZoom(zoom.id as any)}
+                      title={zoom.label}
+                      style={{ textTransform: 'capitalize' }}
+                    >
+                      {zoom.label}
+                    </button>
+                  ))
+                )}
               </div>
               
               <button 
@@ -315,6 +334,24 @@ export default function CoreActCronograma() {
                 ganttZoom={ganttZoom}
                 currentDate={currentDate}
                 level={level as any}
+              />
+            )}
+            {viewMode === 'calendar' && (
+              <CronogramaCalendario 
+                tasks={filteredTasks}
+                projects={projectsData?.projects || []}
+                onTaskClick={(id) => setSelectedTaskId(id)}
+                calendarMode={ganttZoom === 'mes' ? 'month' : ganttZoom === 'semana' ? 'week' : 'day' as any}
+                currentDate={currentDate}
+                onDateChange={setCurrentDate}
+                onModeChange={(mode) => setGanttZoom(mode === 'month' ? 'mes' : mode === 'week' ? 'semana' : 'dia')}
+                onDayClick={(date) => {
+                  setCurrentDate(date);
+                  setGanttZoom('dia');
+                }}
+                onTaskUpdate={(taskId, updates) => {
+                  updateTaskMutation.mutate({ id: taskId, ...updates });
+                }}
               />
             )}
             {viewMode === 'kanban' && (

@@ -15,6 +15,7 @@ import {
   Play,
   CheckCircle2,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import styles from "./CronogramaGantt.module.css";
 
 export type GanttViewMode = "ano" | "semestre" | "trimestre" | "mes" | "quinzena1" | "quinzena2" | "semana" | "dia";
@@ -97,24 +98,28 @@ export function CronogramaGantt({
   const latestGanttDataRef = useRef<any>(null);
   const latestZoomRef = useRef(ganttZoom);
 
-  const handleTaskMouseDown = (e: React.MouseEvent, taskId: string, left: number, width: number) => {
-        if (e.button !== undefined && e.button !== 0) return; // Only process left click if it's a mouse event
+  const handleTaskMouseDown = (e: React.MouseEvent | React.TouchEvent, taskId: string, left: number, width: number, forceAction?: "move" | "resize-left" | "resize-right") => {
+        if ('button' in e && e.button !== undefined && e.button !== 0) return; // Only process left click if it's a mouse event
 
     e.stopPropagation();
     if (e.cancelable) e.preventDefault();
-
-    document.body.style.userSelect = "none"; // CRITICAL: Prevent all text selection during task dragging
 
     dragHasMovedRef.current = false;
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const clientX = ('touches' in e) ? (e as any).touches[0].clientX : (e as React.MouseEvent).clientX;
     const x = clientX - rect.left;
 
-    let action: "move" | "resize-left" | "resize-right" = "move";
-    const gripThreshold = Math.min(8, rect.width * 0.25);
+    let action: "move" | "resize-left" | "resize-right" = forceAction || "move";
     
-    if (x < gripThreshold) action = "resize-left";
-    else if (x > rect.width - gripThreshold) action = "resize-right";
+    // Fallback detection if clicked exactly on edges without handles
+    if (!forceAction) {
+      const gripThreshold = Math.min(8, rect.width * 0.25);
+      if (x < gripThreshold) action = "resize-left";
+      else if (x > rect.width - gripThreshold) action = "resize-right";
+    }
+
+    document.body.style.userSelect = "none"; // CRITICAL: Prevent all text selection during task dragging
+    document.body.style.cursor = action === "move" ? "grabbing" : "ew-resize";
 
     dragRef.current = {
       taskId,
@@ -714,6 +719,7 @@ export function CronogramaGantt({
         dragRef.current = null;
         setIsDragging(false);
         document.body.style.userSelect = ""; // Restore text selection
+        document.body.style.cursor = ""; // Restore cursor
       }
       }
     };
@@ -844,48 +850,6 @@ export function CronogramaGantt({
     };
   }, []);
 
-  // Set up Pan/Drag logic for the Time background
-  const [isPanning, setIsPanning] = useState(false);
-  const handleWrapperMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return;
-    setIsPanning(true);
-    panStart.current = {
-      x: e.clientX,
-      y: e.clientY,
-    };
-    document.body.style.userSelect = "none";
-  };
-
-  useEffect(() => {
-    const handlePanMove = (e: MouseEvent) => {
-      if (!isPanning || !timelineWrapperRef.current) return;
-      
-      const dx = e.clientX - panStart.current.x;
-      const dy = e.clientY - panStart.current.y;
-      
-      timelineWrapperRef.current.scrollLeft -= dx;
-      timelineWrapperRef.current.scrollTop -= dy;
-      
-      panStart.current = { x: e.clientX, y: e.clientY };
-    };
-
-    const handlePanUp = () => {
-      if (isPanning) {
-        setIsPanning(false);
-        document.body.style.userSelect = "";
-      }
-    };
-
-    if (isPanning) {
-      window.addEventListener("mousemove", handlePanMove);
-      window.addEventListener("mouseup", handlePanUp);
-    }
-    return () => {
-      window.removeEventListener("mousemove", handlePanMove);
-      window.removeEventListener("mouseup", handlePanUp);
-    };
-  }, [isPanning]);
-
   const todayT = new Date().getTime();
   const todayLeft = ganttData.dateToPercent(todayT);
   const isDraggingGlobal = isDragging;
@@ -923,11 +887,18 @@ export function CronogramaGantt({
         {/* Timeline */}
         <div
           ref={timelineWrapperRef}
-          className={`${styles.ganttTimelineWrapper} ${styles.grab} ${isPanning ? styles.panning : ""}`}
-          onMouseDown={handleWrapperMouseDown}
-          style={{ cursor: isPanning ? 'grabbing' : 'grab', overflow: 'auto' }}
+          className={`${styles.ganttTimelineWrapper} ${styles.grab}`}
+          style={{ overflowX: 'hidden', overflowY: 'hidden', touchAction: 'none' }}
         >
-          <div ref={timelineContentRef} className={styles.ganttTimelineContent} style={{ width: `${calculatedTimelineWidth}px`, minWidth: '100%' }}>
+          <motion.div
+            ref={timelineContentRef as any}
+            className={styles.ganttTimelineContent}
+            style={{ width: `${calculatedTimelineWidth}px`, minWidth: '100%', cursor: isDraggingGlobal ? 'grabbing' : 'grab' }}
+            drag="x"
+            dragConstraints={{ left: -Math.max(0, calculatedTimelineWidth - containerWidth), right: 0 }}
+            dragElastic={0.1}
+            whileDrag={{ cursor: "grabbing" }}
+          >
             <div className={styles.ganttTimelineHeader}>
               <div className={styles.columnsRow}>
                   {ganttData.columns.map((c, i) => {
@@ -1084,7 +1055,7 @@ export function CronogramaGantt({
                         data-task-id={task.id}
                         data-dragging={isDraggingThis ? "true" : "false"}
                         className={`${styles.taskBarContainer} ${isDraggingThis ? styles.dragging : ""}`}
-                        style={{ left: `${displayLeft}%`, width: `${displayWidth}%` }}
+                        style={{ left: `${displayLeft}%`, width: `${displayWidth}%`, touchAction: "none" }}
                         onClick={(e) => {
                           if (dragHasMovedRef.current) {
                             if (e.cancelable) e.preventDefault();
@@ -1093,9 +1064,19 @@ export function CronogramaGantt({
                           }
                           onTaskClick(task.id);
                         }}
+                        onPointerDown={(e) => { e.stopPropagation(); }}
                         onMouseDown={(e) => handleTaskMouseDown(e, task.id, displayLeft, displayWidth)}
                         onTouchStart={(e) => handleTaskMouseDown(e as any, task.id, displayLeft, displayWidth)}
                       >
+                        {/* Left Resize Handle */}
+                        <div 
+                          className={`${styles.resizeHandle} ${styles.resizeHandleLeft}`}
+                          onMouseDown={(e) => handleTaskMouseDown(e, task.id, displayLeft, displayWidth, "resize-left")}
+                          onTouchStart={(e) => handleTaskMouseDown(e as any, task.id, displayLeft, displayWidth, "resize-left")}
+                        >
+                          <div className={styles.resizeHandleLine} />
+                        </div>
+
                         <div data-drag-feedback className={styles.dragFeedbackLabel}></div>
                         <div
                           className={`${styles.taskBarBg} ${styles[`priority-${task.priority || "medium"}`]}`}
@@ -1117,6 +1098,15 @@ export function CronogramaGantt({
                               {task.name} {task.progress ? `(${task.progress}%)` : ""}
                             </span>
                           </div>
+                        </div>
+
+                        {/* Right Resize Handle */}
+                        <div 
+                          className={`${styles.resizeHandle} ${styles.resizeHandleRight}`}
+                          onMouseDown={(e) => handleTaskMouseDown(e, task.id, displayLeft, displayWidth, "resize-right")}
+                          onTouchStart={(e) => handleTaskMouseDown(e as any, task.id, displayLeft, displayWidth, "resize-right")}
+                        >
+                          <div className={styles.resizeHandleLine} />
                         </div>
 
                         {/* Tooltip */}
@@ -1148,7 +1138,7 @@ export function CronogramaGantt({
                 })}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
