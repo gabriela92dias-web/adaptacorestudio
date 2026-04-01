@@ -1,25 +1,24 @@
-# PROTOCOLO OBRIGATÓRIO — ATIVO EM CADA MENSAGEM
+# BACKEND CORE RULES
 
-Antes de qualquer ação, leia e aplique a skill em:
-`.agents/skills/interpretacao_de_comandos/SKILL.md`
+As an AI Agent working on this project (`plataforma-teste-login`), you MUST obey the following strict rules to prevent production outages and regressions involving the database and Supabase.
 
-Resumo do protocolo:
-1. Liste APENAS o que foi pedido explicitamente (Passo 1 da skill)
-2. Classifique o tipo de pedido (Passo 2)
-3. Verifique o escopo — "simples" = mínimo, alvo específico = só aquele arquivo (Passo 3)
-4. Nada que não foi pedido é executado. Extras são sugeridos, nunca executados (Passo 4)
-5. Em caso de dúvida, pergunte antes de agir (Passo 5)
+1. **DO NOT REMOVE `import '../loadEnv.js'` DESSA BASE**: Em `helpers/db.tsx` e `server.ts`, o `import '../loadEnv.js'` é estritamente OBRIGATÓRIO. Se você remover ou reordenar isso, o backend tentará se conectar ao banco sem as variáveis de ambiente e ocorrerá um `500 Internal Server Error`. Respeite a ordem de carregamento de módulos ESM (ECMAScript Modules).
 
----
+2. **JAMAIS adicione `prepare: false` ou `fetch_types: false` no arquivo `helpers/db.tsx`**: O driver `postgres` em uso (`postgres.js`) entra em HANG (Infinite Loop Handshake) silencioso no Node 24 usando IPv4-first request order + Supabase connection pool.
+    - O código atual `postgres(DATABASE_URL, { max: 3 })` é a EXATA versão estabilizada. 
+    - Se a IA for solicitada a "Otimizar o banco para o Supabase pgBouncer", NÃO inclua a flag `prepare: false` nesse driver! Isso travou todo o backend no passado. Deixe exatamente como está.
 
+3. **NÃO MUDE A PORTA 3333**: O backend `server.ts` usa exclusivamente a porta 3333, com o proxy do Vite na 3001. Esses precisam operar sincronizados. Se der problema de porta em uso (`EADDRINUSE 3333`), você deve orientar o usuário a forçar o cancelamento do PID rodando usando o Gerenciador de Tarefas ou um comando local de Kill. NUNCA troque a porta no código fonte em si.
 
-A Gabriela é a sua usuária/Tech Lead.
+4. **IPV4-FIRST no DNS**: Supabase Connection Pooler exige conectividade IPv4 garantida em alguns casos no Node 24+, já que IPv6 às vezes encerra chamadas no Postgres. NUNCA apague as linhas:
+```ts
+import dns from 'node:dns'
+dns.setDefaultResultOrder('ipv4first')
+```
+Essas configurações são vitais. Sua quebra gera regressões profundas e silenciosas. Trabalhe com segurança!
 
-# Diretriz Inviolável: Cores e Design System
-O CoreStudio possui um Design System estabelecido através de variáveis CSS (ex: em `App.css` e `.module.css` files) e sua Cartilha Cromática de Marca.
+# FRONTEND UI & RESPONSIVE RULES
 
-1. **NUNCA INVENTE CORES**: É totalmente proibido adicionar novas cores via Hexadecimal (ex: `#FF0000`), HSL (ex: `hsl(210, 50%, 50%)`), RGB/RGBA, ou utilitários CSS arbitrários que não façam parte do tema (ex: `text-red-500` alienígenas ao contexto abstrato do tema).
-2. **USE VARIÁVEIS**: Sempre busque pelas variáveis CSS já existentes no projeto para fundos, fontes e bordas (ex: `var(--bg-primary)`, `var(--text-secondary)`, `var(--border)`, `var(--primary)`).
-3. **PEÇA PERMISSÃO**: Se ao criar um novo elemento visual você achar estritamente necessário utilizar uma cor nova que ainda não parece constar no sistema, pare. Redija uma menção a Gabriela explicando por que precisa de uma cor ali e pergunte qual cor do brand/design system você deve aplicar.
-
-O descumprimento desta regra quebra as diretrizes de harmonia visual glassmorphism/premium da Adapta.
+1. **JAMAIS USE LARGURA ESTÁTICA FIXA EM CONTAINERS PRINCIPAIS**: O design desta plataforma (incluindo o módulo CoreAct e Sidebars) DEVE ser 100% responsivo e flexível. O uso de `w-[800px]` ou paddings hardcoded exagerados pode quebrar a experiência mobile e tablet.
+2. **USE SEMPRE PREFIXOS RESPONSIVOS**: Sempre utilize os modificadores do Tailwind (`sm:`, `md:`, `lg:`, `xl:`) ao definir larguras e alturas. Exemplo: Se deseja que uma sidebar seja fixa no desktop, você DEVE usar `w-full md:w-64`, garantindo que não estrague a tela menor.
+3. **BLINDAGEM CONTRA OVERFLOW**: A plataforma usa a largura inteira da tela (Wall-to-wall layout). Ao adicionar componentes novos, tenha CUIDADO EXTREMO com grids e tabelas que possuam `min-w-max`, assegurando que estejam sob um `overflow-x-auto` isolado do container principal, caso contrário a janela inteira vazará uma barra horizontal escondida.

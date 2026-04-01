@@ -10,13 +10,11 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-const projectId = "mock_project_id";
-const publicAnonKey = "mock_anon_key";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://kshybgeyetkkufkmjugz.supabase.co";
+const publicAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzaHliZ2V5ZXRra3Vma21qdWd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjU1OTQsImV4cCI6MjA4OTg0MTU5NH0.bs6pHfjKnPAACxz9fVPR3sGw-2IsjQc4DrrW584wXiY";
 
-const supabaseUrl = `https://${projectId}.supabase.co`;
-
-// Detecta se Supabase está configurado - FORÇADO DESLIGADO PARA O PREVIEW
-export const SUPABASE_CONFIGURED = false;
+// Detecta se Supabase está configurado
+export const SUPABASE_CONFIGURED = true;
 
 // Mock client que NÃO faz requisições - 100% seguro
 const mockClient = {

@@ -37,10 +37,10 @@ export async function handle(request: Request) {
     const dependencies = await query.execute();
 
     return new Response(superjson.stringify({ dependencies } satisfies OutputType));
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error("Internal Server Error in coreact:", error);
     return new Response(
-      superjson.stringify({ error: "Ocorreu um erro interno ao processar a requisição." }),
+      superjson.stringify({ error: error?.message || String(error) }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

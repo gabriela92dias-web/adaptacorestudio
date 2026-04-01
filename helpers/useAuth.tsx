@@ -20,27 +20,49 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // DEV MODE BYPASS
-  const [authState, setAuthState] = useState<AuthState>({ 
-    type: "authenticated",
-    user: { id: 1, email: "dev@adaptacorestudio.com", displayName: "Gabriela Dias (Dev Mode)", avatarUrl: null, role: "admin" }
-  });
-  const [sbUser, setSbUser] = useState<any>({ email: "dev@adaptacorestudio.com" });
+  const [authState, setAuthState] = useState<AuthState>({ type: "loading" });
+  const [sbUser, setSbUser] = useState<any>(null);
 
   const mapSupabaseUser = (sessionUser: any): User => ({
     id: 1, 
     email: sessionUser.email || "",
-    displayName: sessionUser.user_metadata?.name || "Gabriela Dias",
-    avatarUrl: null,
+    displayName: sessionUser.user_metadata?.name || sessionUser.email || "Usuário",
+    avatarUrl: sessionUser.user_metadata?.avatar_url || null,
     role: "admin" 
   });
 
   useEffect(() => {
-    // Auth bypassed for development agility
+    let mounted = true;
+    
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
+      if (session) {
+        setSbUser(session.user);
+        setAuthState({ type: "authenticated", user: mapSupabaseUser(session.user) });
+      } else {
+        setAuthState({ type: "unauthenticated" });
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+      if (session) {
+        setSbUser(session.user);
+        setAuthState({ type: "authenticated", user: mapSupabaseUser(session.user) });
+      } else {
+        setSbUser(null);
+        setAuthState({ type: "unauthenticated" });
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const logout = async () => {
-    setAuthState({ type: "unauthenticated" });
+    setAuthState({ type: "loading" });
     await supabase.auth.signOut();
   };
 
@@ -49,9 +71,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, pass: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
-    // Emulate login even if it mocks
-    setAuthState({ type: "authenticated", user: mapSupabaseUser({email}) });
+    const { error, data } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if (!error && data?.session) {
+      setSbUser(data.session.user);
+      setAuthState({ type: "authenticated", user: mapSupabaseUser(data.session.user) });
+    }
     return { error };
   };
 

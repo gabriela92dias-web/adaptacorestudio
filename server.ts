@@ -21,10 +21,12 @@ app.use('/_api/coreact/*', async (c, next) => {
   }
 
   const token = authHeader.replace('Bearer ', '');
+  console.log("Servidor recebeu o token:", token.substring(0, 15) + "..."); // log para debugar
   const { data, error } = await supabase.auth.getUser(token);
 
   if (error || !data?.user) {
-    return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+    console.error("Erro na validação do token no servidor:", error);
+    return c.json({ error: 'Unauthorized: Invalid token', details: error }, 401);
   }
 
   // Injetando o usuário no request para isolamento de tenancy

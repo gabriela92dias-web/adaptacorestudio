@@ -5,15 +5,22 @@ import {
   HelmetProvider,
 } from "react-helmet-async"
 
-import { supabase } from './helpers/supabase';
+import { supabase } from './helpers/supabase-client';
 
 // Monkeypatch fetch para injetar tokens em todas as chamadas `_api/coreact/*`.
 const originalFetch = window.fetch;
 window.fetch = async (...args) => {
   const [resource, config] = args;
-  if (typeof resource === 'string' && resource.startsWith('/_api/coreact/')) {
+  if (typeof resource === 'string' && resource.includes('/_api/coreact/')) {
+    console.log(`[Fetch Interceptor] Intercepting call to: ${resource}`);
+    
+    // Obter sessão *toda* vez
     const { data: { session } } = await supabase.auth.getSession();
+    
+    console.log(`[Fetch Interceptor] Sessão recuperada:`, session ? "Sessão Válida!" : "NULO ❌");
+    
     if (session?.access_token) {
+      console.log(`[Fetch Interceptor] Token encontrado! Adicionando Authorization header...`);
       const newConfig = config || {};
       const newHeaders = new Headers(newConfig.headers || {});
       if (!newHeaders.has("Authorization")) {
@@ -21,6 +28,8 @@ window.fetch = async (...args) => {
       }
       newConfig.headers = newHeaders;
       return originalFetch(resource, newConfig);
+    } else {
+      console.warn(`[Fetch Interceptor] ❌ NENHUM TOKEN DISPONÍVEL para a chamada: ${resource}`);
     }
   }
   return originalFetch(...args);

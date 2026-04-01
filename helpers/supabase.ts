@@ -18,4 +18,6 @@ if (!SUPABASE_URL && typeof process !== 'undefined' && process.env.NODE_ENV === 
   console.warn("⚠️ ERROR: VITE_SUPABASE_URL or SUPABASE_URL environment variable is MISSING in Render.");
 }
 
+console.log("Supabase Client initialized with URL:", SUPABASE_URL || 'https://placeholder.supabase.co');
+
 export const supabase = createClient(SUPABASE_URL || 'https://placeholder.supabase.co', SUPABASE_ANON_KEY || 'placeholder');
