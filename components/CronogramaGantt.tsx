@@ -85,6 +85,8 @@ export function CronogramaGantt({
     currentX: number;
     initialLeft: number;
     initialWidth: number;
+    snappedLeft?: number;
+    snappedWidth?: number;
   } | null>(null);
 
   const timelineContentRef = useRef<HTMLDivElement>(null);
@@ -646,6 +648,15 @@ export function CronogramaGantt({
     };
   }, [tasks, projects, initiatives, sectors, ganttZoom, currentDate, businessDaysOnly, collapsedGroups, containerWidth, level]);
 
+  // Sync refs for drag operations
+  useEffect(() => {
+    latestGanttDataRef.current = ganttData;
+  }, [ganttData]);
+
+  useEffect(() => {
+    latestZoomRef.current = ganttZoom;
+  }, [ganttZoom]);
+
   // Handle Initial Auto-collapse
   useEffect(() => {
     if (!hasAutoCollapsed && tasks.length > 0 && ganttData.allGroupIds.length > 0) {
@@ -833,6 +844,48 @@ export function CronogramaGantt({
     };
   }, []);
 
+  // Set up Pan/Drag logic for the Time background
+  const [isPanning, setIsPanning] = useState(false);
+  const handleWrapperMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    setIsPanning(true);
+    panStart.current = {
+      x: e.clientX,
+      y: e.clientY,
+    };
+    document.body.style.userSelect = "none";
+  };
+
+  useEffect(() => {
+    const handlePanMove = (e: MouseEvent) => {
+      if (!isPanning || !timelineWrapperRef.current) return;
+      
+      const dx = e.clientX - panStart.current.x;
+      const dy = e.clientY - panStart.current.y;
+      
+      timelineWrapperRef.current.scrollLeft -= dx;
+      timelineWrapperRef.current.scrollTop -= dy;
+      
+      panStart.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handlePanUp = () => {
+      if (isPanning) {
+        setIsPanning(false);
+        document.body.style.userSelect = "";
+      }
+    };
+
+    if (isPanning) {
+      window.addEventListener("mousemove", handlePanMove);
+      window.addEventListener("mouseup", handlePanUp);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handlePanMove);
+      window.removeEventListener("mouseup", handlePanUp);
+    };
+  }, [isPanning]);
+
   const todayT = new Date().getTime();
   const todayLeft = ganttData.dateToPercent(todayT);
   const isDraggingGlobal = isDragging;
@@ -870,7 +923,9 @@ export function CronogramaGantt({
         {/* Timeline */}
         <div
           ref={timelineWrapperRef}
-          className={`${styles.ganttTimelineWrapper} ${styles.grab}`}
+          className={`${styles.ganttTimelineWrapper} ${styles.grab} ${isPanning ? styles.panning : ""}`}
+          onMouseDown={handleWrapperMouseDown}
+          style={{ cursor: isPanning ? 'grabbing' : 'grab', overflow: 'auto' }}
         >
           <div ref={timelineContentRef} className={styles.ganttTimelineContent} style={{ width: `${calculatedTimelineWidth}px`, minWidth: '100%' }}>
             <div className={styles.ganttTimelineHeader}>
@@ -1045,11 +1100,11 @@ export function CronogramaGantt({
                         <div
                           className={`${styles.taskBarBg} ${styles[`priority-${task.priority || "medium"}`]}`}
                           style={{
-                            backgroundColor: task.color
-                              ? `color-mix(in srgb, ${task.color} 30%, var(--card))`
+                            backgroundColor: (task as any).color
+                              ? `color-mix(in srgb, ${(task as any).color} 30%, var(--card))`
                               : `color-mix(in srgb, var(--primary) 20%, var(--card))`,
-                            borderColor: task.color
-                              ? `color-mix(in srgb, ${task.color} 80%, transparent)`
+                            borderColor: (task as any).color
+                              ? `color-mix(in srgb, ${(task as any).color} 80%, transparent)`
                               : `color-mix(in srgb, var(--primary) 60%, transparent)`,
                           }}
                         >              <div className={styles.taskBarFill} style={{ width: `${task.progress || 0}%` }} />
