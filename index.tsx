@@ -7,20 +7,55 @@ import {
 
 import { supabase } from './helpers/supabase';
 
+// Recarregar a página caso haja erro de chunk falho ao buscar o módulo dinâmico após um novo deploy no Render.
+window.addEventListener('vite:preloadError', () => {
+  window.location.reload();
+});
+window.addEventListener('error', (e) => {
+  if (e.message && e.message.includes('Failed to fetch dynamically imported module')) {
+    e.preventDefault();
+    window.location.reload();
+  }
+});
+
 // Monkeypatch fetch para injetar tokens em todas as chamadas `_api/coreact/*`.
 const originalFetch = window.fetch;
 window.fetch = async (...args) => {
   const [resource, config] = args;
-  if (typeof resource === 'string' && resource.startsWith('/_api/coreact/')) {
+  
+  // Extrai a URL para garantir a verificação correta.
+  let urlString = '';
+  if (typeof resource === 'string') {
+    urlString = resource;
+  } else if (resource instanceof URL) {
+    urlString = resource.toString();
+  } else if (resource instanceof Request) {
+    urlString = resource.url;
+  }
+
+  if (urlString.includes('_api/coreact')) {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.access_token) {
-      const newConfig = config || {};
-      const newHeaders = new Headers(newConfig.headers || {});
+      const newConfig: any = config ? { ...config } : {};
+      let newHeaders = new Headers();
+      if (resource instanceof Request) {
+         newHeaders = new Headers(resource.headers);
+      } else if (newConfig.headers) {
+         newHeaders = new Headers(newConfig.headers);
+      }
+
       if (!newHeaders.has("Authorization")) {
         newHeaders.set("Authorization", `Bearer ${session.access_token}`);
       }
+      
       newConfig.headers = newHeaders;
-      return originalFetch(resource, newConfig);
+
+      if (resource instanceof Request) {
+          const newRequest = new Request(resource, newConfig);
+          return originalFetch(newRequest);
+      } else {
+          return originalFetch(resource, newConfig);
+      }
     }
   }
   return originalFetch(...args);
