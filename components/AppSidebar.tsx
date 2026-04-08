@@ -281,7 +281,7 @@ export const AppSidebar = () => {
               <React.Fragment key={group.id}>
                 {index > 0 && isCollapsed && <div className={styles.collapsedSeparator} />}
                 <Collapsible.Root
-                  open={isCollapsed ? false : isOpen}
+                  open={isCollapsed ? false : (isOpen || false)}
                   onOpenChange={() => toggleGroup(group.id)}
                   className={styles.collapsibleRoot}
                 >
