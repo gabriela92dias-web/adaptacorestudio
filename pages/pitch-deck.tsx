@@ -4,70 +4,43 @@ import { useNavigate } from 'react-router-dom';
 
 const CONTENT = {
   pt: [
-    {
-      id: 1, type: "cover", title: "CoreStudio", visual: "glow",
-      subtitle: "A plataforma de inteligência e automação definitiva para o mercado de marketing.",
-      badge: "DNA MARKETING DE ALTA PERFORMANCE"
-    },
-    {
-      id: 2, type: "problem", title: "O Mercado Atual",
-      content: "O modelo tradicional de agências quebrou. Muito trabalho braçal, processos repetitivos e descolamento entre a estratégia e a execução.",
-      points: ["Processos 100% manuais", "Silos entre criação e análise", "Dificuldade de tracionar branding"]
-    },
-    {
-      id: 3, type: "solution", title: "Motor CoreAct V8", visual: "v8-mock",
-      content: "Não é só um CRM. É um cérebro. Você cadastra o DNA da Campanha, e a IA gera todo o workflow de Projetos e Tarefas na hora.",
-      points: ["Criador de Campanhas V8", "Gerador de Projetos CoreAct", "Plataforma Full-Stack"]
-    },
-    {
-      id: 4, type: "future", title: "Bem-vindo ao Futuro", visual: "glow",
-      content: "Uma máquina digital e fluida que transforma escopo abstrato em planos de ação irrefutáveis e automatizados.",
-      badge: "WORKFLOW AUTOMÁGICO"
-    }
+    { id: 1, type: "cover", visual: "glow", title: "ADAPTA 2026", subtitle: "O Espectro do Cuidado • Relatório de Feitos", badge: "REBRANDING & INFRA" },
+    { id: 2, type: "part", title: "01. Diagnóstico", subtitle: "Análise da Comunicação Atual" },
+    { id: 3, type: "problem", visual: "sameness", title: "Sameness", content: "O modelo tradicional e a saturação visual no mercado de saúde criaram um 'mar de mesmice'. Muito trabalho manual e isolamento estratégico.", points: ["Comunicação genérica", "Silos entre criação e análise", "Descolamento de marca"] },
+    { id: 4, type: "part", title: "02. Infraestrutura", subtitle: "CoreStudio & CoreAct Engine" },
+    { id: 5, type: "generic", visual: "system", title: "CoreStudio", content: "Sistema de design unificado. Uma biblioteca de componentes, tokens e padrões visuais garantindo consistência absoluta.", points: ["Tokens universais", "Design Atômico", "Single Source of Truth"] },
+    { id: 6, type: "solution", visual: "v8-mock", title: "Motor CoreAct V8", content: "Uma plataforma de engajamento baseada em IA. Cadastre o DNA da campanha e a infraestrutura gera todos os Projetos e Tarefas na hora.", points: ["Criador de Campanhas V8", "Geração e Atribuição Automática", "Plataforma Full-Stack"] },
+    { id: 7, type: "part", title: "03. Rebranding", subtitle: "Nova Identidade Visual" },
+    { id: 8, type: "generic", visual: "layers", title: "As 5 Camadas", content: "A arquitetura da nova identidade. Expandimos do verde estrutural para múltiplas camadas de emoção e aplicação.", points: ["Núcleo Estrutural", "Expressões de Alegria e Alívio", "Creme Editorial Minimalista"] },
+    { id: 9, type: "generic", visual: "color-core", title: "Color Core", content: "De 30 verdes soltos fomos para um sistema cromático completo, vivo e perfeitamente orquestrado.", points: ["Paleta Rigorosa", "Acessibilidade", "Paredes de Cor"] },
+    { id: 10, type: "future", visual: "glow", title: "Não mudou. Expandiu.", content: "A nova fundação estratégica para os próximos anos. Uma máquina digital e fluida unida a uma marca premium irresistível.", badge: "O FUTURO" },
+    { id: 11, type: "cover", title: "Perguntas?", subtitle: "Obrigado por construírem isso com a gente." }
   ],
   en: [
-    {
-      id: 1, type: "cover", title: "CoreStudio", visual: "glow",
-      subtitle: "The ultimate intelligence and automation platform for the marketing industry.",
-      badge: "HIGH PERFORMANCE MARKETING DNA"
-    },
-    {
-      id: 2, type: "problem", title: "The Current Market",
-      content: "The traditional agency model is broken. Endless manual labor, repetitive processes, and a huge gap between strategy and execution.",
-      points: ["100% manual processes", "Silos between creation and analytics", "Hard to build brand traction"]
-    },
-    {
-      id: 3, type: "solution", title: "CoreAct V8 Engine", visual: "v8-mock",
-      content: "It's not just a CRM. It's a brain. You input the Campaign DNA, and the AI generates the entire workflow of Projects and Tasks instantly.",
-      points: ["V8 Campaign Creator", "CoreAct Project Generator", "Full-Stack Platform"]
-    },
-    {
-      id: 4, type: "future", title: "Welcome to the Future", visual: "glow",
-      content: "A fluid, digital machine that transforms abstract scope into irrefutable, automated action plans.",
-      badge: "AUTOMAGIC WORKFLOW"
-    }
+    { id: 1, type: "cover", visual: "glow", title: "ADAPTA 2026", subtitle: "The Care Spectrum • Accomplishment Report", badge: "REBRANDING & INFRA" },
+    { id: 2, type: "part", title: "01. Diagnosis", subtitle: "Current Communication Analysis" },
+    { id: 3, type: "problem", visual: "sameness", title: "Sameness", content: "The traditional model and visual saturation in the health market created a 'sea of sameness'. Endless manual work and strategic isolation.", points: ["Generic communication", "Silos between creation and analytics", "Brand detachment"] },
+    { id: 4, type: "part", title: "02. Infrastructure", subtitle: "CoreStudio & CoreAct Engine" },
+    { id: 5, type: "generic", visual: "system", title: "CoreStudio", content: "Unified design system. A library of components, tokens, and visual patterns ensuring absolute consistency.", points: ["Universal tokens", "Atomic Design", "Single Source of Truth"] },
+    { id: 6, type: "solution", visual: "v8-mock", title: "CoreAct V8 Engine", content: "An AI-based engagement platform. Input the campaign DNA, and the infrastructure generates all Projects and Tasks instantly.", points: ["V8 Campaign Creator", "Automatic Generation", "Full-Stack Platform"] },
+    { id: 7, type: "part", title: "03. Rebranding", subtitle: "New Visual Identity" },
+    { id: 8, type: "generic", visual: "layers", title: "The 5 Layers", content: "The architecture of the new identity. We expanded from structural green to multiple layers of emotion and application.", points: ["Structural Core", "Expressions of Joy and Relief", "Minimalist Editorial Cream"] },
+    { id: 9, type: "generic", visual: "color-core", title: "Color Core", content: "From 30 loose greens to a complete, vibrant, and perfectly orchestrated chromatic system.", points: ["Rigorous Palette", "Accessibility", "Walls of Color"] },
+    { id: 10, type: "future", visual: "glow", title: "It Didn't Change. It Expanded.", content: "The new strategic foundation for the coming years. A fluid digital machine paired with an irresistible premium brand.", badge: "THE FUTURE" },
+    { id: 11, type: "cover", title: "Questions?", subtitle: "Thank you for building this with us." }
   ],
   de: [
-    {
-      id: 1, type: "cover", title: "CoreStudio", visual: "glow",
-      subtitle: "Die ultimative Plattform für Intelligenz und Automatisierung in der Marketingbranche.",
-      badge: "HIGH-PERFORMANCE MARKETING DNA"
-    },
-    {
-      id: 2, type: "problem", title: "Der Aktuelle Markt",
-      content: "Das klassische Agenturmodell ist kaputt. Endlose manuelle Arbeit, wiederkehrende Prozesse und eine tiefe Kluft zwischen Strategie und Ausführung.",
-      points: ["100% manuelle Prozesse", "Silos zwischen Kreation und Analyse", "Schwierigkeiten beim Markenaufbau"]
-    },
-    {
-      id: 3, type: "solution", title: "CoreAct V8 Engine", visual: "v8-mock",
-      content: "Nicht nur ein CRM. Ein Gehirn. Sie geben die Kampagnen-DNA ein, und die KI generiert sofort den gesamten Workflow an Projekten und Aufgaben.",
-      points: ["V8 Kampagnen-Ersteller", "CoreAct Projekt-Generator", "Full-Stack Plattform"]
-    },
-    {
-      id: 4, type: "future", title: "Willkommen in der Zukunft", visual: "glow",
-      content: "Eine fließende, digitale Maschine, die abstrakten Umfang in unwiderlegbare, automatisierte Aktionspläne verwandelt.",
-      badge: "AUTOMAGISCHER WORKFLOW"
-    }
+    { id: 1, type: "cover", visual: "glow", title: "ADAPTA 2026", subtitle: "Das Spektrum der Pflege • Leistungsbericht", badge: "REBRANDING & INFRASTRUKTUR" },
+    { id: 2, type: "part", title: "01. Diagnose", subtitle: "Aktuelle Kommunikationsanalyse" },
+    { id: 3, type: "problem", visual: "sameness", title: "Gleichförmigkeit", content: "Das traditionelle Modell und die visuelle Sättigung auf dem Gesundheitsmarkt haben ein 'Meer von Gleichförmigkeit' geschaffen.", points: ["Generische Kommunikation", "Silos zwischen Kreation und Analyse", "Markenentfremdung"] },
+    { id: 4, type: "part", title: "02. Infrastruktur", subtitle: "CoreStudio & CoreAct Engine" },
+    { id: 5, type: "generic", visual: "system", title: "CoreStudio", content: "Einheitliches Designsystem. Eine Bibliothek aus Komponenten, Tokens und visuellen Mustern für absolute Konsistenz.", points: ["Universelle Tokens", "Atomares Design", "Einzige Wahrheitsquelle"] },
+    { id: 6, type: "solution", visual: "v8-mock", title: "CoreAct V8 Engine", content: "Eine KI-basierte Engagement-Plattform. Geben Sie die Kampagnen-DNA ein, und die Infrastruktur generiert sofort alle Projekte.", points: ["V8 Kampagnen-Ersteller", "Automatische Generierung", "Full-Stack Plattform"] },
+    { id: 7, type: "part", title: "03. Rebranding", subtitle: "Neue visuelle Identität" },
+    { id: 8, type: "generic", visual: "layers", title: "Die 5 Schichten", content: "Die Architektur der neuen Identität. Wir haben uns vom strukturellen Grün zu mehreren Schichten von Emotionen erweitert.", points: ["Strukturkern", "Ausdrücke von Freude", "Minimalistische Eleganz"] },
+    { id: 9, type: "generic", visual: "color-core", title: "Color Core", content: "Von 30 losen Grüntönen zu einem vollständigen, lebendigen und perfekt orchestrierten chromatischen System.", points: ["Strenge Palette", "Barrierefreiheit", "Farbwände"] },
+    { id: 10, type: "future", visual: "glow", title: "Es hat sich nicht verändert. Es ist gewachsen.", content: "Das neue strategische Fundament für die kommenden Jahre. Eine fließende digitale Maschine, gepaart mit einer Premium-Marke.", badge: "DIE ZUKUNFT" },
+    { id: 11, type: "cover", title: "Fragen?", subtitle: "Vielen Dank, dass Sie das mit uns aufbauen." }
   ]
 };
 
@@ -284,6 +257,15 @@ export default function PitchDeck() {
                  {slide.subtitle}
                </p>
             </div>
+          ) : slide.type === 'part' ? (
+            <div className="text-center flex flex-col items-center justify-center">
+               <h1 className="text-3xl md:text-5xl font-bold tracking-[0.2em] mb-4 text-[var(--primary)] font-heading uppercase opacity-80">
+                  {slide.title}
+               </h1>
+               <p className="text-5xl md:text-7xl text-[var(--foreground)] font-bold tracking-tight text-center leading-tight">
+                 {slide.subtitle}
+               </p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
               <div>
@@ -311,6 +293,32 @@ export default function PitchDeck() {
               <div className="relative w-full">
                 {slide.visual === 'v8-mock' ? (
                   <CoreStudioV8Mock lang={lang} />
+                ) : slide.visual === 'layers' ? (
+                   <div className="w-full aspect-square xl:aspect-[4/3] rounded-[var(--radius-lg)] bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center group shadow-[var(--shadow-lg)] relative overflow-hidden transition-colors duration-300">
+                     <div className="relative w-48 h-48 group-hover:scale-110 transition-transform duration-700">
+                       <div className="absolute inset-0 bg-[var(--primary)] opacity-20 rounded-xl transform translate-x-8 -translate-y-8"></div>
+                       <div className="absolute inset-x-0 inset-y-4 bg-[var(--primary)] opacity-40 rounded-xl transform translate-x-4 -translate-y-4"></div>
+                       <div className="absolute inset-y-8 inset-x-0 bg-[var(--primary)] opacity-80 rounded-xl border border-[var(--border)] shadow-lg"></div>
+                     </div>
+                  </div>
+                ) : slide.visual === 'color-core' ? (
+                   <div className="w-full aspect-square xl:aspect-[4/3] rounded-[var(--radius-lg)] bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center group shadow-[var(--shadow-lg)] relative overflow-hidden transition-colors duration-300">
+                     <div className="flex -space-x-8 group-hover:scale-110 transition-transform duration-700">
+                       <div className="w-24 h-24 rounded-full bg-[var(--primary)] mix-blend-multiply opacity-80 animate-pulse"></div>
+                       <div className="w-24 h-24 rounded-full bg-[var(--info)] mix-blend-multiply opacity-80 animate-pulse delay-75/[1000]"></div>
+                       <div className="w-24 h-24 rounded-full bg-[var(--success)] mix-blend-multiply opacity-80 animate-pulse delay-150/[1000]"></div>
+                     </div>
+                  </div>
+                ) : slide.visual === 'sameness' ? (
+                   <div className="w-full aspect-square xl:aspect-[4/3] rounded-[var(--radius-lg)] bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center group shadow-[var(--shadow-lg)] relative overflow-hidden transition-colors duration-300">
+                     <div className="grid grid-cols-3 gap-3 p-8 group-hover:rotate-6 transition-transform duration-700">
+                       {[...Array(9)].map((_, i) => (
+                         <div key={i} className="w-16 h-16 bg-[var(--muted)] border border-[var(--border)] rounded md shadow-sm opacity-40 flex items-center justify-center">
+                           <Globe className="w-6 h-6 text-[var(--muted-foreground)] opacity-20" />
+                         </div>
+                       ))}
+                     </div>
+                  </div>
                 ) : (
                   <div className="w-full aspect-square xl:aspect-[4/3] rounded-[var(--radius-lg)] bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center group shadow-[var(--shadow-lg)] relative overflow-hidden transition-colors duration-300">
                      <Layers className="w-32 h-32 text-[var(--muted)] group-hover:text-[var(--primary)] transition-colors duration-700 group-hover:scale-110 ease-out opacity-50" />
