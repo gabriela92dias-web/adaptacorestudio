@@ -1,260 +1,863 @@
-/* criar-campanha.module.css
- * Color remapping: black/zinc/emerald → CoreStudio ColdFlora tokens
- * Applies as a wrapper class on the modal root element
- */
+/* criar-campanha.module.css — ColdFlora V8 — ZERO cores hardcoded */
 
-/* ── Root shell ── */
+/* ── NOTA: a classe .active é usada via concatenação de className no JSX.
+   CSS Modules exige que a classe exista neste arquivo para ser exportada.
+   Os estilos reais de .active estão compostos abaixo (.dnaBtn.active, .funnelLevel.active). ── */
+.active {}
+
+
+/* ═══════════════════════════════════════════
+   ROOT / SHELL
+═══════════════════════════════════════════ */
+
 .wizardRoot {
-  background-color: var(--background) !important;
-  color: var(--foreground) !important;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-family-base);
+  overflow: hidden;
 }
 
-/* ── Named structural panels ── */
+@media (min-width: 768px) {
+  .wizardRoot {
+    flex-direction: row;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SIDE PANEL (LEFT)
+═══════════════════════════════════════════ */
+
 .sidePanel {
-  background-color: var(--surface) !important;
-  border-right: 1px solid var(--border) !important;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
 }
 
-.stickyHeader {
-  background-color: color-mix(in srgb, var(--surface) 88%, transparent) !important;
-  border-bottom: 1px solid var(--border) !important;
-  backdrop-filter: blur(12px);
+@media (min-width: 768px) {
+  .sidePanel {
+    width: 400px;
+    flex-shrink: 0;
+  }
 }
+
+@media (min-width: 1024px) {
+  .sidePanel {
+    width: 460px;
+  }
+}
+
+/* ── Sticky header ── */
+.stickyHeader {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.backBtn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.backBtn:hover {
+  color: var(--foreground);
+  border-color: var(--border-hover);
+  background: var(--card);
+}
+
+.headerMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.headerLabel {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted-foreground);
+  line-height: 1;
+}
+
+.headerTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--foreground);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.closeBtn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.closeBtn:hover {
+  color: var(--foreground);
+  border-color: var(--border-hover);
+  background: var(--card);
+}
+
+/* ── Save / CoreAct buttons ── */
+.saveBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 32px;
+  padding: 0 0.9rem;
+  border-radius: 7px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.saveBtn:hover { opacity: 0.85; }
+
+.coreActBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 32px;
+  padding: 0 0.9rem;
+  border-radius: 7px;
+  background: var(--info);
+  color: var(--info-foreground);
+  border: none;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.coreActBtn:hover { opacity: 0.85; }
+.coreActBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Scrollable wizard body ── */
+.wizardBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ═══════════════════════════════════════════
+   STEP ITEM
+═══════════════════════════════════════════ */
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: opacity 0.3s ease;
+}
+
+.stepItem.locked {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.stepLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── Step input ── */
+.stepInput {
+  width: 100%;
+  height: 52px;
+  padding: 0 1rem;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.stepInput::placeholder { color: var(--muted-foreground); opacity: 0.6; }
+.stepInput:focus {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 10%, transparent);
+}
+.stepInput:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.stepTextarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 0.875rem 1rem;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  resize: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.stepTextarea::placeholder { color: var(--muted-foreground); opacity: 0.6; }
+.stepTextarea:focus {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 10%, transparent);
+}
+.stepTextarea:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── DNA toggles ── */
+.dnaSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.dnaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dnaBlockLabel {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+}
+
+.dnaToggles {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.dnaBtn {
+  flex: 1;
+  padding: 0.55rem 0.4rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted-foreground);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-family-base);
+}
+.dnaBtn:hover {
+  border-color: var(--border-hover);
+  color: var(--foreground);
+  background: var(--surface);
+}
+.dnaBtn.active {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+  color: var(--foreground);
+}
+
+/* Modulos grid */
+.modulosGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem;
+}
+
+@media (min-width: 480px) {
+  .modulosGrid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── Main CTA button ── */
+.ctaBtn {
+  width: 100%;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  letter-spacing: -0.01em;
+}
+.ctaBtn:hover { opacity: 0.88; }
+.ctaBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.ctaBtnSecondary {
+  width: 100%;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.ctaBtnSecondary:hover {
+  color: var(--foreground);
+  border-color: var(--border-hover);
+  background: var(--surface);
+}
+.ctaBtnSecondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.ctaBtnFinal {
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 10px;
+  background: var(--info);
+  color: var(--info-foreground);
+  border: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ctaBtnFinal:hover { opacity: 0.88; }
+.ctaBtnFinal:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Inline icon spin ── */
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Row divider ── */
+.dividerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+}
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.dividerLabel {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+/* ── Confirmed card (step done) ── */
+.confirmedCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.confirmedCardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.confirmedValue {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--foreground);
+}
+
+.confirmedValueLarge {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--foreground);
+  letter-spacing: -0.01em;
+}
+
+.confirmedTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.confirmedTag {
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted-foreground);
+}
+
+.confirmedTagActive {
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+  color: var(--foreground);
+}
+
+.resetLink {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  padding: 0;
+  font-family: var(--font-family-base);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.resetLink:hover { color: var(--foreground); }
+
+/* ── Proposition options ── */
+.propOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.propOption {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-family-base);
+}
+.propOption:hover {
+  border-color: var(--border-hover);
+  background: var(--surface);
+}
+.propOption:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.propOptionNum {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  padding: 0.2rem 0.45rem;
+  border-radius: 5px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+.propOption:hover .propOptionNum {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+.propOptionText {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+  line-height: 1.5;
+  flex: 1;
+  min-width: 0;
+}
+
+.propOptionArrow {
+  color: var(--muted-foreground);
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: color 0.15s ease;
+}
+.propOption:hover .propOptionArrow { color: var(--foreground); }
+
+/* ── Placeholder skeleton ── */
+.stepPlaceholder {
+  height: 50px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════
+   RIGHT PANEL
+═══════════════════════════════════════════ */
 
 .rightPanel {
-  background-color: var(--background) !important;
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.75rem 1.5rem;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* ── Background mappings ── */
-.wizardRoot :global(.bg-black) {
-  background-color: var(--surface) !important;
+/* ── Output grid ── */
+.outputGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
 }
 
-.wizardRoot :global(.bg-zinc-950),
-.wizardRoot :global(.bg-\[#0a0a0a\]) {
-  background-color: var(--surface) !important;
+@media (min-width: 640px) {
+  .outputGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.wizardRoot :global(.bg-zinc-900) {
-  background-color: var(--card) !important;
+/* ── Output block ── */
+.outputBlock {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  animation: fadeUp 0.4s ease both;
 }
 
-.wizardRoot :global(.bg-zinc-800) {
-  background-color: var(--secondary) !important;
+.outputBlock.fullWidth {
+  grid-column: 1 / -1;
 }
 
-.wizardRoot :global(.from-zinc-900) {
-  --tw-gradient-from: var(--card) !important;
-}
-.wizardRoot :global(.to-zinc-950) {
-  --tw-gradient-to: var(--surface) !important;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Text mappings ── */
-.wizardRoot :global(.text-white) {
-  color: var(--foreground) !important;
+.outputBlockLabel {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted-foreground);
 }
 
-.wizardRoot :global(.text-zinc-300) {
-  color: var(--card-foreground) !important;
+.outputBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
 }
 
-.wizardRoot :global(.text-zinc-400),
-.wizardRoot :global(.text-zinc-500),
-.wizardRoot :global(.text-zinc-600) {
-  color: var(--muted-foreground) !important;
+/* ── Funnel ── */
+.funnelStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
 }
 
-.wizardRoot :global(.text-emerald-500),
-.wizardRoot :global(.text-emerald-400) {
-  color: var(--primary) !important;
+.funnelLevel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 36px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
 }
 
-/* ── Border mappings ── */
-.wizardRoot :global(.border-zinc-800) {
-  border-color: var(--border) !important;
+.funnelLevel.active {
+  background: var(--primary);
 }
 
-.wizardRoot :global(.border-emerald-500) {
-  border-color: var(--primary) !important;
+.funnelLevel:not(.active) {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  opacity: 0.4;
 }
 
-/* ── Accent background mappings ── */
-.wizardRoot :global(.bg-emerald-500),
-.wizardRoot :global(.bg-emerald-600) {
-  background-color: var(--primary) !important;
+.funnelLevelName {
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--primary-foreground);
 }
 
-.wizardRoot :global(.bg-white) {
-  background-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
+.funnelLevel:not(.active) .funnelLevelName {
+  color: var(--muted-foreground);
 }
 
-/* ── Focus ring ── */
-.wizardRoot :global(.focus-visible\:ring-emerald-500):focus-visible,
-.wizardRoot :global(.focus\:ring-emerald-500):focus {
-  --tw-ring-color: var(--primary) !important;
+.funnelLevelDesc {
+  font-size: 8px;
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-foreground);
+  opacity: 0.8;
 }
 
-/* ── Inline pulse dot ── */
-.wizardRoot :global(.bg-emerald-500.animate-pulse) {
-  background-color: var(--success) !important;
-}
-
-/* ── Divider lines that use bg-white/5 ── */
-.wizardRoot :global(.bg-white\/5):not([class*="text"]) {
-  background-color: var(--border) !important;
-  opacity: 0.6;
-}
-
-/* ── Hover behavior ── */
-.wizardRoot :global(.hover\:text-white):hover {
-  color: var(--foreground) !important;
-}
-.wizardRoot :global(.hover\:bg-zinc-800):hover,
-.wizardRoot :global(.hover\:bg-zinc-700):hover {
-  background-color: var(--muted) !important;
-}
-.wizardRoot :global(.hover\:bg-zinc-200):hover,
-.wizardRoot :global(.hover\:bg-emerald-500):hover {
-  background-color: color-mix(in srgb, var(--primary) 85%, black) !important;
-}
-.wizardRoot :global(.hover\:bg-white\/5):hover {
-  background-color: color-mix(in srgb, var(--foreground) 5%, transparent) !important;
-}
-.wizardRoot :global(.hover\:border-emerald-500\/50):hover {
-  border-color: color-mix(in srgb, var(--primary) 50%, transparent) !important;
-}
-
-/* ── Selection highlight ── */
-.wizardRoot :global(.selection\:bg-emerald-500\/30) *::selection {
-  background-color: color-mix(in srgb, var(--primary) 30%, transparent) !important;
-}
-
-/* ── Input/Textarea text ── */
-.wizardRoot :global(input),
-.wizardRoot :global(textarea) {
-  background-color: var(--surface) !important;
-  color: var(--foreground) !important;
-  border-color: var(--border) !important;
-}
-.wizardRoot :global(input::placeholder),
-.wizardRoot :global(textarea::placeholder) {
-  color: var(--muted-foreground) !important;
-  opacity: 0.7;
-}
-.wizardRoot :global(input:focus),
-.wizardRoot :global(textarea:focus) {
-  border-color: var(--primary) !important;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 15%, transparent) !important;
-}
-
-/* ── Badge variant overrides inside wizard ── */
-.wizardRoot :global(.border-emerald-500\/30),
-.wizardRoot :global(.border-emerald-500\/20) {
-  border-color: color-mix(in srgb, var(--primary) 35%, transparent) !important;
-}
-.wizardRoot :global(.bg-emerald-500\/10),
-.wizardRoot :global(.bg-emerald-500\/5) {
-  background-color: color-mix(in srgb, var(--primary) 10%, transparent) !important;
-}
-.wizardRoot :global(.bg-emerald-500\/20) {
-  background-color: color-mix(in srgb, var(--primary) 18%, transparent) !important;
-}
-.wizardRoot :global(.text-emerald-400\/80) {
-  color: color-mix(in srgb, var(--primary) 80%, white) !important;
-}
-
-/* ── Blue info accent (KPI card) ── */
-.wizardRoot :global(.bg-blue-600),
-.wizardRoot :global(.hover\:bg-blue-500):hover {
-  background-color: var(--info) !important;
-  color: var(--info-foreground) !important;
-}
-.wizardRoot :global(.bg-blue-500\/10) {
-  background-color: color-mix(in srgb, var(--info) 12%, transparent) !important;
-}
-.wizardRoot :global(.border-blue-500\/30) {
-  border-color: color-mix(in srgb, var(--info) 35%, transparent) !important;
-}
-.wizardRoot :global(.text-blue-500) {
-  color: var(--info-foreground) !important;
-}
-.wizardRoot :global(.shadow-blue-500\/20) {
-  --tw-shadow-color: color-mix(in srgb, var(--info) 20%, transparent) !important;
-}
-
-/* ── Glowing blur orb ── */
-.wizardRoot :global(.bg-emerald-500\/5.blur-\[100px\]) {
-  background-color: color-mix(in srgb, var(--primary) 6%, transparent) !important;
-}
-
-/* ── Backdrop overlay for AI config modal ── */
-.wizardRoot :global(.bg-black\/80) {
-  background-color: color-mix(in srgb, var(--foreground) 55%, transparent) !important;
-  backdrop-filter: blur(6px);
-}
-
-/* ── Sticky header backdrop ── */
-.wizardRoot :global(.backdrop-blur-md) {
-  backdrop-filter: blur(12px);
-}
-
-/* ── Stepper connector line ── */
-.wizardRoot :global(.bg-zinc-800):not([class*="border"]):not(button) {
-  background-color: var(--border) !important;
-}
-
-/* ── font-serif in blueprint section → use design system mono ── */
-.wizardRoot :global(.font-serif) {
-  font-family: var(--font-family-monospace) !important;
+/* ── Briefing ── */
+.briefingText {
+  font-size: var(--font-size-xs);
+  color: var(--card-foreground);
   line-height: 1.7;
-  font-size: var(--font-size-xs) !important;
-  color: var(--card-foreground) !important;
+  white-space: pre-wrap;
+  font-family: var(--font-family-monospace);
 }
 
-/* ── shadow-[0_0_*] glow overrides with emerald ── */
-.wizardRoot :global(.shadow-\[0_0_100px_rgba\(16\,185\,129\,0\.1\)\]) {
-  box-shadow: 0 0 60px color-mix(in srgb, var(--primary) 10%, transparent) !important;
-}
-.wizardRoot :global(.shadow-\[0_0_20px_rgba\(37\,99\,235\,0\.3\)\]) {
-  box-shadow: 0 0 20px color-mix(in srgb, var(--info) 20%, transparent) !important;
-}
-.wizardRoot :global(.shadow-\[0_0_15px_rgba\(16\,185\,129\,0\.1\)\]) {
-  box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 10%, transparent) !important;
-}
-.wizardRoot :global(.shadow-emerald-500\/20) {
-  --tw-shadow-color: color-mix(in srgb, var(--primary) 20%, transparent) !important;
+/* ── Channels ── */
+.channelList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
-/* ── Aside left panel ── */
-.wizardRoot > :global(aside) {
-  background-color: var(--surface) !important;
-  border-right-color: var(--border) !important;
+.channelTag {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.3rem 0.65rem;
+  border-radius: 7px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--foreground);
 }
 
-/* ── Right scrollable panel ── */
-.wizardRoot > :global(div:last-child) {
-  background-color: var(--background) !important;
+/* ── KPI block ── */
+.kpiBlock {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-/* ── AI config popup panel ── */
-.wizardRoot :global(.rounded-2xl.bg-zinc-950) {
-  background-color: var(--card) !important;
-  border-color: color-mix(in srgb, var(--primary) 30%, transparent) !important;
+.kpiIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  flex-shrink: 0;
 }
 
-/* ── Missing opacity variants (bg-zinc-900/80 etc.) ── */
-.wizardRoot :global(.bg-zinc-900\/80),
-.wizardRoot :global(.bg-zinc-900\/50) {
-  background-color: var(--card) !important;
+.kpiContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
 }
 
-/* ── Border white opacity variants ── */
-.wizardRoot :global(.border-white\/5),
-.wizardRoot :global(.border-white\/10) {
-  border-color: var(--border) !important;
+.kpiMeta {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--foreground);
 }
-.wizardRoot :global(.border-white\/20) {
-  border-color: color-mix(in srgb, var(--foreground) 18%, transparent) !important;
+
+.kpiGoal {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+  font-family: var(--font-family-monospace);
+  line-height: 1.6;
+}
+
+/* ── Blueprint ── */
+.blueprintBlock {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  grid-column: 1 / -1;
+  animation: fadeUp 0.4s ease both;
+}
+
+.blueprintHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.blueprintIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  flex-shrink: 0;
+}
+
+.blueprintTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--foreground);
+  margin: 0;
+}
+
+.blueprintSubtitle {
+  font-size: 10px;
+  color: var(--muted-foreground);
+  font-family: var(--font-family-monospace);
+  letter-spacing: 0.05em;
+  display: block;
+  margin-top: 2px;
+}
+
+.blueprintText {
+  font-size: var(--font-size-xs);
+  color: var(--card-foreground);
+  line-height: 1.85;
+  white-space: pre-wrap;
+  font-family: var(--font-family-monospace);
+}
+
+/* ═══════════════════════════════════════════
+   AI CONFIG OVERLAY
+═══════════════════════════════════════════ */
+
+.aiOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--foreground) 50%, transparent);
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+
+.aiPanel {
+  background: var(--popup);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.aiPanelTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--foreground);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.aiPanelText {
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.aiPanelActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }

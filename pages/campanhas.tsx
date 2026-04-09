@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { Megaphone, RefreshCw, Zap, Blocks, Activity, LayoutGrid, ArrowRight, Plus, AlertCircle } from "lucide-react";
+import {
+  Megaphone, RefreshCw, Zap, Blocks, Activity,
+  LayoutGrid, ArrowRight, Plus, AlertCircle,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { CriarCampanha } from "../components/brand-studio/criar-campanha";
 import { useCampaigns } from "../helpers/useApi";
@@ -12,18 +15,30 @@ export default function Campanhas() {
   const navigate = useNavigate();
 
   const campaigns = data?.campaigns || [];
-  const totalAtivas = campaigns.filter(c => c.status === "active" || c.status === "approved").length;
-  const totalRascunhos = campaigns.filter(c => c.status === "draft").length;
+  const totalAtivas = campaigns.filter(
+    (c) => c.status === "active" || c.status === "approved"
+  ).length;
+  const totalRascunhos = campaigns.filter((c) => c.status === "draft").length;
+
+  const TYPE_LABELS: Record<string, string> = {
+    seasonal_promotion: "Promoção Sazonal",
+    awareness: "Awareness",
+    brand_engagement: "Engajamento",
+    corporate_event: "Evento",
+    product_launch: "Lançamento",
+  };
 
   return (
     <div className={styles.page}>
-      <Helmet><title>CoreStudio | Campanhas V8</title></Helmet>
+      <Helmet>
+        <title>CoreStudio | Campanhas V8</title>
+      </Helmet>
 
       {/* ── Header ── */}
       <div className={styles.header}>
         <div className={styles.titleGroup}>
           <div className={styles.iconBox}>
-            <Megaphone size={22} strokeWidth={1.8} />
+            <Megaphone size={20} strokeWidth={1.6} />
           </div>
           <div>
             <h1 className={styles.title}>Campanhas</h1>
@@ -40,10 +55,10 @@ export default function Campanhas() {
             disabled={loading}
             title="Atualizar lista"
           >
-            <RefreshCw size={15} className={loading ? styles.spinning : ""} />
+            <RefreshCw size={14} className={loading ? styles.spinning : ""} />
           </button>
           <button className={styles.newBtn} onClick={() => setIsCreating(true)}>
-            <Plus size={15} strokeWidth={2.5} />
+            <Plus size={14} strokeWidth={2.5} />
             Nova Campanha
           </button>
         </div>
@@ -54,7 +69,9 @@ export default function Campanhas() {
         <div className={styles.statCard}>
           <div className={styles.statTop}>
             <span className={styles.statLabel}>Total de Campanhas</span>
-            <div className={styles.statIcon}><Megaphone size={16} strokeWidth={1.8} /></div>
+            <div className={styles.statIcon}>
+              <Megaphone size={15} strokeWidth={1.6} />
+            </div>
           </div>
           <div className={styles.statBottom}>
             <span className={styles.statValue}>{campaigns.length}</span>
@@ -65,7 +82,9 @@ export default function Campanhas() {
         <div className={styles.statCard}>
           <div className={styles.statTop}>
             <span className={styles.statLabel}>Ativas / Aprovadas</span>
-            <div className={styles.statIcon}><Activity size={16} strokeWidth={1.8} /></div>
+            <div className={styles.statIcon}>
+              <Activity size={15} strokeWidth={1.6} />
+            </div>
           </div>
           <div className={styles.statBottom}>
             <span className={styles.statValue}>{totalAtivas}</span>
@@ -76,7 +95,9 @@ export default function Campanhas() {
         <div className={styles.statCard}>
           <div className={styles.statTop}>
             <span className={styles.statLabel}>Rascunhos</span>
-            <div className={styles.statIcon}><Zap size={16} strokeWidth={1.8} /></div>
+            <div className={styles.statIcon}>
+              <Zap size={15} strokeWidth={1.6} />
+            </div>
           </div>
           <div className={styles.statBottom}>
             <span className={styles.statValue}>{totalRascunhos}</span>
@@ -88,30 +109,42 @@ export default function Campanhas() {
       {/* ── Campaign List ── */}
       {loading ? (
         <div className={styles.skeletonList}>
-          {[1, 2, 3].map(i => <div key={i} className={styles.skeletonCard} />)}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className={styles.skeletonCard} />
+          ))}
         </div>
       ) : isError ? (
         <div className={styles.errorState}>
-          <AlertCircle size={28} color="#ef4444" />
-          <h2 className={styles.errorTitle}>Não foi possível carregar as campanhas</h2>
-          <p className={styles.errorText}>Verifique a conexão e tente novamente.</p>
+          <AlertCircle size={26} className={styles.errorIcon} />
+          <h2 className={styles.errorTitle}>
+            Não foi possível carregar as campanhas
+          </h2>
+          <p className={styles.errorText}>
+            Verifique a conexão e tente novamente.
+          </p>
           <button className={styles.emptyBtn} onClick={() => refetch()}>
-            <RefreshCw size={14} /> Tentar novamente
+            <RefreshCw size={13} /> Tentar novamente
           </button>
         </div>
       ) : campaigns.length === 0 ? (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>
-            <LayoutGrid size={28} strokeWidth={1.5} />
+            <LayoutGrid size={26} strokeWidth={1.5} />
           </div>
           <div>
-            <h2 className={styles.emptyTitle}>Nenhuma campanha criada ainda</h2>
+            <h2 className={styles.emptyTitle}>
+              Nenhuma campanha criada ainda
+            </h2>
             <p className={styles.emptyText}>
-              Inicie o Motor V8 para construir o blueprint estratégico da sua primeira campanha.
+              Inicie o Motor V8 para construir o blueprint estratégico da sua
+              primeira campanha.
             </p>
           </div>
-          <button className={styles.emptyBtn} onClick={() => setIsCreating(true)}>
-            <Zap size={15} strokeWidth={2} />
+          <button
+            className={styles.emptyBtn}
+            onClick={() => setIsCreating(true)}
+          >
+            <Zap size={14} strokeWidth={2} />
             Criar primeira campanha
           </button>
         </div>
@@ -119,7 +152,7 @@ export default function Campanhas() {
         <>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>
-              <LayoutGrid size={16} />
+              <LayoutGrid size={15} />
               Todas as Campanhas
               <span className={styles.sectionCount}>{campaigns.length}</span>
             </h2>
@@ -130,23 +163,18 @@ export default function Campanhas() {
               const dateObj = new Date(camp.createdAt || "");
               const formattedDate = !isNaN(dateObj.getTime())
                 ? new Intl.DateTimeFormat("pt-BR", {
-                    day: "2-digit", month: "short", year: "numeric",
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
                   }).format(dateObj)
                 : "Recente";
 
               const activeModsCount = camp.dna_modulos
-                ? Object.values(camp.dna_modulos).filter(v => v === true).length
+                ? Object.values(camp.dna_modulos).filter((v) => v === true)
+                    .length
                 : 0;
 
               const isDraft = camp.status === "draft";
-
-              const typeLabels: Record<string, string> = {
-                seasonal_promotion: "Promoção Sazonal",
-                awareness: "Awareness",
-                brand_engagement: "Engajamento",
-                corporate_event: "Evento",
-                product_launch: "Lançamento",
-              };
 
               return (
                 <div
@@ -155,7 +183,7 @@ export default function Campanhas() {
                   data-status={camp.status || "draft"}
                 >
                   <div className={styles.campaignIcon}>
-                    <Megaphone size={18} strokeWidth={1.5} />
+                    <Megaphone size={17} strokeWidth={1.5} />
                   </div>
 
                   <div className={styles.campaignMain}>
@@ -165,7 +193,7 @@ export default function Campanhas() {
                       </span>
                       {camp.type && (
                         <span className={styles.campaignBadge}>
-                          {typeLabels[camp.type] ?? camp.type}
+                          {TYPE_LABELS[camp.type] ?? camp.type}
                         </span>
                       )}
                     </div>
@@ -174,14 +202,24 @@ export default function Campanhas() {
                       {camp.dna_direcao && (
                         <span>
                           Direção:{" "}
-                          <span className={styles.metaHighlight}>{camp.dna_direcao}</span>
+                          <span className={styles.metaHighlight}>
+                            {camp.dna_direcao}
+                          </span>
                         </span>
                       )}
                       {camp.duration && (
                         <span>{camp.duration} dias</span>
                       )}
                       {camp.objective && (
-                        <span style={{ maxWidth: 260, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <span
+                          style={{
+                            maxWidth: 240,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            display: "inline-block",
+                          }}
+                        >
                           {camp.objective}
                         </span>
                       )}
@@ -191,19 +229,27 @@ export default function Campanhas() {
 
                   <div className={styles.campaignActions}>
                     <div className={styles.metaModules}>
-                      <Blocks size={13} />
+                      <Blocks size={12} />
                       <span>{activeModsCount} módulos</span>
                     </div>
 
-                    <span className={`${styles.statusBadge} ${isDraft ? styles.statusDraft : styles.statusPublished}`}>
-                      {isDraft ? "Rascunho" : camp.status === "completed" ? "Concluída" : "Ativa"}
+                    <span
+                      className={`${styles.statusBadge} ${
+                        isDraft ? styles.statusDraft : styles.statusPublished
+                      }`}
+                    >
+                      {isDraft
+                        ? "Rascunho"
+                        : camp.status === "completed"
+                        ? "Concluída"
+                        : "Ativa"}
                     </span>
 
                     <button
                       className={styles.govBtn}
                       onClick={() => navigate("/coreact")}
                     >
-                      Governança <ArrowRight size={12} />
+                      Governança <ArrowRight size={11} />
                     </button>
                   </div>
                 </div>
@@ -213,7 +259,10 @@ export default function Campanhas() {
         </>
       )}
 
-      <CriarCampanha isOpen={isCreating} onClose={() => setIsCreating(false)} />
+      <CriarCampanha
+        isOpen={isCreating}
+        onClose={() => setIsCreating(false)}
+      />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-/* campanhas.module.css — CoreStudio ColdFlora V8 Premium */
+/* campanhas.module.css — ColdFlora V8 — ZERO cores hardcoded */
 
 /* ── Page shell ── */
 .page {
@@ -29,20 +29,16 @@
 }
 
 .iconBox {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--primary) 15%, transparent),
-    color-mix(in srgb, var(--primary) 6%, transparent)
-  );
-  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: var(--foreground);
   flex-shrink: 0;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 8%, transparent);
 }
 
 .title {
@@ -69,9 +65,9 @@
 }
 
 .refreshBtn {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--card);
   display: flex;
@@ -86,7 +82,7 @@
   border-color: var(--border-hover);
   background: var(--surface);
 }
-.refreshBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.refreshBtn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .spinning { animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -94,10 +90,10 @@
 .newBtn {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  height: 38px;
-  padding: 0 1.25rem;
-  border-radius: 10px;
+  gap: 0.4rem;
+  height: 36px;
+  padding: 0 1.1rem;
+  border-radius: 8px;
   background: var(--primary);
   color: var(--primary-foreground);
   border: none;
@@ -105,20 +101,14 @@
   font-weight: var(--font-weight-semibold);
   font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.15s ease;
-  box-shadow:
-    0 1px 3px color-mix(in srgb, var(--primary) 30%, transparent),
-    0 4px 12px color-mix(in srgb, var(--primary) 15%, transparent);
+  transition: opacity 0.15s ease, transform 0.15s ease;
   letter-spacing: -0.01em;
 }
 .newBtn:hover {
+  opacity: 0.88;
   transform: translateY(-1px);
-  box-shadow:
-    0 4px 8px color-mix(in srgb, var(--primary) 35%, transparent),
-    0 8px 24px color-mix(in srgb, var(--primary) 18%, transparent);
-  background: color-mix(in srgb, var(--primary) 90%, white);
 }
-.newBtn:active { transform: translateY(0); }
+.newBtn:active { transform: translateY(0); opacity: 1; }
 
 /* ── Stat cards ── */
 .statsGrid {
@@ -127,44 +117,20 @@
   gap: 1rem;
 }
 
-@media (max-width: 900px) {
-  .statsGrid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 600px) {
-  .statsGrid { grid-template-columns: 1fr; }
-  .page { padding: 1.25rem 1rem; }
-}
-
 .statCard {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 14px;
+  padding: 1.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.2s ease;
-}
-.statCard::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: 16px 16px 0 0;
-  background: var(--stat-accent, var(--primary));
-  opacity: 0.7;
+  gap: 0.75rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .statCard:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 4px 20px color-mix(in srgb, var(--foreground) 6%, transparent);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
-
-.statCard:nth-child(1) { --stat-accent: var(--primary); }
-.statCard:nth-child(2) { --stat-accent: #22c55e; }
-.statCard:nth-child(3) { --stat-accent: #f59e0b; }
 
 .statTop {
   display: flex;
@@ -177,19 +143,19 @@
   color: var(--muted-foreground);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
 }
 
 .statIcon {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  background: color-mix(in srgb, var(--stat-accent, var(--primary)) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--stat-accent, var(--primary)) 20%, transparent);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--stat-accent, var(--primary));
+  color: var(--foreground);
   flex-shrink: 0;
 }
 
@@ -218,7 +184,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
 }
 
 .sectionTitle {
@@ -238,7 +203,7 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 0.1rem 0.6rem;
+  padding: 0.1rem 0.55rem;
   font-weight: var(--font-weight-medium);
 }
 
@@ -246,53 +211,45 @@
 .campaignList {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .campaignCard {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.25rem 1.5rem;
+  border-left: 3px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem;
   display: grid;
-  grid-template-columns: 44px 1fr auto;
+  grid-template-columns: 40px 1fr auto;
   align-items: center;
   gap: 1rem;
-  transition: all 0.18s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
   cursor: default;
-  position: relative;
-  overflow: hidden;
-}
-.campaignCard::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--card-accent, var(--border));
-  transition: background 0.2s ease;
 }
 .campaignCard:hover {
   border-color: var(--border-hover);
+  border-left-color: var(--foreground);
   background: var(--surface);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 5%, transparent);
-  transform: translateX(2px);
+  box-shadow: var(--shadow);
 }
 
-.campaignCard[data-status="draft"] { --card-accent: #f59e0b; }
-.campaignCard[data-status="active"] { --card-accent: #22c55e; }
-.campaignCard[data-status="approved"] { --card-accent: #22c55e; }
-.campaignCard[data-status="completed"] { --card-accent: var(--primary); }
+/* Status variants — usando apenas tokens semânticos, sem cor avulsa */
+.campaignCard[data-status="draft"]     { border-left-color: var(--warning-foreground); }
+.campaignCard[data-status="active"]    { border-left-color: var(--success-foreground); }
+.campaignCard[data-status="approved"]  { border-left-color: var(--success-foreground); }
+.campaignCard[data-status="completed"] { border-left-color: var(--foreground); }
 
 .campaignIcon {
-  width: 44px;
-  height: 44px;
-  border-radius: 11px;
-  background: color-mix(in srgb, var(--primary) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: var(--foreground);
   flex-shrink: 0;
 }
 
@@ -306,7 +263,7 @@
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
 }
 
 .campaignName {
@@ -323,8 +280,8 @@
   font-size: 10px;
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.2rem 0.55rem;
+  letter-spacing: 0.07em;
+  padding: 0.2rem 0.5rem;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--surface);
@@ -335,7 +292,7 @@
 .campaignMeta {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.7rem;
   font-size: var(--font-size-xs);
   color: var(--muted-foreground);
   flex-wrap: wrap;
@@ -350,7 +307,7 @@
 .campaignActions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
   flex-shrink: 0;
 }
 
@@ -366,23 +323,26 @@
   font-size: 10px;
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.25rem 0.7rem;
+  letter-spacing: 0.07em;
+  padding: 0.2rem 0.6rem;
   border-radius: 999px;
-  border: 1px solid;
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  background: var(--surface);
   white-space: nowrap;
 }
 
+/* Status badge variantes semânticos */
 .statusDraft {
-  color: #92400e;
-  background: #fef3c7;
-  border-color: #fcd34d;
+  color: var(--warning-foreground);
+  background: color-mix(in srgb, var(--warning) 18%, transparent);
+  border-color: color-mix(in srgb, var(--warning-foreground) 25%, transparent);
 }
 
 .statusPublished {
-  color: #065f46;
-  background: #d1fae5;
-  border-color: #6ee7b7;
+  color: var(--success-foreground);
+  background: color-mix(in srgb, var(--success) 25%, transparent);
+  border-color: color-mix(in srgb, var(--success-foreground) 25%, transparent);
 }
 
 .govBtn {
@@ -394,8 +354,8 @@
   background: transparent;
   border: 1px solid var(--border);
   cursor: pointer;
-  padding: 0.4rem 0.875rem;
-  border-radius: 8px;
+  padding: 0.35rem 0.8rem;
+  border-radius: 7px;
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-medium);
   transition: all 0.15s ease;
@@ -412,49 +372,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
   padding: 5rem 2rem;
   text-align: center;
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--primary) 3%, var(--card)),
-    var(--card)
-  );
-  border: 1px dashed color-mix(in srgb, var(--primary) 25%, var(--border));
-  border-radius: 20px;
-  position: relative;
-  overflow: hidden;
-}
-.emptyState::before {
-  content: '';
-  position: absolute;
-  top: -80px; right: -80px;
-  width: 280px; height: 280px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--primary) 8%, transparent),
-    transparent 70%
-  );
-  pointer-events: none;
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: 18px;
 }
 
 .emptyIcon {
-  width: 72px;
-  height: 72px;
-  border-radius: 20px;
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--primary) 15%, var(--card)),
-    color-mix(in srgb, var(--primary) 6%, var(--card))
-  );
-  border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--border));
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
-  box-shadow:
-    0 0 0 6px color-mix(in srgb, var(--primary) 6%, transparent),
-    0 8px 24px color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--foreground);
 }
 
 .emptyTitle {
@@ -470,17 +405,17 @@
   font-size: var(--font-size-sm);
   color: var(--muted-foreground);
   margin: 0;
-  max-width: 360px;
+  max-width: 340px;
   line-height: 1.65;
 }
 
 .emptyBtn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  height: 42px;
-  padding: 0 1.5rem;
-  border-radius: 11px;
+  gap: 0.45rem;
+  height: 40px;
+  padding: 0 1.4rem;
+  border-radius: 10px;
   background: var(--primary);
   color: var(--primary-foreground);
   border: none;
@@ -488,20 +423,11 @@
   font-weight: var(--font-weight-semibold);
   font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.15s ease;
-  margin-top: 0.25rem;
+  transition: opacity 0.15s ease, transform 0.15s ease;
   letter-spacing: -0.01em;
-  box-shadow:
-    0 2px 6px color-mix(in srgb, var(--primary) 30%, transparent),
-    0 6px 20px color-mix(in srgb, var(--primary) 15%, transparent);
 }
-.emptyBtn:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent),
-    0 10px 28px color-mix(in srgb, var(--primary) 18%, transparent);
-}
-.emptyBtn:active { transform: translateY(0); }
+.emptyBtn:hover { opacity: 0.85; transform: translateY(-1px); }
+.emptyBtn:active { transform: translateY(0); opacity: 1; }
 
 /* ── Error state ── */
 .errorState {
@@ -511,14 +437,14 @@
   gap: 1rem;
   padding: 3rem 2rem;
   text-align: center;
-  background: color-mix(in srgb, #ef4444 4%, var(--card));
-  border: 1px dashed color-mix(in srgb, #ef4444 30%, transparent);
-  border-radius: 16px;
+  background: color-mix(in srgb, var(--error) 8%, var(--card));
+  border: 1px dashed color-mix(in srgb, var(--error-foreground) 30%, transparent);
+  border-radius: 14px;
 }
 .errorTitle {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-  color: #ef4444;
+  color: var(--error-foreground);
   margin: 0;
 }
 .errorText {
@@ -526,37 +452,37 @@
   color: var(--muted-foreground);
   margin: 0;
 }
+.errorIcon {
+  color: var(--error-foreground);
+}
 
 /* ── Skeleton ── */
 .skeletonList {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .skeletonCard {
-  height: 82px;
-  border-radius: 14px;
+  height: 76px;
+  border-radius: 12px;
   background: var(--surface);
   border: 1px solid var(--border);
-  animation: shimmer 1.4s ease-in-out infinite;
+  animation: shimmer 1.5s ease-in-out infinite;
 }
 
 @keyframes shimmer {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50%       { opacity: 0.45; }
 }
 
-/* ── Dark mode overrides ── */
-@media (prefers-color-scheme: dark) {
-  .statusDraft {
-    color: #fbbf24;
-    background: color-mix(in srgb, #f59e0b 15%, transparent);
-    border-color: color-mix(in srgb, #f59e0b 35%, transparent);
-  }
-  .statusPublished {
-    color: #34d399;
-    background: color-mix(in srgb, #22c55e 15%, transparent);
-    border-color: color-mix(in srgb, #22c55e 35%, transparent);
-  }
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .statsGrid { grid-template-columns: 1fr; }
+  .page { padding: 1.25rem 1rem; }
+  .campaignCard { grid-template-columns: 40px 1fr; }
+  .campaignActions { display: none; }
 }
