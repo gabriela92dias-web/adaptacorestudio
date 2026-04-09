@@ -199,33 +199,30 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
     });
   };
 
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState<'idle' | 'translating' | 'error'>('idle');
 
-  // Ao salvar: traduz os campos do idoma ativo para EN e DE via backend e salva tudo
   const handleSaveAll = async () => {
-    setSaving(true);
+    setSaving('translating');
+    const next = JSON.parse(JSON.stringify(draft)) as ContentStore;
     try {
       const sourceSlide = draft[activeLang][slideIndex];
       const otherLangs = ALL_LANGS.filter(l => l !== activeLang);
-
-      // Monta um objeto só com os campos que existem no slide (exclui 'type' e 'visual')
       const fields: Record<string, string | string[]> = {};
       if (sourceSlide.badge !== undefined) fields.badge = sourceSlide.badge ?? '';
       fields.title = sourceSlide.title;
       if (sourceSlide.subtitle !== undefined) fields.subtitle = sourceSlide.subtitle ?? '';
       if (sourceSlide.content !== undefined) fields.content = sourceSlide.content ?? '';
       if (sourceSlide.points?.length) fields.points = sourceSlide.points;
-
+      const controller = new AbortController();
+      const tid = setTimeout(() => controller.abort(), 12000);
       const res = await fetch('/_api/pitch/translate', {
-        method: 'POST',
+        method: 'POST', signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fields, sourceLang: activeLang, targetLangs: otherLangs }),
       });
-
-      const result = await res.json() as { translations?: Record<string, typeof fields>; error?: string };
-
-      const next = JSON.parse(JSON.stringify(draft)) as ContentStore;
-
+      clearTimeout(tid);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json() as { translations?: Record<string, typeof fields> };
       if (result.translations) {
         for (const lang of otherLangs) {
           const t = result.translations[lang];
@@ -238,14 +235,13 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
           if (Array.isArray(t.points)) target.points = t.points as string[];
         }
       }
-
       onSave(next);
-    } catch (err) {
-      console.error('Translate error:', err);
-      // fallback: salva só o idioma ativo sem tradução
-      onSave(draft);
-    } finally {
-      setSaving(false);
+      setSaving('idle');
+    } catch (err: any) {
+      console.warn('[pitch] Tradução falhou, salvando só lang ativo:', err?.message);
+      onSave(next);
+      setSaving('error');
+      setTimeout(() => setSaving('idle'), 3000);
     }
   };
 
@@ -384,15 +380,15 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
 
         {/* Footer */}
         <div className="sticky bottom-0 z-10 flex flex-col gap-2 px-6 py-4 border-t" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
-          <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-            {saving
-              ? '⏳ Traduzindo automaticamente para EN e DE…'
-              : `✏️ Editando em ${LANG_LABELS[activeLang]}. Ao salvar, EN e DE serão traduzidos automaticamente.`}
+          <p className="text-xs" style={{ color: saving === 'error' ? 'var(--destructive)' : 'var(--muted-foreground)' }}>
+            {saving === 'translating' && '⏳ Traduzindo automaticamente para EN e DE…'}
+            {saving === 'error' && '⚠️ Tradução falhou. Edição salva só neste idioma.'}
+            {saving === 'idle' && `✏️ Editando em ${LANG_LABELS[activeLang]}. Ao salvar, EN e DE são traduzidos automaticamente.`}
           </p>
           <div className="flex gap-3 justify-end">
             <button
               onClick={onClose}
-              disabled={saving}
+              disabled={saving === 'translating'}
               className="px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-40"
               style={{ color: 'var(--foreground)', border: '1px solid var(--border)' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--border)')}
@@ -402,13 +398,13 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
             </button>
             <button
               onClick={handleSaveAll}
-              disabled={saving}
+              disabled={saving === 'translating'}
               className="px-5 py-2 rounded-lg text-sm font-semibold transition-opacity disabled:opacity-50"
               style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
-              onMouseEnter={e => { if (!saving) e.currentTarget.style.opacity = '0.85'; }}
+              onMouseEnter={e => { if (saving !== 'translating') e.currentTarget.style.opacity = '0.85'; }}
               onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
             >
-              {saving ? 'Traduzindo…' : 'Salvar Alterações'}
+              {saving === 'translating' ? 'Traduzindo…' : 'Salvar Alterações'}
             </button>
           </div>
         </div>
