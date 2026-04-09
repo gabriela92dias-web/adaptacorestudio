@@ -220,6 +220,7 @@ export default function ScrollManager() {
 
 import { AppLayout } from "./components/AppLayout";
 import { UserRoute } from "./components/ProtectedRoute";
+import PitchDeck from "./pages/pitch-deck";
 
 export function App() {
   return (
@@ -266,6 +267,7 @@ export function App() {
           <Route path="/tools/gerar-doc" element={<UserRoute><AppLayout><GerarDoc /></AppLayout></UserRoute>} />
           <Route path="/tools/color-wheel" element={<UserRoute><AppLayout><ColorWheelPage /></AppLayout></UserRoute>} />
           <Route path="/forgot-password" element={<Page_13 />} />
+          <Route path="/pitch" element={<PitchDeck />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </React.Suspense>
