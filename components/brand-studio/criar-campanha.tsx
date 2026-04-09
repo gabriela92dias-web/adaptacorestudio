@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -479,51 +479,39 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         </div>
       )}
 
-      {/* HEADER */}
-      {/* Header Superior - Mobile + Desktop */}
-        <div className="flex items-center justify-between md:hidden mb-6 border-b border-white/5 pb-4">
-           <div className="flex items-center gap-3">
-              <Megaphone className="w-5 h-5 text-emerald-400" />
-              <span className="font-black tracking-widest text-xs">CRIAR AÇÃO</span>
-           </div>
-           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-md transition-colors"><X size={20}/></button>
-        </div>
 
-        <div className="hidden md:flex items-center justify-between mb-8 border-b border-white/5 pb-4">
-           <h1 className="text-xl font-black tracking-widest uppercase flex items-center gap-3">
-              <Sparkles className="text-emerald-500 w-5 h-5" /> 
-              Engenharia de Ação
-              
-           </h1>
-           <button onClick={onClose} className="text-zinc-400 hover:text-white p-2 hover:bg-white/5 rounded-md transition-colors"><X size={24}/></button>
-        </div>
 
-      <aside className={`w-full md:w-[400px] lg:w-[500px] shrink-0 p-6 lg:p-12 flex flex-col ${wizardStyles.sidePanel}`}>
-        <header className={`h-16 flex items-center justify-between px-6 sticky top-0 z-50 ${wizardStyles.stickyHeader}`}>
-         <div className="flex items-center gap-4">
+      <aside className={`w-full md:w-[400px] lg:w-[500px] shrink-0 flex flex-col ${wizardStyles.sidePanel}`}>
+        <header className={`h-16 flex items-center justify-between px-5 sticky top-0 z-50 ${wizardStyles.stickyHeader}`}>
+         <div className="flex items-center gap-3">
             <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors text-zinc-400 hover:text-white">
                <ArrowLeft className="w-5 h-5" />
             </button>
             <div className="flex flex-col">
-               <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Engenharia de Ação</span>
-               <h1 className="text-sm font-semibold text-white">Console Blueprint</h1>
+               <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-500">Nova Campanha</span>
+               <h1 className="text-sm font-semibold text-white leading-tight">Construtor de Ação V8</h1>
             </div>
          </div>
-         {step >= 4 && !isSaved && (
-            <Button onClick={finishCreation} className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider h-9 px-6 shadow-lg shadow-emerald-500/20">
-               Homologar Projeto Oficial <CheckCircle2 className="w-4 h-4 ml-2" />
-            </Button>
-         )}
-         {step >= 4 && isSaved && (
-            <Button 
-                onClick={generateActionPlan} 
-                disabled={isGeneratingPlan}
-                className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider h-9 px-6 shadow-lg shadow-blue-500/20 animate-pulse"
-            >
-               {isGeneratingPlan ? "Gerando CoreAct..." : "Gerar Plano de Ação (CoreAct)"}
-               <Zap className="w-4 h-4 ml-2" />
-            </Button>
-         )}
+         <div className="flex items-center gap-2">
+           {step >= 4 && !isSaved && (
+              <Button onClick={finishCreation} className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs h-8 px-4">
+                 Salvar <CheckCircle2 className="w-3.5 h-3.5 ml-1.5" />
+              </Button>
+           )}
+           {step >= 4 && isSaved && (
+              <Button 
+                  onClick={generateActionPlan} 
+                  disabled={isGeneratingPlan}
+                  className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs h-8 px-4"
+              >
+                 {isGeneratingPlan ? "Gerando..." : "Enviar ao CoreAct"}
+                 <Zap className="w-3.5 h-3.5 ml-1.5" />
+              </Button>
+           )}
+           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-colors text-zinc-400 hover:text-white">
+             <X size={18}/>
+           </button>
+         </div>
         </header>
 
         <div className="flex-1 overflow-y-auto pr-4 -mr-4"> {/* Added pr-4 -mr-4 for custom scrollbar */}
@@ -541,11 +529,10 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors ${step > 0 ? 'bg-emerald-500 text-black shadow-emerald-500/20' : step === 0 ? 'bg-zinc-900 border-2 border-emerald-500 text-emerald-500' : 'bg-zinc-900 border border-white/10 text-zinc-600'}`}>1</div>
                   </div>
                   <div className="flex-1">
-                    <label className="text-xs font-semibold text-zinc-500 mb-3 block">Tema / Nome da Ação</label>
+                    <label className="text-xs font-semibold text-zinc-500 mb-3 block">Nome da campanha</label>
                     {step === 0 ? (
                         <div className="space-y-4">
                             <div className="space-y-2">
-                               <label className="text-xs font-semibold text-zinc-500 mb-3 block">Nome da ação</label>
                                <Input 
                                   autoFocus 
                                   value={rawName} 
@@ -592,8 +579,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                                  </div>
                            </div>
 
-                           <Button onClick={nextStepTema} disabled={isGenerating || !rawName} className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold tracking-widest uppercase text-xs">
-                              {isGenerating ? <Sparkles className="w-4 h-4 animate-spin" /> : "Extrair tese →"}
+                           <Button onClick={nextStepTema} disabled={isGenerating || !rawName} className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-semibold text-sm">
+                              {isGenerating ? <><Sparkles className="w-4 h-4 animate-spin mr-2" /> Analisando...</> : "Analisar e continuar →"}
                            </Button>
                         </div>
                      ) : (
@@ -626,7 +613,6 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     {step === 1 ? (
                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
                            
-                           {/* DYNAMIC SUGGESTIONS REPLACING PURE TEXTAREA */}
                            <div className="flex flex-col gap-3">
                              <div className="flex items-center gap-2 mb-1">
                                 <Sparkles className="w-4 h-4 text-zinc-500" />
@@ -707,9 +693,14 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                               disabled={isGenerating}
                               onKeyDown={e => { if(e.key === 'Enter') { e.preventDefault(); nextStepOrcamento(); } }}
                            />
-                           <Button onClick={nextStepOrcamento} disabled={isGenerating || !orcamento} className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold tracking-widest uppercase text-xs">
-                              {isGenerating ? <Sparkles className="w-4 h-4 animate-spin" /> : "Trilhar Metas Operacionais"}
-                           </Button>
+                           <div className="flex gap-2">
+                              <Button onClick={nextStepOrcamento} disabled={isGenerating} className="flex-1 h-12 bg-white text-black hover:bg-zinc-200 font-semibold text-sm">
+                                 {isGenerating ? <><Sparkles className="w-4 h-4 animate-spin mr-2" /> Calculando...</> : "Continuar →"}
+                              </Button>
+                              {!orcamento && (
+                                <Button onClick={nextStepOrcamento} disabled={isGenerating} variant="ghost" className="h-12 px-4 text-zinc-500 hover:text-white text-xs">Pular</Button>
+                              )}
+                           </div>
                         </div>
                      ) : step > 2 ? (
                         <div className="p-4 bg-zinc-900 border border-white/5 rounded-xl flex items-center justify-between shadow-inner">
@@ -797,7 +788,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                       </div>
 
                       <div className="col-span-1 bg-zinc-900 border border-white/5 rounded-2xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                         <h3 className="text-[11px] font-semibold text-zinc-500 mb-4 block">Canais de contato de Contato</h3>
+                         <h3 className="text-[11px] font-semibold text-zinc-500 mb-4 block">Canais de Contato</h3>
                          <div className="flex flex-wrap gap-2">
                              {aiChannels.map(ch => (
                                 <span key={ch} className="px-3 py-1.5 bg-zinc-950 border border-white/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider rounded-md shadow-inner">{ch}</span>
