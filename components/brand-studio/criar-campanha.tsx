@@ -1,773 +1,434 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import {
-  ArrowLeft, ArrowRight, Target, Megaphone, Stethoscope, Briefcase,
-  Zap, CheckCircle2, Sparkles, HeartHandshake, FileText,
-  Calendar as CalendarIcon, X, Search, Magnet, Flag, Users,
+  ArrowLeft, ArrowRight, Target, Zap, CheckCircle2, Sparkles, FileText, X
 } from "lucide-react";
-import { toast } from "sonner";
-import { useCreateCampaign } from "../../helpers/useApi";
-import {
-  useCreateInitiative,
-  useCreateProject,
-  useCreateStage,
-  useCreateTask,
-} from "../../helpers/useCoreActApi";
-import s from "./criar-campanha.module.css";
+import { useCampaignWizard } from "./useCampaignWizard";
+import { ACTION_TYPES, FUNNELS } from "./wizard-constants";
 
-// ─────────────────────────────────────────────────────────────
-// CONSTANTES (lógica intacta)
-// ─────────────────────────────────────────────────────────────
+function StepTema({ state, actions }: { state: ReturnType<typeof useCampaignWizard>["state"], actions: ReturnType<typeof useCampaignWizard>["actions"] }) {
+  const { isGenerating, step, rawName, direcao, experiencia, modulos } = state;
+  const { setRawName, setDirecao, setExperiencia, setModulos, nextStepTema, setStep } = actions;
 
-const ACTION_TYPES = [
-  { id: "institucional", name: "Conscientização Institucional", icon: Target },
-  { id: "acolhimento",   name: "Mutirão / Acolhimento",        icon: HeartHandshake },
-  { id: "medicos",       name: "Educação Prescritora",          icon: Stethoscope },
-  { id: "sazonal",       name: "Data da Saúde / Sazonal",       icon: CalendarIcon },
-  { id: "pesquisa",      name: "Pesquisa / Ciência",            icon: FileText },
-];
+  const isActive = step === 0;
+  const isPast = step > 0;
 
-const FUNNELS = [
-  { id: "awareness",     name: "Conscientizar",  desc: "Opinião Pública",   pct: "100%" },
-  { id: "consideration", name: "Educação Médica", desc: "Tabus Clínicos",   pct: "83%"  },
-  { id: "conversion",    name: "Acolhimento",     desc: "Entrada Oficial",   pct: "66%"  },
-  { id: "retention",     name: "Acompanhamento",  desc: "Zelo Contínuo",     pct: "83%"  },
-  { id: "expansion",     name: "Apoio Social",    desc: "Rede de Indicação", pct: "100%" },
-];
+  return (
+    <div className={`relative pl-8 pb-10 border-l-2 ml-4 transition-all duration-500 ${isActive || isPast ? "border-[var(--primary)]" : "border-[var(--border)] opacity-30 pointer-events-none"}`}>
+      <span className="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-[var(--background)] border-2 border-[var(--primary)] flex items-center justify-center text-xs font-black font-mono">1</span>
+      
+      <div className="flex flex-col gap-6">
+        <div>
+          <h2 className="text-lg font-bold uppercase tracking-wide">Núcleo da Tese</h2>
+          <p className="text-sm text-[var(--muted-foreground)]">Defina o nome da campanha e os parâmetros estruturais do DNA.</p>
+        </div>
 
-const TACTICAL_MATRIX_DB: Record<string, { channels: string; focus: string; metrics: string }> = {
-  "leads-awareness":     { channels: "Reels Virais 15s, TikTok, YouTube Shorts",   focus: "Foque no problema não mapeado.",                       metrics: "Alcance • CPM • Curtidas" },
-  "leads-consideration": { channels: "Carrossel IG, YouTube Longo, Artigos SEO",   focus: "Como a metodologia sana a dor real.",                   metrics: "VTR • Tráfego • Salvamentos" },
-  "leads-conversion":    { channels: "Meta Ads de Oferta Direta, Landing Page",    focus: "Apelo de Escassez e Garantia.",                         metrics: "CAC • Taxa de Conversão • ROAS" },
-  "leads-retention":     { channels: "Retargeting",                                focus: "Remarketing de Confiança.",                             metrics: "Recall de Marca" },
-  "leads-expansion":     { channels: "Captura de Leads Orgânica",                  focus: "Pesquisas com quem rejeitou a oferta.",                  metrics: "Crescimento da Base" },
-  "members-awareness":   { channels: "Eventos Livres",                             focus: "Teasar novas atualizações.",                            metrics: "Engajamento no Grupo" },
-  "members-consideration": { channels: "Masterclasses, Avisos Telegram",           focus: "Prova de que a nova feature é game-changer.",            metrics: "Taxa de Assistência" },
-  "members-conversion":  { channels: "WhatsApp, Oferta Flash E-mail",              focus: "Exclusividade: preço de Ouro.",                         metrics: "Upsell • Taxa de Abertura" },
-  "members-retention":   { channels: "Masterclass VIP, Carta do Fundador",         focus: "Acolhimento contínuo.",                                 metrics: "Churn Reduzido • MAU" },
-  "members-expansion":   { channels: "MGM Automático",                             focus: "Programa Embaixadores.",                                metrics: "Indicações • NPS" },
-  "doctors-awareness":   { channels: "LinkedIn, RP em Congressos",                 focus: "Autoridade em Tratamentos Disruptivos.",                 metrics: "Lead Magnético B2B" },
-  "doctors-consideration": { channels: "Casos Clínicos PDF, Whitepapers",          focus: "Robustez e Segurança para Prescrição.",                  metrics: "Download E-book • Consultas" },
-  "doctors-conversion":  { channels: "Inside Sales (Call, Key Account)",           focus: "A grande Aliança a longo prazo.",                       metrics: "Reuniões Finalizadas" },
-  "doctors-retention":   { channels: "Dashboards VIP, Portal Médico",              focus: "Acompanhamento sem atrito.",                            metrics: "Pacientes Recorrentes • LTV" },
-  "doctors-expansion":   { channels: "Mesa Redonda Diretiva",                      focus: "Traga mais Parceiros.",                                 metrics: "Eventos Criados pelos Médicos" },
-  "ex-alunos-awareness": { channels: "Lookalike da Base, Ads IG",                  focus: "A Adapta não é mais a mesma.",                          metrics: "Taxa de Clique" },
-  "ex-alunos-consideration": { channels: "Cartas Visuais, Depoimentos",            focus: "Veja a Comunidade atual vibrando.",                      metrics: "Reabertura de Contato" },
-  "ex-alunos-conversion": { channels: "Campanha Flash WhatsApp",                   focus: "Isenção Completa da Taxa de Adesão.",                   metrics: "Alunos Reativados" },
-  "ex-alunos-retention": { channels: "Onboarding Guiado Especialista",             focus: "Cuidaremos do problema que te fez cancelar.",           metrics: "Suporte Imediato" },
-  "ex-alunos-expansion": { channels: "Pouco Custo Alocado",                        focus: "Não focar. Concentrar na volta do plano.",              metrics: "N/A" },
-};
+        {isActive ? (
+          <div className="flex flex-col gap-6 bg-[var(--surface)] p-6 rounded-2xl border border-[var(--border)]">
+            <input
+              autoFocus
+              className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 text-lg font-bold text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 transition-all font-heading"
+              value={rawName}
+              onChange={(e) => setRawName(e.target.value)}
+              placeholder="Ex: Mutirão de Acesso, Educação Médica..."
+              disabled={isGenerating}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); nextStepTema(); } }}
+            />
 
-const WIZARD_TYPE_TO_CAMPAIGN_TYPE: Record<string, "awareness" | "brand_engagement" | "corporate_event" | "product_launch" | "seasonal_promotion"> = {
-  institucional: "awareness",
-  acolhimento:   "corporate_event",
-  medicos:       "product_launch",
-  sazonal:       "seasonal_promotion",
-  pesquisa:      "brand_engagement",
-};
+            <div className="flex flex-col gap-5">
+              
+              {/* Direcao */}
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Orientação de Direção</span>
+                <div className="flex bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] w-fit">
+                  {(["interna", "externa", "hibrida"] as const).map((dir) => (
+                    <button
+                      key={dir}
+                      className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-all ${direcao === dir ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm" : "hover:bg-[var(--surface)] text-[var(--muted-foreground)]"}`}
+                      onClick={() => setDirecao(dir)}
+                    >
+                      {dir}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-// ─────────────────────────────────────────────────────────────
-// COMPONENT
-// ─────────────────────────────────────────────────────────────
+              {/* Experiencia */}
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Formato de Experiência</span>
+                <div className="flex bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] w-fit">
+                  {(["presencial", "digital", "hibrida"] as const).map((exp) => (
+                    <button
+                      key={exp}
+                      className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-all ${experiencia === exp ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm" : "hover:bg-[var(--surface)] text-[var(--muted-foreground)]"}`}
+                      onClick={() => setExperiencia(exp)}
+                    >
+                      {exp}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Modulos */}
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Módulos Ativos</span>
+                <div className="flex flex-wrap gap-2">
+                  {Object.keys(modulos).map((mod) => (
+                    <button
+                      key={mod}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide border transition-all ${modulos[mod as keyof typeof modulos] ? "bg-transparent border-[var(--primary)] text-[var(--primary)]" : "bg-transparent border-[var(--border)] text-[var(--muted-foreground)] hover:border-[var(--border-hover)]"}`}
+                      onClick={() => setModulos((prev) => ({ ...prev, [mod]: !prev[mod as keyof typeof modulos] }))}
+                    >
+                      {mod === "governanca" ? "Governança" : mod === "fisico" ? "Físico" : mod}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+            <button 
+              className="mt-2 w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-[var(--foreground)] text-[var(--background)] font-bold uppercase tracking-wider text-sm hover:opacity-90 disabled:opacity-50 transition-all font-heading" 
+              onClick={nextStepTema} 
+              disabled={isGenerating || !rawName.trim()}
+            >
+              {isGenerating ? (
+                <><Sparkles size={16} className="animate-spin opacity-70" /> Processando dados base...</>
+              ) : (
+                <>Sintetizar & Avançar <ArrowRight size={16} /></>
+              )}
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-sm hover:border-[var(--border-hover)] transition-all group">
+            <div>
+              <h3 className="text-xl font-bold font-heading mb-2">{rawName}</h3>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-transparent border border-[var(--primary)] text-[var(--primary)]">Dir: {direcao}</span>
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-transparent border border-[var(--primary)] text-[var(--primary)]">Exp: {experiencia}</span>
+                {Object.keys(modulos).filter((k) => modulos[k as keyof typeof modulos]).map((k) => (
+                  <span key={k} className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                    {k === "governanca" ? "Gov." : k === "fisico" ? "Fís." : k}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <button className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)] hover:text-[var(--foreground)] opacity-0 group-hover:opacity-100 transition-opacity underline decoration-1 underline-offset-4" onClick={() => setStep(0)}>Alterar Escopo</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function StepProposicao({ state, actions }: { state: ReturnType<typeof useCampaignWizard>["state"], actions: ReturnType<typeof useCampaignWizard>["actions"] }) {
+  const { isGenerating, step, proposicao, suggestedPropositions } = state;
+  const { setProposicao, nextStepProposicao, setStep } = actions;
+
+  const isActive = step === 1;
+  const isPast = step > 1;
+
+  return (
+    <div className={`relative pl-8 pb-10 border-l-2 ml-4 transition-all duration-500 ${isActive || isPast ? "border-[var(--primary)]" : "border-[var(--border)] opacity-30 pointer-events-none"}`}>
+      <span className={`absolute -left-[17px] top-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black font-mono transition-colors ${isActive || isPast ? "bg-[var(--background)] border-2 border-[var(--primary)]" : "bg-[var(--surface)] border-2 border-[var(--border)] text-[var(--muted-foreground)]"}`}>2</span>
+      
+      <div className="flex flex-col gap-6">
+        <div>
+          <h2 className="text-lg font-bold uppercase tracking-wide">Arquitetura de Proposição</h2>
+          <p className="text-sm text-[var(--muted-foreground)]">A inteligência sugere ganchos táticos baseados no setor. Escolha ou defina.</p>
+        </div>
+
+        {isActive ? (
+          <div className="flex flex-col gap-6 bg-[var(--surface)] p-6 rounded-2xl border border-[var(--border)]">
+            
+            <div className="flex flex-col gap-3">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Sugestões (Base de Conhecimento Clínica/Setorial)</span>
+              {suggestedPropositions.map((sug, idx) => (
+                <button
+                  key={idx}
+                  className="w-full text-left p-4 rounded-xl border border-[var(--border)] bg-[var(--background)] hover:border-[var(--primary)] hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 flex gap-4 group"
+                  onClick={() => nextStepProposicao(sug)}
+                  disabled={isGenerating}
+                >
+                  <span className="text-[var(--muted-foreground)] font-mono font-bold text-sm mt-0.5">0{idx + 1}</span>
+                  <span className="flex-1 text-sm font-medium leading-relaxed">{sug}</span>
+                  <ArrowRight size={16} className="text-[var(--primary)] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all mt-0.5" />
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-4 py-2">
+              <div className="h-px bg-[var(--border)] flex-1" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">ou escreva a sua própria matriz</span>
+              <div className="h-px bg-[var(--border)] flex-1" />
+            </div>
+
+            <textarea
+              className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm font-medium text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 transition-all min-h-[100px] resize-y"
+              value={proposicao}
+              onChange={(e) => setProposicao(e.target.value)}
+              placeholder="Digite o core argument, problema a ser resolvido ou narrativa central..."
+              disabled={isGenerating}
+              onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); nextStepProposicao(); } }}
+            />
+
+            <div className="flex gap-3">
+              {proposicao.trim() ? (
+                <button className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-[var(--foreground)] text-[var(--background)] font-bold uppercase tracking-wider text-sm hover:opacity-90 disabled:opacity-50 transition-all font-heading" onClick={() => nextStepProposicao()} disabled={isGenerating}>
+                  {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Enraizando...</> : "Confirmar Proposta Autoral"}
+                </button>
+              ) : (
+                <button className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-transparent border border-[var(--border)] text-[var(--foreground)] font-bold uppercase tracking-wider text-sm hover:bg-[var(--surface)] hover:border-[var(--border-hover)] disabled:opacity-50 transition-all" onClick={() => nextStepProposicao("")} disabled={isGenerating}>
+                  {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Processando...</> : "Pular — Deixar I.A. Abstrair"}
+                </button>
+              )}
+            </div>
+
+          </div>
+        ) : isPast ? (
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-sm hover:border-[var(--border-hover)] transition-all group">
+            <span className="text-sm italic font-medium leading-relaxed max-w-2xl text-[var(--foreground)]">
+              "{proposicao.trim() ? proposicao : "Abstração Sistêmica I.A."}"
+            </span>
+            <button className="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)] hover:text-[var(--foreground)] opacity-0 group-hover:opacity-100 transition-opacity underline decoration-1 underline-offset-4" onClick={() => setStep(1)}>Refinar Escopo</button>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function StepOrcamento({ state, actions }: { state: ReturnType<typeof useCampaignWizard>["state"], actions: ReturnType<typeof useCampaignWizard>["actions"] }) {
+  const { isGenerating, step, orcamento } = state;
+  const { setOrcamento, nextStepOrcamento, setStep } = actions;
+
+  const isActive = step === 2;
+  const isPast = step > 2;
+
+  return (
+    <div className={`relative pl-8 pb-10 border-l-2 ml-4 transition-all duration-500 ${isActive || isPast ? "border-[var(--primary)]" : "border-[var(--border)] opacity-30 pointer-events-none"}`}>
+      <span className={`absolute -left-[17px] top-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black font-mono transition-colors ${isActive || isPast ? "bg-[var(--background)] border-2 border-[var(--primary)]" : "bg-[var(--surface)] border-2 border-[var(--border)] text-[var(--muted-foreground)]"}`}>3</span>
+      
+      <div className="flex flex-col gap-6">
+        <div>
+          <h2 className="text-lg font-bold uppercase tracking-wide">Viabilidade & KPIs</h2>
+          <p className="text-sm text-[var(--muted-foreground)]">Estimativa de custos determina os canais e o alcance.</p>
+        </div>
+
+        {isActive ? (
+          <div className="flex flex-col gap-6 bg-[var(--surface)] p-6 rounded-2xl border border-[var(--border)]">
+            <div className="relative">
+              <span className="absolute left-4 top-[14px] text-[var(--muted-foreground)] font-bold">R$</span>
+              <input
+                autoFocus
+                className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl pl-12 pr-4 py-3 text-lg font-bold text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 transition-all font-mono"
+                value={orcamento}
+                onChange={(e) => setOrcamento(e.target.value)}
+                placeholder="5.000,00"
+                disabled={isGenerating}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); nextStepOrcamento(); } }}
+              />
+            </div>
+            <div className="flex gap-3">
+              <button className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-[var(--foreground)] text-[var(--background)] font-bold uppercase tracking-wider text-sm hover:opacity-90 disabled:opacity-50 transition-all font-heading" onClick={nextStepOrcamento} disabled={isGenerating}>
+                {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Projetando ROI...</> : <>Projetar Impacto Máximo <ArrowRight size={16} /></>}
+              </button>
+              {!orcamento && (
+                <button className="w-auto px-6 h-12 flex items-center justify-center gap-2 rounded-xl bg-transparent border border-[var(--border)] text-[var(--foreground)] font-bold uppercase tracking-wider text-sm hover:bg-[var(--surface)] hover:border-[var(--border-hover)] disabled:opacity-50 transition-all" onClick={nextStepOrcamento} disabled={isGenerating}>
+                  Ignorar
+                </button>
+              )}
+            </div>
+          </div>
+        ) : isPast ? (
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-sm hover:border-[var(--border-hover)] transition-all group">
+            <span className="text-2xl font-black font-mono tracking-tight text-[var(--foreground)]">{orcamento ? `R$ ${orcamento}` : "Mídia Orgânica"}</span>
+            <button className="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)] hover:text-[var(--foreground)] opacity-0 group-hover:opacity-100 transition-opacity underline decoration-1 underline-offset-4" onClick={() => setStep(2)}>Reavaliar Capital</button>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
 
 export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const navigate = useNavigate();
-  const { mutateAsync: saveCampaign }     = useCreateCampaign();
-  const { mutateAsync: createInitiative } = useCreateInitiative();
-  const { mutateAsync: createProject }    = useCreateProject();
-  const { mutateAsync: createStage }      = useCreateStage();
-  const { mutateAsync: createTask }       = useCreateTask();
+  const { state, actions } = useCampaignWizard(onClose);
+  const {
+    isGenerating, isSaved, isGeneratingPlan, step,
+    aiGeneratedType, activeFunnels, aiBriefing, aiChannels, aiKpi, blueprintTheory
+  } = state;
+  const { finishCreation, generateActionPlan, generateBlueprintDense } = actions;
 
-  const [isGenerating, setIsGenerating]         = useState(false);
-  const [isSaved, setIsSaved]                   = useState(false);
-  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
-  const [step, setStep]                         = useState(0);
-
-  // Inputs
-  const [rawName, setRawName]     = useState("");
-  const [direcao, setDirecao]     = useState<"interna" | "externa" | "hibrida">("externa");
-  const [experiencia, setExperiencia] = useState<"presencial" | "digital" | "hibrida">("digital");
-  const [modulos, setModulos]     = useState({ fisico: false, digital: true, evento: false, governanca: true });
-  const [proposicao, setProposicao] = useState("");
-  const [suggestedPropositions, setSuggestedPropositions] = useState<string[]>([]);
-  const [orcamento, setOrcamento] = useState("");
-
-  // AI outputs
-  const [aiGeneratedType, setAiGeneratedType] = useState<string>("institucional");
-  const [activeFunnels, setActiveFunnels]     = useState<Record<string, boolean>>({});
-  const [aiBriefing, setAiBriefing]           = useState("");
-  const [aiChannels, setAiChannels]           = useState<string[]>([]);
-  const [aiKpi, setAiKpi]                     = useState({ meta: "", goal: "" });
-  const [blueprintTheory, setBlueprintTheory] = useState("");
-
-  // OpenAI
-  const [openAiKey, setOpenAiKey]   = useState(() => localStorage.getItem("OPENAI_API_KEY") || "");
-  const [showAiConfig, setShowAiConfig] = useState(false);
-
-  const saveKey = (key: string) => {
-    localStorage.setItem("OPENAI_API_KEY", key);
-    setOpenAiKey(key);
-    setShowAiConfig(false);
-    toast.success("Chave OpenAI vinculada!");
-  };
-
-  async function callOpenAI(system: string, user: string) {
-    const res = await fetch("/_api/ai/openai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key: openAiKey, system, user }),
-    });
-    if (!res.ok) {
-      let errMsg = `A OpenAI retornou erro ${res.status}.`;
-      try { const d = await res.json(); if (d.error?.message) errMsg = d.error.message; } catch {}
-      throw new Error(errMsg);
-    }
-    const data = await res.json();
-    return data.choices[0].message.content;
-  }
-
-  // ── STEP 0 → 1 ──────────────────────────────────────────
-  const nextStepTema = async () => {
-    if (!rawName.trim()) return;
-    if (!openAiKey) { setShowAiConfig(true); return; }
-
-    setIsGenerating(true);
-    let fallbackUsed = false;
-    let aiProps: string[] = [];
-
-    try {
-      const payload = await callOpenAI(
-        `Você é o Diretor de Estratégia de uma Associação Clínica de Cannabis. Retorne EXATAMENTE um JSON: { "proposicoes": ["Tese 1", "Tese 2", "Tese 3"] }. Cada tese máx 20 palavras, densa, focada no terceiro setor.`,
-        `Tema da campanha: "${rawName}"`
-      );
-      const cleaned = payload.replace(/```json|```/gi, "").trim();
-      const parsed  = JSON.parse(cleaned);
-      aiProps = parsed.proposicoes || Object.values(parsed)[0] || [];
-      if (!Array.isArray(aiProps) || aiProps.length < 3) throw new Error("Menos de 3");
-    } catch (e: any) {
-      fallbackUsed = true;
-      toast.warning("Sistema I.A. Padrão ativado: " + e.message);
-      const t = rawName.trim() ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "Ação";
-      aiProps = [
-        `[OFFLINE] Desestigmatização Direcionada (${t}): Combater a assimetria informacional com dossiês irrefutáveis.`,
-        `[OFFLINE] Expansão da Comunidade de Afinidade: Ecossistema focado em "${t}" onde veteranos validam a evolução.`,
-        `[OFFLINE] Cidadania Terapêutica Plena: Acesso cruzado com pautas de ${t} como garantia de amparo social.`,
-      ];
-    }
-
-    try {
-      const lower = rawName.toLowerCase();
-      let type   = "institucional";
-      let funnels = { awareness: true, consideration: true, conversion: false, retention: false, expansion: false };
-
-      if (lower.includes("mutirão") || lower.includes("acolhimento") || lower.includes("paciente") || lower.includes("associação")) {
-        type = "acolhimento";
-        funnels = { awareness: false, consideration: false, conversion: true, retention: true, expansion: true };
-        if (fallbackUsed) aiProps = [
-          `Ancoragem de Acesso Direto (${rawName}): Reduzir latência entre prescrição e contato biológico.`,
-          `Subversão da Burocracia: A entidade absorve a fricção documental do ${rawName}.`,
-          `Acolhimento Terapêutico Focado: Suportar o núcleo isolado mitigando o limbo burocrático.`,
-        ];
-      } else if (lower.includes("médico") || lower.includes("prescrit") || lower.includes("congresso") || lower.includes("pesquisa")) {
-        type = "medicos";
-        funnels = { awareness: true, consideration: true, conversion: true, retention: false, expansion: false };
-        if (fallbackUsed) aiProps = [
-          `Transferência de Autoridade em Protocolos de ${rawName}: Fornecer metanálises robustas.`,
-          `Engenharia de Casos Clínicos Interpares: Transferir autoridade via papers segmentados.`,
-          `Concierge Clínico Compartilhado: Associação como rede estratégica de backoffice.`,
-        ];
-      } else if (lower.includes("setembro") || lower.includes("outubro") || lower.includes("sazonal") || lower.includes("dia")) {
-        type = "sazonal";
-        funnels = { awareness: true, consideration: true, conversion: false, retention: true, expansion: true };
-        if (fallbackUsed) aiProps = [
-          `Empatia Sistêmica Voltada a ${rawName}: Extrair a comunidade do isolamento via relatos reais.`,
-          `Ressonância do Cuidado Sustentável: Evidências da terapia como reinserção central.`,
-          `Janela de Acesso Social Prioritário: Redução de fricção para o ecossistema afetado.`,
-        ];
-      }
-
-      setAiGeneratedType(type);
-      setActiveFunnels(funnels);
-      setSuggestedPropositions(aiProps);
-      setStep(1);
-    } catch (err: any) {
-      toast.error("Erro Crítico: " + err.message);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  // ── STEP 1 → 2 ──────────────────────────────────────────
-  const nextStepProposicao = async (suppliedProp?: string) => {
-    const finalProp = typeof suppliedProp === "string" ? suppliedProp : proposicao;
-    setIsGenerating(true);
-    setProposicao(finalProp);
-
-    try {
-      let data = { briefing: "", channels: ["Instagram Oficial", "Disparo E-Mail"] };
-      try {
-        const payload = await callOpenAI(
-          `Você é o CSO de uma campanha no Terceiro Setor (Cannabis Medicinal). Devolva JSON: { "briefing": "Memorando Tático em markdown", "channels": ["Canal 1", "Canal 2"] }.`,
-          `Tema: "${rawName}". Tese: "${finalProp}". Tipo: ${aiGeneratedType}.`
-        );
-        data = JSON.parse(payload.replace(/```json|```/gi, "").trim());
-      } catch (e: any) {
-        toast.warning("OpenAI falhou: " + e.message, { duration: 5000 });
-        const tF = rawName.trim() ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "Ação Base";
-        if (aiGeneratedType === "acolhimento") {
-          data.briefing  = `ALINHAMENTO DE FRONT-DESK (${tF})\n\nA operação exige contenção imediata de latência. Cluster chega vulnerável.\n\n• Gatilho: Velocidade absoluta e acolhimento humano.`;
-          data.channels  = ["WhatsApp Dedicado", "Triage Telefônica", "Google Tático"];
-        } else if (aiGeneratedType === "medicos") {
-          data.briefing  = `CONSELHO B2B — ${tF.toUpperCase()}\n\nBlindar prescritors da pauta via metanálises.\n\n• Core: Abstracts validados.`;
-          data.channels  = ["LinkedIn InMail Clínico", "Comitês Virtuais", "Dossiês Diretos"];
-        } else if (aiGeneratedType === "sazonal") {
-          data.briefing  = `ENGENHARIA SOCIO-CULTURAL (${tF})\n\nAgenda-Setting: pautar fitoterapia via a data.\n\n• Ação: Liga grupos a casos de melhora clínica.`;
-          data.channels  = ["Reels de Colaboração", "YouTube Long-Form", "Dark Social / WhatsApp"];
-        } else {
-          data.briefing  = `PROJEÇÃO DE MARCA (${tF})\n\nEspiral de Engajamento atrelada ao tema.\n\n• KPI: Cultivar Share of Engagement alto.`;
-          data.channels  = ["Instagram Reels", "Digital PR Saúde", "Carrossel Acadêmico"];
-        }
-      }
-
-      setAiBriefing(data.briefing);
-      setAiChannels(data.channels);
-      setStep(2);
-    } catch (err: any) {
-      toast.error("Erro Crítico: " + err.message);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  // ── STEP 2 → 3 ──────────────────────────────────────────
-  const nextStepOrcamento = async () => {
-    if (!orcamento.trim()) return;
-    setIsGenerating(true);
-
-    try {
-      const val = parseFloat(orcamento.replace(/\D/g, "")) || 0;
-      let kpiObj = { meta: "", goal: "" };
-      try {
-        const payload = await callOpenAI(
-          `Analisa orçamentos do Terceiro Setor Biomédico. Responda JSON: { "meta": "métrica curta", "goal": "parágrafo com CAC, OKRs, CPL." }`,
-          `Teto de mídia: R$ ${val}. Campanha: "${rawName}". Tese: "${proposicao}".`
-        );
-        kpiObj = JSON.parse(payload.replace(/```json|```/gi, "").trim());
-      } catch (e: any) {
-        toast.warning("OpenAI falhou no Orçamento: " + e.message, { duration: 5000 });
-        if (aiGeneratedType === "acolhimento") {
-          const est = Math.floor(val / 145);
-          kpiObj = { meta: "Associações Oficiais (CPA ~R$ 145)", goal: val > 0 ? `Com R$ ${orcamento}, ~${est} acolhimentos. Hedge 15% para remarketing.` : "Esforço inbound orgânico." };
-        } else if (aiGeneratedType === "medicos") {
-          const est = Math.floor(val / 320);
-          kpiObj = { meta: "Adesões de Prescritor (CPL ~R$ 320)", goal: val > 0 ? `~${est} novos parceiros. 35% em LinkedIn InMail.` : "Pipeline Outbound B2B sem impulsionamento." };
-        } else if (aiGeneratedType === "sazonal") {
-          kpiObj = { meta: "Share of Voice Sazonal", goal: val > 0 ? `R$ ${orcamento} traciona CPM segmentado. Pico de admissões no 'day after'.` : "Via Dark Social." };
-        } else {
-          kpiObj = { meta: "Atenção Social Sustentada", goal: val > 0 ? `R$ ${orcamento} → ~${(val * 4.9).toLocaleString()} impactos visuais.` : "Dependente de tração algorítmica nativa." };
-        }
-      }
-
-      setAiKpi(kpiObj);
-      setStep(3);
-    } catch (err: any) {
-      toast.error("Erro KPI: " + err.message);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  // ── STEP 3 → 4 ──────────────────────────────────────────
-  const generateBlueprintDense = async () => {
-    setIsGenerating(true);
-
-    try {
-      let text = "";
-      try {
-        const modsStr = Object.entries(modulos).filter(([_,v]) => v).map(([k]) => k).join(", ");
-        const dnaCtx  = `DNA: Direção [${direcao.toUpperCase()}], Experiência [${experiencia.toUpperCase()}], Módulos [${modsStr}].`;
-        const payload = await callOpenAI(
-          `Gere o Blueprint Oficial. Responda JSON: { "blueprint": "markdown longo" }. Inclua: Visão Estratégica, Alocação de Orçamento, Ações (internas/externas), Etapas, Tarefas e Times.`,
-          `Tema: "${rawName}". Tese: "${proposicao}". Orçamento: R$ ${orcamento}. ${dnaCtx}`
-        );
-        text = JSON.parse(payload.replace(/```json|```/gi, "").trim()).blueprint;
-      } catch (e: any) {
-        toast.warning("OpenAI falhou ao teorizar: " + e.message, { duration: 5000 });
-        const tF = rawName.toUpperCase();
-        if (aiGeneratedType === "acolhimento") {
-          text = `### Blueprint: ${tF}\n\n**Alocação:** Infraestrutura de Front-Desk.\n\n**Ações:** Fila digital estruturada • Capacitação Parajurídica\n\n**Times:** Relacionamento Humano, Advogados Pro-Bono.`;
-        } else if (aiGeneratedType === "medicos") {
-          text = `### Blueprint B2B: ${tF}\n\n**Alocação:** LinkedIn InMail.\n\n**Ações:** Dossiês • Reuniões Clínicas Digitais\n\n**Times:** Técnico, Suporte Médico, Growth Médicos.`;
-        } else if (aiGeneratedType === "sazonal") {
-          text = `### Blueprint Sazonal: ${tF}\n\n**Alocação:** 100% mídia qualificada na janela da data.\n\n**Ações:** Impacto visual IG • Captação via Direct\n\n**Times:** Marketing, P.R., Atendimento Emergencial.`;
-        } else {
-          text = `### Matriz Operacional: ${tF}\n\n**Alocação:** 70% Mídia Ativa, 30% Estruturação.\n\n**Times:** Coordenação Geral, Growth & Mídia, Comunicação Interna.`;
-        }
-      }
-
-      setBlueprintTheory(text);
-      setStep(4);
-    } catch (err: any) {
-      toast.error("Erro Blueprint: " + err.message);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  // ── SAVE ────────────────────────────────────────────────
-  const finishCreation = async () => {
-    try {
-      await saveCampaign({
-        name:          rawName,
-        type:          WIZARD_TYPE_TO_CAMPAIGN_TYPE[aiGeneratedType] ?? "awareness",
-        status:        "draft",
-        objective:     proposicao || undefined,
-        channels:      aiChannels,
-        dna_direcao:   direcao,
-        dna_experiencia: experiencia,
-        dna_modulos:   modulos,
-      });
-      setIsSaved(true);
-      toast.success("Blueprint e DNA salvos com sucesso!");
-    } catch (e) {
-      toast.error("Erro ao salvar campanha.");
-    }
-  };
-
-  // ── GENERATE PLAN ────────────────────────────────────────
-  const generateActionPlan = async () => {
-    setIsGeneratingPlan(true);
-    try {
-      const payload = await callOpenAI(
-        `Crie o Plano de Ação Tático para "${rawName}". Responda JSON: { "governanca": ["tarefa"], "producao": ["tarefa"], "distribuicao": ["tarefa"] }.`,
-        `Blueprint: ${blueprintTheory.substring(0, 300)}... Orçamento: R$ ${orcamento}.`
-      );
-      const json = JSON.parse(payload.replace(/```json|```/gi, "").trim());
-
-      toast.info("Criando Iniciativa Base...");
-      const initObj = await createInitiative({ name: `Campanha V8: ${rawName}` });
-      const initiativeId = initObj.initiative.id;
-
-      toast.info("Criando Projeto Tático...");
-      const projObj = await createProject({ name: `Ativação Técnica: ${rawName}`, startDate: new Date(), initiativeId, status: "active", category: "custom" });
-      const projectId = projObj.project.id;
-
-      for (const [gateName, tasks] of Object.entries(json)) {
-        if (!Array.isArray(tasks) || tasks.length === 0) continue;
-        const stageObj = await createStage({ projectId, name: `Gate: ${gateName.toUpperCase()}` });
-        const stageId  = stageObj.stage.id;
-        for (const t of tasks) {
-          await createTask({ projectId, stageId, name: String(t), status: "open", priority: "medium", shift: "morning" });
-        }
-      }
-
-      toast.success("Plano de Ação construído no CoreAct!");
-      onClose();
-    } catch (e: any) {
-      toast.error("Falha ao gerar plano: " + e.message);
-    } finally {
-      setIsGeneratingPlan(false);
-    }
-  };
+  if (!isOpen) return null;
 
   const typeData = ACTION_TYPES.find((t) => t.id === aiGeneratedType) || ACTION_TYPES[0];
   const TypeIcon = typeData.icon;
 
-  if (!isOpen) return null;
-
-  // ─────────────────────────────────────────────────────────
   return (
-    <div className={s.wizardRoot}>
-
-      {/* ── AI Config Overlay ── */}
-      {showAiConfig && (
-        <div className={s.aiOverlay}>
-          <div className={s.aiPanel}>
-            <h2 className={s.aiPanelTitle}>
-              <Sparkles size={18} /> Plug-in I.A. Requerido
-            </h2>
-            <p className={s.aiPanelText}>
-              Insira sua chave <strong>OpenAI (GPT-4)</strong> abaixo. Ela ficará
-              salva apenas no seu navegador localmente.
-            </p>
-            <input
-              id="openai-key-input"
-              className={s.stepInput}
-              placeholder="sk-proj-..."
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === "Enter") saveKey(e.currentTarget.value);
-              }}
-            />
-            <div className={s.aiPanelActions}>
-              <button className={s.ctaBtnSecondary} style={{ width: "auto", padding: "0 1rem" }} onClick={() => setShowAiConfig(false)}>
-                Voltar ao Padrão
-              </button>
-              <button
-                className={s.saveBtn}
-                onClick={() => saveKey((document.getElementById("openai-key-input") as HTMLInputElement).value)}
-              >
-                Ligar Motor
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ══════════════════════════════════════
-          SIDE PANEL
-      ══════════════════════════════════════ */}
-      <aside className={s.sidePanel}>
-
-        {/* ── Sticky header ── */}
-        <header className={s.stickyHeader}>
-          <div className={s.headerLeft}>
-            <button className={s.backBtn} onClick={onClose}>
-              <ArrowLeft size={16} />
-            </button>
-            <div className={s.headerMeta}>
-              <span className={s.headerLabel}>Nova Campanha</span>
-              <h1 className={s.headerTitle}>Construtor de Ação V8</h1>
-            </div>
+    <div className="fixed inset-0 z-[var(--z-overlay)] flex bg-[var(--background)] font-sans">
+      
+      {/* ── ALINHAMENTO ESQUERDA: EDITOR E PASSOS ── */}
+      <aside className="w-full md:w-[600px] h-full flex flex-col border-r border-[var(--border)] bg-[var(--surface)] overflow-y-auto">
+        <header className="sticky top-0 z-10 flex items-center justify-between px-8 py-6 bg-[var(--surface)]/90 backdrop-blur-md border-b border-[var(--border)]">
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)] flex items-center gap-2">
+              <button className="p-1 rounded-sm hover:bg-[var(--border)] hover:text-[var(--foreground)] transition-colors" onClick={onClose}><ArrowLeft size={14} /></button>
+              Voltar ao Hub
+            </span>
+            <h1 className="text-2xl font-black font-heading mt-1 uppercase tracking-tight">Síntese Estratégica</h1>
           </div>
 
-          <div className={s.headerRight}>
-            {step >= 4 && !isSaved && (
-              <button className={s.saveBtn} onClick={finishCreation}>
-                Salvar <CheckCircle2 size={13} />
-              </button>
-            )}
-            {step >= 4 && isSaved && (
-              <button className={s.coreActBtn} onClick={generateActionPlan} disabled={isGeneratingPlan}>
-                {isGeneratingPlan ? "Gerando..." : "Enviar ao CoreAct"} <Zap size={13} />
-              </button>
-            )}
-            <button className={s.closeBtn} onClick={onClose}>
-              <X size={16} />
-            </button>
+          <div className="flex items-center gap-3">
+             <button className="w-10 h-10 rounded-full flex items-center justify-center border border-[var(--border)] bg-[var(--background)] hover:bg-[var(--card)] hover:border-[var(--border-hover)] text-[var(--muted-foreground)] transition-all" onClick={onClose}><X size={18} /></button>
           </div>
         </header>
 
-        {/* ── Wizard steps ── */}
-        <div className={s.wizardBody}>
+        <div className="flex-1 px-8 py-10">
+          <StepTema state={state} actions={actions} />
+          <StepProposicao state={state} actions={actions} />
+          <StepOrcamento state={state} actions={actions} />
 
-          {/* ─── STEP 0: TEMA ─────────────────────────── */}
-          <div className={`${s.stepItem} ${step === 0 ? "" : s.locked === undefined ? "" : ""}`}
-               style={{ opacity: step === 0 || step > 0 ? 1 : 0.3, pointerEvents: step === 0 ? "auto" : "none" }}>
-            <span className={s.stepLabel}>1 — Nome da campanha</span>
-
-            {step === 0 ? (
-              <>
-                <input
-                  autoFocus
-                  className={s.stepInput}
-                  value={rawName}
-                  onChange={(e) => setRawName(e.target.value)}
-                  placeholder="Ex: Mutirão de Acesso, Educação Médica..."
-                  disabled={isGenerating}
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); nextStepTema(); } }}
-                />
-
-                <div className={s.dnaSection}>
-                  {/* Direção */}
-                  <div className={s.dnaBlock}>
-                    <span className={s.dnaBlockLabel}>Direção</span>
-                    <div className={s.dnaToggles}>
-                      {(["interna", "externa", "hibrida"] as const).map((dir) => (
-                        <button
-                          key={dir}
-                          className={`${s.dnaBtn} ${direcao === dir ? s.active : ""}`}
-                          onClick={() => setDirecao(dir)}
-                        >
-                          {dir}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Experiência */}
-                  <div className={s.dnaBlock}>
-                    <span className={s.dnaBlockLabel}>Experiência</span>
-                    <div className={s.dnaToggles}>
-                      {(["presencial", "digital", "hibrida"] as const).map((exp) => (
-                        <button
-                          key={exp}
-                          className={`${s.dnaBtn} ${experiencia === exp ? s.active : ""}`}
-                          onClick={() => setExperiencia(exp)}
-                        >
-                          {exp}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Módulos */}
-                  <div className={s.dnaBlock}>
-                    <span className={s.dnaBlockLabel}>Módulos ativos</span>
-                    <div className={s.modulosGrid}>
-                      {Object.keys(modulos).map((mod) => (
-                        <button
-                          key={mod}
-                          className={`${s.dnaBtn} ${modulos[mod as keyof typeof modulos] ? s.active : ""}`}
-                          onClick={() =>
-                            setModulos((prev) => ({ ...prev, [mod]: !prev[mod as keyof typeof modulos] }))
-                          }
-                        >
-                          {mod === "governanca" ? "Governança" : mod === "fisico" ? "Físico" : mod}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <button className={s.ctaBtn} onClick={nextStepTema} disabled={isGenerating || !rawName.trim()}>
-                  {isGenerating ? (
-                    <><Sparkles size={15} className={s.spin} /> Analisando...</>
-                  ) : (
-                    <>Analisar e continuar <ArrowRight size={14} /></>
-                  )}
-                </button>
-              </>
-            ) : (
-              <div className={s.confirmedCard}>
-                <div className={s.confirmedCardRow}>
-                  <span className={s.confirmedValueLarge}>{rawName}</span>
-                  <button className={s.resetLink} onClick={() => setStep(0)}>Restaurar DNA</button>
-                </div>
-                <div className={s.confirmedTags}>
-                  <span className={`${s.confirmedTag} ${s.confirmedTagActive}`}>Dir: {direcao}</span>
-                  <span className={`${s.confirmedTag} ${s.confirmedTagActive}`}>Exp: {experiencia}</span>
-                  {Object.keys(modulos)
-                    .filter((k) => modulos[k as keyof typeof modulos])
-                    .map((k) => (
-                      <span key={k} className={s.confirmedTag}>
-                        {k === "governanca" ? "Gov." : k === "fisico" ? "Fís." : k}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* ─── STEP 1: PROPOSIÇÃO ───────────────────── */}
-          <div style={{ opacity: step >= 1 ? 1 : 0.25, pointerEvents: step >= 1 ? "auto" : "none", transition: "opacity 0.3s" }}>
-            <span className={s.stepLabel}>2 — Proposição central</span>
-
-            {step === 1 ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginTop: "0.75rem" }}>
-                <div className={s.propOptions}>
-                  {suggestedPropositions.map((sug, idx) => (
-                    <button
-                      key={idx}
-                      className={s.propOption}
-                      onClick={() => nextStepProposicao(sug)}
-                      disabled={isGenerating}
-                    >
-                      <span className={s.propOptionNum}>{idx + 1}</span>
-                      <span className={s.propOptionText}>{sug}</span>
-                      <ArrowRight size={14} className={s.propOptionArrow} />
-                    </button>
-                  ))}
-                </div>
-
-                <div className={s.dividerRow}>
-                  <div className={s.dividerLine} />
-                  <span className={s.dividerLabel}>ou defina sua própria</span>
-                  <div className={s.dividerLine} />
-                </div>
-
-                <textarea
-                  className={s.stepTextarea}
-                  value={proposicao}
-                  onChange={(e) => setProposicao(e.target.value)}
-                  placeholder="+ Digite seu core argument ou oferta principal..."
-                  disabled={isGenerating}
-                  onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); nextStepProposicao(); } }}
-                />
-
-                {proposicao.trim() ? (
-                  <button className={s.ctaBtn} onClick={() => nextStepProposicao()} disabled={isGenerating}>
-                    {isGenerating ? <Sparkles size={14} className={s.spin} /> : "Avançar com esta proposta"}
-                  </button>
-                ) : (
-                  <button className={s.ctaBtnSecondary} onClick={() => nextStepProposicao("")} disabled={isGenerating}>
-                    {isGenerating ? <Sparkles size={14} className={s.spin} /> : "Pular — deixar I.A. deduzir"}
-                  </button>
-                )}
-              </div>
-            ) : step > 1 ? (
-              <div className={s.confirmedCard} style={{ marginTop: "0.75rem" }}>
-                <div className={s.confirmedCardRow}>
-                  <span className={s.confirmedValue} style={{ fontStyle: "italic", fontSize: "var(--font-size-sm)" }}>
-                    "{proposicao.trim() ? proposicao : "I.A. Deduzida Automaticamente"}"
-                  </span>
-                  <button className={s.resetLink} onClick={() => setStep(1)}>Refazer</button>
-                </div>
-              </div>
-            ) : (
-              <div className={s.stepPlaceholder} style={{ marginTop: "0.75rem" }} />
-            )}
-          </div>
-
-          {/* ─── STEP 2: ORÇAMENTO ────────────────────── */}
-          <div style={{ opacity: step >= 2 ? 1 : 0.25, pointerEvents: step >= 2 ? "auto" : "none", transition: "opacity 0.3s" }}>
-            <span className={s.stepLabel}>
-              3 — Orçamento estimado{" "}
-              <span style={{ fontWeight: 400, opacity: 0.55 }}>(opcional)</span>
-            </span>
-
-            {step === 2 ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "0.75rem" }}>
-                <input
-                  autoFocus
-                  className={s.stepInput}
-                  value={orcamento}
-                  onChange={(e) => setOrcamento(e.target.value)}
-                  placeholder="Ex: R$ 5.000"
-                  disabled={isGenerating}
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); nextStepOrcamento(); } }}
-                />
-                <div style={{ display: "flex", gap: "0.4rem" }}>
-                  <button className={s.ctaBtn} onClick={nextStepOrcamento} disabled={isGenerating}>
-                    {isGenerating ? <><Sparkles size={14} className={s.spin} /> Calculando...</> : <>Continuar <ArrowRight size={14} /></>}
-                  </button>
-                  {!orcamento && (
-                    <button className={s.ctaBtnSecondary} style={{ flex: "0 0 auto", width: "auto", padding: "0 1rem" }} onClick={nextStepOrcamento} disabled={isGenerating}>
-                      Pular
-                    </button>
-                  )}
-                </div>
-              </div>
-            ) : step > 2 ? (
-              <div className={s.confirmedCard} style={{ marginTop: "0.75rem" }}>
-                <div className={s.confirmedCardRow}>
-                  <span className={s.confirmedValueLarge}>R$ {orcamento}</span>
-                  <button className={s.resetLink} onClick={() => setStep(2)}>Ajustar Teto</button>
-                </div>
-              </div>
-            ) : (
-              <div className={s.stepPlaceholder} style={{ marginTop: "0.75rem" }} />
-            )}
-          </div>
-
-          {/* ─── STEP 3: GERAR BLUEPRINT ──────────────── */}
+          {/* ── STEP 3: GERAR BLUEPRINT FINAL ── */}
           {step >= 3 && (
-            <div style={{ opacity: step >= 3 ? 1 : 0, transition: "opacity 0.4s" }}>
-              {step === 3 && (
-                <button className={s.ctaBtnFinal} onClick={generateBlueprintDense} disabled={isGenerating}>
-                  {isGenerating ? (
-                    <><Sparkles size={15} className={s.spin} /> Gerando Blueprint...</>
-                  ) : (
-                    <>Gerar Blueprint Acadêmico Final <Zap size={14} /></>
-                  )}
-                </button>
-              )}
+            <div className={`relative pl-8 pt-2 ml-4 transition-all duration-700 ${step >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+               {step === 3 && (
+                 <button className="w-full h-14 flex items-center justify-center gap-3 rounded-2xl bg-[var(--foreground)] text-[var(--background)] font-black uppercase tracking-wider text-sm shadow-xl hover:scale-[1.02] hover:shadow-[var(--shadow-focus)] disabled:opacity-50 transition-all font-heading" onClick={generateBlueprintDense} disabled={isGenerating}>
+                    {isGenerating ? (
+                      <><Sparkles size={18} className="animate-spin opacity-70" /> Compilando Dossiê Estratégico...</>
+                    ) : (
+                      <>Gerar Documento Orientador Completo <Zap size={18} /></>
+                    )}
+                 </button>
+               )}
             </div>
           )}
-
         </div>
       </aside>
 
-      {/* ══════════════════════════════════════
-          RIGHT PANEL — Outputs
-      ══════════════════════════════════════ */}
-      <div className={s.rightPanel}>
-        <div className={s.outputGrid}>
+      {/* ── ALINHAMENTO DIREITA: CANVAS DE RESULTADO I.A. ── */}
+      <main className="hidden md:flex flex-1 flex-col h-full bg-[var(--background)] overflow-y-auto relative">
+        <header className="sticky top-0 z-10 w-full px-12 py-6 bg-gradient-to-b from-[var(--background)] to-transparent flex justify-between items-center pointer-events-none">
+           <div />
+           <div className="flex items-center gap-3 pointer-events-auto">
+             {step >= 4 && !isSaved && (
+                <button className="h-10 px-5 rounded-full bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-[var(--card)] transition-all shadow-sm" onClick={finishCreation}>
+                  Registrar Blueprint <CheckCircle2 size={14} />
+                </button>
+              )}
+              {step >= 4 && isSaved && (
+                <button className="h-10 px-5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:opacity-90 transition-all shadow-md" onClick={generateActionPlan} disabled={isGeneratingPlan}>
+                  {isGeneratingPlan ? "Enviando ao Maestro..." : "Submeter ao CoreAct"} <Zap size={14} className={isGeneratingPlan ? "animate-pulse" : ""} />
+                </button>
+              )}
+           </div>
+        </header>
 
-          {/* ── FUNIL (step 1+) ── */}
-          {step >= 1 && (
-            <div className={`${s.outputBlock} ${s.fullWidth}`}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                <span className={s.outputBlockLabel}>Arquitetura do funil</span>
-                <div className={s.outputBadge}>
-                  <TypeIcon size={12} strokeWidth={1.8} />
-                  {typeData.name}
+        <div className="flex-1 w-full max-w-4xl mx-auto px-12 pt-4 pb-20 flex flex-col gap-8">
+           
+           {step === 0 && (
+             <div className="flex-1 flex flex-col items-center justify-center text-center opacity-40 mix-blend-luminosity">
+                <Target size={80} strokeWidth={0.5} className="mb-6 text-[var(--muted-foreground)] opacity-20" />
+                <h3 className="text-3xl font-black font-heading uppercase text-[var(--foreground)]">Canvas de Inteligência</h3>
+                <p className="text-[var(--muted-foreground)] max-w-md mt-4 font-medium text-lg leading-relaxed">O dossiê estrutural da campanha e matrizes de canais aparecerão projetados aqui conforme o avanço das orientações de contexto no painel esquerdo.</p>
+             </div>
+           )}
+
+           {/* ── Arquitetura de Funil (Logo no step 1+) ── */}
+           {step >= 1 && (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+               <div className="flex items-center justify-between mb-4 border-b border-[var(--border)] pb-2">
+                 <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)]">Engenharia de Funil</h4>
+                 <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)] flex items-center gap-2 shadow-sm">
+                   <TypeIcon size={12} /> {typeData.name}
+                 </span>
+               </div>
+               
+               <div className="flex flex-col w-full max-w-2xl mx-auto items-center mt-6 gap-0.5">
+                  {FUNNELS.map((level, i) => {
+                    const isActive = activeFunnels[level.id];
+                    const isFirst = i === 0;
+                    const isLast = i === FUNNELS.length - 1;
+                    return (
+                      <div
+                        key={level.id}
+                        className={`py-3 px-6 flex items-center justify-center gap-3 transition-all duration-500 ${isActive ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm" : "bg-[var(--surface)] text-[var(--muted-foreground)] border border-[var(--border)]"}`}
+                        style={{
+                          width: level.pct,
+                          borderRadius: isFirst ? "1rem 1rem 0.25rem 0.25rem" : isLast ? "0.25rem 0.25rem 1rem 1rem" : "0.25rem",
+                        }}
+                      >
+                         <span className="font-heading font-bold uppercase tracking-wide text-sm">{level.name}</span>
+                         {isActive && <span className="opacity-70 text-xs italic font-serif">/ {level.desc}</span>}
+                      </div>
+                    )
+                  })}
+               </div>
+             </div>
+           )}
+
+           {/* ── Briefing e Canais (Step 2+) ── */}
+           {step >= 2 && (
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+                <div className="flex flex-col gap-3">
+                  <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><FileText size={14} /> Memorando Tático</h4>
+                  <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-sm">
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--card-foreground)] font-medium font-serif italic">{aiBriefing}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className={s.funnelStack}>
-                {FUNNELS.map((level, i) => {
-                  const isActive = activeFunnels[level.id];
-                  const isFirst  = i === 0;
-                  const isLast   = i === FUNNELS.length - 1;
-                  return (
-                    <div
-                      key={level.id}
-                      className={s.funnelLevel + " " + (isActive ? s.active : "")}
-                      style={{
-                        width: level.pct,
-                        borderRadius: isFirst ? "8px 8px 3px 3px" : isLast ? "3px 3px 8px 8px" : "3px",
-                        marginLeft: "auto",
-                        marginRight: "auto",
-                      }}
-                    >
-                      <span className={s.funnelLevelName}>{level.name}</span>
-                      {isActive && (
-                        <span className={s.funnelLevelDesc}>— {level.desc}</span>
-                      )}
+                <div className="flex flex-col gap-3">
+                  <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Zap size={14} /> Topologia de Canais</h4>
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {aiChannels.map(ch => (
+                      <span key={ch} className="px-4 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-sm font-bold shadow-sm shadow-[var(--shadow-md)] text-[var(--foreground)] flex-grow text-center">{ch}</span>
+                    ))}
+                  </div>
+                </div>
+             </div>
+           )}
+
+           {/* ── KPI (Step 3+) ── */}
+           {step >= 3 && (
+              <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
+                 <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Target size={14} /> Projeção Analítica (Estimativa)</h4>
+                 <div className="mt-4 p-6 rounded-2xl bg-gradient-to-br from-[var(--surface)] to-[var(--background)] border border-[var(--border)] shadow flex items-start gap-5">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--background)] border border-[var(--border)] text-[var(--primary)] flex items-center justify-center shrink-0">
+                       <Target size={24} strokeWidth={1.5} />
                     </div>
-                  );
-                })}
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">{aiKpi.meta}</span>
+                      <p className="mt-1 text-xl font-bold font-heading leading-snug">{aiKpi.goal}</p>
+                    </div>
+                 </div>
               </div>
-            </div>
-          )}
+           )}
 
-          {/* ── BRIEFING (step 2+) ── */}
-          {step >= 2 && (
-            <div className={s.outputBlock}>
-              <span className={s.outputBlockLabel}>Memorando Tático</span>
-              <p className={s.briefingText}>{aiBriefing}</p>
-            </div>
-          )}
+           {/* ── Blueprint Text (Step 4+) ── */}
+           {step >= 4 && (
+              <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+                 <div className="p-8 rounded-[2rem] bg-[var(--foreground)] text-[var(--background)] shadow-2xl relative overflow-hidden">
+                    
+                    {/* Badge Dossiê Oficial */}
+                    <div className="absolute top-0 right-0 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-2 rounded-bl-3xl font-bold text-xs uppercase tracking-widest shadow-md">
+                       Blueprint Verificado
+                    </div>
 
-          {/* ── CANAIS (step 2+) ── */}
-          {step >= 2 && (
-            <div className={s.outputBlock}>
-              <span className={s.outputBlockLabel}>Canais de Contato</span>
-              <div className={s.channelList}>
-                {aiChannels.map((ch) => (
-                  <span key={ch} className={s.channelTag}>{ch}</span>
-                ))}
+                    <div className="flex items-center gap-4 mb-8 border-b border-[var(--background)]/20 pb-6 pr-32">
+                       <div className="w-14 h-14 rounded-full bg-[var(--background)]/10 flex items-center justify-center font-mono">
+                         <Blocks size={24} className="text-[var(--background)]" />
+                       </div>
+                       <div>
+                         <h3 className="text-3xl font-black font-heading tracking-tight uppercase">Doutrina e Contexto da Ação</h3>
+                         <span className="text-sm opacity-60 font-medium tracking-wider uppercase">Documento Guia Corporativo</span>
+                       </div>
+                    </div>
+                    <div className="prose prose-invert max-w-none font-medium whitespace-pre-wrap leading-relaxed text-[var(--background)]/90 text-justify hyphens-auto font-serif">
+                       {blueprintTheory}
+                    </div>
+                 </div>
               </div>
-            </div>
-          )}
-
-          {/* ── KPI (step 3+) ── */}
-          {step >= 3 && (
-            <div className={`${s.outputBlock} ${s.fullWidth}`}>
-              <span className={s.outputBlockLabel}>Métricas Projetadas</span>
-              <div className={s.kpiBlock}>
-                <div className={s.kpiIcon}>
-                  <Target size={22} strokeWidth={1.6} />
-                </div>
-                <div className={s.kpiContent}>
-                  <span className={s.kpiMeta}>{aiKpi.meta}</span>
-                  <p className={s.kpiGoal}>{aiKpi.goal}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── BLUEPRINT (step 4+) ── */}
-          {step >= 4 && (
-            <div className={`${s.blueprintBlock} ${s.fullWidth}`}>
-              <div className={s.blueprintHeader}>
-                <div className={s.blueprintIcon}>
-                  <FileText size={18} strokeWidth={1.6} />
-                </div>
-                <div>
-                  <h3 className={s.blueprintTitle}>Dossiê Estratégico Oficial</h3>
-                  <span className={s.blueprintSubtitle}>
-                    Conhecimento Clínico-Sociológico Fundamentado
-                  </span>
-                </div>
-              </div>
-              <p className={s.blueprintText}>{blueprintTheory}</p>
-            </div>
-          )}
-
+           )}
         </div>
-      </div>
+      </main>
 
     </div>
   );

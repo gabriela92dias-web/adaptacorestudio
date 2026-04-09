@@ -1291,9 +1291,9 @@ app.post('_api/dev/build',async c => {
 // ── PROXY OPENAI — evita CORS no browser ─────────────────────────────────
 app.post('/_api/ai/openai', async c => {
   try {
-    const body = await c.req.json() as { key?: string; system: string; user: string };
-    const apiKey = body.key || process.env.OPENAI_API_KEY || "";
-    if (!apiKey) return c.json({ error: "OPENAI_API_KEY não configurada" }, 400);
+    const body = await c.req.json() as { system: string; user: string };
+    const apiKey = process.env.OPENAI_API_KEY || "";
+    if (!apiKey) return c.json({ error: "OPENAI_API_KEY não configurada no servidor" }, 400);
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
