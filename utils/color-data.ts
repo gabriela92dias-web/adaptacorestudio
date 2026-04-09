@@ -1,21 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * ADAPTA COLOR DATA - Paleta Institucional Oficial
+ * ADAPTA COLOR DATA - Paleta Institucional ColdFlora
  * ═══════════════════════════════════════════════════════════════
  *
- * Estrutura de grupos esperada pelo color-wheel.tsx:
- *
- *  GRUPOS VERDE (filtro "verde"):
- *    - IDs devem estar em VERDE_GROUP_IDS abaixo
- *
- *  GRUPOS COLOR (filtro "color"):
- *    - IDs devem estar em COLOR_GROUP_IDS abaixo
- *
- *  GRUPOS NEUTRALS (filtro "neutrals"):
- *    - IDs devem estar em NEUTRAL_GROUP_IDS abaixo
- *
- * Cada grupo tem no máximo 5 cores (tons 100→500).
- * Preencha o array colorPalette com os grupos da identidade visual.
+ * Extraída diretamente do design system (base.css) do CoreStudio.
+ * Cada grupo tem 5 tons (100→500), do mais claro ao mais escuro.
  */
 
 export interface ColorEntry {
@@ -31,47 +20,141 @@ export interface ColorGroup {
 }
 
 // ── IDs dos grupos por categoria ──────────────────────────────
-// Ajuste esses arrays quando adicionar grupos novos.
 
 const VERDE_GROUP_IDS: string[] = [
-  // ex: "candy", "lemon", "ventura", "profundo"
+  "verde-core",
+  "verde-meio",
 ];
 
 const COLOR_GROUP_IDS: string[] = [
-  // ex: "energia", "alegria", "seguranca"
+  "success",
+  "error",
+  "warning",
+  "info",
 ];
 
 const NEUTRAL_GROUP_IDS: string[] = [
-  // ex: "neutrals"
+  "neutrals-light",
+  "neutrals-dark",
 ];
 
-// ── Paleta oficial ────────────────────────────────────────────
-// VAZIA — preencha com os grupos da nova identidade visual.
+// ── Paleta oficial ColdFlora ──────────────────────────────────
 
 export const colorPalette: ColorGroup[] = [
-  // Exemplo de estrutura:
-  // {
-  //   id: "nome-do-grupo",
-  //   name: "Nome Exibido",
-  //   description: "Descrição curta",
-  //   colors: [
-  //     { hex: "#FFFFFF", name: "Tom 100" },
-  //     { hex: "#CCCCCC", name: "Tom 200" },
-  //     { hex: "#999999", name: "Tom 300" },
-  //     { hex: "#666666", name: "Tom 400" },
-  //     { hex: "#333333", name: "Tom 500" },
-  //   ],
-  // },
+  // ── Verde Core (escala principal da marca) ────────────────
+  {
+    id: "verde-core",
+    name: "Verde Core",
+    description: "Escala principal da identidade Adapta",
+    colors: [
+      { hex: "#DCE4D6", name: "Verde 100" },
+      { hex: "#B4C5AD", name: "Verde 200" },
+      { hex: "#889B84", name: "Verde 300" },
+      { hex: "#566958", name: "Verde 400" },
+      { hex: "#22382E", name: "Verde 500" },
+    ],
+  },
+
+  // ── Verde Surface (fundos e containers) ───────────────────
+  {
+    id: "verde-meio",
+    name: "Verde Surface",
+    description: "Tons de superfície e fundo do sistema",
+    colors: [
+      { hex: "#F7F9F2", name: "Surface 100" },
+      { hex: "#EBEFE8", name: "Surface 200" },
+      { hex: "#C8D5C2", name: "Surface 300" },
+      { hex: "#9FB499", name: "Surface 400" },
+      { hex: "#6F826D", name: "Surface 500" },
+    ],
+  },
+
+  // ── Success (verde semântico) ──────────────────────────────
+  {
+    id: "success",
+    name: "Success",
+    description: "Cor de sucesso e confirmação",
+    colors: [
+      { hex: "#D1E8B5", name: "Success 100" },
+      { hex: "#ADCC71", name: "Success 200" },
+      { hex: "#8DB84D", name: "Success 300" },
+      { hex: "#5A8A2E", name: "Success 400" },
+      { hex: "#2A4F1A", name: "Success 500" },
+    ],
+  },
+
+  // ── Error (ter semântico) ──────────────────────────────────
+  {
+    id: "error",
+    name: "Error",
+    description: "Cor de erro e alerta crítico",
+    colors: [
+      { hex: "#FFB7AB", name: "Error 100" },
+      { hex: "#F48E72", name: "Error 200" },
+      { hex: "#E06445", name: "Error 300" },
+      { hex: "#B84020", name: "Error 400" },
+      { hex: "#6B2A14", name: "Error 500" },
+    ],
+  },
+
+  // ── Warning (amarelo semântico) ────────────────────────────
+  {
+    id: "warning",
+    name: "Warning",
+    description: "Cor de atenção e alerta moderado",
+    colors: [
+      { hex: "#FFE1AB", name: "Warning 100" },
+      { hex: "#F2C370", name: "Warning 200" },
+      { hex: "#D9A040", name: "Warning 300" },
+      { hex: "#A87A1E", name: "Warning 400" },
+      { hex: "#614210", name: "Warning 500" },
+    ],
+  },
+
+  // ── Info (azul lilás semântico) ───────────────────────────
+  {
+    id: "info",
+    name: "Info",
+    description: "Cor informativa e de destaque suave",
+    colors: [
+      { hex: "#CDD0F9", name: "Info 100" },
+      { hex: "#B5B7F2", name: "Info 200" },
+      { hex: "#9EA0ED", name: "Info 300" },
+      { hex: "#8385D8", name: "Info 400" },
+      { hex: "#2B2D6B", name: "Info 500" },
+    ],
+  },
+
+  // ── Neutrals Light ────────────────────────────────────────
+  {
+    id: "neutrals-light",
+    name: "Neutros Claros",
+    description: "Escala neutra para modo claro",
+    colors: [
+      { hex: "#F7F9F2", name: "Neutro 100" },
+      { hex: "#EBEFE8", name: "Neutro 200" },
+      { hex: "#DCE4D6", name: "Neutro 300" },
+      { hex: "#C8D5C2", name: "Neutro 400" },
+      { hex: "#B4C5AD", name: "Neutro 500" },
+    ],
+  },
+
+  // ── Neutrals Dark ─────────────────────────────────────────
+  {
+    id: "neutrals-dark",
+    name: "Neutros Escuros",
+    description: "Escala neutra para modo escuro",
+    colors: [
+      { hex: "#2a4237", name: "Dark 100" },
+      { hex: "#1B2C24", name: "Dark 200" },
+      { hex: "#121B17", name: "Dark 300" },
+      { hex: "#0E1612", name: "Dark 400" },
+      { hex: "#0A100D", name: "Dark 500" },
+    ],
+  },
 ];
 
 // ── Filtros ───────────────────────────────────────────────────
-// Nomes de filtro usados pelo color-wheel.tsx:
-//   "verde"          → só grupos Verde
-//   "color"          → só grupos Color
-//   "both"           → Verde + Color
-//   "neutrals"       → só Neutrals
-//   "verde-neutrals" → Verde + Neutrals
-//   "all"            → tudo
 
 export function filterForFeature(feature: string): ColorGroup[] {
   switch (feature) {

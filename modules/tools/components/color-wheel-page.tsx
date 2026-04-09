@@ -12,9 +12,9 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { motion } from "motion/react";
 import { Copy, Check } from "lucide-react";
-import { Button } from "../../../components/ui/button";
 import { useTheme } from "../../../utils/theme-context";
 import { colorPalette, filterForFeature } from "../../../utils/color-data";
+import styles from "./color-wheel-page.module.css";
 
 // ─── Re-export das funções internas ──────────────────────────
 function hexToHSL(hex: string): { h: number; s: number; l: number } {
@@ -282,32 +282,29 @@ export function ColorWheelPage() {
   };
 
   const emptyState = adaptaColors.length === 0;
+  const tipColor = isDark ? "rgba(232,240,237,0.7)" : "rgba(0,0,0,0.5)";
 
   return (
     <>
       <Helmet><title>CoreStudio | Roda Cromática</title></Helmet>
 
-      <div className="flex flex-col h-full min-h-0 p-6 gap-6 max-w-[1400px] mx-auto">
+      <div className={styles.pageContainer}>
 
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">Roda Cromática</h1>
-          <p className="text-muted-foreground mt-1">
-            Encontre harmonias de cores da paleta institucional Adapta
-          </p>
+        <div className={styles.header}>
+          <h1>Roda Cromática</h1>
+          <p>Encontre harmonias de cores da paleta institucional Adapta</p>
         </div>
 
         {/* Empty state */}
         {emptyState && (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center space-y-3 max-w-sm">
-              <div className="text-5xl">🎨</div>
-              <h2 className="text-lg font-semibold">Paleta ainda não configurada</h2>
-              <p className="text-sm text-muted-foreground">
+          <div className={styles.emptyState}>
+            <div className={styles.emptyStateInner}>
+              <div className={styles.emptyEmoji}>🎨</div>
+              <h2 className={styles.emptyTitle}>Paleta ainda não configurada</h2>
+              <p className={styles.emptyText}>
                 Adicione as cores da identidade visual Adapta em{" "}
-                <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">
-                  utils/color-data.ts
-                </code>{" "}
+                <code className={styles.emptyCode}>utils/color-data.ts</code>{" "}
                 para ativar a roda cromática.
               </p>
             </div>
@@ -316,20 +313,18 @@ export function ColorWheelPage() {
 
         {/* Main layout */}
         {!emptyState && (
-          <div className="flex gap-6 flex-1 min-h-0 overflow-hidden">
+          <div className={styles.mainLayout}>
 
-            {/* Sidebar */}
-            <aside className="w-60 shrink-0 flex flex-col gap-5 overflow-y-auto">
+            {/* Sidebar de controles */}
+            <aside className={styles.controlsSidebar}>
 
               {/* Filtro de paleta */}
-              <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-                  Paleta
-                </label>
+              <div className={styles.sidebarSection}>
+                <label className={styles.sidebarLabel}>Paleta</label>
                 <select
                   value={coreFilter}
                   onChange={(e) => setCoreFilter(e.target.value as CoreFilter)}
-                  className="w-full px-3 py-2 text-sm rounded-lg bg-muted border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                  className={styles.paletteSelect}
                 >
                   <option value="both">Verde + Color</option>
                   <option value="verde">Verde Core</option>
@@ -341,31 +336,21 @@ export function ColorWheelPage() {
               </div>
 
               {/* Modos de harmonia */}
-              <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-                  Modo de Harmonia
-                </label>
-                <div className="space-y-1.5">
+              <div className={styles.sidebarSection}>
+                <label className={styles.sidebarLabel}>Modo de Harmonia</label>
+                <div className={styles.harmonyList}>
                   {HARMONY_MODES.map((mode) => {
                     const isActive = harmonyMode === mode.id;
                     return (
                       <button
                         key={mode.id}
                         onClick={() => setHarmonyMode(mode.id)}
-                        className={`w-full p-2.5 rounded-lg transition-all flex items-center gap-2.5 text-left text-sm ${
-                          isActive
-                            ? "bg-foreground/10 ring-1 ring-foreground/20 font-semibold"
-                            : "bg-muted/50 hover:bg-muted border border-border"
-                        }`}
+                        className={`${styles.harmonyBtn} ${isActive ? styles.harmonyBtnActive : ""}`}
                       >
-                        <span className={`w-6 h-6 flex items-center justify-center rounded text-base ${
-                          isActive ? "bg-foreground text-background" : "bg-muted text-muted-foreground"
-                        }`}>
-                          {mode.icon}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-xs font-medium">{mode.name}</div>
-                          <div className="text-[10px] text-muted-foreground">{mode.description}</div>
+                        <span className={styles.harmonyIcon}>{mode.icon}</span>
+                        <div className={styles.harmonyInfo}>
+                          <span className={styles.harmonyName}>{mode.name}</span>
+                          <span className={styles.harmonyDesc}>{mode.description}</span>
                         </div>
                       </button>
                     );
@@ -374,26 +359,24 @@ export function ColorWheelPage() {
               </div>
 
               {/* Cores selecionadas */}
-              <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+              <div className={styles.sidebarSection}>
+                <label className={styles.sidebarLabel}>
                   Cores Selecionadas ({harmonyColors.length})
                 </label>
                 {harmonyColors.length === 0 ? (
-                  <p className="text-xs text-center py-4 text-muted-foreground">
-                    Clique na roda para selecionar
-                  </p>
+                  <p className={styles.emptyMsg}>Clique na roda para selecionar</p>
                 ) : (
-                  <div className="space-y-1.5">
+                  <div className={styles.selectedColors}>
                     {harmonyColors.map((color, i) => (
                       <motion.div
                         key={`${color.hex}-${i}`}
                         initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.03 }}
-                        className="flex items-center gap-2 p-2 rounded-lg bg-muted/50"
+                        className={styles.colorCard}
                       >
                         <div
-                          className="w-7 h-7 rounded shrink-0"
+                          className={styles.colorSwatch}
                           style={{
                             background: color.hex,
                             border: color.hex === baseColorHex
@@ -401,26 +384,24 @@ export function ColorWheelPage() {
                               : `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
                           }}
                         />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1">
-                            <span className="text-[11px] font-mono font-bold">
+                        <div className={styles.colorInfo}>
+                          <div className={styles.colorHexRow}>
+                            <span className={styles.colorHex}>
                               {color.hex.toUpperCase()}
                             </span>
                             {color.hex === baseColorHex && (
-                              <span className="text-[9px] px-1 py-0.5 rounded bg-foreground text-background font-bold">
-                                BASE
-                              </span>
+                              <span className={styles.baseBadge}>BASE</span>
                             )}
                           </div>
-                          <div className="text-[10px] text-muted-foreground truncate">{color.name}</div>
+                          <span className={styles.colorName}>{color.name}</span>
                         </div>
                         <button
                           onClick={() => handleCopy(color.hex)}
-                          className="px-1.5 py-1 rounded hover:bg-muted transition-colors"
+                          className={styles.copyBtn}
                         >
                           {copiedHex === color.hex
-                            ? <Check className="w-3 h-3 text-green-500" />
-                            : <Copy className="w-3 h-3" />
+                            ? <Check size={12} color="var(--color-success, #22c55e)" />
+                            : <Copy size={12} />
                           }
                         </button>
                       </motion.div>
@@ -433,20 +414,18 @@ export function ColorWheelPage() {
             {/* Área da roda */}
             <div
               ref={wheelContainerRef}
-              className="flex-1 flex items-center justify-center overflow-hidden"
+              className={styles.wheelArea}
             >
-              <div className="relative" style={{ width: wheelSize, height: wheelSize }}>
+              <div className={styles.wheelWrapper} style={{ width: wheelSize, height: wheelSize }}>
 
                 {/* Dicas flutuantes */}
-                <div className="absolute top-2 left-2 text-[9px] leading-tight opacity-35 font-mono max-w-[100px]"
-                  style={{ color: isDark ? "rgba(232,240,237,0.7)" : "rgba(0,0,0,0.5)" }}>
-                  <div className="font-bold mb-0.5 text-[10px]">// CONTROLES</div>
+                <div className={styles.tipLeft} style={{ color: tipColor }}>
+                  <span className={styles.tipTitle}>// CONTROLES</span>
                   <div>→ Clique: seleciona</div>
                   <div>→ Drag: navega</div>
                 </div>
-                <div className="absolute top-2 right-2 text-[9px] leading-tight opacity-35 font-mono max-w-[110px] text-right"
-                  style={{ color: isDark ? "rgba(232,240,237,0.7)" : "rgba(0,0,0,0.5)" }}>
-                  <div className="font-bold mb-0.5 text-[10px]">// TONS</div>
+                <div className={styles.tipRight} style={{ color: tipColor }}>
+                  <span className={styles.tipTitle}>// TONS</span>
                   <div>✓ Max 2 iguais</div>
                   <div>✓ Sem adjacentes</div>
                 </div>
@@ -459,7 +438,7 @@ export function ColorWheelPage() {
                   onMouseMove={handleSvgMouseMove}
                   onMouseUp={() => setIsDragging(false)}
                   onClick={handleSvgClick}
-                  className="relative z-10"
+                  className={styles.wheelSvg}
                   style={{
                     cursor: isDragging ? "grabbing" : hoveredColor ? "pointer" : "crosshair",
                     userSelect: "none",
@@ -486,9 +465,8 @@ export function ColorWheelPage() {
 
                   {/* Fatias de harmonia */}
                   {harmonyColors.length >= 2 && harmonyColors.map((color, i) => {
-                    const baseColor = positionedColors.find(pc => pc.hex === baseColorHex);
                     const harmonyColor = positionedColors.find(pc => pc.hex === color.hex);
-                    if (!baseColor || !harmonyColor) return null;
+                    if (!harmonyColor) return null;
                     return (
                       <line
                         key={`line-${i}`}
@@ -505,7 +483,6 @@ export function ColorWheelPage() {
                   {positionedColors.map((c) => {
                     const isBase = c.hex === baseColorHex;
                     const isHarmony = harmonyColors.some(hc => hc.hex === c.hex);
-                    const isHovered = c.hex === hoveredColor;
                     const r = isBase ? PIN_R * 1.6 : isHarmony ? PIN_R * 1.3 : PIN_R;
 
                     return (

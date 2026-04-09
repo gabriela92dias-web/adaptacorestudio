@@ -630,7 +630,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                            <div className="flex flex-col gap-3">
                              <div className="flex items-center gap-2 mb-1">
                                 <Sparkles className="w-4 h-4 text-zinc-500" />
-                                <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Propostas do Motor I.A.:</p>
+                                <p className="text-[10px] text-zinc-400 font-bold tracking-wide">Propostas do Motor I.A.:</p>
                              </div>
                              
                              {suggestedPropositions.map((sug, idx) => (
@@ -755,7 +755,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                         <div className="w-full flex flex-col items-center gap-0.5">
                            {[
                              { id: "awareness",     name: "Conscientizar",   desc: "Opinião Pública",  bg: "bg-emerald-400", pct: "100%" },
-                             { id: "consideration", name: "Educação Médica", desc: "Tabus Clínicos",   bg: "bg-emerald-500", pct: "83%"  },
+                             { id: "consideration", name: "Educação Médica", desc: "Tabus Clínicos",   bg: "bg-[#10b981]", pct: "83%"  },
                              { id: "conversion",    name: "Acolhimento",     desc: "Entrada Oficial",  bg: "bg-blue-500",    pct: "66%"  },
                              { id: "retention",     name: "Acompanhamento",  desc: "Zelo Contínuo",    bg: "bg-purple-500",  pct: "83%"  },
                              { id: "expansion",     name: "Apoio Social",    desc: "Rede de Indicação",bg: "bg-pink-500",    pct: "100%" },
