@@ -243,3 +243,18 @@
   background-color: var(--card) !important;
   border-color: color-mix(in srgb, var(--primary) 30%, transparent) !important;
 }
+
+/* ── Missing opacity variants (bg-zinc-900/80 etc.) ── */
+.wizardRoot :global(.bg-zinc-900\/80),
+.wizardRoot :global(.bg-zinc-900\/50) {
+  background-color: var(--card) !important;
+}
+
+/* ── Border white opacity variants ── */
+.wizardRoot :global(.border-white\/5),
+.wizardRoot :global(.border-white\/10) {
+  border-color: var(--border) !important;
+}
+.wizardRoot :global(.border-white\/20) {
+  border-color: color-mix(in srgb, var(--foreground) 18%, transparent) !important;
+}

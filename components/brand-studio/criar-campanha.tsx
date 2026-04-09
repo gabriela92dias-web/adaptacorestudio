@@ -627,10 +627,10 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
                            
                            {/* DYNAMIC SUGGESTIONS REPLACING PURE TEXTAREA */}
-                           <div className="flex flex-col gap-2">
+                           <div className="flex flex-col gap-3">
                              <div className="flex items-center gap-2 mb-1">
                                 <Sparkles className="w-4 h-4 text-zinc-500" />
-                                <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Baseado no Funil, a I.A. sugere:</p>
+                                <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Propostas do Motor I.A.:</p>
                              </div>
                              
                              {suggestedPropositions.map((sug, idx) => (
@@ -649,7 +649,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
                            <div className="flex items-center gap-4 py-2">
                               <div className="h-px bg-white/5 flex-1" />
-                              <span className="text-[10px] uppercase font-bold text-zinc-600 tracking-widest">OU CRIE UMA DIREX DO ZERO</span>
+                              <span className="text-[10px] uppercase font-bold text-zinc-600 tracking-widest">OU DEFINA SUA PRÓPRIA DIRETRIZ</span>
                               <div className="h-px bg-white/5 flex-1" />
                            </div>
 
@@ -738,10 +738,6 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
           </main>
         </div>
 
-        <div className="mt-auto pt-6 flex items-center justify-between border-t border-white/5 opacity-50 text-[10px] font-mono tracking-wider">
-            <span>MODO DE PRODUÇÃO</span>
-            <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"/>ONLINE</span>
-          </div>
       </aside>
 
       {/* --- RIGHT COLUMN / SCROLLABLE WIZARD --- */}
