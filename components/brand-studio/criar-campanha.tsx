@@ -7,22 +7,22 @@ import { ArrowLeft, ArrowRight, Target, Mail, Ticket, Globe, Megaphone, Stethosc
 import { toast } from "sonner";
 import { useCreateCampaign } from "../../helpers/useApi";
 
-// 1. NATUREZA DA A├ç├âO MATRIZ ESTRAT├ëGICA (Types + AutoFill)
+// 1. NATUREZA DA AÇÃO MATRIZ ESTRATÉGICA (Types + AutoFill)
 const ACTION_TYPES = [
   { 
-    id: "institucional", name: "Conscientiza├º├úo Institucional", icon: Target, color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20 hover:border-blue-500",
+    id: "institucional", name: "Conscientização Institucional", icon: Target, color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20 hover:border-blue-500",
   },
   { 
-    id: "acolhimento", name: "Mutir├úo / Acolhimento", icon: HeartHandshake, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20 hover:border-emerald-500",
+    id: "acolhimento", name: "Mutirão / Acolhimento", icon: HeartHandshake, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20 hover:border-emerald-500",
   },
   { 
-    id: "medicos", name: "Educa├º├úo Prescritora", icon: Stethoscope, color: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/20 hover:border-amber-500",
+    id: "medicos", name: "Educação Prescritora", icon: Stethoscope, color: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/20 hover:border-amber-500",
   },
   { 
-    id: "sazonal", name: "Data da Sa├║de / Sazonal", icon: CalendarIcon, color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20 hover:border-purple-500",
+    id: "sazonal", name: "Data da Saúde / Sazonal", icon: CalendarIcon, color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20 hover:border-purple-500",
   },
   { 
-    id: "pesquisa", name: "Pesquisa / Ci├¬ncia", icon: FileText, color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20 hover:border-pink-500",
+    id: "pesquisa", name: "Pesquisa / Ciência", icon: FileText, color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20 hover:border-pink-500",
   }
 ];
 
@@ -31,34 +31,34 @@ const FUNNELS = [
   { 
     id: "awareness", 
     name: "Descoberta / Topo", 
-    desc: "O Despertar: Visitantes descobrem uma necessidade e come├ºam a buscar solu├º├╡es. Fase de atra├º├úo.", 
+    desc: "O Despertar: Visitantes descobrem uma necessidade e começam a buscar soluções. Fase de atração.", 
     icon: Search,
     color: "bg-blue-500", width: "w-full"
   },
   { 
     id: "consideration", 
-    name: "Considera├º├úo / Meio", 
-    desc: "O Interesse: O lead admite que precisa de ajuda e cogita a sua marca como resposta. Fase de nutri├º├úo.", 
+    name: "Consideração / Meio", 
+    desc: "O Interesse: O lead admite que precisa de ajuda e cogita a sua marca como resposta. Fase de nutrição.", 
     icon: Magnet,
     color: "bg-green-500", width: "w-4/5"
   },
   { 
     id: "conversion", 
-    name: "Convers├úo / Fundo", 
-    desc: "A Decis├úo: O cliente decide por voc├¬ e fecha neg├│cio. A├º├úo direta de compra/cadastro.", 
+    name: "Conversão / Fundo", 
+    desc: "A Decisão: O cliente decide por você e fecha negócio. Ação direta de compra/cadastro.", 
     icon: Zap,
     color: "bg-emerald-600", width: "w-3/5"
   },
   { 
     id: "retention", 
-    name: "Reten├º├úo / CS", 
-    desc: "Sucesso do Cliente: Gosta do servi├ºo, usa ativamente e se mant├⌐m na comunidade (evita churn).", 
+    name: "Retenção / CS", 
+    desc: "Sucesso do Cliente: Gosta do serviço, usa ativamente e se mantém na comunidade (evita churn).", 
     icon: HeartHandshake,
     color: "bg-purple-500", width: "w-4/5"
   },
   { 
     id: "expansion", 
-    name: "Expans├úo / Indica├º├úo", 
+    name: "Expansão / Indicação", 
     desc: "Defensores da Marca: Tornam-se leais, compram novos produtos (upsell) e indicam amigos.", 
     icon: Sparkles,
     color: "bg-pink-500", width: "w-full"
@@ -67,42 +67,42 @@ const FUNNELS = [
 
 // 3. COMUNIDADES (Linhas da Matriz)
 const COMMUNITIES = [
-  { id: "leads", name: "P├║blico Geral", desc: "Leads frios e novos seguidores", icon: Target },
+  { id: "leads", name: "Público Geral", desc: "Leads frios e novos seguidores", icon: Target },
   { id: "members", name: "Adapta Members", desc: "Associados e Pacientes Ativos", icon: Users },
-  { id: "doctors", name: "M├⌐dicos Parceiros", desc: "Prescritores da Rede", icon: FileText },
-  { id: "ex-alunos", name: "Ex-Associados", desc: "Base para revers├úo de Churn", icon: Flag },
+  { id: "doctors", name: "Médicos Parceiros", desc: "Prescritores da Rede", icon: FileText },
+  { id: "ex-alunos", name: "Ex-Associados", desc: "Base para reversão de Churn", icon: Flag },
 ];
 
-// 4. INTELIG├èNCIA T├üTICA OCULTA EM BANCO DE DADOS (Canais, Dire├º├úo e Metas KPI)
-// Mapa: "communityId-funnelId" -> Dicion├írio Rico
+// 4. INTELIGÊNCIA TÁTICA OCULTA EM BANCO DE DADOS (Canais, Direção e Metas KPI)
+// Mapa: "communityId-funnelId" -> Dicionário Rico
 const TACTICAL_MATRIX_DB: Record<string, { channels: string, focus: string, metrics: string }> = {
-  // LEADS (P├║blico Geral)
-  "leads-awareness": { channels: "Reels Virais 15s, TikTok, YouTube Shorts", focus: "Foque no problema n├úo mapeado: 'A dor que seu cliente n├úo sabe que tem.'", metrics: "Massivo Alcance (Impress├╡es) ΓÇó CPM e CPV Baratos ΓÇó Curtidas" },
-  "leads-consideration": { channels: "Carrossel Extenso IG, YouTube Longo, Artigos SEO", focus: "Como a metodologia da Adapta sana aquela dor real.", metrics: "Visualiza├º├úo do V├¡deo (VTR) ΓÇó Tr├ífego no Site (Cliques) ΓÇó Salvamentos" },
-  "leads-conversion": { channels: "Meta Ads de Oferta Direta, Landing Page Otimizada", focus: "Apelo de Escassez e Garantia Absoluta: 'Sua vaga com b├┤nus!'", metrics: "Custo por Venda (CAC) ΓÇó Taxa de Convers├úo na P├ígina ΓÇó ROAS" },
-  "leads-retention": { channels: "Retargeting em Redes", focus: "Remarketing de Confian├ºa (Mostre o Suporte da Adapta).", metrics: "Redu├º├úo de Carrinhos Abandonados ΓÇó Recall de Marca" },
-  "leads-expansion": { channels: "Captura de Leads Org├ónica", focus: "Pesquisas com quem rejeitou a oferta principal.", metrics: "Crescimento da Base de E-mails Frios" },
+  // LEADS (Público Geral)
+  "leads-awareness": { channels: "Reels Virais 15s, TikTok, YouTube Shorts", focus: "Foque no problema não mapeado: 'A dor que seu cliente não sabe que tem.'", metrics: "Massivo Alcance (Impressões) • CPM e CPV Baratos • Curtidas" },
+  "leads-consideration": { channels: "Carrossel Extenso IG, YouTube Longo, Artigos SEO", focus: "Como a metodologia da Adapta sana aquela dor real.", metrics: "Visualização do Vídeo (VTR) • Tráfego no Site (Cliques) • Salvamentos" },
+  "leads-conversion": { channels: "Meta Ads de Oferta Direta, Landing Page Otimizada", focus: "Apelo de Escassez e Garantia Absoluta: 'Sua vaga com bônus!'", metrics: "Custo por Venda (CAC) • Taxa de Conversão na Página • ROAS" },
+  "leads-retention": { channels: "Retargeting em Redes", focus: "Remarketing de Confiança (Mostre o Suporte da Adapta).", metrics: "Redução de Carrinhos Abandonados • Recall de Marca" },
+  "leads-expansion": { channels: "Captura de Leads Orgânica", focus: "Pesquisas com quem rejeitou a oferta principal.", metrics: "Crescimento da Base de E-mails Frios" },
 
   // MEMBERS (Adapta Members)
-  "members-awareness": { channels: "Eventos Livres", focus: "Teasar de novas atualiza├º├╡es de produtos sendo incubados.", metrics: "Engajamento (Coment├írios de Interesse) no Grupo" },
-  "members-consideration": { channels: "Masterclasses Abertas, Avisos de Telegram", focus: "A prova de que a nossa nova feature ├⌐ game-changer.", metrics: "Taxa de Assist├¬ncia Nas Lives Mensais" },
-  "members-conversion": { channels: "Disparo no WhatsApp, Oferta Flash no E-mail", focus: "Exclusividade: O pre├ºo de Ouro de quem j├í ├⌐ da casa.", metrics: "Picos de Upsell Realizado ΓÇó Taxa de Abertura do Disparo" },
-  "members-retention": { channels: "Masterclass Fechada VIP, Carta do Fundador (E-mail)", focus: "Acolhimento cont├¡nuo, Sucesso no Setup. 'N├│s te pegamos pela m├úo.'", metrics: "Estabilidade Constante (Redu├º├úo da Taxa de Churn) ΓÇó MAU (Logins Frequentes)" },
-  "members-expansion": { channels: "MGM Autom├ítico na Home do Sistema", focus: "Programa Embaixadores: 'Conhece algu├⌐m que sofre desse mal?'", metrics: "Indica├º├╡es Qualificadas Geradas ΓÇó Net Promoter Score Alto" },
+  "members-awareness": { channels: "Eventos Livres", focus: "Teasar de novas atualizações de produtos sendo incubados.", metrics: "Engajamento (Comentários de Interesse) no Grupo" },
+  "members-consideration": { channels: "Masterclasses Abertas, Avisos de Telegram", focus: "A prova de que a nossa nova feature é game-changer.", metrics: "Taxa de Assistência Nas Lives Mensais" },
+  "members-conversion": { channels: "Disparo no WhatsApp, Oferta Flash no E-mail", focus: "Exclusividade: O preço de Ouro de quem já é da casa.", metrics: "Picos de Upsell Realizado • Taxa de Abertura do Disparo" },
+  "members-retention": { channels: "Masterclass Fechada VIP, Carta do Fundador (E-mail)", focus: "Acolhimento contínuo, Sucesso no Setup. 'Nós te pegamos pela mão.'", metrics: "Estabilidade Constante (Redução da Taxa de Churn) • MAU (Logins Frequentes)" },
+  "members-expansion": { channels: "MGM Automático na Home do Sistema", focus: "Programa Embaixadores: 'Conhece alguém que sofre desse mal?'", metrics: "Indicações Qualificadas Geradas • Net Promoter Score Alto" },
 
   // DOCTORS (Prescritores)
-  "doctors-awareness": { channels: "LinkedIn, Google Escolar, RP em Congressos", focus: "Autoridade inquestion├ível em Tratamentos Disruptivos.", metrics: "Pedidos Iniciais de Casos de Estudo (Lead Magn├⌐tico B2B)" },
-  "doctors-consideration": { channels: "Casos Cl├¡nicos PDF, Entrevistas Guiadas, Whitepapers", focus: "Robustez, Ci├¬ncia de Base Plena e Seguran├ºa para a Prescri├º├úo.", metrics: "Download do E-book de Protocolo ΓÇó Consultas de WhatsApp" },
-  "doctors-conversion": { channels: "Inside Sales (Conversa 1a1 Call, Key Account)", focus: "A grande Alian├ºa a longo prazo entre Adapta e a Cl├¡nica.", metrics: "Reuni├╡es Finalizadas (Fechamento/Sign-up) e Protocolos Emitidos" },
-  "doctors-retention": { channels: "Dashes VIPs do Cliente M├⌐dico, Portal M├⌐dico", focus: "Acompanhamento sem atrito total do Sucesso Terap├¬utico.", metrics: "Pacientes Recorrentes na Prescri├º├úo daquele Doutor ΓÇó LTV" },
-  "doctors-expansion": { channels: "Mesa Redonda Diretiva", focus: "Traga mais Parceiros. 'Fa├ºa Palestras pelas Cl├¡nicas Adapta'.", metrics: "Quantidade de Eventos Criados pela Base de M├⌐dicos Atuais" },
+  "doctors-awareness": { channels: "LinkedIn, Google Escolar, RP em Congressos", focus: "Autoridade inquestionável em Tratamentos Disruptivos.", metrics: "Pedidos Iniciais de Casos de Estudo (Lead Magnético B2B)" },
+  "doctors-consideration": { channels: "Casos Clínicos PDF, Entrevistas Guiadas, Whitepapers", focus: "Robustez, Ciência de Base Plena e Segurança para a Prescrição.", metrics: "Download do E-book de Protocolo • Consultas de WhatsApp" },
+  "doctors-conversion": { channels: "Inside Sales (Conversa 1a1 Call, Key Account)", focus: "A grande Aliança a longo prazo entre Adapta e a Clínica.", metrics: "Reuniões Finalizadas (Fechamento/Sign-up) e Protocolos Emitidos" },
+  "doctors-retention": { channels: "Dashes VIPs do Cliente Médico, Portal Médico", focus: "Acompanhamento sem atrito total do Sucesso Terapêutico.", metrics: "Pacientes Recorrentes na Prescrição daquele Doutor • LTV" },
+  "doctors-expansion": { channels: "Mesa Redonda Diretiva", focus: "Traga mais Parceiros. 'Faça Palestras pelas Clínicas Adapta'.", metrics: "Quantidade de Eventos Criados pela Base de Médicos Atuais" },
 
   // EX-ALUNOS (Churn / Base Antiga)
-  "ex-alunos-awareness": { channels: "An├║ncio 'Lookalike' da Base Suja, Ads no IG", focus: "A Adapta n├úo ├⌐ mais a que voc├¬ deixou para tr├ís (Atualiza├º├úo Total).", metrics: "Taxa de Clique no E-mail Velho" },
-  "ex-alunos-consideration": { channels: "Cartas Visuais e Depoimentos Recentes, News VIP", focus: "Veja a Comunidade atual vibrando (Perda Psicol├│gica/FOMO).", metrics: "Interpreta├º├úo da Reabertura de Contato" },
-  "ex-alunos-conversion": { channels: "Campanha Flash de Resgate no WhatsApp T├ítico", focus: "Isen├º├úo Completa da Taxa de Ades├úo caso Volte Hoje.", metrics: "Alunos Reativados e Taxa de Voltas de Assinatura" },
-  "ex-alunos-retention": { channels: "Onboarding Guiado Especialista", focus: "Cuidaremos daquele problema que te fez cancelar no passado.", metrics: "Suporte Imediato Resolutivo P├│s-Volta" },
-  "ex-alunos-expansion": { channels: "Pouco Custo Alocado", focus: "N├úo focar. Focar em Recupera├º├úo Direta 100% Convers├úo.", metrics: "N/A - Concentre na Volta do Plano" }
+  "ex-alunos-awareness": { channels: "Anúncio 'Lookalike' da Base Suja, Ads no IG", focus: "A Adapta não é mais a que você deixou para trás (Atualização Total).", metrics: "Taxa de Clique no E-mail Velho" },
+  "ex-alunos-consideration": { channels: "Cartas Visuais e Depoimentos Recentes, News VIP", focus: "Veja a Comunidade atual vibrando (Perda Psicológica/FOMO).", metrics: "Interpretação da Reabertura de Contato" },
+  "ex-alunos-conversion": { channels: "Campanha Flash de Resgate no WhatsApp Tático", focus: "Isenção Completa da Taxa de Adesão caso Volte Hoje.", metrics: "Alunos Reativados e Taxa de Voltas de Assinatura" },
+  "ex-alunos-retention": { channels: "Onboarding Guiado Especialista", focus: "Cuidaremos daquele problema que te fez cancelar no passado.", metrics: "Suporte Imediato Resolutivo Pós-Volta" },
+  "ex-alunos-expansion": { channels: "Pouco Custo Alocado", focus: "Não focar. Focar em Recuperação Direta 100% Conversão.", metrics: "N/A - Concentre na Volta do Plano" }
 };
 
 export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -138,7 +138,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
       localStorage.setItem("OPENAI_API_KEY", key);
       setOpenAiKey(key);
       setShowAiConfig(false);
-      toast.success("Chave OpenAI vinculada! O c├⌐rebro da matriz agora ├⌐ real.");
+      toast.success("Chave OpenAI vinculada! O cérebro da matriz agora é real.");
   };
 
   async function callOpenAI(system: string, user: string) {
@@ -181,7 +181,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
     
     try {
         const payload = await callOpenAI(
-            `Voc├¬ ├⌐ o Diretor de Estrat├⌐gia de uma Associa├º├úo Cl├¡nica de Cannabis. O usu├írio vai passar um TEMA de campanha. Voc├¬ DEVE retornar EXATAMENTE um objeto JSON no formato: { "proposicoes": ["Tese 1", "Tese 2", "Tese 3"] }. Cada tese deve ter no m├íximo 20 palavras e ser ABSURDAMENTE densa, te├│rica, focada na mec├ónica do terceiro setor, sem absolutamente nenhum jarg├úo raso de varejo ou vendas.`,
+            `Você é o Diretor de Estratégia de uma Associação Clínica de Cannabis. O usuário vai passar um TEMA de campanha. Você DEVE retornar EXATAMENTE um objeto JSON no formato: { "proposicoes": ["Tese 1", "Tese 2", "Tese 3"] }. Cada tese deve ter no máximo 20 palavras e ser ABSURDAMENTE densa, teórica, focada na mecânica do terceiro setor, sem absolutamente nenhum jargão raso de varejo ou vendas.`,
             `Tema da campanha: "${rawName}"`
         );
         const cleaned = payload.replace(/```json|```/gi, "").trim();
@@ -190,12 +190,12 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         if (!Array.isArray(aiProps) || aiProps.length < 3) throw new Error("Menos de 3");
     } catch (e: any) {
         fallbackUsed = true;
-        toast.warning("Sistema I.A. Padr├úo ativado: " + e.message);
-        const temaFormatado = rawName.trim() ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "A├º├úo";
+        toast.warning("Sistema I.A. Padrão ativado: " + e.message);
+        const temaFormatado = rawName.trim() ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "Ação";
         aiProps = [
-            `[OFFLINE] Desestigmatiza├º├úo Direcionada (${temaFormatado}): Combater a assimetria informacional munindo a pauta desta comunidade com dossi├¬s irrefut├íveis.`,
-            `[OFFLINE] Expans├úo da Comunidade de Afinidade: Adotar um ecossistema focado no tema "${temaFormatado}" onde pacientes veteranos validam a evolu├º├úo.`,
-            `[OFFLINE] Cidadania Terap├¬utica Plena: Promover a narrativa de que o acesso cruzado com pautas de ${temaFormatado} ├⌐ garantia de amparo social.`
+            `[OFFLINE] Desestigmatização Direcionada (${temaFormatado}): Combater a assimetria informacional munindo a pauta desta comunidade com dossiês irrefutáveis.`,
+            `[OFFLINE] Expansão da Comunidade de Afinidade: Adotar um ecossistema focado no tema "${temaFormatado}" onde pacientes veteranos validam a evolução.`,
+            `[OFFLINE] Cidadania Terapêutica Plena: Promover a narrativa de que o acesso cruzado com pautas de ${temaFormatado} é garantia de amparo social.`
         ];
     }
 
@@ -204,24 +204,24 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         let type = "institucional";
         let funnels = { awareness: true, consideration: true, conversion: false, retention: false, expansion: false };
 
-        if (lowerName.includes('mutir├úo') || lowerName.includes('acolhimento') || lowerName.includes('paciente') || lowerName.includes('associa├º├úo')) {
+        if (lowerName.includes('mutirão') || lowerName.includes('acolhimento') || lowerName.includes('paciente') || lowerName.includes('associação')) {
            type = "acolhimento";
            funnels = { awareness: false, consideration: false, conversion: true, retention: true, expansion: true };
            if (fallbackUsed) {
                aiProps = [
-                   `Ancoragem de Acesso Direto (${rawName}): Reduzir a lat├¬ncia log├¡stica entre a valida├º├úo da prescri├º├úo e o contato biol├│gico.`,
-                   `Subvers├úo da Burocracia: A estrutura da entidade absorve a fric├º├úo documental pesada deste agrupamento de ${rawName}.`,
-                   `Acolhimento Terap├¬utico Focado: Suportar este n├║cleo isolado mitigando o limbo burocr├ítico inicial do Estado frente ├á causa.`
+                   `Ancoragem de Acesso Direto (${rawName}): Reduzir a latência logística entre a validação da prescrição e o contato biológico.`,
+                   `Subversão da Burocracia: A estrutura da entidade absorve a fricção documental pesada deste agrupamento de ${rawName}.`,
+                   `Acolhimento Terapêutico Focado: Suportar este núcleo isolado mitigando o limbo burocrático inicial do Estado frente à causa.`
                ];
            }
-        } else if (lowerName.includes('m├⌐dico') || lowerName.includes('prescrit') || lowerName.includes('congresso') || lowerName.includes('pesquisa')) {
+        } else if (lowerName.includes('médico') || lowerName.includes('prescrit') || lowerName.includes('congresso') || lowerName.includes('pesquisa')) {
            type = "medicos";
            funnels = { awareness: true, consideration: true, conversion: true, retention: false, expansion: false };
            if (fallbackUsed) {
                aiProps = [
-                   `Transfer├¬ncia de Autoridade em Protocolos de ${rawName}: Fornecer metan├ílises robustas isolando os prescritores de exposi├º├úo jur├¡dica.`,
-                   `Engenharia de Casos Cl├¡nicos Interpares: Transferir autoridade usando papers sobre ${rawName} segmentados para a pr├│pria classe m├⌐dica.`,
-                   `Concierge Cl├¡nico Compartilhado: Posicionar a associa├º├úo como rede estrat├⌐gica de backoffice no vi├⌐s biom├⌐dico da campanha.`
+                   `Transferência de Autoridade em Protocolos de ${rawName}: Fornecer metanálises robustas isolando os prescritores de exposição jurídica.`,
+                   `Engenharia de Casos Clínicos Interpares: Transferir autoridade usando papers sobre ${rawName} segmentados para a própria classe médica.`,
+                   `Concierge Clínico Compartilhado: Posicionar a associação como rede estratégica de backoffice no viés biomédico da campanha.`
                ];
            }
         } else if (lowerName.includes('setembro') || lowerName.includes('outubro') || lowerName.includes('sazonal') || lowerName.includes('dia')) {
@@ -229,9 +229,9 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
            funnels = { awareness: true, consideration: true, conversion: false, retention: true, expansion: true };
            if (fallbackUsed) {
                aiProps = [
-                   `Empatia Sist├¬mica Voltada a ${rawName}: Extrair a comunidade alvo do isolamento atrav├⌐s da proje├º├úo social de relatos reais.`,
-                   `Resson├óncia do Cuidado Sustent├ível: Alavancar a data pautando evid├¬ncias expl├¡citas da terapia como via central de reinser├º├úo.`,
-                   `Janela de Acesso Social Priorit├írio: Redu├º├úo brusca de fric├º├úo unicamente para o ecossistema afetado durante a ocorr├¬ncia da data.`
+                   `Empatia Sistêmica Voltada a ${rawName}: Extrair a comunidade alvo do isolamento através da projeção social de relatos reais.`,
+                   `Ressonância do Cuidado Sustentável: Alavancar a data pautando evidências explícitas da terapia como via central de reinserção.`,
+                   `Janela de Acesso Social Prioritário: Redução brusca de fricção unicamente para o ecossistema afetado durante a ocorrência da data.`
                ];
            }
         }
@@ -241,7 +241,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         setSuggestedPropositions(aiProps);
         setStep(1);
     } catch (err: any) {
-        toast.error("Erro Cr├¡tico: " + err.message);
+        toast.error("Erro Crítico: " + err.message);
     } finally {
         setIsGenerating(false);
     }
@@ -256,26 +256,26 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         let data = { briefing: "", channels: ["Instagram Oficial", "Disparo E-Mail"] };
         try {
             const payload = await callOpenAI(
-                `Voc├¬ ├⌐ o CSO operando uma campanha no Terceiro Setor em Cannabis Medicinal. Devolva um JSON estrito no formato: { "briefing": "O Memorando T├ítico densamente te├│rico validando as diretrizes, usando par├ígrafos e bullet points. ", "channels": ["Canal 1", "Canal 2", "Canal 3"] }. Seja brutal na densidade das m├⌐tricas do terceiro setor (ex: Custo-Por-Aten├º├úo, etc).`,
-                `Tema: "${rawName}". Tese Central adotada pela equipe: "${finalProp}". Estruture o Memorando T├ítico justificando as escolhas operacionais visando efici├¬ncia absurda no atendimento, ativismo f├ítico e expans├úo de associa├º├╡es oficiais.`
+                `Você é o CSO operando uma campanha no Terceiro Setor em Cannabis Medicinal. Devolva um JSON estrito no formato: { "briefing": "O Memorando Tático densamente teórico validando as diretrizes, usando parágrafos e bullet points. ", "channels": ["Canal 1", "Canal 2", "Canal 3"] }. Seja brutal na densidade das métricas do terceiro setor (ex: Custo-Por-Atenção, etc).`,
+                `Tema: "${rawName}". Tese Central adotada pela equipe: "${finalProp}". Estruture o Memorando Tático justificando as escolhas operacionais visando eficiência absurda no atendimento, ativismo fático e expansão de associações oficiais.`
             );
             data = JSON.parse(payload.replace(/```json|```/gi, "").trim());
         } catch (e: any) {
             toast.warning("OpenAI falhou no Tactical Briefing: " + e.message, { duration: 5000 });
-            // Fallback Din├ómico
-            const temaFormatado = rawName.trim() ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "A├º├úo Base";
+            // Fallback Dinâmico
+            const temaFormatado = rawName.trim() ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "Ação Base";
             if (aiGeneratedType === "acolhimento") {
-               data.briefing = `ALINHAMENTO DE FRONT-DESK (PROJETO: ${temaFormatado})\n\nA opera├º├úo em torno de "${finalProp}" exige conten├º├úo imediata de lat├¬ncia. O cluster associado chega vulner├ível (Cognitive Load Alert). O papel da base ├⌐ 'Paralegal', absorvendo a carga de compliance.\n\nΓÇó Gatilho Operacional: Velocidade absoluta e acolhimento humano.`;
-               data.channels = ["WhatsApp Dedicado", "Triage Telef├┤nica", "Google T├ítico"];
+               data.briefing = `ALINHAMENTO DE FRONT-DESK (PROJETO: ${temaFormatado})\n\nA operação em torno de "${finalProp}" exige contenção imediata de latência. O cluster associado chega vulnerável (Cognitive Load Alert). O papel da base é 'Paralegal', absorvendo a carga de compliance.\n\n• Gatilho Operacional: Velocidade absoluta e acolhimento humano.`;
+               data.channels = ["WhatsApp Dedicado", "Triage Telefônica", "Google Tático"];
             } else if (aiGeneratedType === "medicos") {
-               data.briefing = `CONSELHO B2B ORIENTADO AO MACRO-TEMA "${temaFormatado.toUpperCase()}"\n\nA comunica├º├úo pautada em "${finalProp}" exigir├í blindagem cient├¡fica dos prescritores envoltos na pauta. Entregaremos prote├º├úo contra "Loss Aversion Jur├¡dico".\n\nΓÇó Core: Metan├ílises isoladoras focadas em abstracts validados.`;
-               data.channels = ["LinkedIn InMail Cl├¡nico", "Comit├¬s Virtuais", "Envio Direto de Dossi├¬s"];
+               data.briefing = `CONSELHO B2B ORIENTADO AO MACRO-TEMA "${temaFormatado.toUpperCase()}"\n\nA comunicação pautada em "${finalProp}" exigirá blindagem científica dos prescritores envoltos na pauta. Entregaremos proteção contra "Loss Aversion Jurídico".\n\n• Core: Metanálises isoladoras focadas em abstracts validados.`;
+               data.channels = ["LinkedIn InMail Clínico", "Comitês Virtuais", "Envio Direto de Dossiês"];
             } else if (aiGeneratedType === "sazonal") {
-               data.briefing = `ENGENHARIA SOCIO-CULTURAL (TEMA-ALVO: ${temaFormatado})\n\nA estrat├⌐gia de "${finalProp}" capitaneia o ├ípice de consci├¬ncia midi├ítica para pautar fitoterapia na agenda p├║blica (Agenda-Setting). Contexto ├⌐ lei: usar a data como megafone para valida├º├úo emp├¡rica.\n\nΓÇó Racional de A├º├úo: Conectar grupos a casos de melhora cl├¡nica expl├¡citos da associa├º├úo.`;
-               data.channels = ["Colabora├º├╡es Sociais via Reels", "Pain├⌐is no YouTube Long-Form", "Dark Social / WhatsApp"];
+               data.briefing = `ENGENHARIA SOCIO-CULTURAL (TEMA-ALVO: ${temaFormatado})\n\nA estratégia de "${finalProp}" capitaneia o ápice de consciência midiática para pautar fitoterapia na agenda pública (Agenda-Setting). Contexto é lei: usar a data como megafone para validação empírica.\n\n• Racional de Ação: Conectar grupos a casos de melhora clínica explícitos da associação.`;
+               data.channels = ["Colaborações Sociais via Reels", "Painéis no YouTube Long-Form", "Dark Social / WhatsApp"];
             } else {
-               data.briefing = `PROJE├ç├âO DE MARCA (DIRECIONAL: ${temaFormatado})\n\nA opera├º├úo lastreada em "${finalProp}" foca na mec├ónica de 'Espiral de Engajamento' atrelada visceralmente ├á dor/ideologia contida na premissa tem├ítica do usu├írio. Cultivaremos alt├¡ssimo Share of Engagement.\n\nΓÇó KPI Invis├¡vel: Fomentar massivamente cliques de 'Salvar para Estudo'.`;
-               data.channels = ["Instagram Reels", "Digital PR Focado em Sa├║de", "Carrossel Acad├¬mico"];
+               data.briefing = `PROJEÇÃO DE MARCA (DIRECIONAL: ${temaFormatado})\n\nA operação lastreada em "${finalProp}" foca na mecânica de 'Espiral de Engajamento' atrelada visceralmente à dor/ideologia contida na premissa temática do usuário. Cultivaremos altíssimo Share of Engagement.\n\n• KPI Invisível: Fomentar massivamente cliques de 'Salvar para Estudo'.`;
+               data.channels = ["Instagram Reels", "Digital PR Focado em Saúde", "Carrossel Acadêmico"];
             }
         }
 
@@ -283,7 +283,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         setAiChannels(data.channels);
         setStep(2);
     } catch (err: any) {
-        toast.error("Erro Cr├¡tico: " + err.message);
+        toast.error("Erro Crítico: " + err.message);
     } finally {
         setIsGenerating(false);
     }
@@ -298,30 +298,30 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         let kpiObj = { meta: "", goal: "" };
         try {
             const payload = await callOpenAI(
-                `Voc├¬ analisa or├ºamentos e custos de aquisi├º├úo do Terceiro Setor Biom├⌐dico. Responda um JSON estrito: { "meta": "Sua m├⌐trica densa curta", "goal": "Um par├ígrafo explicando a proje├º├úo t├ítica do CAC, proje├º├úo de leads com jarg├╡es como Edge Cases, Hedge, CPL Cr├¡tico, etc." }.`,
-                `A diretoria fixou um teto de m├¡dia de R$ ${val}. A campanha ├⌐ "${rawName}" sob a tese "${proposicao}". Como o Head Cl├¡nico traduziria isso em OKRs palp├íveis para a associa├º├úo?`
+                `Você analisa orçamentos e custos de aquisição do Terceiro Setor Biomédico. Responda um JSON estrito: { "meta": "Sua métrica densa curta", "goal": "Um parágrafo explicando a projeção tática do CAC, projeção de leads com jargões como Edge Cases, Hedge, CPL Crítico, etc." }.`,
+                `A diretoria fixou um teto de mídia de R$ ${val}. A campanha é "${rawName}" sob a tese "${proposicao}". Como o Head Clínico traduziria isso em OKRs palpáveis para a associação?`
             );
             kpiObj = JSON.parse(payload.replace(/```json|```/gi, "").trim());
         } catch (e: any) {
-            toast.warning("OpenAI falhou no Or├ºamento: " + e.message, { duration: 5000 });
+            toast.warning("OpenAI falhou no Orçamento: " + e.message, { duration: 5000 });
             // Fallback
             if (aiGeneratedType === "acolhimento") {
                 const est = Math.floor(val / 145);
-                kpiObj = { meta: "Associa├º├╡es Oficiais (CPA Projetado: ~R$ 145)", goal: val > 0 ? `Com R$ ${orcamento}, estima-se ${est} acolhimentos. Sugerimos hedge preventivo de 15% na verba para remarketing de abandono de laudo.` : "Esfor├ºo direcionado ao inbound org├ónico. CAC em isolamento." };
+                kpiObj = { meta: "Associações Oficiais (CPA Projetado: ~R$ 145)", goal: val > 0 ? `Com R$ ${orcamento}, estima-se ${est} acolhimentos. Sugerimos hedge preventivo de 15% na verba para remarketing de abandono de laudo.` : "Esforço direcionado ao inbound orgânico. CAC em isolamento." };
             } else if (aiGeneratedType === "medicos") {
                 const est = Math.floor(val / 320);
-                kpiObj = { meta: "Ades├╡es de Corpo Prescritor (CPL: ~R$ 320)", goal: val > 0 ? `Prospec├º├úo viabiliza ~${est} novos parceiros prescritivistas avaliados pelo LTV Cr├¡tico. Aportar 35% em LinkedIn InMail.` : "Pipeline Outbound B2B sem impulsionamento direto de m├¡dia." };
+                kpiObj = { meta: "Adesões de Corpo Prescritor (CPL: ~R$ 320)", goal: val > 0 ? `Prospecção viabiliza ~${est} novos parceiros prescritivistas avaliados pelo LTV Crítico. Aportar 35% em LinkedIn InMail.` : "Pipeline Outbound B2B sem impulsionamento direto de mídia." };
             } else if (aiGeneratedType === "sazonal") {
-                kpiObj = { meta: "Share of Voice Transversal Sazonal", goal: val > 0 ? `R$ ${orcamento} traciona CPM ultra segmentado. Pico focal de admiss├╡es na comunidade via triagem no 'day after'.` : "Motoriza├º├úo via Dark Social (WhatsApp) pautada na relev├óncia da data." };
+                kpiObj = { meta: "Share of Voice Transversal Sazonal", goal: val > 0 ? `R$ ${orcamento} traciona CPM ultra segmentado. Pico focal de admissões na comunidade via triagem no 'day after'.` : "Motorização via Dark Social (WhatsApp) pautada na relevância da data." };
             } else {
-                kpiObj = { meta: "Aten├º├úo Social Sustentada (Voice Cr├¡tico)", goal: val > 0 ? `Calibra├º├úo de R$ ${orcamento} resulta em proje├º├úo de ${(val * 4.9).toLocaleString()} impactos visuais plenos com propens├úo a repasse.` : "Massa cr├¡tica dependente quase unicamente de tra├º├úo algor├¡tmica nativa." };
+                kpiObj = { meta: "Atenção Social Sustentada (Voice Crítico)", goal: val > 0 ? `Calibração de R$ ${orcamento} resulta em projeção de ${(val * 4.9).toLocaleString()} impactos visuais plenos com propensão a repasse.` : "Massa crítica dependente quase unicamente de tração algorítmica nativa." };
             }
         }
         
         setAiKpi(kpiObj);
         setStep(3);
     } catch(err:any) {
-        toast.error("Erro Cr├¡tico KPI: " + err.message);
+        toast.error("Erro Crítico KPI: " + err.message);
     } finally {
         setIsGenerating(false);
     }
@@ -334,8 +334,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         let text = "";
         try {
             const payload = await callOpenAI(
-                `Gere o Blueprint Acad├¬mico Oficial da a├º├úo. Voc├¬ deve responder um objeto JSON estrito: { "blueprint": "Seu texto com no min├¡mo 4 par├ígrafos ultradensos." }. O texto deve invocar teorias sociol├│gicas atreladas ao marketing cl├¡nico, citando Carga Cognitiva, Framing ou Agenda-Setting para chancelar a opera├º├úo de Terceiro Setor.`,
-                `Gere a fundamenta├º├úo acad├¬mica que ser├í fixada para justificar o tema: "${rawName}". A tese-chave da opera├º├úo foi "${proposicao}" or├ºada a R$ ${orcamento}. O texto ser├í encaminhado para a Presid├¬ncia.`
+                `Gere o Blueprint Acadêmico Oficial da ação. Você deve responder um objeto JSON estrito: { "blueprint": "Seu texto com no mínimo 4 parágrafos ultradensos." }. O texto deve invocar teorias sociológicas atreladas ao marketing clínico, citando Carga Cognitiva, Framing ou Agenda-Setting para chancelar a operação de Terceiro Setor.`,
+                `Gere a fundamentação acadêmica que será fixada para justificar o tema: "${rawName}". A tese-chave da operação foi "${proposicao}" orçada a R$ ${orcamento}. O texto será encaminhado para a Presidência.`
             );
             text = JSON.parse(payload.replace(/```json|```/gi, "").trim()).blueprint;
         } catch (e: any) {
@@ -343,20 +343,20 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
             // Fallback
             const temaF = rawName.toUpperCase();
             if (aiGeneratedType === "acolhimento") {
-                text = `DOUTRINA ACAD├èMICA APLICADA AO ACOLHIMENTO DE ${temaF}:\n\n1. Teoria da Carga Cognitiva (Sweller, 1988): A fadiga decis├│ria ├⌐ contornada absorvendo 100% dos tr├ómites legais do paciente.`;
+                text = `DOUTRINA ACADÊMICA APLICADA AO ACOLHIMENTO DE ${temaF}:\n\n1. Teoria da Carga Cognitiva (Sweller, 1988): A fadiga decisória é contornada absorvendo 100% dos trâmites legais do paciente.`;
             } else if (aiGeneratedType === "medicos") {
-                text = `ARQUITETURA ACAD├èMICA (B2B): ${temaF}\n\nAplica-se a mitiga├º├úo do 'Loss Aversion' jur├¡dico dos prescritores atrav├⌐s de blindagem institucional e aprova├º├úo interpares (Axioma de Berger).`;
+                text = `ARQUITETURA ACADÊMICA (B2B): ${temaF}\n\nAplica-se a mitigação do 'Loss Aversion' jurídico dos prescritores através de blindagem institucional e aprovação interpares (Axioma de Berger).`;
             } else if (aiGeneratedType === "sazonal") {
-                text = `TEOREMA DA RELEV├éNCIA TEMPORAL DE ${temaF}:\n\nO Agenda-Setting da data ├⌐ subvertido para garantir utilidade cl├¡nica validada de imediato ao p├║blico alvo afetado pela janela de conscientiza├º├úo.`;
+                text = `TEOREMA DA RELEVÂNCIA TEMPORAL DE ${temaF}:\n\nO Agenda-Setting da data é subvertido para garantir utilidade clínica validada de imediato ao público alvo afetado pela janela de conscientização.`;
             } else {
-                text = `DETERMINISMO MACRO-SOCIOL├ôGICO PARA ${temaF}:\n\nO Framing Sist├¬mico de Goffman aplicado aqui posiciona a Associa├º├úo como autoridade inquestion├ível, fomentando um Espiral de Engajamento social org├ónico (Bandura).`;
+                text = `DETERMINISMO MACRO-SOCIOLÓGICO PARA ${temaF}:\n\nO Framing Sistêmico de Goffman aplicado aqui posiciona a Associação como autoridade inquestionável, fomentando um Espiral de Engajamento social orgânico (Bandura).`;
             }
         }
         
         setBlueprintTheory(text);
         setStep(4);
     } catch(err:any) {
-        toast.error("Erro Cr├¡tico Teoriza├º├úo: " + err.message);
+        toast.error("Erro Crítico Teorização: " + err.message);
     } finally {
         setIsGenerating(false);
     }
@@ -398,8 +398,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                  <h2 className="text-white font-bold tracking-widest text-lg">PLUG-IN I.A. REQUERIDO</h2>
               </div>
               <p className="text-zinc-400 text-sm mb-6 leading-relaxed">
-                 Voc├¬ solicitou a intelig├¬ncia artificial real. A partir de agora, as pautas da matriz n├úo ser├úo mais "mockadas".<br/><br/>
-                 Insira sua chave <strong className="text-white">OpenAI (GPT-4)</strong> abaixo. Ela ficar├í salva apenas no seu navegador localmente.
+                 Você solicitou a inteligência artificial real. A partir de agora, as pautas da matriz não serão mais "mockadas".<br/><br/>
+                 Insira sua chave <strong className="text-white">OpenAI (GPT-4)</strong> abaixo. Ela ficará salva apenas no seu navegador localmente.
               </p>
               <Input 
                  placeholder="sk-proj-..." 
@@ -411,7 +411,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                  autoFocus
               />
               <div className="flex justify-end gap-3">
-                 <Button variant="ghost" className="text-zinc-500 hover:text-white" onClick={() => setShowAiConfig(false)}>Voltar ao Padr├úo</Button>
+                 <Button variant="ghost" className="text-zinc-500 hover:text-white" onClick={() => setShowAiConfig(false)}>Voltar ao Padrão</Button>
                  <Button onClick={() => saveKey((document.getElementById('openai-key-input') as HTMLInputElement).value)} className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-10 px-6">Ligar Motor</Button>
               </div>
            </div>
@@ -423,7 +423,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         <div className="flex items-center justify-between md:hidden mb-6 border-b border-white/5 pb-4">
            <div className="flex items-center gap-3">
               <Megaphone className="w-5 h-5 text-emerald-400" />
-              <span className="font-black tracking-widest text-xs">CRIAR A├ç├âO</span>
+              <span className="font-black tracking-widest text-xs">CRIAR AÇÃO</span>
            </div>
            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-md transition-colors"><X size={20}/></button>
         </div>
@@ -431,7 +431,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         <div className="hidden md:flex items-center justify-between mb-8 border-b border-white/5 pb-4">
            <h1 className="text-xl font-black tracking-widest uppercase flex items-center gap-3">
               <Sparkles className="text-emerald-500 w-5 h-5" /> 
-              Engenharia de A├º├úo
+              Engenharia de Ação
               <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] px-2 py-0.5 rounded-full uppercase tracking-widest font-bold ml-2">Console Blueprint</span>
            </h1>
            <button onClick={onClose} className="text-zinc-400 hover:text-white p-2 hover:bg-white/5 rounded-md transition-colors"><X size={24}/></button>
@@ -470,14 +470,14 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors ${step > 0 ? 'bg-emerald-500 text-black shadow-emerald-500/20' : step === 0 ? 'bg-zinc-900 border-2 border-emerald-500 text-emerald-500' : 'bg-zinc-900 border border-white/10 text-zinc-600'}`}>1</div>
                   </div>
                   <div className="flex-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Tema / Nome da A├º├úo</label>
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Tema / Nome da Ação</label>
                     {step === 0 ? (
                         <div className="space-y-3">
                            <Input 
                               autoFocus 
                               value={rawName} 
                               onChange={e => setRawName(e.target.value)} 
-                              placeholder="Ex: Mutir├úo de Acesso, Congresso Brasileiro..." 
+                              placeholder="Ex: Mutirão de Acesso, Congresso Brasileiro..." 
                               className="h-14 bg-zinc-900 border-white/10 text-emerald-400 font-medium text-lg placeholder:text-zinc-600 focus-visible:ring-emerald-500"
                               disabled={isGenerating}
                               onKeyDown={e => { if(e.key === 'Enter') { e.preventDefault(); nextStepTema(); } }}
@@ -495,13 +495,13 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   </div>
                 </div>
 
-                {/* PASSO 2: PROPOSI├ç├âO CENTRAL */}
+                {/* PASSO 2: PROPOSIÇÃO CENTRAL */}
                 <div className={`relative flex gap-6 z-10 transition-opacity duration-500 ${step >= 1 ? 'opacity-100' : 'opacity-20 pointer-events-none'}`}>
                   <div className="hidden md:flex flex-col items-center shrink-0">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors ${step > 1 ? 'bg-emerald-500 text-black' : step === 1 ? 'bg-zinc-900 border-2 border-emerald-500 text-emerald-500' : 'bg-zinc-900 border border-white/10 text-zinc-600'}`}>2</div>
                   </div>
                   <div className="flex-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Proposi├º├úo Central da A├º├úo</label>
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Proposição Central da Ação</label>
                     {step === 1 ? (
                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
                            
@@ -536,7 +536,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                               <textarea 
                                  value={proposicao} 
                                  onChange={e => setProposicao(e.target.value)} 
-                                 placeholder="+ Digite o seu pr├│prio core argument ou oferta principal..." 
+                                 placeholder="+ Digite o seu próprio core argument ou oferta principal..." 
                                  className="w-full h-24 bg-zinc-950 border border-white/10 text-emerald-400 font-medium text-sm p-4 rounded-xl placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none shadow-inner"
                                  disabled={isGenerating}
                                  onKeyDown={e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); nextStepProposicao(); } }}
@@ -545,7 +545,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                            <div className="flex gap-3 pt-1">
                               {proposicao.trim() ? (
                                 <Button onClick={() => nextStepProposicao()} disabled={isGenerating} className="flex-1 h-12 bg-white text-black hover:bg-zinc-200 font-bold tracking-widest uppercase text-xs">
-                                   {isGenerating ? <Sparkles className="w-4 h-4 animate-spin" /> : "Avan├ºar com Modifica├º├úo Personalizada"}
+                                   {isGenerating ? <Sparkles className="w-4 h-4 animate-spin" /> : "Avançar com Modificação Personalizada"}
                                 </Button>
                               ) : (
                                 <Button onClick={() => nextStepProposicao('')} disabled={isGenerating} className="flex-1 h-12 bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white font-bold tracking-widest uppercase text-xs">
@@ -557,18 +557,18 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                      ) : step > 1 ? (
                         <div className="p-4 bg-zinc-900 border border-white/5 rounded-xl flex flex-col gap-3 shadow-inner group">
                            <div className="flex gap-3 items-start">
-                              <Target className="w-4 h-4 text-emerald-500/50 mt-1 shrink-0" />
-                              <span className={`font-medium text-sm leading-relaxed italic ${proposicao.trim() ? 'text-emerald-400' : 'text-zinc-500'}`}>"{proposicao.trim() ? proposicao : 'I.A. Deduzida Automaticamente (A├º├úo sem Proposi├º├úo Expl├¡cita)'}"</span>
-                           </div>
-                           <button onClick={()=>setStep(1)} className="text-[10px] uppercase font-bold text-zinc-500 hover:text-white transition-colors self-end tracking-widest ml-7">Refazer Proposi├º├úo</button>
-                        </div>
-                     ) : (
-                        <div className="h-14 bg-zinc-900/50 border border-dashed border-white/5 rounded-xl" />
-                     )}
+                               <Target className="w-4 h-4 text-emerald-500/50 mt-1 shrink-0" />
+                               <span className={`font-medium text-sm leading-relaxed italic ${proposicao.trim() ? 'text-emerald-400' : 'text-zinc-500'}`}>"{proposicao.trim() ? proposicao : 'I.A. Deduzida Automaticamente (Ação sem Proposição Explícita)'}"</span>
+                            </div>
+                            <button onClick={()=>setStep(1)} className="text-[10px] uppercase font-bold text-zinc-500 hover:text-white transition-colors self-end tracking-widest ml-7">Refazer Proposição</button>
+                         </div>
+                      ) : (
+                         <div className="h-14 bg-zinc-900/50 border border-dashed border-white/5 rounded-xl" />
+                      )}
                   </div>
                 </div>
 
-                {/* PASSO 3: OR├çAMENTO */}
+                {/* PASSO 3: ORÇAMENTO */}
                 <div className={`relative flex gap-6 z-10 transition-opacity duration-500 ${step >= 2 ? 'opacity-100' : 'opacity-20 pointer-events-none'}`}>
                   <div className="hidden md:flex flex-col items-center shrink-0">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors ${step > 2 ? 'bg-emerald-500 text-black' : step === 2 ? 'bg-zinc-900 border-2 border-emerald-500 text-emerald-500' : 'bg-zinc-900 border border-white/10 text-zinc-600'}`}>3</div>
@@ -606,7 +606,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   <div className="flex-1 ml-0 md:ml-14">
                       {step === 3 && (
                          <Button onClick={generateBlueprintDense} disabled={isGenerating} className="w-full h-16 bg-blue-600 hover:bg-blue-500 text-white font-black tracking-[0.2em] uppercase text-sm shadow-[0_0_20px_rgba(37,99,235,0.3)] animate-in fade-in zoom-in duration-500">
-                           {isGenerating ? <Sparkles className="w-5 h-5 animate-spin" /> : "GERAR BLUEPRINT ACAD├èMICO FINAL"}
+                           {isGenerating ? <Sparkles className="w-5 h-5 animate-spin" /> : "GERAR BLUEPRINT ACADÊMICO FINAL"}
                          </Button>
                       )}
                   </div>
@@ -618,7 +618,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         </div>
 
         <div className="mt-auto pt-6 flex items-center justify-between border-t border-white/5 opacity-50 text-[10px] font-mono tracking-wider">
-            <span>MODO DE PRODU├ç├âO</span>
+            <span>MODO DE PRODUÇÃO</span>
             <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"/>ONLINE</span>
           </div>
       </aside>
@@ -637,11 +637,11 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                         
                         <div className="w-full flex flex-col items-center justify-center gap-1">
                            {[
-                             { id: "awareness", name: "Conscientizar", desc: "Opini├úo P├║blica", color: "bg-emerald-400", clipPath: "polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)" },
-                             { id: "consideration", name: "Educa├º├úo M├⌐dica", desc: "Tabus Cl├¡nicos", color: "bg-emerald-500", clipPath: "polygon(15% 0%, 85% 0%, 75% 100%, 25% 100%)" },
+                             { id: "awareness", name: "Conscientizar", desc: "Opinião Pública", color: "bg-emerald-400", clipPath: "polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)" },
+                             { id: "consideration", name: "Educação Médica", desc: "Tabus Clínicos", color: "bg-emerald-500", clipPath: "polygon(15% 0%, 85% 0%, 75% 100%, 25% 100%)" },
                              { id: "conversion", name: "Acolhimento", desc: "Entrada Oficial", color: "bg-blue-500", clipPath: "polygon(25% 0%, 75% 0%, 75% 100%, 25% 100%)" },
-                             { id: "retention", name: "Acompanhamento", desc: "Zelo Cont├¡nuo", color: "bg-purple-500", clipPath: "polygon(25% 0%, 75% 0%, 85% 100%, 15% 100%)" },
-                             { id: "expansion", name: "Apoio Social", desc: "Rede de Indica├º├úo", color: "bg-pink-500", clipPath: "polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%)" }
+                             { id: "retention", name: "Acompanhamento", desc: "Zelo Contínuo", color: "bg-purple-500", clipPath: "polygon(25% 0%, 75% 0%, 85% 100%, 15% 100%)" },
+                             { id: "expansion", name: "Apoio Social", desc: "Rede de Indicação", color: "bg-pink-500", clipPath: "polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%)" }
                            ].map((funnel) => {
                              const isActive = activeFunnels[funnel.id as string];
                              return (
@@ -668,7 +668,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   {step >= 2 && (
                     <>
                       <div className="col-span-1 bg-zinc-900 border border-white/5 rounded-2xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                         <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 block">Memorando T├ítico</h3>
+                         <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 block">Memorando Tático</h3>
                          <div className="bg-emerald-500/5 p-4 rounded-xl border border-emerald-500/20 relative">
                             <Target className="absolute top-4 right-4 w-4 h-4 text-emerald-500/50" />
                             <p className="text-xs text-zinc-300 leading-[1.6] font-medium pr-6 whitespace-pre-wrap">{aiBriefing}</p>
@@ -676,7 +676,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                       </div>
 
                       <div className="col-span-1 bg-zinc-900 border border-white/5 rounded-2xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                         <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 block">Superf├¡cies de Contato</h3>
+                         <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 block">Superfícies de Contato</h3>
                          <div className="flex flex-wrap gap-2">
                              {aiChannels.map(ch => (
                                 <span key={ch} className="px-3 py-1.5 bg-zinc-950 border border-white/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider rounded-md shadow-inner">{ch}</span>
@@ -693,7 +693,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                            <Target className="w-8 h-8 text-blue-500" />
                         </div>
                         <div>
-                           <h3 className="text-[10px] uppercase font-bold text-blue-500 tracking-widest mb-1">M├⌐tricas Diretas Projetadas</h3>
+                           <h3 className="text-[10px] uppercase font-bold text-blue-500 tracking-widest mb-1">Métricas Diretas Projetadas</h3>
                            <div className="text-lg font-bold text-white mb-1">{aiKpi.meta}</div>
                            <div className="text-xs text-zinc-400 font-mono">{aiKpi.goal}</div>
                         </div>
@@ -709,8 +709,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                         <div className="flex items-center gap-3 border-b border-zinc-800 pb-6 mb-6">
                            <FileText className="w-6 h-6 text-emerald-500" />
                            <div>
-                             <h3 className="text-sm font-black uppercase tracking-widest text-white">Dossi├¬ Estrat├⌐gico Oficial</h3>
-                             <span className="text-[10px] uppercase font-mono tracking-widest text-zinc-500 block mt-1">Conhecimento Cl├¡nico-Sociol├│gico Fundamentado</span>
+                             <h3 className="text-sm font-black uppercase tracking-widest text-white">Dossiê Estratégico Oficial</h3>
+                             <span className="text-[10px] uppercase font-mono tracking-widest text-zinc-500 block mt-1">Conhecimento Clínico-Sociológico Fundamentado</span>
                            </div>
                         </div>
 
