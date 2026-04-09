@@ -1,5 +1,5 @@
-﻿import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
@@ -367,15 +367,24 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
     }
   };
 
+  const WIZARD_TYPE_TO_CAMPAIGN_TYPE: Record<string, "awareness" | "brand_engagement" | "corporate_event" | "product_launch" | "seasonal_promotion"> = {
+    institucional: "awareness",
+    acolhimento: "corporate_event",
+    medicos: "product_launch",
+    sazonal: "seasonal_promotion",
+    pesquisa: "brand_engagement",
+  };
+
   const finishCreation = () => {
-     if(saveCampaign) saveCampaign({ 
-         name: rawName, 
-         type: ACTION_TYPES.find(t=>t.id===aiGeneratedType)?.name, 
-         status: "draft", 
-         strategicMatrix: { academic: blueprintTheory.substring(0, 50) } 
+     saveCampaign({
+         name: rawName,
+         type: WIZARD_TYPE_TO_CAMPAIGN_TYPE[aiGeneratedType] ?? "awareness",
+         status: "draft",
+         objective: proposicao || undefined,
+         channels: aiChannels,
      });
      toast.success("Blueprint Criptografado e Salvo com Sucesso!");
-     navigate('/marketing/campanhas/ativas');
+     navigate('/marketing/campanhas');
   };
 
   const typeData = ACTION_TYPES.find(t => t.id === aiGeneratedType) || ACTION_TYPES[0];

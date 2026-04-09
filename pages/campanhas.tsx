@@ -9,6 +9,8 @@ import {
   LayoutGrid, ArrowRight, Plus,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { CriarCampanha } from "../components/brand-studio/criar-campanha";
+
 
 interface V8Campaign {
   id: string;
@@ -24,7 +26,9 @@ interface V8Campaign {
 export default function Campanhas() {
   const [campaigns, setCampaigns] = useState<V8Campaign[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
   const navigate = useNavigate();
+
 
   const fetchCampaigns = () => {
     setLoading(true);
@@ -54,7 +58,7 @@ export default function Campanhas() {
             <Button variant="outline" size="icon" onClick={fetchCampaigns} disabled={loading}>
               <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             </Button>
-            <Button className="gap-2" onClick={() => navigate("/coreact")}>
+            <Button className="gap-2" onClick={() => setIsCreating(true)}>
               <Plus className="w-4 h-4" />
               Nova Campanha
             </Button>
@@ -192,6 +196,8 @@ export default function Campanhas() {
           </div>
         )}
       </div>
+
+      <CriarCampanha isOpen={isCreating} onClose={() => setIsCreating(false)} />
     </div>
   );
 }
