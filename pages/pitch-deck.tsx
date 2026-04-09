@@ -67,7 +67,7 @@ const DEFAULT_CONTENT: ContentStore = {
   ]
 };
 
-const STORAGE_KEY = 'pitch_deck_content_v1';
+const STORAGE_KEY = 'pitch_deck_content_v2';
 
 // ─── CoreStudio Mock ──────────────────────────────────────────────────────────
 
@@ -199,20 +199,8 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
     });
   };
 
-  // On save: propagate edited lang's changes to all other languages
-  const handleSaveAll = () => {
-    const result = JSON.parse(JSON.stringify(draft)) as ContentStore;
-    const source = draft[activeLang][slideIndex];
-    ALL_LANGS.filter(l => l !== activeLang).forEach(otherLang => {
-      const target = result[otherLang][slideIndex];
-      target.title = source.title;
-      if (source.subtitle !== undefined) target.subtitle = source.subtitle;
-      if (source.badge !== undefined) target.badge = source.badge;
-      if (source.content !== undefined) target.content = source.content;
-      if (source.points !== undefined) target.points = [...source.points];
-    });
-    onSave(result);
-  };
+  // Salva apenas o idioma ativo — traduções dos outros idiomas ficam intactas
+  const handleSaveAll = () => onSave(draft);
 
   const hasPoints = !!activeSlide.points;
   const hasContent = activeSlide.type !== 'cover' && activeSlide.type !== 'part';
@@ -350,7 +338,7 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
         {/* Footer */}
         <div className="sticky bottom-0 z-10 flex flex-col gap-2 px-6 py-4 border-t" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
           <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-            💡 As alterações serão aplicadas a <strong>todos os idiomas</strong> (PT, EN, DE).
+            💡 Editando em <strong>{LANG_LABELS[activeLang]}</strong>. As outras traduções ficam intactas.
           </p>
           <div className="flex gap-3 justify-end">
             <button
