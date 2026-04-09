@@ -11,21 +11,45 @@ const app = new Hono();
 
 import { supabase } from './helpers/supabase.js';
 
+app.use('*', async (c, next) => {
+  if (c.req.url.includes('_api/coreact')) {
+    console.log(`[GLOBAL LOGGER] ${c.req.method} ${c.req.url} | Auth Header Presente? ${!!c.req.header('Authorization')}`);
+  }
+  await next();
+});
+
 // ---- SECURE ROUTING: GLOBAL AUTH MIDDLEWARE FOR COREACT ----
 // BLOCK: CRITICO-002 - Impede acesso não autorizado (401) sem token válido
 // PREPARE: ALTO-001 - Injeta dados do usuário no contexto ('user') para Data Tenancy nos endpoints
 app.use('/_api/coreact/*', async (c, next) => {
-  const authHeader = c.req.header('Authorization');
-  if (!authHeader) {
-    return c.json({ error: 'Unauthorized: Missing Authorization header' }, 401);
+  console.log(`[Auth Middleware] Interceptando request [${c.req.method}] para: ${c.req.url}`);
+  
+  // Liberar requisições OPTIONS (CORS preflight) para não exigir token
+  if (c.req.method === 'OPTIONS') {
+    return await next();
   }
 
-  const token = authHeader.replace('Bearer ', '');
+  // Tenta ler o header Authorization ou um alternativo X-Coreact-Auth
+  const authHeader = c.req.header('Authorization');
+  const fallbackHeader = c.req.header('X-Coreact-Auth');
+  const tokenString = authHeader ?? fallbackHeader;
+
+  if (!tokenString) {
+    console.log('[Auth Middleware] Falhou: Missing Authorization header e X-Coreact-Auth');
+    return c.json({ error: 'Unauthorized: Missing Auth Headers' }, 401);
+  }
+
+  const token = tokenString.replace('Bearer ', '');
+  console.log(`[Auth Middleware] Header de auth detectado. Verificando token JWT... (Token começa com: ${token.substring(0, 10)}...)`);
+  
   const { data, error } = await supabase.auth.getUser(token);
 
   if (error || !data?.user) {
-    return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+    console.error(`[Auth Middleware] Erro na validação do Supabase:`, JSON.stringify(error), data?.user ? 'Usuário existe' : 'Sem usuário (null/undefined)');
+    return c.json({ error: 'Unauthorized: Invalid token', details: error }, 401);
   }
+
+  console.log(`[Auth Middleware] Sucesso! Usuário validado: ${data.user.id} (${data.user.email})`);
 
   // Injetando o usuário no request para isolamento de tenancy
   c.set('user', data.user);
@@ -1261,6 +1285,43 @@ app.post('_api/dev/build',async c => {
   } catch (e: any) {
     console.error(e);
     return c.text("Error loading endpoint code " + e.message, 500)
+  }
+})
+
+// ── PROXY OPENAI — evita CORS no browser ─────────────────────────────────
+app.post('/_api/ai/openai', async c => {
+  try {
+    const body = await c.req.json() as { key?: string; system: string; user: string };
+    const apiKey = body.key || process.env.OPENAI_API_KEY || "";
+    if (!apiKey) return c.json({ error: "OPENAI_API_KEY não configurada" }, 400);
+
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o",
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: body.system },
+          { role: "user",   content: body.user   },
+        ],
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("[AI proxy] OpenAI error:", err);
+      return c.json({ error: err }, res.status as any);
+    }
+
+    const data = await res.json() as any;
+    return c.json(data);
+  } catch (e: any) {
+    console.error("[AI proxy] Unexpected error:", e);
+    return c.json({ error: e.message }, 500);
   }
 })
 import fs from 'fs';

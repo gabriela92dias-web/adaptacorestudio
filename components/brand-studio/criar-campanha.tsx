@@ -142,19 +142,14 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
   };
 
   async function callOpenAI(system: string, user: string) {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      // Usa proxy interno para evitar CORS em produção
+      const res = await fetch("/_api/ai/openai", {
           method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${openAiKey}`
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-              model: "gpt-4o",
-              response_format: { type: "json_object" },
-              messages: [
-                  { role: "system", content: system },
-                  { role: "user", content: user }
-              ]
+              key: openAiKey,
+              system,
+              user,
           })
       });
       
@@ -384,7 +379,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
          channels: aiChannels,
      });
      toast.success("Blueprint Criptografado e Salvo com Sucesso!");
-     navigate('/marketing/campanhas');
+     onClose();
   };
 
   const typeData = ACTION_TYPES.find(t => t.id === aiGeneratedType) || ACTION_TYPES[0];
@@ -445,11 +440,11 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
       <aside className="w-full md:w-[400px] lg:w-[500px] shrink-0 bg-zinc-950 border-r border-white/5 p-6 lg:p-12 flex flex-col">
         <header className="h-16 border-b border-white/5 bg-zinc-950/80 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-50">
          <div className="flex items-center gap-4">
-            <button onClick={() => navigate(-1)} className="p-2 hover:bg-white/5 rounded-full transition-colors text-zinc-400 hover:text-white">
+            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors text-zinc-400 hover:text-white">
                <ArrowLeft className="w-5 h-5" />
             </button>
             <div className="flex flex-col">
-               <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Engenharia de A├º├úo</span>
+               <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Engenharia de Ação</span>
                <h1 className="text-sm font-semibold text-white">Console Blueprint</h1>
             </div>
          </div>
