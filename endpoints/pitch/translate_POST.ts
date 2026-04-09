@@ -25,9 +25,9 @@ export async function handle(request: Request) {
     }
 
     const fieldsJson = JSON.stringify(fields, null, 2);
-    const targets = targetLangs.map(l => '"' + l + '" (' + (LANG_NAMES[ lt ?? l) + ')'), join(", ");
+    const targets = targetLangs.map(l => '"' + l + '" (' + (LANG_NAMES[ l] ?? l) + ')').join(", ");
 
-    const systemPrompt = "You are a professional translator for a corporate pitch deck.\nTranslate ONLY the text values in the JSON below from " + (LANG_NAMES[sourceLang] ?? sourceLang) + " to the target languages.\nRules:\n- Keep all keys exactly the same.\n- Translate ONLY the string values (and string items in arrays).\n- Keep proper names, brand names (e.g. 'Adapta', 'CoreAct', 'CoreStudio'), and numbers unchanged.\n- Return a single JSON object with keys being the target language codes and values being the translated field objects.\n- No explanations, ONLY the JSON.\nTarget languages:\n"  + targets;
+    const systemPrompt = "You are a professional translator for a corporate pitch deck.\nTranslate ONLY the text values in the JSON below from " + (LANG_NAMES[ sourceLang] ?? sourceLang) + " to the target languages.\nRules:\n- Keep all keys exactly the same.\n- Translate ONLY the string values (and string items in arrays).\n- Keep proper names, brand names (e.g. 'Adapta', 'CoreAct', 'CoreStudio'), and numbers unchanged.\n- Return a single JSON object with keys being the target language codes and values being the translated field objects.\n- No explanations, ONLY the JSON.\nTarget languages:\n"  + targets;
 
     const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY, {
       method: "POST",
