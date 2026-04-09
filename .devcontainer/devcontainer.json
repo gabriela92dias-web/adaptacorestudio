@@ -2,15 +2,18 @@
   "name": "Adapta Core Studio",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
   "postCreateCommand": "npm install --legacy-peer-deps",
+  "postStartCommand": "fuser -k 3333/tcp 3001/tcp 2>/dev/null; nohup npm run start > /tmp/hono.log 2>&1 & sleep 2; nohup npm run dev > /tmp/vite.log 2>&1 &",
   "forwardPorts": [3001, 3333],
   "portsAttributes": {
     "3001": {
       "label": "Frontend (Vite)",
-      "onAutoForward": "notify"
+      "onAutoForward": "openBrowser",
+      "visibility": "public"
     },
     "3333": {
       "label": "Backend API (Hono)",
-      "onAutoForward": "ignore"
+      "onAutoForward": "ignore",
+      "visibility": "public"
     }
   },
   "customizations": {
