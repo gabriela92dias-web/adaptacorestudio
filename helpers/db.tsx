@@ -40,6 +40,9 @@ export const db = new Kysely<DB>({
       ssl: { rejectUnauthorized: false },
       fetch_types: false,
       connect_timeout: 15,
+      // Force IPv4 — Render doesn't support IPv6 outbound connections
+      // dns.setDefaultResultOrder('ipv4first') doesn't affect postgres-js internals
+      connection: { family: 4 } as any,
     }),
   }),
 })

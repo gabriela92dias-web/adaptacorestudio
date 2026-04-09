@@ -39,6 +39,7 @@ export async function handle(request: Request) {
     return new Response(superjson.stringify({ campaigns: campaignsWithPosts } satisfies OutputType));
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("[campaigns/list] Error:", message);
     return new Response(superjson.stringify({ error: message }), { status: 400 });
   }
 }
