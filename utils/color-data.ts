@@ -205,3 +205,72 @@ export function filterForFeature(feature: string): ColorGroup[] {
       return colorPalette;
   }
 }
+
+// ── O Cérebro do Diretor Criativo (Inteligência da Roda V8) ────
+
+// Flattened array com todas as cores para busca fácil do Anti-Erro
+export const allColorsFlat: ColorEntry[] = colorPalette.flatMap(g => g.colors);
+
+/**
+ * Motor Auto-Fix: Tenta encontrar a cor mais acessível (WCAG >= 4.5:1) 
+ * dentro da própria família da cor alvo. Caso não exista um tom seguro, 
+ * faz fallback inteligente para tons neutros extremos baseados no fundo.
+ */
+export function findClosestAccessibleColor(baseHex: string, targetHex: string): string {
+  // 1. Se já está seguro, mantém. (O Toque Invisível)
+  if (getContrastRatio(baseHex, targetHex) >= 4.5) {
+    return targetHex; 
+  }
+
+  // 2. Tentar encontrar uma variante segura dentro do mesmo grupo de cor (Ex: Era Verde 200, cai pro Verde 500)
+  const group = colorPalette.find(g => g.colors.some(c => c.hex.toLowerCase() === targetHex.toLowerCase()));
+  
+  if (group) {
+     // Buscamos a cor que passa no teste, priorizando a que tiver o melhor contraste possível
+     let bestColor = targetHex;
+     let bestContrast = getContrastRatio(baseHex, targetHex);
+     
+     for (const c of group.colors) {
+        const ratio = getContrastRatio(baseHex, c.hex);
+        if (ratio >= 4.5 && ratio > bestContrast) {
+           bestContrast = ratio;
+           bestColor = c.hex;
+        }
+     }
+     if (bestContrast >= 4.5) return bestColor;
+  }
+  
+  // 3. Fallback de Segurança (Se tentou usar Rosa Ciano num Fundo Amarelo, recua pra Neutros)
+  const baseLuminance = getLuminance(baseHex);
+  // Se o fundo for claro (luminância alta), precisamos de texto bem escuro
+  if (baseLuminance > 0.5) {
+    return "#0A100D"; // Dark 500 (Neutro Escuro)
+  } else {
+    // Se o fundo for escuro, precisamos de texto muito claro
+    return "#F7F9F2"; // Surface 100 (Neutro Claro)
+  }
+}
+
+/**
+ * Atribui 'Roles' (Funções) semânticas de campanha para um arranjo de cores.
+ * Recebe o array de cores geradas pela roda (Base, Harmonia 1, Harmonia 2) e devolve um esquema de design.
+ */
+export function getCampaignRoles(selectedColors: string[]): { background: string, accent: string, text: string } {
+   // A cor que o usuário clicou na roda se torna a âncora/fundo principal da campanha
+   const background = selectedColors[0] || "#F7F9F2";
+   
+   // A segunda cor da roda se torna o detalhe vibrante/Call-to-Action
+   const accent = selectedColors[1] || background; 
+   
+   // A terceira cor (ou a segunda, caso seja complementares duplas) deveria ser texto/apoio
+   // Damos fallback pro accent caso só tenha 2 cores selecionadas.
+   const rawText = selectedColors[2] || accent;
+   
+   // Aqui mora a inteligência: O texto PRECISA ser legível no Background.
+   const text = findClosestAccessibleColor(background, rawText);
+   
+   // Garantia extra: Se o Accent (botão) não tiver nada de destaque no fundo, podemos ajustar também?
+   // Normalmente o Destaque não precisa ter WCAG 4.5 contra o fundo caso seja elemento gráfico, mas é bom alertar (faremos isso na UI).
+   
+   return { background, accent, text };
+}
