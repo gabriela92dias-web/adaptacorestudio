@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowRight, ArrowLeft, Sparkles, Zap, ChevronRight, Layers, MousePointer2, CheckCircle2, LayoutTemplate, Globe, Moon, Sun, Pencil, X, Plus, Trash2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Sparkles, Zap, ChevronRight, Layers, MousePointer2, CheckCircle2, LayoutTemplate, Globe, Moon, Sun, Pencil, X, Plus, Trash2, Star, ArrowRightCircle, Check, Dot, Flame, Rocket, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -10,12 +10,46 @@ interface SlideData {
   id: number;
   type: 'cover' | 'part' | 'problem' | 'generic' | 'solution' | 'future';
   visual?: string;
+  icon?: string; // ícone dos bullet points
   title: string;
   subtitle?: string;
   badge?: string;
   content?: string;
   points?: string[];
 }
+
+// ─── Configurações de Visual/Ícone ───────────────────────────────────────────
+
+const VISUAL_OPTIONS: { value: string; label: string; thumb: string }[] = [
+  { value: 'glow',       label: 'Glow',      thumb: '🌟' },
+  { value: 'v8-mock',    label: 'CoreAct',   thumb: '⚡' },
+  { value: 'layers',     label: 'Camadas',   thumb: '📐' },
+  { value: 'color-core', label: 'Cores',     thumb: '🎨' },
+  { value: 'sameness',   label: 'Grid',      thumb: '📊' },
+  { value: 'system',     label: 'Sistema',   thumb: '🖥️' },
+];
+
+const ICON_OPTIONS: { value: string; label: string; Icon: LucideIcon }[] = [
+  { value: 'chevron-right',   label: 'Seta',      Icon: ChevronRight },
+  { value: 'check',           label: 'Check',     Icon: Check },
+  { value: 'check-circle',    label: 'Círculo',   Icon: CheckCircle2 },
+  { value: 'arrow-right',     label: 'Arrow',     Icon: ArrowRightCircle },
+  { value: 'star',            label: 'Estrela',   Icon: Star },
+  { value: 'dot',             label: 'Ponto',     Icon: Dot },
+  { value: 'flame',           label: 'Chama',     Icon: Flame },
+  { value: 'rocket',          label: 'Foguete',   Icon: Rocket },
+];
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  'chevron-right': ChevronRight,
+  'check': Check,
+  'check-circle': CheckCircle2,
+  'arrow-right': ArrowRightCircle,
+  'star': Star,
+  'dot': Dot,
+  'flame': Flame,
+  'rocket': Rocket,
+};
 
 interface ContentStore {
   pt: SlideData[];
@@ -67,7 +101,7 @@ const DEFAULT_CONTENT: ContentStore = {
   ]
 };
 
-const STORAGE_KEY = 'pitch_deck_content_v2';
+const STORAGE_KEY = 'pitch_deck_content_v3';
 
 // ─── CoreStudio Mock ──────────────────────────────────────────────────────────
 
@@ -374,6 +408,73 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
               </div>
             )}
           </div>
+
+          {/* Visual do slide */}
+          {activeSlide.visual !== undefined && (
+            <div className="flex flex-col gap-2 pt-2 border-t" style={{ borderColor: 'var(--border)' }}>
+              <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Visual do slide</label>
+              <div className="flex flex-wrap gap-2">
+                {VISUAL_OPTIONS.map(opt => {
+                  const isActive = (draft.pt[slideIndex].visual ?? 'glow') === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      onClick={() => {
+                        setDraft(prev => {
+                          const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
+                          for (const l of ALL_LANGS) next[l][slideIndex].visual = opt.value;
+                          return next;
+                        });
+                      }}
+                      className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
+                      style={{
+                        background: isActive ? 'var(--primary)' : 'var(--background)',
+                        color: isActive ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
+                        border: isActive ? '1px solid var(--primary)' : '1px solid var(--border)',
+                      }}
+                    >
+                      <span className="text-lg">{opt.thumb}</span>
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Ícone dos bullet points */}
+          {hasPoints && (
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Ícone dos pontos</label>
+              <div className="flex flex-wrap gap-2">
+                {ICON_OPTIONS.map(opt => {
+                  const current = draft.pt[slideIndex].icon ?? 'chevron-right';
+                  const isActive = current === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      title={opt.label}
+                      onClick={() => {
+                        setDraft(prev => {
+                          const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
+                          for (const l of ALL_LANGS) next[l][slideIndex].icon = opt.value;
+                          return next;
+                        });
+                      }}
+                      className="w-9 h-9 rounded-lg flex items-center justify-center transition-all"
+                      style={{
+                        background: isActive ? 'var(--primary)' : 'var(--background)',
+                        color: isActive ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
+                        border: isActive ? '1px solid var(--primary)' : '1px solid var(--border)',
+                      }}
+                    >
+                      <opt.Icon className="w-4 h-4" />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
 
@@ -558,18 +659,21 @@ export default function PitchDeck() {
                 <p className="text-xl text-[var(--muted-foreground)] leading-relaxed mb-10 font-medium">
                   {slide.content}
                 </p>
-                {slide.points && (
-                  <ul className="space-y-6">
-                    {slide.points.map((point, idx) => (
-                      <li key={idx} className="flex items-center gap-4 text-xl text-[var(--foreground)] font-medium">
-                        <div className="w-8 h-8 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[var(--primary)] shadow-[var(--shadow)]">
-                          <ChevronRight className="w-4 h-4" />
-                        </div>
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                {slide.points && (() => {
+                  const BulletIcon = ICON_MAP[slide.icon ?? 'chevron-right'] ?? ChevronRight;
+                  return (
+                    <ul className="space-y-6">
+                      {slide.points.map((point, idx) => (
+                        <li key={idx} className="flex items-center gap-4 text-xl text-[var(--foreground)] font-medium">
+                          <div className="w-8 h-8 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[var(--primary)] shadow-[var(--shadow)]">
+                            <BulletIcon className="w-4 h-4" />
+                          </div>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                })()}
               </div>
 
               <div className="relative w-full">
