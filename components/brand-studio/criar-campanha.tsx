@@ -348,9 +348,12 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
     try {
         let text = "";
         try {
+            const modsStr = Object.entries(modulos).filter(([_, v]) => v).map(([k]) => k).join(", ");
+            const dnaContext = `O DNA da campanha é: Direção [${direcao.toUpperCase()}], Experiência [${experiencia.toUpperCase()}], Módulos Táticos [${modsStr}].`;
+            
             const payload = await callOpenAI(
-                `Gere o Blueprint Acadêmico Oficial da ação. Você deve responder um objeto JSON estrito: { "blueprint": "Seu texto com no mínimo 4 parágrafos ultradensos." }. O texto deve invocar teorias sociológicas atreladas ao marketing clínico, citando Carga Cognitiva, Framing ou Agenda-Setting para chancelar a operação de Terceiro Setor.`,
-                `Gere a fundamentação acadêmica que será fixada para justificar o tema: "${rawName}". A tese-chave da operação foi "${proposicao}" orçada a R$ ${orcamento}. O texto será encaminhado para a Presidência.`
+                `Gere o Blueprint Oficial da Ação. Responda num objeto JSON estrito: { "blueprint": "Texto longo em markdown" }. O texto 'blueprint' DEVE ser a máxima fatoração lógica da operação e conter obrigatoriamente: 1) Visão Estratégica Teórica (citando Carga Cognitiva ou Agenda-Setting), 2) Sugestões práticas de alocação de Orçamento, 3) Sugestões práticas de Ações (internas e externas), 4) Sugestão detalhada de Etapas, Tarefas e Times necessários. Seja denso, técnico e estruturado no formato markdown.`,
+                `Tema: "${rawName}". Tese-chave escolhida: "${proposicao}". Orçamento total: R$ ${orcamento}. ${dnaContext} Escreva este Mega-Blueprint visando a operação e o planejamento do CoreAct que virá a seguir.`
             );
             text = JSON.parse(payload.replace(/```json|```/gi, "").trim()).blueprint;
         } catch (e: any) {
@@ -358,13 +361,13 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
             // Fallback
             const temaF = rawName.toUpperCase();
             if (aiGeneratedType === "acolhimento") {
-                text = `DOUTRINA ACADÊMICA APLICADA AO ACOLHIMENTO DE ${temaF}:\n\n1. Teoria da Carga Cognitiva (Sweller, 1988): A fadiga decisória é contornada absorvendo 100% dos trâmites legais do paciente.`;
+                text = `### Blueprint de Operação: ${temaF}\n\nA estrutura tática para "${proposicao}" assume a urgência de Acolhimento Social.\n\n**Alocação de Verba:** Concentrada primariamente em Infraestrutura de Front-Desk.\n\n**Ações sugeridas:**\n- Fila digital estruturada\n- Capacitação de Parajurídicos\n\n**Times Envolvidos:** Relacionamento Humano, Advogados Pro-Bono.`;
             } else if (aiGeneratedType === "medicos") {
-                text = `ARQUITETURA ACADÊMICA (B2B): ${temaF}\n\nAplica-se a mitigação do 'Loss Aversion' jurídico dos prescritores através de blindagem institucional e aprovação interpares (Axioma de Berger).`;
+                text = `### Blueprint B2B: ${temaF}\n\nAplica-se a mitigação do 'Loss Aversion' jurídico dos prescritores.\n\n**Alocação de Verba:** Foco em Mídia Inbound (LinkedIn InMail).\n\n**Ações sugeridas:**\n- Elaboração de Dossiês\n- Reuniões Clínicas (Digital)\n\n**Times Envolvidos:** Time Técnico, Suporte Médico, Growth Médicos.`;
             } else if (aiGeneratedType === "sazonal") {
-                text = `TEOREMA DA RELEVÂNCIA TEMPORAL DE ${temaF}:\n\nO Agenda-Setting da data é subvertido para garantir utilidade clínica validada de imediato ao público alvo afetado pela janela de conscientização.`;
+                text = `### Blueprint Sazonal: ${temaF}\n\nO Agenda-Setting da data é subvertido para fomento de utilidade clínica imediata.\n\n**Alocação Estratégica:** 100% da verba em Mídia Qualificada na janela da data.\n\n**Ações:**\n- Impacto visual no Instagram\n- Captação direta pelo Direct\n\n**Times:** Marketing, P.R., Atendimento Emergencial.`;
             } else {
-                text = `DETERMINISMO MACRO-SOCIOLÓGICO PARA ${temaF}:\n\nO Framing Sistêmico de Goffman aplicado aqui posiciona a Associação como autoridade inquestionável, fomentando um Espiral de Engajamento social orgânico (Bandura).`;
+                text = `### Matriz Operacional: ${temaF}\n\nO Framing Sistêmico posiciona a Associação como autoridade inquestionável.\n\n**Alocação Recomendada:** 70% Investimento Midia Ativa, 30% Estruturação.\n\n**Times:** Coordenação Geral, Growth & Mídia, Atendimento e Comunicação Interna.`;
             }
         }
         
