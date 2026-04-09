@@ -1,82 +1,97 @@
 import { schema, OutputType } from "./create_POST.schema";
 import superjson from 'superjson';
-import { db } from "../../helpers/db";
+import { supabase } from "../../helpers/supabase.js";
 import { nanoid } from "nanoid";
-import { Selectable } from "kysely";
-import { CampaignPosts } from "../../helpers/schema";
 
 export async function handle(request: Request) {
   try {
     const json = superjson.parse(await request.text());
     const input = schema.parse(json);
 
-    const result = await db.transaction().execute(async (trx) => {
-      const campaignId = nanoid();
-      
-      const newCampaign = await trx.insertInto("campaigns")
-        .values({
-          id: campaignId,
-          name: input.name,
-          type: input.type,
-          duration: input.duration,
-          channels: input.channels,
-          objective: input.objective,
-          targetAudience: input.targetAudience,
-          status: input.status,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        })
-        .returningAll()
-        .executeTakeFirstOrThrow();
+    const campaignId = nanoid();
 
-      // Auto-generate posts based on suggestedPosts from V8 or channels
-      const generatedPosts = [];
-      const now = Date.now();
-      
-      if (input.suggestedPosts && input.suggestedPosts.length > 0) {
-        for (const post of input.suggestedPosts) {
-          generatedPosts.push({
-            id: nanoid(),
-            campaignId: campaignId,
-            channel: post.channel,
-            title: post.title,
-            content: post.content,
-            scheduledDate: new Date(now + 86400000 * (generatedPosts.length + 1)), // plus some days
-            createdAt: new Date(),
-          });
-        }
+    // ── 1. Insert campaign ────────────────────────────────────────────────
+    const { data: newCampaign, error: campaignError } = await supabase
+      .from("campaigns")
+      .insert({
+        id: campaignId,
+        name: input.name,
+        type: input.type,
+        duration: input.duration,
+        channels: input.channels,
+        objective: input.objective ?? null,
+        target_audience: input.targetAudience ?? null,
+        status: input.status,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (campaignError) {
+      console.error("[campaigns/create] Supabase error (campaign):", campaignError);
+      return new Response(
+        superjson.stringify({ error: campaignError.message }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // ── 2. Auto-generate posts ─────────────────────────────────────────────
+    const now = Date.now();
+    const generatedPosts: object[] = [];
+
+    if (input.suggestedPosts && input.suggestedPosts.length > 0) {
+      for (const post of input.suggestedPosts) {
+        generatedPosts.push({
+          id: nanoid(),
+          campaign_id: campaignId,
+          channel: post.channel,
+          title: post.title,
+          content: post.content,
+          scheduled_date: new Date(now + 86400000 * (generatedPosts.length + 1)).toISOString(),
+          created_at: new Date().toISOString(),
+        });
+      }
+    } else {
+      const channelsToUse =
+        input.channels.length > 0 ? input.channels : ["Instagram", "LinkedIn", "Facebook"];
+      for (const channel of channelsToUse) {
+        generatedPosts.push({
+          id: nanoid(),
+          campaign_id: campaignId,
+          channel,
+          title: `[Rascunho V8] Post para ${channel} - ${input.name}`,
+          content: `Estrutura de conteúdo em construção para a campanha ${input.name} no canal ${channel}.`,
+          scheduled_date: new Date(now + 86400000 * (generatedPosts.length + 1)).toISOString(),
+          created_at: new Date().toISOString(),
+        });
+      }
+    }
+
+    let insertedPosts: object[] = [];
+    if (generatedPosts.length > 0) {
+      const { data: posts, error: postsError } = await supabase
+        .from("campaign_posts")
+        .insert(generatedPosts)
+        .select();
+
+      if (postsError) {
+        // Não bloqueia — campanha já foi salva, só loga o erro de posts
+        console.error("[campaigns/create] Supabase error (posts):", postsError);
       } else {
-        const channelsToUse = input.channels.length > 0 ? input.channels : ["Instagram", "LinkedIn", "Facebook"];
-        for (const channel of channelsToUse) {
-          generatedPosts.push({
-            id: nanoid(),
-            campaignId: campaignId,
-            channel: channel,
-            title: `[Rascunho V8] Post para ${channel} - ${input.name}`,
-            content: `Estrutura de conteúdo em construção para a campanha ${input.name} no canal ${channel}. A inteligência V8 será acionada aqui em breve.`,
-            scheduledDate: new Date(now + 86400000 * (generatedPosts.length + 1)),
-            createdAt: new Date(),
-          });
-        }
+        insertedPosts = posts ?? [];
       }
+    }
 
-      let insertedPosts: Selectable<CampaignPosts>[] = [];
-      if (generatedPosts.length > 0) {
-        insertedPosts = await trx.insertInto("campaignPosts")
-          .values(generatedPosts)
-          .returningAll()
-          .execute();
-      }
-
-      return {
-        ...newCampaign,
-        posts: insertedPosts,
-      };
-    });
-
-    return new Response(superjson.stringify({ campaign: result } satisfies OutputType));
+    return new Response(
+      superjson.stringify({ campaign: { ...newCampaign, posts: insertedPosts } } as OutputType)
+    );
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    return new Response(superjson.stringify({ error: message }), { status: 400 });
+    console.error("[campaigns/create] Unexpected error:", message);
+    return new Response(
+      superjson.stringify({ error: message }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
   }
 }
