@@ -12,31 +12,45 @@ export interface ColorEntry {
   name: string;
 }
 
+export type ColorRole = "ui" | "campaign";
+
 export interface ColorGroup {
   id: string;
   name: string;
   description: string;
+  roles: ColorRole[]; // Define se a cor é para interface (ColdFlora restrito) e/ou campanhas livrres
   colors: ColorEntry[]; // máx. 5 itens: índice 0=tom100, 4=tom500
+}
+
+// ── Funções Utilitárias Avançadas (Contraste WCAG) ─────────────
+
+// Formula para luminance relativa do sRGB
+function getLuminance(hex: string): number {
+  const rgb = hex.replace("#", "");
+  const r = parseInt(rgb.substring(0, 2), 16) / 255;
+  const g = parseInt(rgb.substring(2, 4), 16) / 255;
+  const b = parseInt(rgb.substring(4, 6), 16) / 255;
+
+  const a = [r, g, b].map((v) => {
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+
+/** Calcula a taxa de contraste (1 até 21) entre dois códigos HEX */
+export function getContrastRatio(hex1: string, hex2: string): number {
+  const l1 = getLuminance(hex1);
+  const l2 = getLuminance(hex2);
+  const lightest = Math.max(l1, l2);
+  const darkest = Math.min(l1, l2);
+  return (lightest + 0.05) / (darkest + 0.05);
 }
 
 // ── IDs dos grupos por categoria ──────────────────────────────
 
-const VERDE_GROUP_IDS: string[] = [
-  "verde-core",
-  "verde-meio",
-];
-
-const COLOR_GROUP_IDS: string[] = [
-  "success",
-  "error",
-  "warning",
-  "info",
-];
-
-const NEUTRAL_GROUP_IDS: string[] = [
-  "neutrals-light",
-  "neutrals-dark",
-];
+const VERDE_GROUP_IDS: string[] = ["verde-core", "verde-meio"];
+const COLOR_GROUP_IDS: string[] = ["success", "error", "warning", "info"];
+const NEUTRAL_GROUP_IDS: string[] = ["neutrals-light", "neutrals-dark"];
 
 // ── Paleta oficial ColdFlora ──────────────────────────────────
 
@@ -46,6 +60,7 @@ export const colorPalette: ColorGroup[] = [
     id: "verde-core",
     name: "Verde Core",
     description: "Escala principal da identidade Adapta",
+    roles: ["campaign", "ui"], // Pode ser ui se usado com cuidado
     colors: [
       { hex: "#DCE4D6", name: "Verde 100" },
       { hex: "#B4C5AD", name: "Verde 200" },
@@ -60,6 +75,7 @@ export const colorPalette: ColorGroup[] = [
     id: "verde-meio",
     name: "Verde Surface",
     description: "Tons de superfície e fundo do sistema",
+    roles: ["ui"], // Super exclusivo de UI
     colors: [
       { hex: "#F7F9F2", name: "Surface 100" },
       { hex: "#EBEFE8", name: "Surface 200" },
@@ -74,6 +90,7 @@ export const colorPalette: ColorGroup[] = [
     id: "success",
     name: "Success",
     description: "Cor de sucesso e confirmação",
+    roles: ["ui", "campaign"],
     colors: [
       { hex: "#D1E8B5", name: "Success 100" },
       { hex: "#ADCC71", name: "Success 200" },
@@ -88,6 +105,7 @@ export const colorPalette: ColorGroup[] = [
     id: "error",
     name: "Error",
     description: "Cor de erro e alerta crítico",
+    roles: ["ui", "campaign"],
     colors: [
       { hex: "#FFB7AB", name: "Error 100" },
       { hex: "#F48E72", name: "Error 200" },
@@ -102,6 +120,7 @@ export const colorPalette: ColorGroup[] = [
     id: "warning",
     name: "Warning",
     description: "Cor de atenção e alerta moderado",
+    roles: ["ui", "campaign"],
     colors: [
       { hex: "#FFE1AB", name: "Warning 100" },
       { hex: "#F2C370", name: "Warning 200" },
@@ -116,6 +135,7 @@ export const colorPalette: ColorGroup[] = [
     id: "info",
     name: "Info",
     description: "Cor informativa e de destaque suave",
+    roles: ["ui", "campaign"],
     colors: [
       { hex: "#CDD0F9", name: "Info 100" },
       { hex: "#B5B7F2", name: "Info 200" },
@@ -130,6 +150,7 @@ export const colorPalette: ColorGroup[] = [
     id: "neutrals-light",
     name: "Neutros Claros",
     description: "Escala neutra para modo claro",
+    roles: ["ui", "campaign"],
     colors: [
       { hex: "#F7F9F2", name: "Neutro 100" },
       { hex: "#EBEFE8", name: "Neutro 200" },
@@ -144,6 +165,7 @@ export const colorPalette: ColorGroup[] = [
     id: "neutrals-dark",
     name: "Neutros Escuros",
     description: "Escala neutra para modo escuro",
+    roles: ["ui", "campaign"],
     colors: [
       { hex: "#2a4237", name: "Dark 100" },
       { hex: "#1B2C24", name: "Dark 200" },
@@ -156,27 +178,28 @@ export const colorPalette: ColorGroup[] = [
 
 // ── Filtros ───────────────────────────────────────────────────
 
+export function getColorsByRole(role: ColorRole): ColorGroup[] {
+  return colorPalette.filter((g) => g.roles.includes(role));
+}
+
 export function filterForFeature(feature: string): ColorGroup[] {
   switch (feature) {
     case "verde":
       return colorPalette.filter((g) => VERDE_GROUP_IDS.includes(g.id));
-
     case "color":
       return colorPalette.filter((g) => COLOR_GROUP_IDS.includes(g.id));
-
     case "both":
       return colorPalette.filter(
         (g) => VERDE_GROUP_IDS.includes(g.id) || COLOR_GROUP_IDS.includes(g.id)
       );
-
     case "neutrals":
       return colorPalette.filter((g) => NEUTRAL_GROUP_IDS.includes(g.id));
-
     case "verde-neutrals":
       return colorPalette.filter(
         (g) => VERDE_GROUP_IDS.includes(g.id) || NEUTRAL_GROUP_IDS.includes(g.id)
       );
-
+    case "ui-only":
+      return getColorsByRole("ui");
     case "all":
     default:
       return colorPalette;

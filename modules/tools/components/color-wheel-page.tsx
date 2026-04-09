@@ -13,7 +13,7 @@ import { flushSync } from "react-dom";
 import { motion } from "motion/react";
 import { Copy, Check } from "lucide-react";
 import { useTheme } from "../../../utils/theme-context";
-import { colorPalette, filterForFeature } from "../../../utils/color-data";
+import { colorPalette, filterForFeature, getContrastRatio, ColorRole } from "../../../utils/color-data";
 import styles from "./color-wheel-page.module.css";
 
 // ─── Re-export das funções internas ──────────────────────────
@@ -74,6 +74,7 @@ interface ColorData {
   hex: string;
   name: string;
   group: string;
+  roles: ColorRole[];
   hue: number;
   sat: number;
   lum: number;
@@ -81,14 +82,19 @@ interface ColorData {
   originalHue?: number;
 }
 
-type HarmonyMode = "analogous" | "complementary" | "triadic" | "tetradic" | "split";
+type DesignContext = "ui" | "campaign";
+type HarmonyMode = "text-bg" | "ui-accent" | "analogous" | "complementary" | "triadic" | "split";
 type CoreFilter = "verde" | "color" | "both" | "neutrals" | "verde-neutrals" | "all";
 
-const HARMONY_MODES = [
+const UI_MODES = [
+  { id: "text-bg" as const, name: "Fundo & Texto", icon: "◧", description: "WCAG >= 4.5" },
+  { id: "ui-accent" as const, name: "Acentos", icon: "✦", description: "Destaques seguros" },
+];
+
+const CAMPAIGN_MODES = [
   { id: "analogous" as const, name: "Análogas", icon: "≈", angles: [0, 30, -30], description: "±30°" },
   { id: "complementary" as const, name: "Complementares", icon: "⊕", angles: [0, 180], description: "≈180°" },
   { id: "triadic" as const, name: "Tríade", icon: "△", angles: [0, 120, 240], description: "120°" },
-  { id: "tetradic" as const, name: "Tétrade", icon: "◻", angles: [0, 90, 180, 270], description: "90°" },
   { id: "split" as const, name: "Split-Compl.", icon: "⋀", angles: [0, 150, 210], description: "150°+210°" },
 ];
 
@@ -98,8 +104,9 @@ export function ColorWheelPage() {
   const svgRef = useRef<SVGSVGElement>(null);
   const wheelContainerRef = useRef<HTMLDivElement>(null);
 
-  const [harmonyMode, setHarmonyMode] = useState<HarmonyMode>("analogous");
-  const [coreFilter, setCoreFilter] = useState<CoreFilter>("both");
+  const [designContext, setDesignContext] = useState<DesignContext>("ui");
+  const [harmonyMode, setHarmonyMode] = useState<HarmonyMode>("text-bg");
+  const [coreFilter, setCoreFilter] = useState<CoreFilter>("all");
   const [baseColorHex, setBaseColorHex] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragAngle, setDragAngle] = useState<number | null>(null);
@@ -124,7 +131,15 @@ export function ColorWheelPage() {
     filtered.forEach((group) => {
       group.colors.forEach((c) => {
         const { h, s, l } = hexToHSL(c.hex);
-        colors.push({ hex: c.hex, name: c.name || c.hex, group: group.name, hue: h, sat: s, lum: l });
+        colors.push({
+          hex: c.hex,
+          name: c.name || c.hex,
+          group: group.name,
+          roles: group.roles,
+          hue: h,
+          sat: s,
+          lum: l
+        });
       });
     });
     const anglePerColor = colors.length > 0 ? 360 / colors.length : 0;
@@ -135,12 +150,14 @@ export function ColorWheelPage() {
     }));
   }, [coreFilter]);
 
-  const currentHarmony = HARMONY_MODES.find((m) => m.id === harmonyMode)!;
+  const activeModesList = designContext === "ui" ? UI_MODES : CAMPAIGN_MODES;
+  const currentHarmony = activeModesList.find((m) => m.id === harmonyMode);
 
   const harmonyLookup = useMemo(() => {
     const lookup = new Map<string, ColorData[]>();
     adaptaColors.forEach((baseColor) => {
-      HARMONY_MODES.forEach((mode) => {
+      CAMPAIGN_MODES.forEach((mode) => {
+        if (!mode.angles) return;
         const result: ColorData[] = [];
         mode.angles.forEach((angleOffset) => {
           const targetHue = normalizeAngle(baseColor.hue + angleOffset);
@@ -160,7 +177,24 @@ export function ColorWheelPage() {
 
   const harmonyColors = useMemo(() => {
     if (!baseColorHex || adaptaColors.length === 0) return [];
-    if (isDragging && dragAngle !== null) {
+    
+    // UI specific modes
+    if (designContext === "ui") {
+      if (harmonyMode === "text-bg") {
+        // Encontrar as melhores cores de contraste da paleta que dão >= 4.5
+        const validContrastColors = adaptaColors.filter(c => getContrastRatio(baseColorHex, c.hex) >= 4.5);
+        // Sugerir top 3 contrastes seguros e de áreas diferentes (ex. neutro, surface)
+        return validContrastColors.slice(0, 4);
+      }
+      if (harmonyMode === "ui-accent") {
+        // Sugerir cor semântica baseada na cor de entrada
+        const validAccents = adaptaColors.filter(c => c.roles.includes("ui") && c.group !== "Verde Surface" && c.group !== "Neutros Claros" && c.group !== "Neutros Escuros" && getContrastRatio(baseColorHex, c.hex) >= 3.0);
+        return validAccents.slice(0, 3);
+      }
+    }
+
+    // Campaign Modes
+    if (isDragging && dragAngle !== null && currentHarmony?.angles) {
       const result: ColorData[] = [];
       currentHarmony.angles.forEach((angleOffset) => {
         const targetAngle = normalizeAngle(dragAngle + angleOffset);
@@ -175,16 +209,13 @@ export function ColorWheelPage() {
       return result;
     }
     return harmonyLookup.get(`${baseColorHex}-${harmonyMode}`) || [];
-  }, [baseColorHex, harmonyMode, harmonyLookup, isDragging, dragAngle, currentHarmony, adaptaColors]);
+  }, [baseColorHex, harmonyMode, designContext, harmonyLookup, isDragging, dragAngle, currentHarmony, adaptaColors]);
 
   const validatedColors = useMemo(() => {
-    if (!baseColorHex || harmonyColors.length === 0) return adaptaColors;
-    const validColors = adaptaColors.filter((c) =>
-      isValidTone(harmonyColors, extractTone(c), harmonyMode)
-    );
-    const anglePerColor = validColors.length > 0 ? 360 / validColors.length : 0;
-    return validColors.map((color, index) => ({ ...color, wheelAngle: index * anglePerColor }));
-  }, [adaptaColors, harmonyColors, harmonyMode, baseColorHex]);
+    // Retirado o filtro rígido de tons no validatedColors para permitir UI Mode ver tudo
+    const anglePerColor = adaptaColors.length > 0 ? 360 / adaptaColors.length : 0;
+    return adaptaColors.map((color, index) => ({ ...color, wheelAngle: index * anglePerColor }));
+  }, [adaptaColors]);
 
   const CENTER = wheelSize / 2;
   const WHEEL_R = wheelSize * 0.38;
@@ -193,9 +224,24 @@ export function ColorWheelPage() {
   const positionedColors = useMemo(() =>
     validatedColors.map((c) => {
       const angle = ((c.wheelAngle! - 90) * Math.PI) / 180;
-      return { ...c, x: CENTER + WHEEL_R * Math.cos(angle), y: CENTER + WHEEL_R * Math.sin(angle) };
+      
+      let isLocked = false;
+      if (designContext === 'ui' && !c.roles.includes('ui')) {
+         isLocked = true;
+      } else if (designContext === 'ui' && harmonyMode === 'text-bg' && baseColorHex) {
+         if (getContrastRatio(baseColorHex, c.hex) < 4.5 && c.hex !== baseColorHex) {
+             isLocked = true;
+         }
+      }
+
+      return { 
+        ...c, 
+        x: CENTER + WHEEL_R * Math.cos(angle), 
+        y: CENTER + WHEEL_R * Math.sin(angle),
+        isLocked
+      };
     }),
-  [validatedColors, CENTER, WHEEL_R]);
+  [validatedColors, CENTER, WHEEL_R, designContext, harmonyMode, baseColorHex]);
 
   const findClosestColor = (svgX: number, svgY: number): ColorData | null => {
     const THRESHOLD = wheelSize * 0.08;
@@ -222,7 +268,7 @@ export function ColorWheelPage() {
     const coords = getSvgCoords(e);
     if (!coords) return;
     const c = findClosestColor(coords.x, coords.y);
-    if (c) setBaseColorHex(c.hex);
+    if (c && !c.isLocked) setBaseColorHex(c.hex);
   };
 
   const handleSvgMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
@@ -259,6 +305,7 @@ export function ColorWheelPage() {
       let closest = adaptaColors[0];
       let minDiff = hueDiff(angleDeg, adaptaColors[0].wheelAngle!);
       adaptaColors.forEach((c) => {
+        if (c.isLocked) return;
         const diff = hueDiff(angleDeg, c.wheelAngle!);
         if (diff < minDiff) { minDiff = diff; closest = c; }
       });
@@ -318,6 +365,25 @@ export function ColorWheelPage() {
             {/* Sidebar de controles */}
             <aside className={styles.controlsSidebar}>
 
+              {/* Contexto de Design */}
+              <div className={styles.sidebarSection}>
+                <label className={styles.sidebarLabel}>Contexto de Design</label>
+                <div className={styles.contextTabs}>
+                  <button 
+                    onClick={() => { setDesignContext("ui"); setHarmonyMode("text-bg"); }}
+                    className={`${styles.contextTab} ${designContext === "ui" ? styles.contextTabActive : ""}`}
+                  >
+                    Interface (Seguro)
+                  </button>
+                  <button 
+                    onClick={() => { setDesignContext("campaign"); setHarmonyMode("analogous"); }}
+                    className={`${styles.contextTab} ${designContext === "campaign" ? styles.contextTabActive : ""}`}
+                  >
+                    Campanha (Livre)
+                  </button>
+                </div>
+              </div>
+
               {/* Filtro de paleta */}
               <div className={styles.sidebarSection}>
                 <label className={styles.sidebarLabel}>Paleta</label>
@@ -326,25 +392,25 @@ export function ColorWheelPage() {
                   onChange={(e) => setCoreFilter(e.target.value as CoreFilter)}
                   className={styles.paletteSelect}
                 >
+                  <option value="all">Todas as Cores</option>
                   <option value="both">Verde + Color</option>
                   <option value="verde">Verde Core</option>
-                  <option value="color">Color Core</option>
-                  <option value="neutrals">Neutrals</option>
-                  <option value="verde-neutrals">Verde + Neutrals</option>
-                  <option value="all">Todas</option>
+                  <option value="color">Semânticas (Color)</option>
+                  <option value="neutrals">Neutros</option>
+                  <option value="verde-neutrals">Verde + Neutros</option>
                 </select>
               </div>
 
               {/* Modos de harmonia */}
               <div className={styles.sidebarSection}>
-                <label className={styles.sidebarLabel}>Modo de Harmonia</label>
+                <label className={styles.sidebarLabel}>Objetivo / Harmonia</label>
                 <div className={styles.harmonyList}>
-                  {HARMONY_MODES.map((mode) => {
+                  {activeModesList.map((mode) => {
                     const isActive = harmonyMode === mode.id;
                     return (
                       <button
                         key={mode.id}
-                        onClick={() => setHarmonyMode(mode.id)}
+                        onClick={() => setHarmonyMode(mode.id as HarmonyMode)}
                         className={`${styles.harmonyBtn} ${isActive ? styles.harmonyBtnActive : ""}`}
                       >
                         <span className={styles.harmonyIcon}>{mode.icon}</span>
@@ -421,13 +487,12 @@ export function ColorWheelPage() {
                 {/* Dicas flutuantes */}
                 <div className={styles.tipLeft} style={{ color: tipColor }}>
                   <span className={styles.tipTitle}>// CONTROLES</span>
-                  <div>→ Clique: seleciona</div>
-                  <div>→ Drag: navega</div>
+                  <div>→ Clique: seleciona base</div>
+                  <div>→ Lock: cores não seguras estão travadas</div>
                 </div>
                 <div className={styles.tipRight} style={{ color: tipColor }}>
-                  <span className={styles.tipTitle}>// TONS</span>
-                  <div>✓ Max 2 iguais</div>
-                  <div>✓ Sem adjacentes</div>
+                  <span className={styles.tipTitle}>// VALIDAÇÃO WCAG</span>
+                  <div>✓ {designContext === 'ui' ? 'Contraste Mín 4.5:1 exigido' : 'Mistura Livre Cuidado com Contraste'}</div>
                 </div>
 
                 <svg
@@ -482,7 +547,10 @@ export function ColorWheelPage() {
                   {/* Pontos de cor */}
                   {positionedColors.map((c) => {
                     const isBase = c.hex === baseColorHex;
-                    const isHarmony = harmonyColors.some(hc => hc.hex === c.hex);
+                    const isHarmony = !c.isLocked && harmonyColors.some(hc => hc.hex === c.hex);
+                    // Diminui o tamanho e opacidade se estiver travado (inseguro/sem contraste)
+                    const isLocked = c.isLocked;
+                    
                     const r = isBase ? PIN_R * 1.6 : isHarmony ? PIN_R * 1.3 : PIN_R;
 
                     return (
@@ -498,8 +566,9 @@ export function ColorWheelPage() {
                           : (isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)")}
                         strokeWidth={isBase ? 2.5 : isHarmony ? 1.5 : 0.5}
                         filter={isBase || isHarmony ? "url(#glow-cw)" : undefined}
-                        onMouseDown={() => { setBaseColorHex(c.hex); setIsDragging(true); }}
-                        style={{ cursor: "grab", transition: "r 0.1s ease" }}
+                        opacity={isLocked ? 0.15 : 1}
+                        onMouseDown={() => { if (!isLocked) { setBaseColorHex(c.hex); setIsDragging(true); } }}
+                        style={{ cursor: isLocked ? "not-allowed" : "pointer", transition: "r 0.2s ease, opacity 0.3s ease" }}
                       />
                     );
                   })}
@@ -523,6 +592,73 @@ export function ColorWheelPage() {
                 </svg>
               </div>
             </div>
+
+            {/* Sidebar de Preview (Lado Direito) */}
+            <aside className={styles.previewSidebar}>
+              <div className={styles.sidebarSection}>
+                <h3 className={styles.previewTitle}>Preview em Tempo Real</h3>
+                <p className={styles.previewDesc}>
+                  {designContext === 'ui' 
+                    ? "Veja como as cores se comportam em um componente de interface com validação de acessibilidade."
+                    : "Visualize a vibração e o contraste para peças gráficas e campanhas de marketing."}
+                </p>
+
+                {/* Dynamic Card */}
+                {(() => {
+                  const isUI = designContext === 'ui';
+                  const primary = baseColorHex || (isDark ? '#141a17' : '#F7F9F2');
+                  const secondary = harmonyColors[0]?.hex || (isDark ? '#ffffff' : '#000000');
+                  const tertiary = harmonyColors[1]?.hex || secondary;
+
+                  if (isUI) {
+                    return (
+                      <div 
+                        className={styles.previewCard}
+                        style={{ background: primary, color: secondary }}
+                      >
+                        <div className={styles.previewHeader} style={{ borderBottomColor: tertiary + '40' }}>
+                          <span>Configurações</span>
+                          <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>WCAG {getContrastRatio(primary, secondary).toFixed(1)}</span>
+                        </div>
+                        <div className={styles.previewBody}>
+                          <div className={styles.previewField} style={{ background: tertiary + '15', borderColor: tertiary + '30' }}></div>
+                          <div className={styles.previewField} style={{ background: tertiary + '15', borderColor: tertiary + '30' }}></div>
+                          <button 
+                            className={styles.previewButton}
+                            style={{ background: secondary, color: primary }}
+                          >
+                            Salvar Alterações
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div 
+                      className={styles.previewCard}
+                      style={{ background: primary, color: secondary, justifyContent: 'center' }}
+                    >
+                      <div className={styles.previewBody} style={{ alignItems: 'center', textAlign: 'center', flex: 'none' }}>
+                        <div className={styles.previewCampaignText}>
+                          O FUTURO<br/>É ADAPTA
+                        </div>
+                        <div className={styles.previewCampaignSub} style={{ color: tertiary }}>
+                          Lançamento Oficial
+                        </div>
+                        <button 
+                          className={styles.previewButton}
+                          style={{ background: secondary, color: primary, marginTop: '2rem', alignSelf: 'center' }}
+                        >
+                          Saiba Mais
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </aside>
+
           </div>
         )}
       </div>
