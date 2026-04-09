@@ -606,8 +606,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                               <div className="flex flex-wrap gap-2 text-[9px] font-bold uppercase tracking-widest">
                                  <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded">Dir: {direcao}</span>
                                  <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded">Exp: {experiencia}</span>
-                                 {Object.keys(modulos).filter(k => modulos[k as keyof typeof modulos]).map(k => (
-                                    <span key={k} className="bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded border border-white/5">{k}</span>
+                                 {Object.keys(modulos).filter(k => modulos[k as keyof typeof modulos] && k !== experiencia).map(k => (
+                                    <span key={k} className="bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded border border-white/5">{k === 'governanca' ? 'Gov.' : k === 'fisico' ? 'Fís.' : k}</span>
                                  ))}
                               </div>
                            </div>
@@ -641,8 +641,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                                    className="text-left p-4 rounded-xl border border-white/5 bg-zinc-900/80 hover:bg-zinc-800 hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.1)] transition-all group flex items-start gap-3 disabled:opacity-50"
                                 >
                                    <div className="mt-0.5 bg-emerald-500/10 text-emerald-500 rounded px-1.5 py-0.5 text-[10px] font-black group-hover:bg-emerald-500 group-hover:text-black transition-colors">{idx + 1}</div>
-                                   <p className="text-sm font-medium text-emerald-400/80 group-hover:text-emerald-400 leading-snug">{sug}</p>
-                                   <ArrowRight className="w-4 h-4 text-emerald-500/0 ml-auto group-hover:text-emerald-500/50 transition-colors" />
+                                   <p className="text-sm font-medium text-emerald-400/80 group-hover:text-emerald-400 leading-snug flex-1 min-w-0 break-words">{sug}</p>
+                                   <ArrowRight className="w-4 h-4 shrink-0 text-emerald-500/0 ml-2 group-hover:text-emerald-500/50 transition-colors" />
                                 </button>
                              ))}
                            </div>
