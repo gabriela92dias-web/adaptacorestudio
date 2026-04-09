@@ -1,4 +1,5 @@
-// Tradução via Gemini REST API (sem OpenAI)
+import OpenAI from "openai";
+
 const LANG_NAMES: Record<string, string> = {
   pt: "Portuguese (Brazil)",
   en: "English",
@@ -19,64 +20,51 @@ export async function handle(request: Request) {
       return new Response(JSON.stringify({ error: "Missing fields/sourceLang/targetLangs" }), { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-
-    if (!apiKey) {
-      // Sem chave: retorna os campos sem alteração (fallback silencioso)
-      console.warn("[pitch/translate] GEMINI_API_KEY não configurada, usando fallback.");
+    if (!process.env.OPENAI_API_KEY) {
+      // Fallback sem OpenAI: retorna os campos sem alteração para todos os idiomas
       const result: Record<string, typeof fields> = {};
       for (const lang of targetLangs) result[lang] = { ...fields };
       return new Response(JSON.stringify({ translations: result }));
     }
 
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const fieldsJson = JSON.stringify(fields, null, 2);
     const targets = targetLangs.map(l => `"${l}" (${LANG_NAMES[l] ?? l})`).join(", ");
 
-    const prompt = `You are a professional translator for a corporate pitch deck.
+    const systemPrompt = `You are a professional translator for a corporate pitch deck.
 Translate ONLY the text values in the JSON below from ${LANG_NAMES[sourceLang] ?? sourceLang} to the target languages.
 Rules:
 - Keep all keys exactly the same.
 - Translate ONLY the string values (and string items in arrays).
-- Keep proper names and brand names (e.g. "Adapta", "CoreAct", "CoreStudio") unchanged.
-- Return ONLY a JSON object with keys being the target language codes and values being the translated field objects.
+- Keep proper names, brand names (e.g. "Adapta", "CoreAct", "CoreStudio"), and numbers unchanged.
+- Return a single JSON object with keys being the target language codes and values being the translated field objects.
 - No explanations, ONLY the JSON.
 
-Target languages: ${targets}
+Target languages:
+${targets}
 
 Fields to translate:
-${fieldsJson}`;
+${fieldsJson}
+`;
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-    const geminiRes = await fetch(geminiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: "application/json" },
-      }),
+    const chat = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: systemPrompt }],
+      response_format: { type: "json_object" },
     });
 
-    if (!geminiRes.ok) {
-      const errText = await geminiRes.text();
-      console.error("[pitch/translate] Gemini error:", errText);
-      throw new Error(`Gemini HTTP ${geminiRes.status}: ${errText.slice(0, 200)}`);
-    }
-
-    const geminiData = await geminiRes.json() as {
-      candidates?: Array<{ content: { parts: Array<{ text: string }> } }>;
-    };
-
-    const raw = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+    const raw = chat.choices[0].message.content ?? "{}";
     const parsed = JSON.parse(raw);
 
     // O modelo pode devolver { translations: {...} } ou direto { en: {...}, de: {...} }
     const translations = parsed.translations ?? parsed;
 
     return new Response(JSON.stringify({ translations }));
-
   } catch (error: any) {
-    console.error("[pitch/translate] Error:", error?.message ?? error);
+    console.error("[pitch/translate] Error:", error);
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
