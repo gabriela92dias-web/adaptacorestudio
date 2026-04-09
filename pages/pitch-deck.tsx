@@ -149,57 +149,73 @@ const ALL_LANGS: Lang[] = ['pt', 'en', 'de'];
 
 interface EditModalProps {
   slideIndex: number;
+  activeLang: Lang;
   content: ContentStore;
   onSave: (updated: ContentStore) => void;
   onClose: () => void;
 }
 
-function EditModal({ slideIndex, content, onSave, onClose }: EditModalProps) {
+function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditModalProps) {
   // Deep-clone current content for editing
   const [draft, setDraft] = useState<ContentStore>(() =>
     JSON.parse(JSON.stringify(content))
   );
 
-  const slide_pt = draft.pt[slideIndex];
+  const activeSlide = draft[activeLang][slideIndex];
 
-  const updateField = (lang: Lang, field: keyof SlideData, value: string) => {
+  const updateField = (field: keyof SlideData, value: string) => {
     setDraft(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
-      (next[lang][slideIndex] as Record<string, unknown>)[field] = value;
+      (next[activeLang][slideIndex] as Record<string, unknown>)[field] = value;
       return next;
     });
   };
 
-  const updatePoint = (lang: Lang, idx: number, value: string) => {
+  const updatePoint = (idx: number, value: string) => {
     setDraft(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
-      const pts = next[lang][slideIndex].points ?? [];
+      const pts = next[activeLang][slideIndex].points ?? [];
       pts[idx] = value;
-      next[lang][slideIndex].points = pts;
+      next[activeLang][slideIndex].points = pts;
       return next;
     });
   };
 
-  const addPoint = (lang: Lang) => {
+  const addPoint = () => {
     setDraft(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
-      const pts = next[lang][slideIndex].points ?? [];
-      next[lang][slideIndex].points = [...pts, ''];
+      const pts = next[activeLang][slideIndex].points ?? [];
+      next[activeLang][slideIndex].points = [...pts, ''];
       return next;
     });
   };
 
-  const removePoint = (lang: Lang, idx: number) => {
+  const removePoint = (idx: number) => {
     setDraft(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
-      const pts = next[lang][slideIndex].points ?? [];
-      next[lang][slideIndex].points = pts.filter((_, i) => i !== idx);
+      const pts = next[activeLang][slideIndex].points ?? [];
+      next[activeLang][slideIndex].points = pts.filter((_, i) => i !== idx);
       return next;
     });
   };
 
-  const hasPoints = !!slide_pt.points;
-  const hasContent = slide_pt.type !== 'cover' && slide_pt.type !== 'part';
+  // On save: propagate edited lang's changes to all other languages
+  const handleSaveAll = () => {
+    const result = JSON.parse(JSON.stringify(draft)) as ContentStore;
+    const source = draft[activeLang][slideIndex];
+    ALL_LANGS.filter(l => l !== activeLang).forEach(otherLang => {
+      const target = result[otherLang][slideIndex];
+      target.title = source.title;
+      if (source.subtitle !== undefined) target.subtitle = source.subtitle;
+      if (source.badge !== undefined) target.badge = source.badge;
+      if (source.content !== undefined) target.content = source.content;
+      if (source.points !== undefined) target.points = [...source.points];
+    });
+    onSave(result);
+  };
+
+  const hasPoints = !!activeSlide.points;
+  const hasContent = activeSlide.type !== 'cover' && activeSlide.type !== 'part';
 
   return (
     <div
@@ -228,134 +244,134 @@ function EditModal({ slideIndex, content, onSave, onClose }: EditModalProps) {
         </div>
 
         {/* Body */}
-        <div className="p-6 flex flex-col gap-8">
-          {ALL_LANGS.map(lang => {
-            const s = draft[lang][slideIndex];
-            return (
-              <div key={lang}>
-                <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: 'var(--primary)' }}>
-                  {LANG_LABELS[lang]}
-                </p>
-                <div className="flex flex-col gap-3">
-                  {/* badge */}
-                  {s.badge !== undefined && (
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>badge</label>
+        <div className="p-6 flex flex-col gap-4">
+          <p className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>
+            {LANG_LABELS[activeLang]}
+          </p>
+          <div className="flex flex-col gap-3">
+            {/* badge */}
+            {activeSlide.badge !== undefined && (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>badge</label>
+                <input
+                  value={activeSlide.badge ?? ''}
+                  onChange={e => updateField('badge', e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg text-sm outline-none transition-all"
+                  style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
+                  onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
+                  onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+                />
+              </div>
+            )}
+            {/* title */}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>title</label>
+              <input
+                value={activeSlide.title}
+                onChange={e => updateField('title', e.target.value)}
+                className="w-full px-3 py-2 rounded-lg text-sm outline-none transition-all"
+                style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
+                onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+              />
+            </div>
+            {/* subtitle */}
+            {activeSlide.subtitle !== undefined && (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>subtitle</label>
+                <input
+                  value={activeSlide.subtitle ?? ''}
+                  onChange={e => updateField('subtitle', e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg text-sm outline-none transition-all"
+                  style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
+                  onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
+                  onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+                />
+              </div>
+            )}
+            {/* content */}
+            {hasContent && activeSlide.content !== undefined && (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>content</label>
+                <textarea
+                  value={activeSlide.content ?? ''}
+                  onChange={e => updateField('content', e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 rounded-lg text-sm outline-none resize-none transition-all"
+                  style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
+                  onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
+                  onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+                />
+              </div>
+            )}
+            {/* points */}
+            {hasPoints && (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>points</label>
+                <div className="flex flex-col gap-2">
+                  {(activeSlide.points ?? []).map((pt, idx) => (
+                    <div key={idx} className="flex gap-2 items-center">
                       <input
-                        value={s.badge ?? ''}
-                        onChange={e => updateField(lang, 'badge', e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg text-sm outline-none transition-all"
+                        value={pt}
+                        onChange={e => updatePoint(idx, e.target.value)}
+                        className="flex-1 px-3 py-2 rounded-lg text-sm outline-none transition-all"
                         style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
                         onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
                         onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
                       />
+                      <button
+                        onClick={() => removePoint(idx)}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0"
+                        style={{ color: 'var(--muted-foreground)' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'var(--destructive)'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted-foreground)'; }}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
                     </div>
-                  )}
-                  {/* title */}
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>title</label>
-                    <input
-                      value={s.title}
-                      onChange={e => updateField(lang, 'title', e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg text-sm outline-none transition-all"
-                      style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
-                      onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
-                      onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
-                    />
-                  </div>
-                  {/* subtitle */}
-                  {s.subtitle !== undefined && (
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>subtitle</label>
-                      <input
-                        value={s.subtitle ?? ''}
-                        onChange={e => updateField(lang, 'subtitle', e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg text-sm outline-none transition-all"
-                        style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
-                        onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
-                        onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
-                      />
-                    </div>
-                  )}
-                  {/* content */}
-                  {hasContent && s.content !== undefined && (
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>content</label>
-                      <textarea
-                        value={s.content ?? ''}
-                        onChange={e => updateField(lang, 'content', e.target.value)}
-                        rows={3}
-                        className="w-full px-3 py-2 rounded-lg text-sm outline-none resize-none transition-all"
-                        style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
-                        onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
-                        onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
-                      />
-                    </div>
-                  )}
-                  {/* points */}
-                  {hasPoints && (
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>points</label>
-                      <div className="flex flex-col gap-2">
-                        {(s.points ?? []).map((pt, idx) => (
-                          <div key={idx} className="flex gap-2 items-center">
-                            <input
-                              value={pt}
-                              onChange={e => updatePoint(lang, idx, e.target.value)}
-                              className="flex-1 px-3 py-2 rounded-lg text-sm outline-none transition-all"
-                              style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
-                              onFocus={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
-                              onBlur={e => (e.currentTarget.style.borderColor = 'var(--border)')}
-                            />
-                            <button
-                              onClick={() => removePoint(lang, idx)}
-                              className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0"
-                              style={{ color: 'var(--muted-foreground)' }}
-                              onMouseEnter={e => { e.currentTarget.style.background = 'var(--destructive)'; e.currentTarget.style.color = '#fff'; }}
-                              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted-foreground)'; }}
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </button>
-                          </div>
-                        ))}
-                        <button
-                          onClick={() => addPoint(lang)}
-                          className="flex items-center gap-1 text-xs font-semibold py-1 px-2 rounded-lg w-fit transition-colors"
-                          style={{ color: 'var(--primary)', border: '1px dashed var(--primary)' }}
-                          onMouseEnter={e => (e.currentTarget.style.background = 'color-mix(in srgb, var(--primary) 10%, transparent)')}
-                          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                        >
-                          <Plus className="w-3 h-3" /> Adicionar item
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                  ))}
+                  <button
+                    onClick={() => addPoint()}
+                    className="flex items-center gap-1 text-xs font-semibold py-1 px-2 rounded-lg w-fit transition-colors"
+                    style={{ color: 'var(--primary)', border: '1px dashed var(--primary)' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'color-mix(in srgb, var(--primary) 10%, transparent)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <Plus className="w-3 h-3" /> Adicionar item
+                  </button>
                 </div>
               </div>
-            );
-          })}
+            )}
+          </div>
         </div>
 
+
+
         {/* Footer */}
-        <div className="sticky bottom-0 z-10 flex gap-3 justify-end px-6 py-4 border-t" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
-          <button
-            onClick={onClose}
-            className="px-5 py-2 rounded-lg text-sm font-medium transition-colors"
-            style={{ color: 'var(--foreground)', border: '1px solid var(--border)' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'var(--border)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={() => onSave(draft)}
-            className="px-5 py-2 rounded-lg text-sm font-semibold transition-opacity"
-            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
-            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-          >
-            Salvar Alterações
-          </button>
+        <div className="sticky bottom-0 z-10 flex flex-col gap-2 px-6 py-4 border-t" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
+          <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+            💡 As alterações serão aplicadas a <strong>todos os idiomas</strong> (PT, EN, DE).
+          </p>
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={onClose}
+              className="px-5 py-2 rounded-lg text-sm font-medium transition-colors"
+              style={{ color: 'var(--foreground)', border: '1px solid var(--border)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--border)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleSaveAll}
+              className="px-5 py-2 rounded-lg text-sm font-semibold transition-opacity"
+              style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+            >
+              Salvar Alterações
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -593,8 +609,9 @@ export default function PitchDeck() {
 
       {/* Edit Modal */}
       {editOpen && (
-        <EditModal
+      <EditModal
           slideIndex={currentSlide}
+          activeLang={lang}
           content={content}
           onSave={handleSave}
           onClose={() => setEditOpen(false)}
