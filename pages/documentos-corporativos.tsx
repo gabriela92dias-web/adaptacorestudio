@@ -69,7 +69,6 @@ const AD_TEMPLATES = [
 ];
 
 const PRES_TEMPLATES = [
-  { id: 1, name: "Pitch Deck Corporativo", slides: 12 },
   { id: 2, name: "Relatório Trimestral", slides: 8 },
   { id: 3, name: "Proposta Comercial", slides: 10 },
 ];
@@ -468,6 +467,42 @@ export default function DocumentosCorporativos() {
           {/* ── APRESENTAÇÕES ── */}
           <TabsContent value="apresentacoes" className={styles.tabContent}>
             <div className={styles.grid}>
+
+              {/* ── Featured: Adapta CoreAct Pitch ── */}
+              <div className={styles.card} style={{ gridColumn: '1 / -1', background: 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 8%, var(--surface)), var(--surface))', border: '1px solid color-mix(in srgb, var(--primary) 30%, var(--border))' }}>
+                <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', padding: '0.5rem', flexWrap: 'wrap' }}>
+                  {/* Mini preview */}
+                  <div className={styles.previewContainer} style={{ minWidth: 160, maxWidth: 200, flex: '0 0 auto' }}>
+                    <div className={styles.presentationPreview} style={{ background: '#0a0a0a', position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: 8 }}>
+                        <div style={{ width: '60%', height: 3, borderRadius: 99, background: 'var(--primary)', opacity: 0.9 }} />
+                        <div style={{ width: '80%', height: 2, borderRadius: 99, background: '#fff', opacity: 0.5 }} />
+                        <div style={{ width: '70%', height: 2, borderRadius: 99, background: '#fff', opacity: 0.3 }} />
+                      </div>
+                    </div>
+                  </div>
+                  {/* Info */}
+                  <div className={styles.cardBody} style={{ flex: 1, padding: 0 }}>
+                    <div className={styles.cardHeader}>
+                      <Badge variant="secondary" className={styles.formatBadge}>Pitch Deck</Badge>
+                      <span className={styles.dimensionsText}>11 slides • PT / EN / DE</span>
+                    </div>
+                    <h3 className={styles.cardTitle}>Adapta CoreAct — Apresentação Oficial</h3>
+                    <p className={styles.cardDescription}>
+                      Pitch interativo da plataforma com suporte multilíngue. Edite os textos de cada slide diretamente pela apresentação, sem sair da plataforma.
+                    </p>
+                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                      <Link to="/pitch">
+                        <Button variant="primary" className={styles.actionButton}>
+                          ✏️ Editar &amp; Apresentar
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Other templates */}
               {PRES_TEMPLATES.map((tpl) => (
                 <div key={tpl.id} className={styles.card}>
                   <div className={styles.previewContainer}>
