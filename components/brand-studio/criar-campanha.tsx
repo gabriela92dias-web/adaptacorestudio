@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -493,7 +493,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
            <h1 className="text-xl font-black tracking-widest uppercase flex items-center gap-3">
               <Sparkles className="text-emerald-500 w-5 h-5" /> 
               Engenharia de Ação
-              <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] px-2 py-0.5 rounded-full uppercase tracking-widest font-bold ml-2">Console Blueprint</span>
+              
            </h1>
            <button onClick={onClose} className="text-zinc-400 hover:text-white p-2 hover:bg-white/5 rounded-md transition-colors"><X size={24}/></button>
         </div>
@@ -541,11 +541,11 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors ${step > 0 ? 'bg-emerald-500 text-black shadow-emerald-500/20' : step === 0 ? 'bg-zinc-900 border-2 border-emerald-500 text-emerald-500' : 'bg-zinc-900 border border-white/10 text-zinc-600'}`}>1</div>
                   </div>
                   <div className="flex-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Tema / Nome da Ação</label>
+                    <label className="text-xs font-semibold text-zinc-500 mb-3 block">Tema / Nome da Ação</label>
                     {step === 0 ? (
                         <div className="space-y-4">
                             <div className="space-y-2">
-                               <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Tema Principal</label>
+                               <label className="text-xs font-semibold text-zinc-500 mb-3 block">Nome da ação</label>
                                <Input 
                                   autoFocus 
                                   value={rawName} 
@@ -559,7 +559,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
                            <div className="space-y-4 pt-4 border-t border-white/5">
                                <div className="space-y-2">
-                                   <label className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest">A) DIREÇÃO</label>
+                                   <label className="text-[10px] font-semibold text-zinc-500">Direção</label>
                                    <div className="flex gap-2">
                                      {['interna', 'externa', 'hibrida'].map(dir => (
                                         <button key={dir} onClick={() => setDirecao(dir as any)} className={`flex-1 py-2 text-[10px] font-bold rounded-lg border uppercase tracking-wider transition-colors ${direcao === dir ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'bg-zinc-900 border-white/5 text-zinc-600 hover:bg-zinc-800'}`}>
@@ -570,7 +570,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                                </div>
 
                                <div className="space-y-2 pt-2 border-t border-white/5">
-                                   <label className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest">B) EXPERIÊNCIA</label>
+                                   <label className="text-[10px] font-semibold text-zinc-500">Experiência</label>
                                    <div className="flex gap-2">
                                      {['presencial', 'digital', 'hibrida'].map(exp => (
                                         <button key={exp} onClick={() => setExperiencia(exp as any)} className={`flex-1 py-2 text-[10px] font-bold rounded-lg border uppercase tracking-wider transition-colors ${experiencia === exp ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'bg-zinc-900 border-white/5 text-zinc-600 hover:bg-zinc-800'}`}>
@@ -581,7 +581,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                                </div>
 
                                  <div className="space-y-2 pt-2 border-t border-white/5">
-                                     <label className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest">C) TOGGLES DE MÓDULOS (CORE)</label>
+                                     <label className="text-[10px] font-semibold text-zinc-500">Módulos ativos</label>
                                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                                        {Object.keys(modulos).map((mod) => (
                                           <button key={mod} onClick={() => setModulos(prev => ({...prev, [mod]: !prev[mod as keyof typeof modulos]}))} className={`px-2 py-3 text-[10px] font-bold rounded-lg border uppercase tracking-widest transition-colors ${modulos[mod as keyof typeof modulos] ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400' : 'bg-zinc-900 border-white/5 text-zinc-600 hover:bg-zinc-800'}`}>
@@ -593,7 +593,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                            </div>
 
                            <Button onClick={nextStepTema} disabled={isGenerating || !rawName} className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold tracking-widest uppercase text-xs">
-                              {isGenerating ? <Sparkles className="w-4 h-4 animate-spin" /> : "Processar Matriz I.A. (Extrair Tese)"}
+                              {isGenerating ? <Sparkles className="w-4 h-4 animate-spin" /> : "Extrair tese →"}
                            </Button>
                         </div>
                      ) : (
@@ -622,7 +622,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors ${step > 1 ? 'bg-emerald-500 text-black' : step === 1 ? 'bg-zinc-900 border-2 border-emerald-500 text-emerald-500' : 'bg-zinc-900 border border-white/10 text-zinc-600'}`}>2</div>
                   </div>
                   <div className="flex-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Proposição Central da Ação</label>
+                    <label className="text-xs font-semibold text-zinc-500 mb-3 block">Proposição central</label>
                     {step === 1 ? (
                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
                            
@@ -695,7 +695,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md transition-colors ${step > 2 ? 'bg-emerald-500 text-black' : step === 2 ? 'bg-zinc-900 border-2 border-emerald-500 text-emerald-500' : 'bg-zinc-900 border border-white/10 text-zinc-600'}`}>3</div>
                   </div>
                   <div className="flex-1">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Direcionamento de Verba (Teto Opcional)</label>
+                    <label className="text-xs font-semibold text-zinc-500 mb-3 block">Orçamento estimado <span className="font-normal opacity-60">(opcional)</span></label>
                     {step === 2 ? (
                         <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4">
                            <Input 
@@ -746,36 +746,40 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   
                   {/* FUNNEL OUPUT (Appears at Step 1+) */}
                   {step >= 1 && (
-                    <div className="md:col-span-2 bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/10 rounded-2xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                        <div className="flex items-center justify-between mb-6">
-                           <h3 className="text-[11px] font-bold uppercase tracking-widest text-emerald-500">Arquitetura Estrutural Fixada</h3>
+                    <div className="md:col-span-2 border border-[--border] rounded-2xl p-6 shadow-sm animate-in fade-in slide-in-from-bottom-8 duration-700" style={{ backgroundColor: 'var(--card)' }}>
+                        <div className="flex items-center justify-between mb-5">
+                           <h3 className="text-[11px] font-semibold tracking-wide text-zinc-500">Arquitetura do funil</h3>
                            <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 uppercase font-mono text-[9px]"><TypeIcon className="w-3 h-3 mr-1"/>{typeData.name}</Badge>
                         </div>
                         
-                        <div className="w-full flex flex-col items-center justify-center gap-1">
+                        <div className="w-full flex flex-col items-center gap-0.5">
                            {[
-                             { id: "awareness", name: "Conscientizar", desc: "Opinião Pública", color: "bg-emerald-400", clipPath: "polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)" },
-                             { id: "consideration", name: "Educação Médica", desc: "Tabus Clínicos", color: "bg-emerald-500", clipPath: "polygon(15% 0%, 85% 0%, 75% 100%, 25% 100%)" },
-                             { id: "conversion", name: "Acolhimento", desc: "Entrada Oficial", color: "bg-blue-500", clipPath: "polygon(25% 0%, 75% 0%, 75% 100%, 25% 100%)" },
-                             { id: "retention", name: "Acompanhamento", desc: "Zelo Contínuo", color: "bg-purple-500", clipPath: "polygon(25% 0%, 75% 0%, 85% 100%, 15% 100%)" },
-                             { id: "expansion", name: "Apoio Social", desc: "Rede de Indicação", color: "bg-pink-500", clipPath: "polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%)" }
-                           ].map((funnel) => {
-                             const isActive = activeFunnels[funnel.id as string];
+                             { id: "awareness",     name: "Conscientizar",   desc: "Opinião Pública",  bg: "bg-emerald-400", pct: "100%" },
+                             { id: "consideration", name: "Educação Médica", desc: "Tabus Clínicos",   bg: "bg-emerald-500", pct: "83%"  },
+                             { id: "conversion",    name: "Acolhimento",     desc: "Entrada Oficial",  bg: "bg-blue-500",    pct: "66%"  },
+                             { id: "retention",     name: "Acompanhamento",  desc: "Zelo Contínuo",    bg: "bg-purple-500",  pct: "83%"  },
+                             { id: "expansion",     name: "Apoio Social",    desc: "Rede de Indicação",bg: "bg-pink-500",    pct: "100%" },
+                           ].map((level, i) => {
+                             const isActive = activeFunnels[level.id as string];
+                             const isFirst = i === 0;
+                             const isLast = i === 4;
                              return (
-                               <div key={funnel.id} className="w-full max-w-sm">
-                                 <div 
-                                    className={`w-full h-[40px] relative transition-all duration-700 flex items-center justify-center
-                                               ${isActive ? 'opacity-100 scale-100 drop-shadow-[0_0_15px_rgba(16,185,129,0.15)]' : 'opacity-20 scale-95 grayscale'}`}
-                                    style={{ clipPath: funnel.clipPath }}
+                               <div key={level.id} style={{ width: level.pct }} className="transition-all duration-700 mx-auto">
+                                 <div className={`h-9 flex items-center justify-center gap-2 transition-all duration-700
+                                   ${isFirst ? 'rounded-t-lg' : ''} ${isLast ? 'rounded-b-lg' : ''}
+                                   ${isActive ? `${level.bg} shadow-sm` : 'bg-zinc-100 opacity-30'}`}
                                  >
-                                    <div className={`absolute inset-0 ${isActive ? `${funnel.color}/20 border-y border-white/20` : 'bg-zinc-800'}`} />
-                                    <div className="relative z-20 flex items-center justify-center gap-2 w-full px-2 text-center pointer-events-none">
-                                       <span className={`text-[10px] font-black tracking-widest uppercase ${isActive ? 'text-white' : 'text-zinc-500'}`}>{funnel.name}</span>
-                                       {isActive && <span className={`text-[9px] font-semibold ${funnel.color.replace('bg-', 'text-')}`}>{funnel.desc}</span>}
-                                    </div>
+                                   <span className="text-[9px] font-bold tracking-widest uppercase" style={{ color: isActive ? 'white' : 'inherit' }}>
+                                     {level.name}
+                                   </span>
+                                   {isActive && (
+                                     <span className="text-[8px] font-medium opacity-80" style={{ color: 'white' }}>
+                                       — {level.desc}
+                                     </span>
+                                   )}
                                  </div>
                                </div>
-                             )
+                             );
                            })}
                         </div>
                     </div>
@@ -785,7 +789,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   {step >= 2 && (
                     <>
                       <div className="col-span-1 bg-zinc-900 border border-white/5 rounded-2xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                         <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 block">Memorando Tático</h3>
+                         <h3 className="text-[11px] font-semibold text-zinc-500 mb-4 block">Memorando Tático</h3>
                          <div className="bg-emerald-500/5 p-4 rounded-xl border border-emerald-500/20 relative">
                             <Target className="absolute top-4 right-4 w-4 h-4 text-emerald-500/50" />
                             <p className="text-xs text-zinc-300 leading-[1.6] font-medium pr-6 whitespace-pre-wrap">{aiBriefing}</p>
@@ -793,7 +797,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                       </div>
 
                       <div className="col-span-1 bg-zinc-900 border border-white/5 rounded-2xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                         <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 block">Superfícies de Contato</h3>
+                         <h3 className="text-[11px] font-semibold text-zinc-500 mb-4 block">Canais de contato de Contato</h3>
                          <div className="flex flex-wrap gap-2">
                              {aiChannels.map(ch => (
                                 <span key={ch} className="px-3 py-1.5 bg-zinc-950 border border-white/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider rounded-md shadow-inner">{ch}</span>
@@ -810,7 +814,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                            <Target className="w-8 h-8 text-blue-500" />
                         </div>
                         <div>
-                           <h3 className="text-[10px] uppercase font-bold text-blue-500 tracking-widest mb-1">Métricas Diretas Projetadas</h3>
+                           <h3 className="text-[10px] font-semibold text-blue-500 mb-1">Métricas projetadas</h3>
                            <div className="text-lg font-bold text-white mb-1">{aiKpi.meta}</div>
                            <div className="text-xs text-zinc-400 font-mono">{aiKpi.goal}</div>
                         </div>
@@ -826,8 +830,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                         <div className="flex items-center gap-3 border-b border-zinc-800 pb-6 mb-6">
                            <FileText className="w-6 h-6 text-emerald-500" />
                            <div>
-                             <h3 className="text-sm font-black uppercase tracking-widest text-white">Dossiê Estratégico Oficial</h3>
-                             <span className="text-[10px] uppercase font-mono tracking-widest text-zinc-500 block mt-1">Conhecimento Clínico-Sociológico Fundamentado</span>
+                             <h3 className="text-sm font-bold text-white">Dossiê Estratégico Oficial</h3>
+                             <span className="text-[10px] font-mono tracking-wide text-zinc-400 block mt-1">Conhecimento Clínico-Sociológico Fundamentado</span>
                            </div>
                         </div>
 
