@@ -131,6 +131,9 @@ export interface CampaignPosts {
 export interface Campaigns {
   channels: Generated<string[] | null>;
   createdAt: Generated<Timestamp | null>;
+  dna_direcao: Generated<string | null>;
+  dna_experiencia: Generated<string | null>;
+  dna_modulos: Generated<any | null>;
   duration: Generated<number>;
   id: string;
   name: string;

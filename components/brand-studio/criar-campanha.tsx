@@ -6,7 +6,12 @@ import { Badge } from "../ui/badge";
 import { ArrowLeft, ArrowRight, Target, Mail, Ticket, Globe, Megaphone, Stethoscope, Briefcase, Zap, Flame, Crown, Check, CheckCircle2, Copy, Sparkles, Filter, MoreHorizontal, MessageSquare, History, Phone, CreditCard, ChevronDown, CheckCircle, Search, Settings, Building2, Eye, ShieldAlert, Users, HeartHandshake, Magnet, FileText, Flag, Calendar as CalendarIcon, X } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateCampaign } from "../../helpers/useApi";
-
+import { 
+  useCreateInitiative, 
+  useCreateProject, 
+  useCreateStage, 
+  useCreateTask 
+} from "../../helpers/useCoreActApi";
 // 1. NATUREZA DA AÇÃO MATRIZ ESTRATÉGICA (Types + AutoFill)
 const ACTION_TYPES = [
   { 
@@ -108,13 +113,23 @@ const TACTICAL_MATRIX_DB: Record<string, { channels: string, focus: string, metr
 export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const navigate = useNavigate();
   const { mutateAsync: saveCampaign } = useCreateCampaign();
+  const { mutateAsync: createInitiative } = useCreateInitiative();
+  const { mutateAsync: createProject } = useCreateProject();
+  const { mutateAsync: createStage } = useCreateStage();
+  const { mutateAsync: createTask } = useCreateTask();
+
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
 
   // PROGRESSIVE WIZARD STATE
   const [step, setStep] = useState(0);
 
   // USER INPUTS
   const [rawName, setRawName] = useState("");
+  const [direcao, setDirecao] = useState<"interna" | "externa" | "hibrida">("externa");
+  const [experiencia, setExperiencia] = useState<"presencial" | "digital" | "hibrida">("digital");
+  const [modulos, setModulos] = useState({ fisico: false, digital: true, evento: false, governanca: true });
   const [proposicao, setProposicao] = useState("");
   const [suggestedPropositions, setSuggestedPropositions] = useState<string[]>([]);
   const [orcamento, setOrcamento] = useState("");
@@ -370,16 +385,58 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
     pesquisa: "brand_engagement",
   };
 
-  const finishCreation = () => {
-     saveCampaign({
+  const finishCreation = async () => {
+    try {
+      await saveCampaign({
          name: rawName,
          type: WIZARD_TYPE_TO_CAMPAIGN_TYPE[aiGeneratedType] ?? "awareness",
          status: "draft",
          objective: proposicao || undefined,
          channels: aiChannels,
-     });
-     toast.success("Blueprint Criptografado e Salvo com Sucesso!");
-     onClose();
+         dna_direcao: direcao,
+         dna_experiencia: experiencia,
+         dna_modulos: modulos,
+      });
+      setIsSaved(true);
+      toast.success("Blueprint e DNA Criptografado salvo com Sucesso!");
+    } catch(e) {
+      toast.error("Erro ao salvar campanha.");
+    }
+  };
+
+  const generateActionPlan = async () => {
+     setIsGeneratingPlan(true);
+     try {
+       const payload = await callOpenAI(
+          `Você criará o Plano de Ação Tático (CoreAct) para a campanha "${rawName}". Responda estritamente um JSON neste formato: { "governanca": ["tarefa 1", "tarefa 2"], "producao": ["tarefa 3"], "distribuicao": ["tarefa 4"] }. Mantenha as tarefas curtas e voltadas para execução no terceiro setor.`,
+          `O Blueprint da campanha é: ${blueprintTheory.substring(0, 300)}... O orçamento é R$ ${orcamento}.`
+       );
+       const json = JSON.parse(payload.replace(/```json|```/gi, "").trim());
+
+       toast.info("Criando Iniciativa Base...");
+       const initObj = await createInitiative({ name: `Campanha V8: ${rawName}` });
+       const initiativeId = initObj.initiative.id;
+
+       toast.info("Criando Projeto Tático...");
+       const projObj = await createProject({ name: `Ativação Técnica: ${rawName}`, startDate: new Date(), initiativeId, status: "active", category: "custom" });
+       const projectId = projObj.project.id;
+
+       for (const [gateName, tasks] of Object.entries(json)) {
+          if (!Array.isArray(tasks) || tasks.length === 0) continue;
+          const stageObj = await createStage({ projectId, name: `Gate: ${gateName.toUpperCase()}` });
+          const stageId = stageObj.stage.id;
+          
+          for (const t of tasks) {
+             await createTask({ projectId, stageId, name: String(t), status: "open", priority: "medium", shift: "morning" });
+          }
+       }
+       toast.success("Plano de Ação construído com sucesso no CoreAct!");
+       onClose();
+     } catch(e: any) {
+       toast.error("Falha ao gerar plano: " + e.message);
+     } finally {
+       setIsGeneratingPlan(false);
+     }
   };
 
   const typeData = ACTION_TYPES.find(t => t.id === aiGeneratedType) || ACTION_TYPES[0];
@@ -448,9 +505,19 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                <h1 className="text-sm font-semibold text-white">Console Blueprint</h1>
             </div>
          </div>
-         {step >= 4 && (
+         {step >= 4 && !isSaved && (
             <Button onClick={finishCreation} className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider h-9 px-6 shadow-lg shadow-emerald-500/20">
                Homologar Projeto Oficial <CheckCircle2 className="w-4 h-4 ml-2" />
+            </Button>
+         )}
+         {step >= 4 && isSaved && (
+            <Button 
+                onClick={generateActionPlan} 
+                disabled={isGeneratingPlan}
+                className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider h-9 px-6 shadow-lg shadow-blue-500/20 animate-pulse"
+            >
+               {isGeneratingPlan ? "Gerando CoreAct..." : "Gerar Plano de Ação (CoreAct)"}
+               <Zap className="w-4 h-4 ml-2" />
             </Button>
          )}
         </header>
@@ -472,24 +539,74 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   <div className="flex-1">
                     <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Tema / Nome da Ação</label>
                     {step === 0 ? (
-                        <div className="space-y-3">
-                           <Input 
-                              autoFocus 
-                              value={rawName} 
-                              onChange={e => setRawName(e.target.value)} 
-                              placeholder="Ex: Mutirão de Acesso, Congresso Brasileiro..." 
-                              className="h-14 bg-zinc-900 border-white/10 text-emerald-400 font-medium text-lg placeholder:text-zinc-600 focus-visible:ring-emerald-500"
-                              disabled={isGenerating}
-                              onKeyDown={e => { if(e.key === 'Enter') { e.preventDefault(); nextStepTema(); } }}
-                           />
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                               <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 block">Tema Principal</label>
+                               <Input 
+                                  autoFocus 
+                                  value={rawName} 
+                                  onChange={e => setRawName(e.target.value)} 
+                                  placeholder="Ex: Mutirão de Acesso, Educação Médica..." 
+                                  className="h-14 bg-zinc-900 border-white/10 text-emerald-400 font-medium text-lg placeholder:text-zinc-600 focus-visible:ring-emerald-500"
+                                  disabled={isGenerating}
+                                  onKeyDown={e => { if(e.key === 'Enter') { e.preventDefault(); nextStepTema(); } }}
+                               />
+                            </div>
+
+                           <div className="space-y-4 pt-4 border-t border-white/5">
+                               <div className="space-y-2">
+                                   <label className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest">A) DIREÇÃO</label>
+                                   <div className="flex gap-2">
+                                     {['interna', 'externa', 'hibrida'].map(dir => (
+                                        <button key={dir} onClick={() => setDirecao(dir as any)} className={`flex-1 py-2 text-[10px] font-bold rounded-lg border uppercase tracking-wider transition-colors ${direcao === dir ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'bg-zinc-900 border-white/5 text-zinc-600 hover:bg-zinc-800'}`}>
+                                           {dir}
+                                        </button>
+                                     ))}
+                                   </div>
+                               </div>
+
+                               <div className="space-y-2 pt-2 border-t border-white/5">
+                                   <label className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest">B) EXPERIÊNCIA</label>
+                                   <div className="flex gap-2">
+                                     {['presencial', 'digital', 'hibrida'].map(exp => (
+                                        <button key={exp} onClick={() => setExperiencia(exp as any)} className={`flex-1 py-2 text-[10px] font-bold rounded-lg border uppercase tracking-wider transition-colors ${experiencia === exp ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'bg-zinc-900 border-white/5 text-zinc-600 hover:bg-zinc-800'}`}>
+                                           {exp}
+                                        </button>
+                                     ))}
+                                   </div>
+                               </div>
+
+                                 <div className="space-y-2 pt-2 border-t border-white/5">
+                                     <label className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest">C) TOGGLES DE MÓDULOS (CORE)</label>
+                                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                                       {Object.keys(modulos).map((mod) => (
+                                          <button key={mod} onClick={() => setModulos(prev => ({...prev, [mod]: !prev[mod as keyof typeof modulos]}))} className={`px-2 py-3 text-[10px] font-bold rounded-lg border uppercase tracking-widest transition-colors ${modulos[mod as keyof typeof modulos] ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400' : 'bg-zinc-900 border-white/5 text-zinc-600 hover:bg-zinc-800'}`}>
+                                             {mod === 'governanca' ? 'Governança' : mod === 'fisico' ? 'Físico' : mod}                                                                       
+                                          </button>
+                                       ))}
+                                     </div>
+                                 </div>
+                           </div>
+
                            <Button onClick={nextStepTema} disabled={isGenerating || !rawName} className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold tracking-widest uppercase text-xs">
-                              {isGenerating ? <Sparkles className="w-4 h-4 animate-spin" /> : "Extrair Funil pela I.A."}
+                              {isGenerating ? <Sparkles className="w-4 h-4 animate-spin" /> : "Processar Matriz I.A. (Extrair Tese)"}
                            </Button>
                         </div>
                      ) : (
-                        <div className="p-4 bg-zinc-900 border border-white/5 rounded-xl flex items-center justify-between shadow-inner">
-                           <span className="text-emerald-400 font-bold text-lg">{rawName}</span>
-                           <button onClick={()=>setStep(0)} className="text-[10px] uppercase font-bold text-zinc-500 hover:text-white transition-colors tracking-widest">Editar</button>
+                        <div className="space-y-4">
+                           <div className="p-4 bg-zinc-900 border border-white/5 rounded-xl flex flex-col gap-3 shadow-inner">
+                              <div className="flex items-center justify-between">
+                                 <span className="text-emerald-400 font-bold text-lg">{rawName}</span>
+                                 <button onClick={()=>setStep(0)} className="text-[10px] uppercase font-bold text-zinc-500 hover:text-white transition-colors tracking-widest">Restaurar DNA</button>
+                              </div>
+                              <div className="flex flex-wrap gap-2 text-[9px] font-bold uppercase tracking-widest">
+                                 <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded">Dir: {direcao}</span>
+                                 <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded">Exp: {experiencia}</span>
+                                 {Object.keys(modulos).filter(k => modulos[k as keyof typeof modulos]).map(k => (
+                                    <span key={k} className="bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded border border-white/5">{k}</span>
+                                 ))}
+                              </div>
+                           </div>
                         </div>
                      )}
                   </div>

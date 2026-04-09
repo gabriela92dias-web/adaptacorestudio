@@ -22,6 +22,9 @@ export async function handle(request: Request) {
         objective: input.objective ?? null,
         target_audience: input.targetAudience ?? null,
         status: input.status,
+        dna_direcao: input.dna_direcao ?? null,
+        dna_experiencia: input.dna_experiencia ?? null,
+        dna_modulos: input.dna_modulos ?? null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })

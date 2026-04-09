@@ -5,7 +5,7 @@ import {
   HelmetProvider,
 } from "react-helmet-async"
 
-import { supabase } from './helpers/supabase';
+import { supabase } from './helpers/supabase-client';
 
 // Recarregar a página caso haja erro de chunk falho ao buscar o módulo dinâmico após um novo deploy no Render.
 window.addEventListener('vite:preloadError', () => {
@@ -34,8 +34,15 @@ window.fetch = async (...args) => {
   }
 
   if (urlString.includes('_api/coreact')) {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    // Forçando log sempre como erro para que apareça na tela do usuário que está filtrando
+    console.error(`[A V I S O   F E T C H] Interceptado:`, urlString);
+    
+    if (error) console.error(`[A V I S O   F E T C H] Supabase GetSession Error:`, error);
+
     if (session?.access_token) {
+      console.error(`[A V I S O   F E T C H] Token encontrado para o usuário. Injetando...`);
       const newConfig: any = config ? { ...config } : {};
       let newHeaders = new Headers();
       if (resource instanceof Request) {
@@ -44,9 +51,8 @@ window.fetch = async (...args) => {
          newHeaders = new Headers(newConfig.headers);
       }
 
-      if (!newHeaders.has("Authorization")) {
-        newHeaders.set("Authorization", `Bearer ${session.access_token}`);
-      }
+      newHeaders.set("Authorization", `Bearer ${session.access_token}`);
+      newHeaders.set("X-Coreact-Auth", `Bearer ${session.access_token}`);
       
       newConfig.headers = newHeaders;
 
@@ -56,6 +62,8 @@ window.fetch = async (...args) => {
       } else {
           return originalFetch(resource, newConfig);
       }
+    } else {
+      console.error(`[A V I S O   F E T C H] Sem sessão existente! Requisição poderá falhar (401).`);
     }
   }
   return originalFetch(...args);

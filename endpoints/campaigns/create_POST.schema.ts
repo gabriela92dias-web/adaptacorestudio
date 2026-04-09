@@ -11,6 +11,9 @@ export const schema = z.object({
   objective: z.string().optional(),
   targetAudience: z.string().optional(),
   status: z.enum(CampaignStatusArrayValues).default("draft"),
+  dna_direcao: z.string().optional().nullable(),
+  dna_experiencia: z.string().optional().nullable(),
+  dna_modulos: z.any().optional().nullable(),
   suggestedPosts: z.array(z.object({
     channel: z.string(),
     title: z.string(),
