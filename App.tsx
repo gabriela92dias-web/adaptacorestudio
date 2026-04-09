@@ -221,6 +221,7 @@ export default function ScrollManager() {
 import { AppLayout } from "./components/AppLayout";
 import { UserRoute } from "./components/ProtectedRoute";
 import PitchDeck from "./pages/pitch-deck";
+const SlidePadrao = React.lazy(() => import("./pages/slide-padrao"));
 
 export function App() {
   return (
@@ -268,6 +269,7 @@ export function App() {
           <Route path="/tools/color-wheel" element={<UserRoute><AppLayout><ColorWheelPage /></AppLayout></UserRoute>} />
           <Route path="/forgot-password" element={<Page_13 />} />
           <Route path="/pitch" element={<PitchDeck />} />
+          <Route path="/tools/gerar-doc/slide-padrao" element={<UserRoute><SlidePadrao /></UserRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </React.Suspense>
