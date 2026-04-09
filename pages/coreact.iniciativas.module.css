@@ -36,7 +36,14 @@
 .filterBar {
   display: flex;
   gap: var(--spacing-2);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.filterBar::-webkit-scrollbar {
+  display: none;
 }
 
 .filterPill {
@@ -183,6 +190,7 @@
   color: var(--foreground);
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

@@ -98,31 +98,42 @@
 
 .filtersSection {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--spacing-4);
   background-color: var(--card);
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  flex-wrap: wrap;
   flex-shrink: 0;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .filterLabel {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--muted-foreground);
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .pillsList {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 2px;
+}
+
+.pillsList::-webkit-scrollbar {
+  display: none;
 }
 
 .pillSeparator {
@@ -163,16 +174,19 @@
 
 .splitLayout {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: var(--spacing-6);
+  grid-template-columns: 1fr 300px;
+  gap: var(--spacing-4);
   align-items: stretch;
   flex: 1;
   min-height: 0;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .splitLayout {
     grid-template-columns: 1fr;
+  }
+  .breakdownsSection {
+    display: none;
   }
 }
 
@@ -314,7 +328,13 @@
 .amountsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
+}
+
+@media (max-width: 600px) {
+  .amountsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .amountCol {

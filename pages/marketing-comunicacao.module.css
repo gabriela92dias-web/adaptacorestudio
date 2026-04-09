@@ -94,7 +94,8 @@
   background: color-mix(in srgb, var(--primary) 5%, var(--surface));
   border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
   border-radius: var(--radius-lg);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .sectorLabel {
@@ -109,9 +110,16 @@
 
 .sectorFilters {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--spacing-1-5);
   flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.sectorFilters::-webkit-scrollbar {
+  display: none;
 }
 
 .sectorBtn {
@@ -183,8 +191,15 @@
 
 .filters {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--spacing-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
 }
 
 .filterBtn {
