@@ -12,6 +12,7 @@ import {
   useCreateStage, 
   useCreateTask 
 } from "../../helpers/useCoreActApi";
+import wizardStyles from "./criar-campanha.module.css";
 // 1. NATUREZA DA AÇÃO MATRIZ ESTRATÉGICA (Types + AutoFill)
 const ACTION_TYPES = [
   { 
@@ -448,7 +449,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] min-h-screen bg-black text-white selection:bg-emerald-500/30 flex flex-col md:flex-row overflow-y-auto">
+    <div className={`fixed inset-0 z-[100] min-h-screen flex flex-col md:flex-row overflow-y-auto ${wizardStyles.wizardRoot}`}>
         
       {showAiConfig && (
         <div className="fixed inset-0 z-[99] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in">
@@ -497,8 +498,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
            <button onClick={onClose} className="text-zinc-400 hover:text-white p-2 hover:bg-white/5 rounded-md transition-colors"><X size={24}/></button>
         </div>
 
-      <aside className="w-full md:w-[400px] lg:w-[500px] shrink-0 bg-zinc-950 border-r border-white/5 p-6 lg:p-12 flex flex-col">
-        <header className="h-16 border-b border-white/5 bg-zinc-950/80 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-50">
+      <aside className={`w-full md:w-[400px] lg:w-[500px] shrink-0 p-6 lg:p-12 flex flex-col ${wizardStyles.sidePanel}`}>
+        <header className={`h-16 flex items-center justify-between px-6 sticky top-0 z-50 ${wizardStyles.stickyHeader}`}>
          <div className="flex items-center gap-4">
             <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors text-zinc-400 hover:text-white">
                <ArrowLeft className="w-5 h-5" />
@@ -744,7 +745,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
       </aside>
 
       {/* --- RIGHT COLUMN / SCROLLABLE WIZARD --- */}
-      <div className="flex-1 p-6 lg:p-12 overflow-y-auto">
+      <div className={`flex-1 p-6 lg:p-12 overflow-y-auto ${wizardStyles.rightPanel}`}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                   
                   {/* FUNNEL OUPUT (Appears at Step 1+) */}
