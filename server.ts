@@ -1377,6 +1377,17 @@ app.get("*", async (c, next) => {
   }
 });
 
+app.post('_api/pitch/translate', async c => {
+  try {
+    const { handle } = await import("./endpoints/pitch/translate_POST.js");
+    const response = await handle(c.req.raw);
+    return response;
+  } catch (e: any) {
+    console.error(e);
+    return c.text("Error loading pitch/translate: " + e.message, 500);
+  }
+})
+
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3333;
 serve({ fetch: app.fetch, port, hostname: '0.0.0.0' });
 console.log(`🚀 API & Frontend Production Server running at http://0.0.0.0:${port}`);
