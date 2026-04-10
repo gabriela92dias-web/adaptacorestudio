@@ -117,29 +117,8 @@ export function ControlPanel({
     }
   }, [isWinkAnimation, hasIncompatibleEyes]); // Apenas quando essas flags mudarem
   
-  // 🎨 MASCOT COLORS - Primeiros 3 tons de cada espectro (27 cores total)
-  const ALL_COLORS = getMascotBodyColors();
-  
-  // ✅ FILTRO CURADO: Verdes selecionados + TODO Color Core
-  // VERDES: Alma (3 médios) + seleção de tons claros específicos
-  const ALMA_COLORS = ALL_COLORS.filter(c => c.spectrum === 'Alma'); // 3 cores
-  const VENTURA_VEU = ALL_COLORS.filter(c => c.spectrum === 'Ventura' && c.name === 'Véu'); // 1 cor
-  const CANDY_COLORS = ALL_COLORS.filter(c => c.spectrum === 'Candy'); // 4 cores
-  const LEMON_CITRUS = ALL_COLORS.filter(c => c.spectrum === 'Lemon' && c.name === 'Citrus'); // 1 cor
-  
-  // COLOR CORE: TODOS os 16 tons (Linalool Sky + Myrcene Soul)
-  const COLOR_CORE_COLORS = ALL_COLORS.filter(c => 
-    c.spectrum === 'Linalool Sky' || c.spectrum === 'Myrcene Soul'
-  ); // 16 cores
-  
-  // Organização: Verdes curados (9) + Color Core completo (16) = 25 cores
-  const MASCOT_COLORS = [
-    ...ALMA_COLORS,        // Linha 1: 3 verdes médios (Green Smoke, Emerald Haze, Deep Pine)
-    ...VENTURA_VEU,        // +1 acinzentado (Véu)
-    ...CANDY_COLORS,       // +4 pastel (Marshmallow, Açúcar, Baunilha, Pistache)
-    ...LEMON_CITRUS,       // +1 suave (Citrus)
-    ...COLOR_CORE_COLORS,  // +16 Color Core (Linalool, Myrcene)
-  ]; // Total: 25 cores
+  // 🎨 MASCOT COLORS (24 cores)
+  const MASCOT_COLORS = getMascotBodyColors();
 
   return (
     <div className="flex flex-col gap-0 w-full">

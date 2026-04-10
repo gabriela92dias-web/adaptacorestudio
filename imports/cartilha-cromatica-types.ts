@@ -12,6 +12,7 @@
 
 export interface CorEspectro {
   nome: string;
+  nivel?: string;
   hex: string;
   uso?: string;
   a11y?: {
@@ -91,50 +92,19 @@ export const NEUTRALS_ESPECTROS = {
 // ═══════════════════════════════════════════════════════════════════
 
 export const VERDE_CORE = {
-  candy: {
-    id: 'candy',
-    nome: 'Candy',
-    descricao: 'Verde limão pastel nebuloso, doçura cítrica',
+  og_hybrid: {
+    id: 'og-hybrid',
+    nome: 'OG Hybrid Blend',
+    descricao: 'A identidade pura da marca — Estabilidade institucional sólida, frescor profundo e raízes da terra.',
     tons: [
-      { nome: 'Marshmallow', hex: '#F7FBF0', uso: 'Backgrounds leves, cards de destaque jovem' },
-      { nome: 'Açúcar', hex: '#EFF7E0', uso: 'Overlays frescos, hover states suaves' },
-      { nome: 'Baunilha', hex: '#E5F2D0', uso: 'Badges, pills, elementos decorativos' },
-      { nome: 'Pistache', hex: '#DBEDC2', uso: 'Acentos vibrantes controlados' },
-      { nome: 'Citrus Ice', hex: '#D1E8B4', uso: 'CTAs vibrantes, energia fresca' },
-    ],
-  },
-  
-  lemon: {
-    id: 'lemon',
-    nome: 'Lemon',
-    descricao: 'Verde limão suave, frescor cítrico controlado',
-    tons: [
-      { nome: 'Neblina', hex: '#F5F9F2', uso: 'Backgrounds de campanha, bem-estar' },
-      { nome: 'Vapor', hex: '#EAF3E5', uso: 'Cards emocionais, overlays leves' },
-      { nome: 'Citrus', hex: '#DFEDD8', uso: 'Hover states, transições suaves' },
-      { nome: 'Zeste', hex: '#D3E7CA', uso: 'CTAs vibrantes, links importantes' },
-    ],
-  },
-  
-  ventura: {
-    id: 'ventura',
-    nome: 'Ventura',
-    descricao: 'Verde acinzentado etéreo, atmosférico sofisticado',
-    tons: [
-      { nome: 'Névoa Clara', hex: '#E8EFE0', uso: 'Elementos de apoio, fundos com presença' },
-      { nome: 'Fumaça', hex: '#D7E3CC', uso: 'Textos suaves, divisores sutis' },
-      { nome: 'Bruma', hex: '#C1D4B2', uso: 'Bordas suaves, estados desabilitados' },
-      { nome: 'Jade Mist', hex: '#C7E1BD', uso: 'Hover suave, elementos secundários' },
-    ],
-  },
-  
-  profundo: {
-    id: 'profundo',
-    nome: 'Verde Profundo',
-    descricao: 'Tons médios de verde institucional',
-    tons: [
-      { nome: 'Sage Deep', hex: '#A8BF9A', uso: 'Textos médios, elementos intermediários' },
-      { nome: 'Forest Green', hex: '#8CA680', uso: 'Acentos naturais, botões secundários' },
+      { nome: 'Deep Canopy', nivel: '900', hex: '#1B4235', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: 'Pine Extract', nivel: '700', hex: '#3B6C5A', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: 'Herbal Diesel', nivel: '500', hex: '#619B7F', a11y: { allows_black_foreground: true, allows_white_foreground: true } },
+      { nome: 'Sour Leaf', nivel: '400', hex: '#85B99B', a11y: { allows_black_foreground: true, allows_white_foreground: false } },
+      { nome: 'Crisp Sap', nivel: '300', hex: '#ABCEB0', a11y: { allows_black_foreground: true, allows_white_foreground: false } },
+      { nome: 'Matcha Breeze', nivel: '200', hex: '#CFE3C6', a11y: { allows_black_foreground: true, allows_white_foreground: false } },
+      { nome: 'Crystal Dew', nivel: '100', hex: '#E1EDD5', a11y: { allows_black_foreground: true, allows_white_foreground: false } },
+      { nome: 'Olive Haze', nivel: '50', hex: '#F2F8EA', a11y: { allows_black_foreground: true, allows_white_foreground: false } },
     ],
   },
 };
@@ -152,14 +122,14 @@ export const COLOR_CORE = {
     nome: 'Linalool Sky',
     descricao: 'Espectro de roxos e azuis (Índica)',
     tons: [
-      { nome: '900', hex: '#483d79', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
-      { nome: '800', hex: '#642e50', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
-      { nome: '700', hex: '#984492', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
-      { nome: '500', hex: '#9687b2', a11y: { allows_black_foreground: true,  allows_white_foreground: true } },
-      { nome: '300', hex: '#e4ddfa', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
-      { nome: '200', hex: '#fbe0ff', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
-      { nome: '100', hex: '#e2efff', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
-      { nome: '50',  hex: '#fcf5ff', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Indigo Resin', nivel: '900', hex: '#483D79', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: 'Plum Vapor', nivel: '800', hex: '#704085', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: 'Amethyst Smoke', nivel: '700', hex: '#83639B', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: 'Lavender Cloud', nivel: '500', hex: '#9687B2', a11y: { allows_black_foreground: true,  allows_white_foreground: true } },
+      { nome: 'Lilac Frost', nivel: '300', hex: '#E4DDFA', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Sweet Trichome', nivel: '200', hex: '#FBE0FF', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Glacial Extract', nivel: '100', hex: '#E2EFFF', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Milky Mist', nivel: '50',  hex: '#FCF5FF', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
     ],
   },
   
@@ -168,14 +138,14 @@ export const COLOR_CORE = {
     nome: 'Myrcene Soul',
     descricao: 'Espectro de rosas, laranjas e amarelos (Sativa)',
     tons: [
-      { nome: '900', hex: '#af4f72', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
-      { nome: '700', hex: '#f37a63', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
-      { nome: '500', hex: '#f394a7', a11y: { allows_black_foreground: true,  allows_white_foreground: true } },
-      { nome: '400', hex: '#fbdbdb', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
-      { nome: '300', hex: '#f8e5a8', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
-      { nome: '200', hex: '#ffe4c1', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
-      { nome: '100', hex: '#fffee3', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
-      { nome: '50',  hex: '#fff5f5', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Cherry Terpene', nivel: '900', hex: '#AF4F72', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: 'Sunset Nectar', nivel: '700', hex: '#F37A63', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: 'Berry Infusion', nivel: '500', hex: '#F394A7', a11y: { allows_black_foreground: true,  allows_white_foreground: true } },
+      { nome: 'Pink Vapor', nivel: '400', hex: '#FBDBDB', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Tropical Rush', nivel: '300', hex: '#F8E5A8', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Papaya Daze', nivel: '200', hex: '#FFE4C1', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Golden Kief', nivel: '100', hex: '#FFFEE3', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: 'Terpene Sugar', nivel: '50',  hex: '#FFF5F5', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
     ],
   },
 };
@@ -205,48 +175,35 @@ export const TODAS_AS_CORES: Record<string, string> = {
   'neutral-990': '#0A0D0B',
   'neutral-1000': '#000000',
   
-  // VERDE CORE - Candy (5)
-  'candy-100': '#F7FBF0',
-  'candy-200': '#EFF7E0',
-  'candy-300': '#E5F2D0',
-  'candy-400': '#DBEDC2',
-  'candy-500': '#D1E8B4',
-  
-  // VERDE CORE - Lemon (4)
-  'lemon-100': '#F5F9F2',
-  'lemon-200': '#EAF3E5',
-  'lemon-300': '#DFEDD8',
-  'lemon-400': '#D3E7CA',
-  
-  // VERDE CORE - Ventura (4)
-  'ventura-100': '#E8EFE0',
-  'ventura-200': '#D7E3CC',
-  'ventura-300': '#C1D4B2',
-  'ventura-400': '#C7E1BD',
-  
-  // VERDE CORE - Profundo (2)
-  'profundo-100': '#A8BF9A',
-  'profundo-200': '#8CA680',
+  // VERDE CORE - OG Hybrid (8)
+  'og-hybrid-900': '#1B4235',
+  'og-hybrid-700': '#3B6C5A',
+  'og-hybrid-500': '#619B7F',
+  'og-hybrid-400': '#85B99B',
+  'og-hybrid-300': '#ABCEB0',
+  'og-hybrid-200': '#CFE3C6',
+  'og-hybrid-100': '#E1EDD5',
+  'og-hybrid-50': '#F2F8EA',
   
   // COLOR CORE - Linalool Sky (8)
-  'linalool-900': '#483d79',
-  'linalool-800': '#642e50',
-  'linalool-700': '#984492',
-  'linalool-500': '#9687b2',
-  'linalool-300': '#e4ddfa',
-  'linalool-200': '#fbe0ff',
-  'linalool-100': '#e2efff',
-  'linalool-50': '#fcf5ff',
+  'linalool-900': '#483D79',
+  'linalool-800': '#704085',
+  'linalool-700': '#83639B',
+  'linalool-500': '#9687B2',
+  'linalool-300': '#E4DDFA',
+  'linalool-200': '#FBE0FF',
+  'linalool-100': '#E2EFFF',
+  'linalool-50': '#FCF5FF',
   
   // COLOR CORE - Myrcene Soul (8)
-  'myrcene-900': '#af4f72',
-  'myrcene-700': '#f37a63',
-  'myrcene-500': '#f394a7',
-  'myrcene-400': '#fbdbdb',
-  'myrcene-300': '#f8e5a8',
-  'myrcene-200': '#ffe4c1',
-  'myrcene-100': '#fffee3',
-  'myrcene-50': '#fff5f5',
+  'myrcene-900': '#AF4F72',
+  'myrcene-700': '#F37A63',
+  'myrcene-500': '#F394A7',
+  'myrcene-400': '#FBDBDB',
+  'myrcene-300': '#F8E5A8',
+  'myrcene-200': '#FFE4C1',
+  'myrcene-100': '#FFFEE3',
+  'myrcene-50': '#FFF5F5',
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -255,13 +212,13 @@ export const TODAS_AS_CORES: Record<string, string> = {
 
 export const CARTILHA_METADATA = {
   name: 'Adapta - Paleta Institucional',
-  version: '2026.1 DEFINITIVA',
-  date: '2026-03-11',
-  totalColors: 45,
-  families: 9,
+  version: '2026.2 DEFINITIVA',
+  date: '2026-04-10',
+  totalColors: 39,
+  families: 5,
   breakdown: {
     neutrals: 15,
-    verdeCore: 15, // Candy(5) + Lemon(4) + Ventura(4) + Profundo(2)
+    verdeCore: 8, // OG Hybrid(8)
     colorCore: 16, // Linalool(8) + Myrcene(8)
   },
 };

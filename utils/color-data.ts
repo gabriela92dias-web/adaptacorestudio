@@ -1,10 +1,16 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * ADAPTA COLOR DATA - Paleta Institucional ColdFlora
+ * ADAPTA COLOR DATA - Cartilha Cromática Oficial v2026.2
  * ═══════════════════════════════════════════════════════════════
  *
- * Extraída diretamente do design system (base.css) do CoreStudio.
- * Cada grupo tem 5 tons (100→500), do mais claro ao mais escuro.
+ * Fonte única de verdade para Roda Cromática, Gradientes e demais
+ * ferramentas de design do CoreStudio.
+ *
+ * 39 cores — 5 famílias:
+ *   - Neutrals (15): Tons esverdeados neutros
+ *   - OG Hybrid Blend (8): Identidade verde institucional
+ *   - Linalool Sky (8): Espectro roxo-azul (Índica)
+ *   - Myrcene Soul (8): Espectro rosa-laranja-amarelo (Sativa)
  */
 
 export interface ColorEntry {
@@ -18,13 +24,12 @@ export interface ColorGroup {
   id: string;
   name: string;
   description: string;
-  roles: ColorRole[]; // Define se a cor é para interface (ColdFlora restrito) e/ou campanhas livrres
-  colors: ColorEntry[]; // máx. 5 itens: índice 0=tom100, 4=tom500
+  roles: ColorRole[];
+  colors: ColorEntry[];
 }
 
 // ── Funções Utilitárias Avançadas (Contraste WCAG) ─────────────
 
-// Formula para luminance relativa do sRGB
 function getLuminance(hex: string): number {
   const rgb = hex.replace("#", "");
   const r = parseInt(rgb.substring(0, 2), 16) / 255;
@@ -46,176 +51,100 @@ export function getContrastRatio(hex1: string, hex2: string): number {
   return (lightest + 0.05) / (darkest + 0.05);
 }
 
-const VERDE_GROUP_IDS: string[] = ["verde-core", "verde-meio"];
-const COLOR_GROUP_IDS: string[] = [
-  "red-core", "deep-orange-core", "orange-core", "yellow-orange-core", 
-  "deep-purple-core", "purple-core", "magenta-purple-core", "deep-pink-core", "rose-red-core"
-];
+const VERDE_GROUP_IDS: string[] = ["og-hybrid-blend"];
+const COLOR_GROUP_IDS: string[] = ["linalool-sky", "myrcene-soul"];
 const NEUTRAL_GROUP_IDS: string[] = ["neutrals-light", "neutrals-dark"];
 
-// ── Paleta oficial ColdFlora ──────────────────────────────────
+// ── Paleta Oficial Adapta v2026.2 ────────────────────────────
 
 export const colorPalette: ColorGroup[] = [
-  // ── Verde Core (escala principal da marca) ────────────────
+
+  // ── OG Hybrid Blend — Identidade Principal Verde ──────────
   {
-    id: "verde-core",
-    name: "Verde Core",
-    description: "Escala principal da identidade Adapta",
-    roles: ["campaign", "ui"], // Pode ser ui se usado com cuidado
+    id: "og-hybrid-blend",
+    name: "OG Hybrid Blend",
+    description: "A identidade pura da marca — estabilidade institucional, frescor profundo e raízes da terra",
+    roles: ["campaign", "ui"],
     colors: [
-      { hex: "#DCE4D6", name: "Verde 100" },
-      { hex: "#B4C5AD", name: "Verde 200" },
-      { hex: "#889B84", name: "Verde 300" },
-      { hex: "#566958", name: "Verde 400" },
-      { hex: "#22382E", name: "Verde 500" },
+      { hex: "#F2F8EA", name: "Olive Haze" },
+      { hex: "#E1EDD5", name: "Crystal Dew" },
+      { hex: "#CFE3C6", name: "Matcha Breeze" },
+      { hex: "#ABCEB0", name: "Crisp Sap" },
+      { hex: "#85B99B", name: "Sour Leaf" },
+      { hex: "#619B7F", name: "Herbal Diesel" },
+      { hex: "#3B6C5A", name: "Pine Extract" },
+      { hex: "#1B4235", name: "Deep Canopy" },
     ],
   },
 
-  // ── Verde Surface (fundos e containers) ───────────────────
+  // ── Linalool Sky — Espectro Roxo-Azul (Índica) ───────────
   {
-    id: "verde-meio",
-    name: "Verde Surface",
-    description: "Tons de superfície e fundo do sistema",
-    roles: ["ui"], // Super exclusivo de UI
+    id: "linalool-sky",
+    name: "Linalool Sky",
+    description: "Espectro de roxos e azuis — sofisticação, profundidade e confiança",
+    roles: ["campaign"],
     colors: [
-      { hex: "#F7F9F2", name: "Surface 100" },
-      { hex: "#EBEFE8", name: "Surface 200" },
-      { hex: "#C8D5C2", name: "Surface 300" },
-      { hex: "#9FB499", name: "Surface 400" },
-      { hex: "#6F826D", name: "Surface 500" },
+      { hex: "#FCF5FF", name: "Milky Mist" },
+      { hex: "#E2EFFF", name: "Glacial Extract" },
+      { hex: "#FBE0FF", name: "Sweet Trichome" },
+      { hex: "#E4DDFA", name: "Lilac Frost" },
+      { hex: "#9687B2", name: "Lavender Cloud" },
+      { hex: "#83639B", name: "Amethyst Smoke" },
+      { hex: "#704085", name: "Plum Vapor" },
+      { hex: "#483D79", name: "Indigo Resin" },
     ],
   },
 
-  // ── Cores Fundamentais Curadas (Campanha) ───────────────────
+  // ── Myrcene Soul — Espectro Rosa-Laranja-Amarelo (Sativa) ─
   {
-    id: "red-core",
-    name: "Red Core",
-    description: "Espectro curado Red Core",
+    id: "myrcene-soul",
+    name: "Myrcene Soul",
+    description: "Espectro de rosas, laranjas e amarelos — calor, energia e vitalidade",
     roles: ["campaign"],
     colors: [
-      { hex: "#E1B1B0", name: "Red 200" },
-      { hex: "#D28987", name: "Red 300" },
-      { hex: "#C3615F", name: "Red 400" }
-    ],
-  },
-  {
-    id: "deep-orange-core",
-    name: "Deep Orange Core",
-    description: "Espectro curado Deep Orange Core",
-    roles: ["campaign"],
-    colors: [
-      { hex: "#FDD2BD", name: "Orange 100" },
-      { hex: "#FA9B6B", name: "Orange 200" }
-    ],
-  },
-  {
-    id: "orange-core",
-    name: "Orange Core",
-    description: "Espectro curado Orange Core",
-    roles: ["campaign"],
-    colors: [
-      { hex: "#F6B56F", name: "Orange 300" },
-      { hex: "#F39C3F", name: "Orange 400" },
-      { hex: "#F67409", name: "Orange 500" },
-      { hex: "#CF4200", name: "Orange 600" }
-    ],
-  },
-  {
-    id: "yellow-orange-core",
-    name: "Yellow Orange Core",
-    description: "Espectro curado Yellow Orange Core",
-    roles: ["campaign"],
-    colors: [
-      { hex: "#FDF7E7", name: "Yellow 50" },
-      { hex: "#FBECC8", name: "Yellow 100" },
-      { hex: "#F7D689", name: "Yellow 200" }
-    ],
-  },
-  {
-    id: "deep-purple-core",
-    name: "Deep Purple Core",
-    description: "Espectro curado Deep Purple Core",
-    roles: ["campaign"],
-    colors: [
-      { hex: "#CECDFD", name: "Purple 100" },
-      { hex: "#2C006D", name: "Purple 800" },
-      { hex: "#100029", name: "Purple 950" }
-    ],
-  },
-  {
-    id: "purple-core",
-    name: "Purple Core",
-    description: "Espectro curado Purple Core",
-    roles: ["campaign"],
-    colors: [
-      { hex: "#B69BFA", name: "Purple 200" },
-      { hex: "#8500C7", name: "Purple 600" },
-      { hex: "#1B0029", name: "Purple 950" }
-    ],
-  },
-  {
-    id: "magenta-purple-core",
-    name: "Magenta Purple Core",
-    description: "Espectro curado Magenta Purple Core",
-    roles: ["campaign"],
-    colors: [
-      { hex: "#8C009C", name: "Magenta 600" },
-      { hex: "#51005A", name: "Magenta 800" }
-    ],
-  },
-  {
-    id: "deep-pink-core",
-    name: "Deep Pink Core",
-    description: "Espectro curado Deep Pink Core",
-    roles: ["campaign"],
-    colors: [
-      { hex: "#FCD2E8", name: "Pink 100" },
-      { hex: "#F9A8D2", name: "Pink 200" },
-      { hex: "#F67EBC", name: "Pink 300" },
-      { hex: "#F5249E", name: "Pink 500" },
-      { hex: "#790057", name: "Pink 800" },
-      { hex: "#430030", name: "Pink 900" }
-    ],
-  },
-  {
-    id: "rose-red-core",
-    name: "Rose Red Core",
-    description: "Espectro curado Rose Red Core",
-    roles: ["campaign"],
-    colors: [
-      { hex: "#F86276", name: "Rose 300" },
-      { hex: "#940031", name: "Rose 700" },
-      { hex: "#690023", name: "Rose 800" }
+      { hex: "#FFF5F5", name: "Terpene Sugar" },
+      { hex: "#FFFEE3", name: "Golden Kief" },
+      { hex: "#FFE4C1", name: "Papaya Daze" },
+      { hex: "#F8E5A8", name: "Tropical Rush" },
+      { hex: "#FBDBDB", name: "Pink Vapor" },
+      { hex: "#F394A7", name: "Berry Infusion" },
+      { hex: "#F37A63", name: "Sunset Nectar" },
+      { hex: "#AF4F72", name: "Cherry Terpene" },
     ],
   },
 
-  // ── Neutrals Light ────────────────────────────────────────
+  // ── Neutrals Claros — Sistema de UI (modo claro) ──────────
   {
     id: "neutrals-light",
     name: "Neutros Claros",
-    description: "Escala neutra para modo claro",
+    description: "Escala de neutros esverdeados para modo claro",
     roles: ["ui", "campaign"],
     colors: [
-      { hex: "#F7F9F2", name: "Neutro 100" },
-      { hex: "#EBEFE8", name: "Neutro 200" },
-      { hex: "#DCE4D6", name: "Neutro 300" },
-      { hex: "#C8D5C2", name: "Neutro 400" },
-      { hex: "#B4C5AD", name: "Neutro 500" },
+      { hex: "#FAFBFA", name: "Sage Mist" },
+      { hex: "#F7F9F8", name: "Hemp Canvas" },
+      { hex: "#EDF1EF", name: "Sage Whisper" },
+      { hex: "#D5E2D5", name: "Leaf Frost" },
+      { hex: "#B5C5BC", name: "Forest Dew" },
+      { hex: "#8FA89B", name: "Green Smoke" },
+      { hex: "#6A8A7A", name: "Emerald Haze" },
+      { hex: "#455A4F", name: "Deep Pine" },
     ],
   },
 
-  // ── Neutrals Dark ─────────────────────────────────────────
+  // ── Neutrals Escuros — Sistema de UI (modo escuro) ────────
   {
     id: "neutrals-dark",
     name: "Neutros Escuros",
-    description: "Escala neutra para modo escuro",
+    description: "Escala de neutros esverdeados para modo escuro",
     roles: ["ui", "campaign"],
     colors: [
-      { hex: "#2a4237", name: "Dark 100" },
-      { hex: "#1B2C24", name: "Dark 200" },
-      { hex: "#121B17", name: "Dark 300" },
-      { hex: "#0E1612", name: "Dark 400" },
-      { hex: "#0A100D", name: "Dark 500" },
+      { hex: "#2E3E34", name: "Forest Shadow" },
+      { hex: "#1F2A23", name: "Midnight Garden" },
+      { hex: "#1A231D", name: "Dark Forest" },
+      { hex: "#141A17", name: "Black Earth" },
+      { hex: "#0F1411", name: "Deep Shadow" },
+      { hex: "#0A0D0B", name: "Void" },
+      { hex: "#000000", name: "Pure Black" },
     ],
   },
 ];
@@ -250,71 +179,54 @@ export function filterForFeature(feature: string): ColorGroup[] {
   }
 }
 
-// ── O Cérebro do Diretor Criativo (Inteligência da Roda V8) ────
-
-// Flattened array com todas as cores para busca fácil do Anti-Erro
-export const allColorsFlat: ColorEntry[] = colorPalette.flatMap(g => g.colors);
+// ── Flattened para buscas rápidas ─────────────────────────────
+export const allColorsFlat: ColorEntry[] = colorPalette.flatMap((g) => g.colors);
 
 /**
- * Motor Auto-Fix: Tenta encontrar a cor mais acessível (WCAG >= 4.5:1) 
- * dentro da própria família da cor alvo. Caso não exista um tom seguro, 
- * faz fallback inteligente para tons neutros extremos baseados no fundo.
+ * Motor Auto-Fix WCAG: Encontra a cor mais acessível (≥ 4.5:1)
+ * dentro da família da cor alvo. Fallback para neutros extremos.
  */
 export function findClosestAccessibleColor(baseHex: string, targetHex: string): string {
-  // 1. Se já está seguro, mantém. (O Toque Invisível)
   if (getContrastRatio(baseHex, targetHex) >= 4.5) {
-    return targetHex; 
+    return targetHex;
   }
 
-  // 2. Tentar encontrar uma variante segura dentro do mesmo grupo de cor (Ex: Era Verde 200, cai pro Verde 500)
-  const group = colorPalette.find(g => g.colors.some(c => c.hex.toLowerCase() === targetHex.toLowerCase()));
-  
+  const group = colorPalette.find((g) =>
+    g.colors.some((c) => c.hex.toLowerCase() === targetHex.toLowerCase())
+  );
+
   if (group) {
-     // Buscamos a cor que passa no teste, priorizando a que tiver o melhor contraste possível
-     let bestColor = targetHex;
-     let bestContrast = getContrastRatio(baseHex, targetHex);
-     
-     for (const c of group.colors) {
-        const ratio = getContrastRatio(baseHex, c.hex);
-        if (ratio >= 4.5 && ratio > bestContrast) {
-           bestContrast = ratio;
-           bestColor = c.hex;
-        }
-     }
-     if (bestContrast >= 4.5) return bestColor;
+    let bestColor = targetHex;
+    let bestContrast = getContrastRatio(baseHex, targetHex);
+
+    for (const c of group.colors) {
+      const ratio = getContrastRatio(baseHex, c.hex);
+      if (ratio >= 4.5 && ratio > bestContrast) {
+        bestContrast = ratio;
+        bestColor = c.hex;
+      }
+    }
+    if (bestContrast >= 4.5) return bestColor;
   }
-  
-  // 3. Fallback de Segurança (Se tentou usar Rosa Ciano num Fundo Amarelo, recua pra Neutros)
+
+  // Fallback: neutros extremos baseados na luminância do fundo
   const baseLuminance = getLuminance(baseHex);
-  // Se o fundo for claro (luminância alta), precisamos de texto bem escuro
-  if (baseLuminance > 0.5) {
-    return "#0A100D"; // Dark 500 (Neutro Escuro)
-  } else {
-    // Se o fundo for escuro, precisamos de texto muito claro
-    return "#F7F9F2"; // Surface 100 (Neutro Claro)
-  }
+  return baseLuminance > 0.5
+    ? "#141A17" // Black Earth (neutro escuro)
+    : "#FAFBFA"; // Sage Mist (neutro claro)
 }
 
 /**
- * Atribui 'Roles' (Funções) semânticas de campanha para um arranjo de cores.
- * Recebe o array de cores geradas pela roda (Base, Harmonia 1, Harmonia 2) e devolve um esquema de design.
+ * Atribui 'Roles' semânticas de campanha para um arranjo de cores.
+ * Recebe as cores geradas pela roda (base, harmonia1, harmonia2).
  */
-export function getCampaignRoles(selectedColors: string[]): { background: string, accent: string, text: string } {
-   // A cor que o usuário clicou na roda se torna a âncora/fundo principal da campanha
-   const background = selectedColors[0] || "#F7F9F2";
-   
-   // A segunda cor da roda se torna o detalhe vibrante/Call-to-Action
-   const accent = selectedColors[1] || background; 
-   
-   // A terceira cor (ou a segunda, caso seja complementares duplas) deveria ser texto/apoio
-   // Damos fallback pro accent caso só tenha 2 cores selecionadas.
-   const rawText = selectedColors[2] || accent;
-   
-   // Aqui mora a inteligência: O texto PRECISA ser legível no Background.
-   const text = findClosestAccessibleColor(background, rawText);
-   
-   // Garantia extra: Se o Accent (botão) não tiver nada de destaque no fundo, podemos ajustar também?
-   // Normalmente o Destaque não precisa ter WCAG 4.5 contra o fundo caso seja elemento gráfico, mas é bom alertar (faremos isso na UI).
-   
-   return { background, accent, text };
+export function getCampaignRoles(
+  selectedColors: string[]
+): { background: string; accent: string; text: string } {
+  const background = selectedColors[0] || "#F7F9F8";
+  const accent = selectedColors[1] || background;
+  const rawText = selectedColors[2] || accent;
+  const text = findClosestAccessibleColor(background, rawText);
+
+  return { background, accent, text };
 }

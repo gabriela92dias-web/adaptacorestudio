@@ -1,20 +1,18 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * CARTILHA CROMÁTICA ADAPTA - SISTEMA OFICIAL DE CORES v2026.1
+ * CARTILHA CROMÁTICA ADAPTA - SISTEMA OFICIAL DE CORES v2026.2
  * ═══════════════════════════════════════════════════════════════════
  * 
- * 🎨 PALETA OFICIAL: 45 cores em 9 espectros
+ * 🎨 PALETA OFICIAL: 39 cores em 5 famílias
  * 
  * ✅ NEUTRALS (15 cores): Luz, Alma, Firmeza
- * ✅ VERDE CORE (15 cores): Candy, Lemon, Ventura, Profundo  
- * ✅ COLOR CORE (15 cores): Energia, Alegria, Segurança
+ * ✅ VERDE CORE (8 cores): OG Hybrid Blend
+ * ✅ COLOR CORE (16 cores): Linalool Sky + Myrcene Soul
  * 
  * 📐 REGRAS DE USO:
  * - Emerald Haze (#6A8A7A): máximo 20% do layout
- * - Verde Core: liberado para qualquer componente
- * - Color Core: permitido em ferramentas de design (mascotes, logos)
- * - Verde institucional (Signal #2ECC9B): sempre monocromático
- * - Nunca usar emojis no sistema
+ * - OG Hybrid Blend: identidade institucional — qualquer componente
+ * - Color Core: campanhas, CTAs e ferramentas de design
  * - WCAG 2.1 AA mínimo (contraste 4.5:1)
  */
 
@@ -79,25 +77,13 @@ export const neutralColors = [
 ];
 
 /**
- * Retorna array de todas as cores do Verde Core (15 cores)
+ * Retorna array de todas as cores do Verde Core (8 cores)
  */
-export function getVerdeCoreColors(): Array<{ name: string; value: string; spectrum: string }> {
-  const colors: Array<{ name: string; value: string; spectrum: string }> = [];
+export function getVerdeCoreColors(): Array<{ name: string; value: string; spectrum: string; conceptual?: string }> {
+  const colors: Array<{ name: string; value: string; spectrum: string; conceptual?: string }> = [];
   
-  VERDE_CORE_ESPECTROS.candy.tons.forEach(ton => {
-    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Candy' });
-  });
-  
-  VERDE_CORE_ESPECTROS.lemon.tons.forEach(ton => {
-    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Lemon' });
-  });
-  
-  VERDE_CORE_ESPECTROS.ventura.tons.forEach(ton => {
-    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Ventura' });
-  });
-  
-  VERDE_CORE_ESPECTROS.profundo.tons.forEach(ton => {
-    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Profundo' });
+  VERDE_CORE_ESPECTROS.og_hybrid.tons.forEach((ton: any) => {
+    colors.push({ name: ton.nivel || ton.nome, value: ton.hex, spectrum: 'OG Hybrid Blend', conceptual: ton.nome });
   });
   
   return colors;
@@ -160,10 +146,7 @@ export function getPaletteBySpectrums() {
       firmeza: NEUTRALS_ESPECTROS.firmeza,
     },
     verdeCore: {
-      candy: VERDE_CORE_ESPECTROS.candy,
-      lemon: VERDE_CORE_ESPECTROS.lemon,
-      ventura: VERDE_CORE_ESPECTROS.ventura,
-      profundo: VERDE_CORE_ESPECTROS.profundo,
+      og_hybrid: VERDE_CORE_ESPECTROS.og_hybrid,
     },
     colorCore: {
       linalool_sky: COLOR_CORE_ESPECTROS.linalool_sky,

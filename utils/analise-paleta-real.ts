@@ -6,7 +6,7 @@
 
 import { analyzeImageColors } from './color-extraction';
 
-// Cartilha Cromática ADAPTA v2026.1
+// Cartilha Cromática ADAPTA v2026.2
 const CARTILHA_CROMATICA = {
   neutral: {
     '000': '#F5F7F6',
@@ -21,68 +21,58 @@ const CARTILHA_CROMATICA = {
     '900': '#1F4338',
     '950': '#141A17',
   },
-  verdeCore: {
-    '300': '#A3C4B4',
-    '400': '#8FB09F',
-    '500': '#6A8A7A',
-    '600': '#557065',
-    '700': '#445A4F',
+  // OG Hybrid Blend — Identidade Verde Institucional
+  ogHybrid: {
+    '050': '#F2F8EA', // Olive Haze
+    '100': '#E1EDD5', // Crystal Dew
+    '200': '#CFE3C6', // Matcha Breeze
+    '300': '#ABCEB0', // Crisp Sap
+    '400': '#85B99B', // Sour Leaf
+    '500': '#619B7F', // Herbal Diesel
+    '700': '#3B6C5A', // Pine Extract
+    '900': '#1B4235', // Deep Canopy
   },
-  azul: {
-    '300': '#7FB3E8',
-    '400': '#5A9FE0',
-    '500': '#3D8DD8',
-    '600': '#2871B5',
-    '700': '#1F5A92',
+  // Linalool Sky — Espectro Roxo-Azul (Índica)
+  linaloolSky: {
+    '050': '#FCF5FF', // Milky Mist
+    '100': '#E2EFFF', // Glacial Extract
+    '150': '#FBE0FF', // Sweet Trichome
+    '200': '#E4DDFA', // Lilac Frost
+    '500': '#9687B2', // Lavender Cloud
+    '600': '#83639B', // Amethyst Smoke
+    '700': '#704085', // Plum Vapor
+    '800': '#483D79', // Indigo Resin
   },
-  laranja: {
-    '300': '#FFB88C',
-    '400': '#FFA066',
-    '500': '#FF8940',
-    '600': '#E67329',
-    '700': '#CC5E1A',
+  // Myrcene Soul — Espectro Rosa-Laranja-Amarelo (Sativa)
+  myrceneSoul: {
+    '050': '#FFF5F5', // Terpene Sugar
+    '100': '#FFFEE3', // Golden Kief
+    '200': '#FFE4C1', // Papaya Daze
+    '300': '#F8E5A8', // Tropical Rush
+    '350': '#FBDBDB', // Pink Vapor
+    '400': '#F394A7', // Berry Infusion
+    '500': '#F37A63', // Sunset Nectar
+    '700': '#AF4F72', // Cherry Terpene
   },
-  rosa: {
-    '300': '#FFB3D9',
-    '400': '#FF8FC7',
-    '500': '#FF6BB5',
-    '600': '#E64D9B',
-    '700': '#CC3081',
+  // Neutros Claros (UI Light)
+  neutralsLight: {
+    '000': '#FAFBFA', // Sage Mist
+    '050': '#F7F9F8', // Hemp Canvas
+    '100': '#EDF1EF', // Sage Whisper
+    '200': '#D5E2D5', // Leaf Frost
+    '300': '#B5C5BC', // Forest Dew
+    '400': '#8FA89B', // Green Smoke
+    '500': '#6A8A7A', // Emerald Haze
+    '600': '#455A4F', // Deep Pine
   },
-  roxo: {
-    '300': '#C5B3E6',
-    '400': '#A98FD9',
-    '500': '#8D6BCC',
-    '600': '#7254B3',
-    '700': '#5A3E99',
-  },
-  verde: {
-    '300': '#A8E6A3',
-    '400': '#85D97F',
-    '500': '#62CC5B',
-    '600': '#4AB344',
-    '700': '#3A992D',
-  },
-  amarelo: {
-    '300': '#FFF099',
-    '400': '#FFE666',
-    '500': '#FFDD33',
-    '600': '#E6C61A',
-    '700': '#CCB000',
-  },
-  vermelho: {
-    '300': '#FF9999',
-    '400': '#FF6666',
-    '500': '#FF3333',
-    '600': '#E61A1A',
-    '700': '#CC0000',
-  },
-  ciano: {
-    '300': '#99F0FF',
-    '400': '#66E6FF',
-    '500': '#33DDFF',
-    '600': '#1AC4E6',
-    '700': '#00AACC',
+  // Neutros Escuros (UI Dark)
+  neutralsDark: {
+    '100': '#2E3E34', // Forest Shadow
+    '200': '#1F2A23', // Midnight Garden
+    '300': '#1A231D', // Dark Forest
+    '400': '#141A17', // Black Earth
+    '500': '#0F1411', // Deep Shadow
+    '600': '#0A0D0B', // Void
   },
 } as const;
 
@@ -118,11 +108,17 @@ export async function analisarPaletaReal(
   tipoPeca: TipoPeca
 ): Promise<AnalisePaletaResult> {
   // 1. Prepara cartilha em formato plano
+  const ESPECTRO_LABELS: Record<string, string> = {
+    neutral: 'Neutral',
+    ogHybrid: 'OG Hybrid Blend',
+    linaloolSky: 'Linalool Sky',
+    myrceneSoul: 'Myrcene Soul',
+    neutralsLight: 'Neutros Claros',
+    neutralsDark: 'Neutros Escuros',
+  };
   const cartilhaPlana = Object.entries(CARTILHA_CROMATICA).flatMap(([espectro, tons]) =>
     Object.entries(tons).map(([tom, hex]) => {
-      // Nome mais legível
-      const espectroNome = espectro === 'verdeCore' ? 'Verde Core' : 
-                          espectro.charAt(0).toUpperCase() + espectro.slice(1);
+      const espectroNome = ESPECTRO_LABELS[espectro] ?? espectro;
       return {
         hex,
         nome: `${espectroNome} ${tom}`,
@@ -166,14 +162,16 @@ export async function analisarPaletaReal(
       // ✓ COR OFICIAL
       coresValidadas.push(`✓ ${official.nome}`);
       
-      // Detecta padrões de uso
+      // Detecta padrões de uso (v2026.2)
       const nomeLower = official.nome.toLowerCase();
-      if (nomeLower.includes('neutral')) {
+      if (nomeLower.includes('neutral') || nomeLower.includes('neutros')) {
         usoNeutral = true;
-      } else if (nomeLower.includes('verde') && nomeLower.includes('core')) {
+      } else if (nomeLower.includes('og hybrid')) {
         usoVerdeCore = true;
+      } else if (nomeLower.includes('linalool') || nomeLower.includes('myrcene')) {
+        // Linalool Sky e Myrcene Soul = Color Core
+        usoColorCore = true;
       } else {
-        // Qualquer cor que não seja Neutral ou Verde Core = Color Core
         usoColorCore = true;
       }
       
@@ -183,7 +181,7 @@ export async function analisarPaletaReal(
       coresValidadas.push(`🚨 ${hex} (PIRATA)`);
       
       problemas.push(`❌ COR PIRATA #${totalCoresPiratas}: ${hex}`);
-      problemas.push(`   → NÃO é uma cor oficial da Cartilha Cromática ADAPTA v2026.1`);
+      problemas.push(`   → NÃO é uma cor oficial da Cartilha Cromática ADAPTA v2026.2`);
       problemas.push(`   → Mais próxima: ${official.nome} (${official.hex.toUpperCase()})`);
       problemas.push(`   → Distância detectada: ${Math.round(distance)} (tolerância: 10)`);
       problemas.push('');
@@ -210,7 +208,7 @@ export async function analisarPaletaReal(
     problemas.push(`🚨 REPROVAÇÃO: ${totalCoresPiratas} COR${totalCoresPiratas > 1 ? 'ES' : ''} PIRATA${totalCoresPiratas > 1 ? 'S' : ''} DETECTADA${totalCoresPiratas > 1 ? 'S' : ''}!`);
     problemas.push('═══════════════════════════════════════════════════════');
     problemas.push('As cores PARECEM corretas visualmente, mas o código HEX NÃO É OFICIAL.');
-    problemas.push('TODA peça DEVE usar os códigos EXATOS da Cartilha Cromática v2026.1');
+    problemas.push('TODA peça DEVE usar os códigos EXATOS da Cartilha Cromática v2026.2');
     problemas.push('Diferença de 1 dígito = COR PIRATA = REPROVAÇÃO');
     
     sugestoes.push('');
