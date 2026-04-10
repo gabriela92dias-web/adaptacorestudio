@@ -127,19 +127,19 @@ export function ControlPanel({
   const CANDY_COLORS = ALL_COLORS.filter(c => c.spectrum === 'Candy'); // 4 cores
   const LEMON_CITRUS = ALL_COLORS.filter(c => c.spectrum === 'Lemon' && c.name === 'Citrus'); // 1 cor
   
-  // COLOR CORE: TODOS os 15 tons (Energia + Alegria + Segurança)
+  // COLOR CORE: TODOS os 16 tons (Linalool Sky + Myrcene Soul)
   const COLOR_CORE_COLORS = ALL_COLORS.filter(c => 
-    c.spectrum === 'Energia' || c.spectrum === 'Alegria' || c.spectrum === 'Segurança'
-  ); // 15 cores
+    c.spectrum === 'Linalool Sky' || c.spectrum === 'Myrcene Soul'
+  ); // 16 cores
   
-  // Organização: Verdes curados (9) + Color Core completo (15) = 24 cores
+  // Organização: Verdes curados (9) + Color Core completo (16) = 25 cores
   const MASCOT_COLORS = [
     ...ALMA_COLORS,        // Linha 1: 3 verdes médios (Green Smoke, Emerald Haze, Deep Pine)
     ...VENTURA_VEU,        // +1 acinzentado (Véu)
     ...CANDY_COLORS,       // +4 pastel (Marshmallow, Açúcar, Baunilha, Pistache)
     ...LEMON_CITRUS,       // +1 suave (Citrus)
-    ...COLOR_CORE_COLORS,  // +15 Color Core (Energia, Alegria, Segurança)
-  ]; // Total: 24 cores
+    ...COLOR_CORE_COLORS,  // +16 Color Core (Linalool, Myrcene)
+  ]; // Total: 25 cores
 
   return (
     <div className="flex flex-col gap-0 w-full">

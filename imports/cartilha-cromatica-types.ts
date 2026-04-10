@@ -14,6 +14,10 @@ export interface CorEspectro {
   nome: string;
   hex: string;
   uso?: string;
+  a11y?: {
+    allows_black_foreground: boolean;
+    allows_white_foreground: boolean;
+  };
 }
 
 export interface Espectro {
@@ -143,42 +147,35 @@ export const VERDE_CORE_ESPECTROS = VERDE_CORE;
 // ═══════════════════════════════════════════════════════════════════
 
 export const COLOR_CORE = {
-  energia: {
-    id: 'energia',
-    nome: 'Energia',
-    descricao: 'Espectro de luz quente frutada - amarelo/laranja/coral',
+  linalool_sky: {
+    id: 'linalool-sky',
+    nome: 'Linalool Sky',
+    descricao: 'Espectro de roxos e azuis (Índica)',
     tons: [
-      { nome: 'Campo Alto', hex: '#FFFAE0', uso: 'Backgrounds quentes, destaque leve' },
-      { nome: 'Campo Velado', hex: '#FFE7A3', uso: 'Warnings suaves, atenção leve' },
-      { nome: 'Centro', hex: '#FFE2C2', uso: 'Acentos pêssego, calor acolhedor' },
-      { nome: 'Marca Texto', hex: '#FED376', uso: 'Highlights, CTAs secundários' },
-      { nome: 'Denso', hex: '#F58E72', uso: 'CTAs vibrantes, energia máxima' },
+      { nome: '900', hex: '#483d79', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: '800', hex: '#642e50', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: '700', hex: '#984492', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: '500', hex: '#9687b2', a11y: { allows_black_foreground: true,  allows_white_foreground: true } },
+      { nome: '300', hex: '#e4ddfa', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: '200', hex: '#fbe0ff', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: '100', hex: '#e2efff', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: '50',  hex: '#fcf5ff', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
     ],
   },
   
-  alegria: {
-    id: 'alegria',
-    nome: 'Alegria',
-    descricao: 'Espectro de rosa vivo e berry suave',
+  myrcene_soul: {
+    id: 'myrcene-soul',
+    nome: 'Myrcene Soul',
+    descricao: 'Espectro de rosas, laranjas e amarelos (Sativa)',
     tons: [
-      { nome: 'Campo Alto', hex: '#FDE2DD', uso: 'Backgrounds rosa suave' },
-      { nome: 'Campo Velado', hex: '#FFC8C2', uso: 'Acentos rosados claros' },
-      { nome: 'Centro', hex: '#FFA3B1', uso: 'Rosa médio vibrante' },
-      { nome: 'Marca Texto', hex: '#FE86A4', uso: 'CTAs rosados, energia feminina' },
-      { nome: 'Denso', hex: '#CF6E9B', uso: 'Rosa profundo, empoderamento' },
-    ],
-  },
-  
-  seguranca: {
-    id: 'seguranca',
-    nome: 'Segurança',
-    descricao: 'Espectro de lavanda rosada, pervinca e roxo frio',
-    tons: [
-      { nome: 'Campo Alto', hex: '#F1E6F0', uso: 'Backgrounds lavanda' },
-      { nome: 'Campo Velado', hex: '#DEC7DE', uso: 'Acentos lilás suaves' },
-      { nome: 'Centro', hex: '#D0AEE0', uso: 'Roxo médio elegante' },
-      { nome: 'Marca Texto', hex: '#D1B4FE', uso: 'Roxo vibrante, modernidade' },
-      { nome: 'Denso', hex: '#9DA0EC', uso: 'Azul-roxo profundo, confiança' },
+      { nome: '900', hex: '#af4f72', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: '700', hex: '#f37a63', a11y: { allows_black_foreground: false, allows_white_foreground: true } },
+      { nome: '500', hex: '#f394a7', a11y: { allows_black_foreground: true,  allows_white_foreground: true } },
+      { nome: '400', hex: '#fbdbdb', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: '300', hex: '#f8e5a8', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: '200', hex: '#ffe4c1', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: '100', hex: '#fffee3', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
+      { nome: '50',  hex: '#fff5f5', a11y: { allows_black_foreground: true,  allows_white_foreground: false } },
     ],
   },
 };
@@ -231,26 +228,25 @@ export const TODAS_AS_CORES: Record<string, string> = {
   'profundo-100': '#A8BF9A',
   'profundo-200': '#8CA680',
   
-  // COLOR CORE - Energia (5)
-  'energia-100': '#FFFAE0',
-  'energia-200': '#FFE7A3',
-  'energia-300': '#FFE2C2',
-  'energia-400': '#FED376',
-  'energia-500': '#F58E72',
+  // COLOR CORE - Linalool Sky (8)
+  'linalool-900': '#483d79',
+  'linalool-800': '#642e50',
+  'linalool-700': '#984492',
+  'linalool-500': '#9687b2',
+  'linalool-300': '#e4ddfa',
+  'linalool-200': '#fbe0ff',
+  'linalool-100': '#e2efff',
+  'linalool-50': '#fcf5ff',
   
-  // COLOR CORE - Alegria (5)
-  'alegria-100': '#FDE2DD',
-  'alegria-200': '#FFC8C2',
-  'alegria-300': '#FFA3B1',
-  'alegria-400': '#FE86A4',
-  'alegria-500': '#CF6E9B',
-  
-  // COLOR CORE - Segurança (5)
-  'seguranca-100': '#F1E6F0',
-  'seguranca-200': '#DEC7DE',
-  'seguranca-300': '#D0AEE0',
-  'seguranca-400': '#D1B4FE',
-  'seguranca-500': '#9DA0EC',
+  // COLOR CORE - Myrcene Soul (8)
+  'myrcene-900': '#af4f72',
+  'myrcene-700': '#f37a63',
+  'myrcene-500': '#f394a7',
+  'myrcene-400': '#fbdbdb',
+  'myrcene-300': '#f8e5a8',
+  'myrcene-200': '#ffe4c1',
+  'myrcene-100': '#fffee3',
+  'myrcene-50': '#fff5f5',
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -266,6 +262,6 @@ export const CARTILHA_METADATA = {
   breakdown: {
     neutrals: 15,
     verdeCore: 15, // Candy(5) + Lemon(4) + Ventura(4) + Profundo(2)
-    colorCore: 15, // Energia(5) + Alegria(5) + Segurança(5)
+    colorCore: 16, // Linalool(8) + Myrcene(8)
   },
 };

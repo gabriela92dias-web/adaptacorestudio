@@ -46,10 +46,8 @@ export function getContrastRatio(hex1: string, hex2: string): number {
   return (lightest + 0.05) / (darkest + 0.05);
 }
 
-// ── IDs dos grupos por categoria ──────────────────────────────
-
 const VERDE_GROUP_IDS: string[] = ["verde-core", "verde-meio"];
-const COLOR_GROUP_IDS: string[] = ["success", "error", "warning", "info"];
+const COLOR_GROUP_IDS: string[] = ["linalool-sky", "myrcene-soul"];
 const NEUTRAL_GROUP_IDS: string[] = ["neutrals-light", "neutrals-dark"];
 
 // ── Paleta oficial ColdFlora ──────────────────────────────────
@@ -85,63 +83,39 @@ export const colorPalette: ColorGroup[] = [
     ],
   },
 
-  // ── Success (verde semântico) ──────────────────────────────
+  // ── Linalool Sky (Cor de apoio expressivo - Índica) ─────────────
   {
-    id: "success",
-    name: "Success",
-    description: "Cor de sucesso e confirmação",
-    roles: ["ui", "campaign"],
+    id: "linalool-sky",
+    name: "Linalool Sky",
+    description: "Espectro de roxos e azuis",
+    roles: ["campaign"],
     colors: [
-      { hex: "#D1E8B5", name: "Success 100" },
-      { hex: "#ADCC71", name: "Success 200" },
-      { hex: "#8DB84D", name: "Success 300" },
-      { hex: "#5A8A2E", name: "Success 400" },
-      { hex: "#2A4F1A", name: "Success 500" },
+      { hex: "#fcf5ff", name: "Linalool 50" },
+      { hex: "#e2efff", name: "Linalool 100" },
+      { hex: "#fbe0ff", name: "Linalool 200" },
+      { hex: "#e4ddfa", name: "Linalool 300" },
+      { hex: "#9687b2", name: "Linalool 500" },
+      { hex: "#984492", name: "Linalool 700" },
+      { hex: "#642e50", name: "Linalool 800" },
+      { hex: "#483d79", name: "Linalool 900" },
     ],
   },
 
-  // ── Error (ter semântico) ──────────────────────────────────
+  // ── Myrcene Soul (Cor de apoio expressivo - Sativa) ─────────────
   {
-    id: "error",
-    name: "Error",
-    description: "Cor de erro e alerta crítico",
-    roles: ["ui", "campaign"],
+    id: "myrcene-soul",
+    name: "Myrcene Soul",
+    description: "Espectro de rosas, laranjas e amarelos",
+    roles: ["campaign"],
     colors: [
-      { hex: "#FFB7AB", name: "Error 100" },
-      { hex: "#F48E72", name: "Error 200" },
-      { hex: "#E06445", name: "Error 300" },
-      { hex: "#B84020", name: "Error 400" },
-      { hex: "#6B2A14", name: "Error 500" },
-    ],
-  },
-
-  // ── Warning (amarelo semântico) ────────────────────────────
-  {
-    id: "warning",
-    name: "Warning",
-    description: "Cor de atenção e alerta moderado",
-    roles: ["ui", "campaign"],
-    colors: [
-      { hex: "#FFE1AB", name: "Warning 100" },
-      { hex: "#F2C370", name: "Warning 200" },
-      { hex: "#D9A040", name: "Warning 300" },
-      { hex: "#A87A1E", name: "Warning 400" },
-      { hex: "#614210", name: "Warning 500" },
-    ],
-  },
-
-  // ── Info (azul lilás semântico) ───────────────────────────
-  {
-    id: "info",
-    name: "Info",
-    description: "Cor informativa e de destaque suave",
-    roles: ["ui", "campaign"],
-    colors: [
-      { hex: "#CDD0F9", name: "Info 100" },
-      { hex: "#B5B7F2", name: "Info 200" },
-      { hex: "#9EA0ED", name: "Info 300" },
-      { hex: "#8385D8", name: "Info 400" },
-      { hex: "#2B2D6B", name: "Info 500" },
+      { hex: "#fff5f5", name: "Myrcene 50" },
+      { hex: "#fffee3", name: "Myrcene 100" },
+      { hex: "#ffe4c1", name: "Myrcene 200" },
+      { hex: "#f8e5a8", name: "Myrcene 300" },
+      { hex: "#fbdbdb", name: "Myrcene 400" },
+      { hex: "#f394a7", name: "Myrcene 500" },
+      { hex: "#f37a63", name: "Myrcene 700" },
+      { hex: "#af4f72", name: "Myrcene 900" },
     ],
   },
 

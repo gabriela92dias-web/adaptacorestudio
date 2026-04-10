@@ -1,24 +1,20 @@
 # 🚀 PENDENTE — Próximo Deployment
 
 > Arquivo de rastreamento de mudanças prontas aguardando deploy.
-> Atualizado em: 2026-03-30
+> Atualizado em: 2026-04-10
 
 ---
 
 ## ✅ Pronto para Deploy
 
-### [BIBLIOTECA] Menu + Filtro por Setor
-**Data:** 2026-03-30  
+### [CAMPANHAS] Refatoração da Arquitetura Visual do Motor V8 (Substituição de Funil Estático por Blueprint 3D)
 **Arquivos alterados:**
-- `components/AppSidebar.tsx` — Biblioteca movida para fora do grupo Marketing, agora é item independente no menu com ícone próprio (BookOpen)
-- `pages/marketing-comunicacao.tsx` — Adicionado campo `setor` nos documentos + barra de filtro por setor (Marketing, Comunicação, Financeiro, Administrativo, Jurídico, RH)
-- `pages/marketing-comunicacao.module.css` — CSS da barra de setores
+- `components/brand-studio/criar-campanha.tsx` — Remoção do componente de funil estático com %. Criação de nova "Arquitetura Estratégica (Motores V8)", gerando *Layers* logísticos (Governança, Físico, Digital, Conversão) de forma reativa. 
+   - A UI agora usa uma estética avançada **Chique Moderno 3D / Blueprint**, utilizando transformações isométricas no CSS (`perspective`, `rotateX`), tipografia monoespaçada, grades iluminadas e larguras regressivas formando um visual incrível de máquina.
+- `components/brand-studio/useCampaignWizard.ts` — Alteração no prompt do "Gancho Principal" (Tese), forçando a IA a atuar como Diretor de Criação (saindo do pragmatismo puro para 3 propostas magnéticas e ousadas).
+- `components/brand-studio/wizard-constants.ts` — Remoção da constante fixa `FUNNELS` (débito técnico visual).
 
-**O que muda na UI:**
-- Menu lateral: "Biblioteca" aparece como item solto, fora do grupo Marketing
-- Página da Biblioteca: filtro de setor no topo, acima dos filtros de categoria
-
-**Risco:** Baixo — sem alterações de DB, sem novos endpoints, só UI.
+---
 
 ## 🚀 Status de Deployments Anteriores
 

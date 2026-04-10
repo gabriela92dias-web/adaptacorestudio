@@ -14,13 +14,7 @@ export const ACTION_TYPES = [
   { id: "pesquisa",      name: "Pesquisa / Ciência",            icon: FileText },
 ];
 
-export const FUNNELS = [
-  { id: "awareness",     name: "Conscientizar",  desc: "Opinião Pública",   pct: "100%" },
-  { id: "consideration", name: "Educação Médica", desc: "Tabus Clínicos",   pct: "83%"  },
-  { id: "conversion",    name: "Acolhimento",     desc: "Entrada Oficial",   pct: "66%"  },
-  { id: "retention",     name: "Acompanhamento",  desc: "Zelo Contínuo",     pct: "83%"  },
-  { id: "expansion",     name: "Apoio Social",    desc: "Rede de Indicação", pct: "100%" },
-];
+
 
 export const WIZARD_TYPE_TO_CAMPAIGN_TYPE: Record<string, "awareness" | "brand_engagement" | "corporate_event" | "product_launch" | "seasonal_promotion"> = {
   institucional: "awareness",

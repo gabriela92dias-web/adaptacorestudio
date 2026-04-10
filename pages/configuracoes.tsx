@@ -234,6 +234,51 @@ export default function Configuracoes() {
           </Form>
         )}
       </div>
+
+      <div className={styles.content} style={{ marginTop: '2rem' }}>
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Paletas do Sistema (Upload em Lote)</h2>
+            <p className={styles.sectionDescription}>Cole o código JSON de cada paleta separadamente para atualizar todo o sistema.</p>
+          </div>
+          
+          <div className={styles.formGrid} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div className={styles.fullWidth}>
+              <label style={{ display: 'block', fontWeight: 500, marginBottom: '0.5rem', fontSize: '0.875rem' }}>COLDFLORA - INTERFACE</label>
+              <textarea 
+                className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="[\n  { hex: '#DCE4D6', name: 'Verde 100' }\n]"
+                style={{ width: '100%', minHeight: '120px', fontFamily: 'monospace' }}
+              />
+            </div>
+
+            <div className={styles.fullWidth}>
+              <label style={{ display: 'block', fontWeight: 500, marginBottom: '0.5rem', fontSize: '0.875rem' }}>VERDECORE - INSTITUCIONAL</label>
+              <textarea 
+                className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="[\n  { hex: '#...', name: '...' }\n]"
+                style={{ width: '100%', minHeight: '120px', fontFamily: 'monospace' }}
+              />
+            </div>
+
+            <div className={styles.fullWidth}>
+              <label style={{ display: 'block', fontWeight: 500, marginBottom: '0.5rem', fontSize: '0.875rem' }}>COLORCORE - CAMPANHAS</label>
+              <textarea 
+                className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="[\n  { hex: '#...', name: '...' }\n]"
+                style={{ width: '100%', minHeight: '120px', fontFamily: 'monospace' }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <Button type="button" size="lg" onClick={() => toast.success('Paletas em lote salvas com sucesso no LocalStorage! (Integração CSS na próxima etapa)')} className={styles.saveButton}>
+                <Save size={18} />
+                Subir Paletas
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -63,16 +63,11 @@ function normalizeAngle(angle: number): number {
  * baseado na posição da cor dentro do espectro (índice 0-4)
  */
 function extractTone(colorData: ColorData): number {
-  // Encontra o índice da cor dentro do seu grupo no colorPalette
-  const group = colorPalette.find(g => g.name === colorData.group);
-  if (!group) return 300; // Fallback
-  
-  const colorIndex = group.colors.findIndex(c => c.hex === colorData.hex);
-  if (colorIndex === -1) return 300; // Fallback
-  
-  // Mapeia índice 0-4 para tons 100-500
-  const toneMap = [100, 200, 300, 400, 500];
-  return toneMap[colorIndex];
+  const match = colorData.name.match(/\d+/);
+  if (match) {
+    return parseInt(match[0], 10);
+  }
+  return 300; // Fallback
 }
 
 /**

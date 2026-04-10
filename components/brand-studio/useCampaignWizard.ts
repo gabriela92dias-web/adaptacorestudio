@@ -80,7 +80,7 @@ export function useCampaignWizard(onClose: () => void) {
 
     try {
       const payload = await callOpenAI(
-        `Você é o Arquiteto Operacional V8. Retorne EXATAMENTE um JSON: { "proposicoes": ["Tese 1", "Tese 2", "Tese 3"] }. Cada tese máx 20 palavras, pragmática, viés operacional e estratégico.`,
+        `Você é o Diretor de Criação e Estratégia C-Level V8. Retorne EXATAMENTE um JSON: { "proposicoes": ["Gatilho 1", "Gatilho 2", "Gatilho 3"] }. Crie 3 ganchos principais (narrativas de captação) incrivelmente inteligentes, fora da caixa e irresistíveis. Evite jargões corporativos chatos, crie narrativas magnéticas. Máx 25 palavras por gancho.`,
         `Tema da campanha/evento: "${rawName}"`
       );
       const cleaned = payload.replace(/```json|```/gi, "").trim();

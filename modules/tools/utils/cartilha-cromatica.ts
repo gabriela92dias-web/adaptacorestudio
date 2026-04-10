@@ -109,17 +109,15 @@ export function getVerdeCoreColors(): Array<{ name: string; value: string; spect
 export function getColorCoreColors(): Array<{ name: string; value: string; spectrum: string }> {
   const colors: Array<{ name: string; value: string; spectrum: string }> = [];
   
-  COLOR_CORE_ESPECTROS.energia.tons.forEach(ton => {
-    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Energia' });
+  COLOR_CORE_ESPECTROS.linalool_sky.tons.forEach(ton => {
+    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Linalool Sky' });
   });
   
-  COLOR_CORE_ESPECTROS.alegria.tons.forEach(ton => {
-    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Alegria' });
+  COLOR_CORE_ESPECTROS.myrcene_soul.tons.forEach(ton => {
+    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Myrcene Soul' });
   });
   
-  COLOR_CORE_ESPECTROS.seguranca.tons.forEach(ton => {
-    colors.push({ name: ton.nome, value: ton.hex, spectrum: 'Segurança' });
-  });
+
   
   return colors;
 }
@@ -127,10 +125,26 @@ export function getColorCoreColors(): Array<{ name: string; value: string; spect
 /**
  * Retorna TODAS as 45 cores da cartilha organizadas por categoria
  */
-export function getAllDesignColors(): Array<{ name: string; value: string; spectrum: string; category: 'Neutrals' | 'Verde Core' | 'Color Core' }> {
+export function getAllDesignColors(): Array<{ name: string; value: string; spectrum: string; category: 'Neutrals' | 'Verde Core' | 'Color Core'; a11y?: { allows_black_foreground: boolean; allows_white_foreground: boolean } }> {
+  // Vamos resgatar os a11y direto do objeto original das cores se existirem
+  const mapColorWithA11y = (arr: any[], spectrumObj: any) => {
+    return arr.map(c => {
+      const tonMatch = spectrumObj.tons.find((t: any) => t.nome === c.name || t.hex.toLowerCase() === c.value.toLowerCase());
+      return { ...c, a11y: tonMatch?.a11y };
+    });
+  };
+
   const neutrals = getNeutralsColors().map(c => ({ ...c, category: 'Neutrals' as const }));
   const verdeCore = getVerdeCoreColors().map(c => ({ ...c, category: 'Verde Core' as const }));
-  const colorCore = getColorCoreColors().map(c => ({ ...c, category: 'Color Core' as const }));
+  
+  // Para ColorCore, pegamos a11y do linalool_sky e myrcene_soul
+  const colorCoreRaw = getColorCoreColors();
+  const colorCore = colorCoreRaw.map(c => {
+    const isLinalool = c.spectrum === 'Linalool Sky';
+    const spectrumObj = isLinalool ? COLOR_CORE_ESPECTROS.linalool_sky : COLOR_CORE_ESPECTROS.myrcene_soul;
+    const tonMatch = spectrumObj.tons.find((t: any) => t.hex.toLowerCase() === c.value.toLowerCase());
+    return { ...c, category: 'Color Core' as const, a11y: tonMatch?.a11y };
+  });
   
   return [...neutrals, ...verdeCore, ...colorCore];
 }
@@ -152,9 +166,8 @@ export function getPaletteBySpectrums() {
       profundo: VERDE_CORE_ESPECTROS.profundo,
     },
     colorCore: {
-      energia: COLOR_CORE_ESPECTROS.energia,
-      alegria: COLOR_CORE_ESPECTROS.alegria,
-      seguranca: COLOR_CORE_ESPECTROS.seguranca,
+      linalool_sky: COLOR_CORE_ESPECTROS.linalool_sky,
+      myrcene_soul: COLOR_CORE_ESPECTROS.myrcene_soul,
     },
   };
 }
@@ -231,10 +244,18 @@ export function getMascotBodyColors(): Array<{ name: string; value: string; spec
   const MOUTH_COLOR = '#0e0d10'; // Preto escuro da boca/olhos
   const allColors = getAllDesignColors();
   
-  // ✅ APROVAÇÃO TOTAL: Retorna TODAS as cores da cartilha
-  // Usuário aprovou acessibilidade - sem filtros de contraste
-  return allColors.map(color => ({
-    ...color,
-    contrast: getContrastRatio(color.value, MOUTH_COLOR)
-  }));
+  // Filtro de acessibilidade "fundamental":
+  // Respeita explicitamente a propriedade a11y.allows_black_foreground quando presente (json de ColorCore)
+  // Caso não esteja presente (cores antigas), usa a regra de WCAG AA para contrastes mínimos (>= 3.0)
+  return allColors
+    .map(color => ({
+      ...color,
+      contrast: getContrastRatio(color.value, MOUTH_COLOR)
+    }))
+    .filter(color => {
+      if (color.a11y && color.a11y.allows_black_foreground !== undefined) {
+        return color.a11y.allows_black_foreground;
+      }
+      return color.contrast >= 3.0; // Fallback WCAG para textos/elementos visuais grandes
+    });
 }

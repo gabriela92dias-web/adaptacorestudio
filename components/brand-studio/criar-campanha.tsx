@@ -4,7 +4,7 @@ import {
   Blocks, Users, Globe, Receipt, Hexagon
 } from "lucide-react";
 import { useCampaignWizard } from "./useCampaignWizard";
-import { ACTION_TYPES, FUNNELS } from "./wizard-constants";
+import { ACTION_TYPES } from "./wizard-constants";
 
 function StepTema({ state, actions }: { state: ReturnType<typeof useCampaignWizard>["state"], actions: ReturnType<typeof useCampaignWizard>["actions"] }) {
   const { isGenerating, step, rawName, direcao, experiencia, modulos, eventoPublico, eventoDuracao } = state;
@@ -298,7 +298,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
   const { state, actions } = useCampaignWizard(onClose);
   const {
     isGenerating, isSaved, isGeneratingPlan, step,
-    aiGeneratedType, activeFunnels, aiTrilhaInterna, aiTrilhaExterna, aiOrcamentoLinhas, aiOrcamentoTotal, blueprintTheory
+    aiGeneratedType, activeFunnels, aiTrilhaInterna, aiTrilhaExterna, aiOrcamentoLinhas, aiOrcamentoTotal, blueprintTheory,
+    modulos, experiencia, eventoDuracao
   } = state;
   const { finishCreation, generateActionPlan, generateBlueprintDense, setAiOrcamentoLinhas } = actions;
 
@@ -391,36 +392,115 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
              </div>
            )}
 
-           {/* ── Arquitetura de Funil (Logo no step 1+) ── */}
+           {/* ── Arquitetura de Funil (Vignette Moderno) ── */}
            {step >= 1 && (
-             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-               <div className="flex items-center justify-between mb-4 border-b border-[var(--border)] pb-2">
-                 <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)]">Funil Sugerido</h4>
-                 <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)] flex items-center gap-2 shadow-sm">
-                   <TypeIcon size={12} /> {typeData.name}
-                 </span>
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 w-full mt-4">
+               <div className="flex flex-col items-center text-center mb-16 pb-6 border-b border-[var(--border)]">
+                 <h4 className="text-3xl font-black font-heading tracking-tight text-[var(--foreground)] mb-2">Estrutura da Sua Campanha</h4>
+                 <p className="text-sm font-medium text-[var(--muted-foreground)] max-w-md">VISÃO GERAL DE TODAS AS ETAPAS E RECURSOS QUE SERÃO ALOCADOS NESTE PROJETO.</p>
                </div>
                
-               <div className="flex flex-col w-full max-w-2xl mx-auto items-center mt-6 gap-0.5">
-                  {FUNNELS.map((level, i) => {
-                    const isActive = activeFunnels[level.id];
-                    const isFirst = i === 0;
-                    const isLast = i === FUNNELS.length - 1;
-                    return (
-                      <div
-                        key={level.id}
-                        className={`py-3 px-6 flex items-center justify-center gap-3 transition-all duration-500 ${isActive ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm" : "bg-[var(--surface)] text-[var(--muted-foreground)] border border-[var(--border)]"}`}
-                        style={{
-                          width: level.pct,
-                          borderRadius: isFirst ? "1rem 1rem 0.25rem 0.25rem" : isLast ? "0.25rem 0.25rem 1rem 1rem" : "0.25rem",
-                        }}
-                      >
-                         <span className="font-heading font-bold uppercase tracking-wide text-sm">{level.name}</span>
-                         {isActive && <span className="opacity-70 text-xs italic font-serif">/ {level.desc}</span>}
+               <div className="flex w-full relative items-start h-[400px]">
+
+                 {/* FUNÇÕES DE RENDERIZAÇÃO INTERNA */}
+                 {(() => {
+                    const layers = [];
+                    
+                    // Layer 1
+                    if (modulos.governanca || true) {
+                      layers.push({
+                         title: "Planejamento Base",
+                         subtitle: "Etapa 1",
+                         items: ["Controle de Verba", "Contratos & Jurídico", "Aprovação Final da Ideia"],
+                         clip: "polygon(0% 0%, 100% 12%, 100% 88%, 0% 100%)",
+                         opacity: "opacity-100" // Opacidade Plena
+                      });
+                    }
+
+                    // Layer 2
+                    if (experiencia === "presencial" || experiencia === "hibrida" || modulos.fisico || modulos.evento) {
+                      const l2Items = [];
+                      if (modulos.evento) l2Items.push("Credenciamento e Acesso", "Estrutura de Palco");
+                      else l2Items.push("Materiais e Brindes");
+                      l2Items.push("Equipe de Recepção");
+                      if (eventoDuracao >= 3) l2Items.push("Alimentação e Bebidas");
+
+                      layers.push({
+                         title: "Operação Presencial",
+                         subtitle: "Etapa 2",
+                         items: l2Items,
+                         clip: "polygon(0% 12%, 100% 24%, 100% 76%, 0% 88%)",
+                         opacity: "opacity-80" // 80%
+                      });
+                    }
+
+                    // Layer 3
+                    if (experiencia === "digital" || experiencia === "hibrida" || modulos.digital) {
+                      layers.push({
+                         title: "Atração e Inscrição",
+                         subtitle: "Etapa 3",
+                         items: ["Página Web do Projeto", "Anúncios de Captação", "Automação de E-mails"],
+                         clip: "polygon(0% 24%, 100% 36%, 100% 64%, 0% 76%)",
+                         opacity: "opacity-60" // 60%
+                      });
+                    }
+
+                    // Layer 4
+                    layers.push({
+                         title: "Pós-Campanha",
+                         subtitle: "Etapa 4",
+                         items: ["Pesquisa de Satisfação", "Engajamento Contínuo"],
+                         clip: "polygon(0% 36%, 100% 48%, 100% 52%, 0% 64%)",
+                         opacity: "opacity-40" // 40%
+                    });
+
+                    return layers.map((layer, idx) => (
+                      <div key={idx} className="flex-1 flex flex-col group">
+                         {/* Header: Title */}
+                         <div className="h-20 flex flex-col items-center justify-end pb-6 px-2 text-center transition-transform duration-500 group-hover:-translate-y-2">
+                             <span className="text-[10px] font-black tracking-widest uppercase text-[var(--muted-foreground)] mb-1">{layer.subtitle}</span>
+                             <span className="text-sm font-bold text-[var(--foreground)] leading-tight">{layer.title}</span>
+                         </div>
+                         
+                         {/* Funnel Middle Segment */}
+                         <div className="w-full h-40 relative flex items-center justify-center px-[0.5px]">
+                            {/* Shadow/Hover Glow Underneath */}
+                            <div 
+                              className={`absolute inset-0 bg-[var(--primary)] blur-xl transition-all duration-300 opacity-0 group-hover:opacity-30`}
+                              style={{ clipPath: layer.clip }}
+                            />
+                            {/* Solid Funnel Shape */}
+                            <div 
+                              className={`absolute inset-0 bg-[var(--primary)] ${layer.opacity} transition-all duration-500`}
+                              style={{ clipPath: layer.clip }}
+                            />
+                            {/* Inner Circle / Label */}
+                            <div className="relative z-10 w-8 h-8 rounded-full bg-[var(--background)] flex items-center justify-center shadow-lg font-black font-heading text-xs text-[var(--primary)] border border-[var(--primary)]/20 transition-transform duration-500 group-hover:scale-125">
+                               {idx + 1}
+                            </div>
+                         </div>
+                         
+                         {/* Footer: Items List */}
+                         <div className="flex flex-col gap-2 mt-8 px-4 items-center">
+                            {layer.items.map((item, j) => (
+                               <span key={j} className="text-[10px] bg-[var(--surface)] border border-[var(--border)] px-3 py-1 rounded-full text-[var(--foreground)] font-semibold shadow-sm text-center transition-all duration-300 hover:border-[var(--primary)] hover:text-[var(--primary)] cursor-crosshair">
+                                 {item}
+                               </span>
+                            ))}
+                         </div>
                       </div>
-                    )
-                  })}
+                    ));
+                 })()}
+
+                 {/* Dribbble Style Target Pin on the right end */}
+                 <div className="w-12 h-68 pt-20 flex flex-col items-center -ml-4 z-10 relative">
+                     <div className="w-10 h-10 mt-10 rounded-full bg-[var(--foreground)] text-[var(--background)] shadow-2xl flex items-center justify-center font-black animate-pulse">
+                         <Target size={16} />
+                     </div>
+                 </div>
+
                </div>
+               
              </div>
            )}
 
