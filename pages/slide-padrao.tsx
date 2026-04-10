@@ -187,7 +187,7 @@ export const getDynamicFontSize = (text: string | undefined, type: 'cover-title'
 };
 
 export const getTypeLabel = (slideType: string, idx: number, total: number) => {
-  if (slideType === 'cover') return idx === 0 ? 'Introdução' : 'Até logo';
+  if (slideType === 'cover') return idx === 0 ? 'Introdução' : 'Fechamento';
   if (slideType === 'part') return 'Aterrizagem';
   if (slideType === 'generic') return 'Conteúdo';
   if (slideType === 'solution') return 'Resultados';
@@ -1131,45 +1131,114 @@ export default function SlidePadrao() {
               <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{slideList.length}</span>
             </div>
             <div className="flex-1 overflow-y-auto py-2">
-              {slideList.map((s, idx) => (
-                <div key={s.id}
-                  className="group flex items-center gap-1 px-2 py-1.5 mx-2 my-0.5 rounded-lg cursor-pointer transition-all"
-                  style={{
-                    background: idx === current ? 'color-mix(in srgb, var(--primary) 12%, transparent)' : 'transparent',
-                    borderLeft: `2px solid ${idx === current ? 'var(--primary)' : 'transparent'}`,
-                  }}
-                  onClick={() => setCurrent(idx)}>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-semibold truncate flex items-center justify-between gap-2" style={{ color: idx === current ? 'var(--primary)' : (s.type !== 'generic' ? 'var(--muted-foreground)' : 'var(--foreground)') }}>
-                      <span className="truncate">{idx + 1}. {s.title}</span>
-                      {s.type !== 'generic' && <Lock className={`w-[10px] h-[10px] flex-shrink-0 ${idx === current ? 'opacity-50' : 'opacity-[0.25]'}`} title="Slide Estrutural (Fixo)" />}
-                    </div>
-                    <div className="text-[10px] flex items-center gap-1 mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-                      <span>{getTypeLabel(s.type, idx, slideList.length)}</span>
-                      {s.topicBlock && (
-                        <>
-                          <span className="opacity-40">•</span>
-                          {React.createElement(VIEW_CONFIG[s.topicBlock.view].icon, { className: "w-3 h-3 opacity-60" })}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {[
-                      { title: '↑', action: () => moveUp(idx),        disabled: idx === 0,                  Icon: ChevronUp   },
-                      { title: '↓', action: () => moveDown(idx),      disabled: idx === slideList.length-1, Icon: ChevronDown },
-                      { title: 'Editar', action: () => setCurrent(idx), disabled: false,                     Icon: Pencil        },
-                      { title: '✕', action: () => deleteSlide(idx),   disabled: s.type !== 'generic' || slideList.length <= 5, Icon: Trash2      },
-                    ].map(({ title, action, disabled, Icon }) => (
-                      <button key={title} onClick={e => { e.stopPropagation(); action(); }} disabled={disabled} title={title}
-                        className="w-5 h-5 flex items-center justify-center rounded transition-colors disabled:opacity-20"
-                        style={{ color: 'var(--muted-foreground)' }}>
-                        <Icon className="w-3 h-3" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
+              {(() => {
+                let currentLetterCode = 65; // A
+                let contentCounter = 1;
+                const items: React.ReactNode[] = [];
+                
+                slideList.forEach((s, idx) => {
+                  const isAnchor = s.type !== 'generic';
+                  const typeName = getTypeLabel(s.type, idx, slideList.length);
+                  
+                  if (!isAnchor) {
+                    if (contentCounter === 1) {
+                      items.push(
+                        <div key="generic-header" className="px-5 py-2 mt-2 flex items-center group">
+                          <span className="text-[10px] font-bold tracking-widest uppercase opacity-50 flex items-center gap-1" style={{ color: 'var(--foreground)' }}>
+                            {String.fromCharCode(currentLetterCode)}) CONTEÚDO <ChevronDown className="w-3 h-3 opacity-50" />
+                          </span>
+                        </div>
+                      );
+                      currentLetterCode++;
+                    }
+                    
+                    const primaryText = `${contentCounter} - ${s.title}`;
+                    const secondaryText = typeName;
+                    
+                    items.push(
+                      <div key={s.id}
+                        className="group flex items-center gap-1 px-2 py-1.5 mx-2 my-0.5 rounded-lg cursor-pointer transition-all"
+                        style={{
+                          background: idx === current ? 'color-mix(in srgb, var(--primary) 12%, transparent)' : 'transparent',
+                          borderLeft: `2px solid ${idx === current ? 'var(--primary)' : 'transparent'}`,
+                        }}
+                        onClick={() => setCurrent(idx)}>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-semibold truncate flex items-center justify-between gap-2" style={{ color: idx === current ? 'var(--primary)' : 'var(--foreground)' }}>
+                            <span className="truncate">{primaryText}</span>
+                          </div>
+                          <div className="text-[10px] flex items-center gap-1 mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+                            <span>{secondaryText}</span>
+                            {s.topicBlock && (
+                              <>
+                                <span className="opacity-40">•</span>
+                                {React.createElement(VIEW_CONFIG[s.topicBlock.view].icon, { className: "w-3 h-3 opacity-60" })}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          {[
+                            { title: '↑', action: () => moveUp(idx),        disabled: idx === 0 || slideList[idx-1]?.type !== 'generic', Icon: ChevronUp   },
+                            { title: '↓', action: () => moveDown(idx),      disabled: idx === slideList.length-1 || slideList[idx+1]?.type !== 'generic', Icon: ChevronDown },
+                            { title: 'Editar', action: () => setCurrent(idx), disabled: false,                     Icon: Pencil        },
+                            { title: '✕', action: () => deleteSlide(idx),   disabled: slideList.length <= 5, Icon: Trash2      },
+                          ].map(({ title, action, disabled, Icon }) => (
+                            <button key={title} onClick={e => { e.stopPropagation(); action(); }} disabled={disabled} title={title}
+                              className="w-5 h-5 flex items-center justify-center rounded transition-colors disabled:opacity-20"
+                              style={{ color: 'var(--muted-foreground)' }}>
+                              <Icon className="w-3 h-3" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                    contentCounter++;
+                  } else {
+                    const primaryText = `${String.fromCharCode(currentLetterCode)}) ${typeName.toUpperCase()}`;
+                    const secondaryText = s.title;
+                    
+                    items.push(
+                      <div key={s.id}
+                        className="group flex items-center gap-1 px-2 py-1.5 mx-2 my-0.5 rounded-lg cursor-pointer transition-all"
+                        style={{
+                          background: idx === current ? 'color-mix(in srgb, var(--primary) 12%, transparent)' : 'transparent',
+                          borderLeft: `2px solid ${idx === current ? 'var(--primary)' : 'transparent'}`,
+                        }}
+                        onClick={() => setCurrent(idx)}>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-semibold truncate flex items-center justify-between gap-2" style={{ color: idx === current ? 'var(--primary)' : 'var(--muted-foreground)' }}>
+                            <span className="truncate">{primaryText}</span>
+                            <Lock className={`w-[10px] h-[10px] flex-shrink-0 ${idx === current ? 'opacity-50' : 'opacity-[0.25]'}`} title="Slide Estrutural (Fixo)" />
+                          </div>
+                          <div className="text-[10px] flex items-center gap-1 mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+                            <span className="truncate">{secondaryText}</span>
+                            {s.topicBlock && (
+                              <>
+                                <span className="opacity-40">•</span>
+                                {React.createElement(VIEW_CONFIG[s.topicBlock.view].icon, { className: "w-3 h-3 opacity-60" })}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          {[
+                            { title: 'Editar', action: () => setCurrent(idx), disabled: false,                     Icon: Pencil        },
+                          ].map(({ title, action, disabled, Icon }) => (
+                            <button key={title} onClick={e => { e.stopPropagation(); action(); }} disabled={disabled} title={title}
+                              className="w-5 h-5 flex items-center justify-center rounded transition-colors disabled:opacity-20"
+                              style={{ color: 'var(--muted-foreground)' }}>
+                              <Icon className="w-3 h-3" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                    currentLetterCode++;
+                  }
+                });
+                return items;
+              })()}
             </div>
             {!isViewMode && (
             <div className="p-3 border-t" style={{ borderColor: 'var(--border)' }}>
