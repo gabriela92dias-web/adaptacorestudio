@@ -80,7 +80,13 @@ export function useCampaignWizard(onClose: () => void) {
 
     try {
       const payload = await callOpenAI(
-        `Você é o Diretor Executivo de Operações Institucionais e Estratégia B2B da Adapta. Retorne EXATAMENTE um JSON: { "proposicoes": ["Tese 1", "Tese 2", "Tese 3"] }. Crie 3 escopos institucionais (teses de campanha) pragmáticas, operacionais e realistas. Foco em relacionamento corporativo, capacitação, reuniões táticas ou engajamento de rede. ZERO fantasia, ZERO historinhas lúdicas ou poéticas. Seja absolutamente executivo e direto. Máximo 25 palavras por tese.`,
+        `Você é o Engenheiro de Ação e Estrategista Chefe V8 da Adapta. Retorne EXATAMENTE um JSON: { "proposicoes": ["Tese 1", "Tese 2", "Tese 3"] }. 
+Crie 3 proposições centrais de campanha estruturadas exaustivamente sob uma ótica de ARQUITETURA SISTÊMICA. 
+Utilize conceitos de alta densidade intelectual corporativa, como: 'Ressonância', 'Empatia Sistêmica', 'Alavancagem Tática', 'Projeção', 'Extração de Comunidade', 'Convergência'.
+Formato mandatório de cada gancho: "[Nome do Conceito Sistêmico]: [Ação arquitetural para o tema]".
+NUNCA use termos de publicidade (vendas, leads, marketing) ou historinhas infantis (fadas, floresta). Seja absurdamente analítico, sistêmico e genial.
+Exemplo: "Empatia Sistêmica Voltada a [Tema]: Extrair a comunidade alvo do isolamento através da projeção social de evidências reais."
+Máximo de 25 palavras por proposição.`,
         `Tema da proposição de ação/campanha: "${rawName}"`
       );
       const cleaned = payload.replace(/```json|```/gi, "").trim();
