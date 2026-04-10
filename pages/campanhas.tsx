@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import {
-  Megaphone, RefreshCw, Zap, Blocks, Activity,
-  LayoutGrid, ArrowRight, Plus, AlertCircle, CheckCircle2,
+  Megaphone, Zap, Blocks, Activity,
+  LayoutGrid, ArrowRight, Plus, AlertCircle, CheckCircle2, RefreshCw,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { CriarCampanha } from "../components/brand-studio/criar-campanha";
@@ -54,13 +54,6 @@ export default function Campanhas() {
           </div>
           
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => refetch()}
-              disabled={loading}
-              className="w-11 h-11 flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--surface-foreground)] hover:border-[var(--border-hover)] hover:bg-[var(--card)] transition-all"
-            >
-              <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
-            </button>
             <button
               onClick={() => setIsCreating(true)}
               className="h-11 px-6 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] text-sm font-bold uppercase tracking-wider flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md group"
