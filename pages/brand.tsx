@@ -330,7 +330,7 @@ export default function Brand() {
                 Spectrum Rules
               </h2>
               <p className="text-sm md:text-base max-w-xl leading-relaxed m-0" style={{ color: t.textMuted }}>
-                39 variáveis oficiais mapeadas. É terminantemente proibido inserir blends externos. Software auditor rastreia correspondências paramétricas e bloqueia <span className="font-mono bg-black/5 dark:bg-white/10 px-1 rounded">ΔE > limite</span>.
+                39 variáveis oficiais mapeadas. É terminantemente proibido inserir blends externos. Software auditor rastreia correspondências paramétricas e bloqueia <span className="font-mono bg-black/5 dark:bg-white/10 px-1 rounded">ΔE &gt; limite</span>.
               </p>
             </div>
           </div>
