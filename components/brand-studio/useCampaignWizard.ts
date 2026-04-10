@@ -217,8 +217,13 @@ export function useCampaignWizard(onClose: () => void) {
       let text = "";
       try {
         const payload = await callOpenAI(
-          `Gere a Árvore-mãe Tática (Blueprint Oficial Motor V8). Responda JSON: { "blueprint": "markdown longo" }. Inclua: Resumo de Direção/Experiência, Esboço Orçamentário, Oportunidades, Desafios (Riscos Críticos) e Regras Operacionais. ATENÇÃO: Faça cruzamento de informações. Duração > 3h exige Coffee Break obrigatório. Mapeie necessidades de Produção Física (como camisas para staff, brindes temáticos). Se houver público > 30, preveja checagem de banheiros e local. Fuja do viés de "só redes sociais". Seja executivo e pragmático.`,
-          `Tema: "${rawName}". Direção: ${direcao}, Exp: ${experiencia}. Prev. Duração: ${eventoDuracao}h. Prev. Público: ${eventoPublico}. Orçamento Validado: R$ ${aiOrcamentoTotal}.`
+          `Gere a Árvore-mãe Tática (Blueprint Motor V8). Responda EXATAMENTE um JSON: { "blueprint": "markdown longo" }. Siga a estrutura:
+1. "Gancho Principal" Criativo: Uma big idea genial para tracionar.
+2. O Funil Completo: Mapeie de 7 a 10 funções/etapas estratégicas cobrindo Ativação, Engajamento e Retenção.
+3. Projetos de Oportunidades: Visão brilhante de marketing e conversão.
+4. Logística e Riscos.
+Seja o mais inteligente, ousado e brilhante estrategista. (Incorpore infraestrutura presencial se a duração > 3h e público > 30, mas não foque só nisso, brilhe no funil criativo).`,
+          `Tema: "${rawName}". Direção: ${direcao}, Exp: ${experiencia}. Prev. Duração: ${eventoDuracao}h. Prev. Público: ${eventoPublico}. Orçamento: R$ ${aiOrcamentoTotal}.`
         );
         const parsed = JSON.parse(payload.replace(/```json|```/gi, "").trim());
         const validation = aiBlueprintSchema.safeParse(parsed);
@@ -291,8 +296,8 @@ export function useCampaignWizard(onClose: () => void) {
 
       try {
         const payload = await callOpenAI(
-          `Gere APENAS 1 a 2 tarefas MUITO ESPECÍFICAS, CRIATIVAS e ÚNICAS para o tema "${rawName}". Responda JSON: { "governanca_risco": ["..."], "producao_fisica": ["..."], "evento_logistica": ["..."], "digital_distribuicao": ["..."] }. REGRA DE OURO: NÃO crie tarefas logísticas genéricas de eventos (como reservar local, coffee, anúncios normais) - isso já está mapeado no sistema determinístico. Crie OPORTUNIDADES e DESDOBRAMENTOS particulares do tema.`,
-          `Blueprint: ${blueprintTheory.substring(0, 300)}... Exp: ${experiencia}. Duração: ${eventoDuracao}h. Público: ${eventoPublico}.`
+          `Gere de 6 a 12 tarefas ESTRATÉGICAS e CRIATIVAS DE ALTO VALOR para o tema "${rawName}". Traga ideias brilhantes para o funil (ganchos de captação, ativações surpreendentes). Responda JSON: { "governanca_risco": ["..."], "producao_fisica": ["..."], "evento_logistica": ["..."], "digital_distribuicao": ["..."] }. Seja EXTREMAMENTE criativo, focado no gancho principal. Não precisa se preocupar com Coffee Break ou banheiros, isso já está garantido pela máquina. Foco na inteligência da campanha!`,
+          `Blueprint: ${blueprintTheory.substring(0, 300)}... Exp: ${experiencia}.`
         );
         const parsed = JSON.parse(payload.replace(/```json|```/gi, "").trim());
         const validation = aiActionPlanSchema.safeParse(parsed);
