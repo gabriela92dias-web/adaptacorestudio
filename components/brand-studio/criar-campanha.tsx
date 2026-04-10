@@ -294,6 +294,23 @@ function StepOrcamento({ state, actions }: { state: ReturnType<typeof useCampaig
   );
 }
 
+function WireframeBlock({ label, title, subtitle, children, className = "" }: { label: string, title?: string, subtitle?: string, children: React.ReactNode, className?: string }) {
+  return (
+    <div className={`relative border-2 border-[var(--border)] bg-[var(--surface)] p-6 md:p-8 ${className}`}>
+      <div className="absolute -top-[11px] left-4 md:left-6 bg-[var(--surface)] px-3 border-l-2 border-r-2 border-[var(--border)] text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] shrink-0 max-w-[calc(100%-2rem)] overflow-hidden text-ellipsis whitespace-nowrap">
+        {label}
+      </div>
+      {(title || subtitle) && (
+        <div className="mb-6 pb-4 border-b border-[var(--border)]">
+          {title && <h2 className="text-xl md:text-2xl font-black font-heading uppercase tracking-wider text-[var(--foreground)]">{title}</h2>}
+          {subtitle && <p className="text-sm font-sans font-medium text-[var(--muted-foreground)] mt-2">{subtitle}</p>}
+        </div>
+      )}
+      <div>{children}</div>
+    </div>
+  );
+}
+
 export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { state, actions } = useCampaignWizard(onClose);
   const {
@@ -367,235 +384,347 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
            </div>
         </header>
 
-        <div className="flex-1 w-full max-w-4xl mx-auto px-12 pt-4 pb-20 flex flex-col gap-8">
+        <div className="flex-1 w-full max-w-5xl mx-auto px-8 md:px-12 pt-4 pb-24 flex flex-col gap-10">
            
-           {step === 0 && (
-             <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <div className="flex flex-col items-center text-[var(--muted-foreground)] opacity-[0.15] mb-12 scale-110">
-                  <div className="w-32 h-12 border-2 border-current bg-transparent text-center text-xs flex items-center justify-center font-bold tracking-widest uppercase">Gatilho</div>
-                  <div className="w-px h-6 bg-current"></div>
-                  <div className="relative flex items-center justify-center">
-                    <Hexagon size={64} strokeWidth={1} className="transform -rotate-90" />
-                    <span className="absolute text-[10px] font-bold">V8</span>
-                  </div>
-                  <div className="flex w-64 justify-between -mt-[1px]">
-                      <div className="w-1/2 h-8 border-t-2 border-l-2 border-current rounded-tl-xl object-none"></div>
-                      <div className="w-1/2 h-8 border-t-2 border-r-2 border-current rounded-tr-xl"></div>
-                  </div>
-                  <div className="flex w-96 justify-between gap-12">
-                      <div className="w-32 h-16 border-2 border-current flex items-center justify-center rounded-lg"><span className="text-[10px] font-bold uppercase tracking-widest">Trilha A</span></div>
-                      <div className="w-32 h-16 border-2 border-dashed border-current flex items-center justify-center rounded-lg"><span className="text-[10px] font-bold uppercase tracking-widest">Trilha B</span></div>
-                  </div>
-                </div>
-                <h3 className="text-3xl font-black tracking-tight text-[var(--foreground)] opacity-50 mix-blend-luminosity">O Seu Plano Vai Aparecer Aqui</h3>
-                <p className="text-[var(--muted-foreground)] max-w-md mt-4 font-medium text-lg leading-relaxed opacity-50 mix-blend-luminosity">Siga os passos à esquerda para visualizar como a plataforma vai distribuir as tarefas, orçamentos e a estrutura do seu projeto.</p>
-             </div>
-           )}
+           <div className={`transition-all duration-700 ${step >= 0 ? "opacity-100 mt-8" : "hidden"}`}>
+             <WireframeBlock label="BLOCO 1: HUB OMNICANAL (RADIAL)" title="DNA DA CAMPANHA (ESCORE + ESCOPO)" subtitle="Centro = decisão mínima que ativa todo o resto. Nodes = pilares que a campanha obrigatoriamente define.">
+               {step === 0 ? (
+                 <div className="flex flex-col items-center justify-center py-16 opacity-40 mix-blend-luminosity">
+                    <div className="w-24 h-24 border-2 border-[var(--primary)] border-dashed rounded-full flex items-center justify-center relative bg-[var(--background)]">
+                        <span className="text-[10px] tracking-widest uppercase text-[var(--primary)] font-bold">NODE</span>
+                        <div className="absolute w-16 h-0 border-t-2 border-[var(--primary)] border-dashed" style={{ top: '50%', left: '-66px' }}></div>
+                        <div className="absolute w-16 h-0 border-t-2 border-[var(--primary)] border-dashed" style={{ top: '50%', right: '-66px' }}></div>
+                        <div className="absolute h-16 w-0 border-l-2 border-[var(--primary)] border-dashed" style={{ left: '50%', top: '-66px' }}></div>
+                        <div className="absolute h-16 w-0 border-l-2 border-[var(--primary)] border-dashed" style={{ left: '50%', bottom: '-66px' }}></div>
+                    </div>
+                    <h3 className="text-2xl font-black tracking-tight text-[var(--foreground)] mt-12">O Seu Plano Vai Aparecer Aqui</h3>
+                    <p className="text-[var(--muted-foreground)] max-w-md mt-2 font-medium text-sm leading-relaxed text-center">Siga os passos à esquerda para visualizar como a plataforma vai distribuir as tarefas, orçamentos e a estrutura do seu projeto.</p>
+                 </div>
+               ) : (
+                 <div className="flex flex-col md:flex-row gap-8 py-4">
+                   <div className="flex-[2] text-[var(--foreground)] text-sm">
+                     <ul className="list-disc pl-5 space-y-2">
+                       <li><b className="uppercase">Direção:</b> {direcao === "interna" ? "Interna" : direcao === "externa" ? "Externa" : "Híbrida"}</li>
+                       <li><b className="uppercase">Experiência:</b> {experiencia === "digital" ? "Digital" : experiencia === "presencial" ? "Presencial" : "Híbrida"}</li>
+                       <li><b className="uppercase">Públicos / Pax:</b> {eventoPublico > 0 ? eventoPublico + " pessoas" : "Indefinido"}</li>
+                       <li><b className="uppercase">Duração / Janela:</b> {eventoDuracao > 0 ? eventoDuracao + " horas" : "Indefinido"}</li>
+                       <li><b className="uppercase">Módulos Ativos:</b> {Object.keys(modulos).filter(k => modulos[k as keyof typeof modulos]).map(k => k.toUpperCase()).join(', ') || "Padrão"}</li>
+                     </ul>
+                     <div className="mt-6 text-[var(--muted-foreground)] border-l-2 border-[var(--primary)] pl-4 italic text-xs font-medium bg-[var(--surface)] p-3">
+                        Regra: se for híbrida, a camada interna existe sempre (kit + alinhamento + risco).
+                     </div>
+                   </div>
+                   <div className="flex-1 flex flex-col items-center justify-center h-48 border border-[var(--border)] bg-[var(--background)] shadow-inner">
+                     <div className="w-16 h-16 border-2 border-dashed border-[var(--primary)] rounded-full flex items-center justify-center relative bg-[var(--surface)] text-[var(--foreground)] font-bold text-[9px] tracking-widest uppercase shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+                         Node
+                         <div className="absolute w-12 h-0 border-t-2 border-[var(--primary)] border-dashed opacity-70" style={{ top: '50%', left: '-50px' }}></div>
+                         <div className="absolute w-12 h-0 border-t-2 border-[var(--primary)] border-dashed opacity-70" style={{ top: '50%', right: '-50px' }}></div>
+                         <div className="absolute h-12 w-0 border-l-2 border-[var(--primary)] border-dashed opacity-70" style={{ left: '50%', top: '-50px' }}></div>
+                         <div className="absolute h-12 w-0 border-l-2 border-[var(--primary)] border-dashed opacity-70" style={{ left: '50%', bottom: '-50px' }}></div>
+                     </div>
+                   </div>
+                 </div>
+               )}
+             </WireframeBlock>
+           </div>
 
            {/* ── Arquitetura de Funil (Vignette Moderno) ── */}
            {step >= 1 && (
-             <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 w-full mt-4">
-               <div className="flex flex-col items-center text-center mb-16 pb-6 border-b border-[var(--border)]">
-                 <h4 className="text-3xl font-black font-heading tracking-tight text-[var(--foreground)] mb-2">Estrutura da Sua Campanha</h4>
-                 <p className="text-sm font-medium text-[var(--muted-foreground)] max-w-md">VISÃO GERAL DE TODAS AS ETAPAS E RECURSOS QUE SERÃO ALOCADOS NESTE PROJETO.</p>
-               </div>
-               
-               <div className="flex w-full relative items-start h-[400px]">
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 w-full mt-8">
+               <WireframeBlock label="BLOCO 2: ESTRUTURA PROGRESSIVA (FUNIL)" title="GATES DE EXECUÇÃO (DO PLANEJAMENTO AO “NO AR”)" subtitle="Cada layer é um “portão”: se não fechar, a campanha não pode avançar.">
+                 <div className="flex w-full relative items-start h-[360px] pt-4">
 
-                 {/* FUNÇÕES DE RENDERIZAÇÃO INTERNA */}
-                 {(() => {
-                    const layers = [];
-                    
-                    // Layer 1
-                    if (modulos.governanca || true) {
+                   {/* FUNÇÕES DE RENDERIZAÇÃO INTERNA */}
+                   {(() => {
+                      const layers = [];
+                      
+                      // Layer 1
+                      if (modulos.governanca || true) {
+                        layers.push({
+                           title: "Planejamento Base",
+                           subtitle: "Etapa 1",
+                           items: ["Controle de Verba", "Contratos & Jurídico", "Aprovação Final da Ideia"],
+                           clip: "polygon(0% 0%, 100% 12%, 100% 88%, 0% 100%)",
+                           opacity: "opacity-100" // Opacidade Plena
+                        });
+                      }
+
+                      // Layer 2
+                      if (experiencia === "presencial" || experiencia === "hibrida" || modulos.fisico || modulos.evento) {
+                        const l2Items = [];
+                        if (modulos.evento) l2Items.push("Credenciamento e Acesso", "Estrutura de Palco");
+                        else l2Items.push("Materiais e Brindes");
+                        l2Items.push("Equipe de Recepção");
+                        if (eventoDuracao >= 3) l2Items.push("Alimentação e Bebidas");
+
+                        layers.push({
+                           title: "Operação Presencial",
+                           subtitle: "Etapa 2",
+                           items: l2Items,
+                           clip: "polygon(0% 12%, 100% 24%, 100% 76%, 0% 88%)",
+                           opacity: "opacity-80" // 80%
+                        });
+                      }
+
+                      // Layer 3
+                      if (experiencia === "digital" || experiencia === "hibrida" || modulos.digital) {
+                        layers.push({
+                           title: "Atração e Inscrição",
+                           subtitle: "Etapa 3",
+                           items: ["Página Web do Projeto", "Anúncios de Captação", "Automação de E-mails"],
+                           clip: "polygon(0% 24%, 100% 36%, 100% 64%, 0% 76%)",
+                           opacity: "opacity-60" // 60%
+                        });
+                      }
+
+                      // Layer 4
                       layers.push({
-                         title: "Planejamento Base",
-                         subtitle: "Etapa 1",
-                         items: ["Controle de Verba", "Contratos & Jurídico", "Aprovação Final da Ideia"],
-                         clip: "polygon(0% 0%, 100% 12%, 100% 88%, 0% 100%)",
-                         opacity: "opacity-100" // Opacidade Plena
+                           title: "Pós-Campanha",
+                           subtitle: "Etapa 4",
+                           items: ["Pesquisa de Satisfação", "Engajamento Contínuo"],
+                           clip: "polygon(0% 36%, 100% 48%, 100% 52%, 0% 64%)",
+                           opacity: "opacity-40" // 40%
                       });
-                    }
 
-                    // Layer 2
-                    if (experiencia === "presencial" || experiencia === "hibrida" || modulos.fisico || modulos.evento) {
-                      const l2Items = [];
-                      if (modulos.evento) l2Items.push("Credenciamento e Acesso", "Estrutura de Palco");
-                      else l2Items.push("Materiais e Brindes");
-                      l2Items.push("Equipe de Recepção");
-                      if (eventoDuracao >= 3) l2Items.push("Alimentação e Bebidas");
+                      return layers.map((layer, idx) => (
+                        <div key={idx} className="flex-1 flex flex-col group">
+                           {/* Header: Title */}
+                           <div className="h-20 flex flex-col items-center justify-end pb-6 px-2 text-center transition-transform duration-500 group-hover:-translate-y-2">
+                               <span className="text-[10px] font-black tracking-widest uppercase text-[var(--muted-foreground)] mb-1">{layer.subtitle}</span>
+                               <span className="text-sm font-bold text-[var(--foreground)] leading-tight">{layer.title}</span>
+                           </div>
+                           
+                           {/* Funnel Middle Segment */}
+                           <div className="w-full h-40 relative flex items-center justify-center px-[0.5px]">
+                              {/* Shadow/Hover Glow Underneath */}
+                              <div 
+                                className={`absolute inset-0 bg-[var(--primary)] blur-xl transition-all duration-300 opacity-0 group-hover:opacity-30`}
+                                style={{ clipPath: layer.clip }}
+                              />
+                              {/* Solid Funnel Shape */}
+                              <div 
+                                className={`absolute inset-0 bg-[var(--primary)] ${layer.opacity} transition-all duration-500 border-x border-[var(--background)]`}
+                                style={{ clipPath: layer.clip }}
+                              />
+                              {/* Inner Circle / Label */}
+                              <div className="relative z-10 w-8 h-8 rounded-full bg-[var(--background)] flex items-center justify-center shadow-lg font-black font-heading text-xs text-[var(--primary)] border border-[var(--primary)]/20 transition-transform duration-500 group-hover:scale-125">
+                                 {idx + 1}
+                              </div>
+                           </div>
+                           
+                           {/* Footer: Items List */}
+                           <div className="flex flex-col gap-2 mt-8 px-4 items-center">
+                              {layer.items.map((item, j) => (
+                                 <span key={j} className="text-[9px] uppercase tracking-wider bg-[var(--background)] border border-[var(--border)] px-2 py-1 rounded text-[var(--foreground)] font-bold shadow-sm text-center transition-all duration-300 hover:border-[var(--primary)] hover:text-[var(--primary)] cursor-crosshair">
+                                   {item}
+                                 </span>
+                              ))}
+                           </div>
+                        </div>
+                      ));
+                   })()}
 
-                      layers.push({
-                         title: "Operação Presencial",
-                         subtitle: "Etapa 2",
-                         items: l2Items,
-                         clip: "polygon(0% 12%, 100% 24%, 100% 76%, 0% 88%)",
-                         opacity: "opacity-80" // 80%
-                      });
-                    }
+                   {/* Dribbble Style Target Pin on the right end */}
+                   <div className="w-12 h-68 pt-20 flex flex-col items-center -ml-4 z-10 relative">
+                       <div className="w-10 h-10 mt-10 rounded-full bg-[var(--foreground)] text-[var(--background)] shadow-2xl flex items-center justify-center font-black animate-pulse">
+                           <Target size={16} />
+                       </div>
+                   </div>
 
-                    // Layer 3
-                    if (experiencia === "digital" || experiencia === "hibrida" || modulos.digital) {
-                      layers.push({
-                         title: "Atração e Inscrição",
-                         subtitle: "Etapa 3",
-                         items: ["Página Web do Projeto", "Anúncios de Captação", "Automação de E-mails"],
-                         clip: "polygon(0% 24%, 100% 36%, 100% 64%, 0% 76%)",
-                         opacity: "opacity-60" // 60%
-                      });
-                    }
-
-                    // Layer 4
-                    layers.push({
-                         title: "Pós-Campanha",
-                         subtitle: "Etapa 4",
-                         items: ["Pesquisa de Satisfação", "Engajamento Contínuo"],
-                         clip: "polygon(0% 36%, 100% 48%, 100% 52%, 0% 64%)",
-                         opacity: "opacity-40" // 40%
-                    });
-
-                    return layers.map((layer, idx) => (
-                      <div key={idx} className="flex-1 flex flex-col group">
-                         {/* Header: Title */}
-                         <div className="h-20 flex flex-col items-center justify-end pb-6 px-2 text-center transition-transform duration-500 group-hover:-translate-y-2">
-                             <span className="text-[10px] font-black tracking-widest uppercase text-[var(--muted-foreground)] mb-1">{layer.subtitle}</span>
-                             <span className="text-sm font-bold text-[var(--foreground)] leading-tight">{layer.title}</span>
-                         </div>
-                         
-                         {/* Funnel Middle Segment */}
-                         <div className="w-full h-40 relative flex items-center justify-center px-[0.5px]">
-                            {/* Shadow/Hover Glow Underneath */}
-                            <div 
-                              className={`absolute inset-0 bg-[var(--primary)] blur-xl transition-all duration-300 opacity-0 group-hover:opacity-30`}
-                              style={{ clipPath: layer.clip }}
-                            />
-                            {/* Solid Funnel Shape */}
-                            <div 
-                              className={`absolute inset-0 bg-[var(--primary)] ${layer.opacity} transition-all duration-500`}
-                              style={{ clipPath: layer.clip }}
-                            />
-                            {/* Inner Circle / Label */}
-                            <div className="relative z-10 w-8 h-8 rounded-full bg-[var(--background)] flex items-center justify-center shadow-lg font-black font-heading text-xs text-[var(--primary)] border border-[var(--primary)]/20 transition-transform duration-500 group-hover:scale-125">
-                               {idx + 1}
-                            </div>
-                         </div>
-                         
-                         {/* Footer: Items List */}
-                         <div className="flex flex-col gap-2 mt-8 px-4 items-center">
-                            {layer.items.map((item, j) => (
-                               <span key={j} className="text-[10px] bg-[var(--surface)] border border-[var(--border)] px-3 py-1 rounded-full text-[var(--foreground)] font-semibold shadow-sm text-center transition-all duration-300 hover:border-[var(--primary)] hover:text-[var(--primary)] cursor-crosshair">
-                                 {item}
-                               </span>
-                            ))}
-                         </div>
-                      </div>
-                    ));
-                 })()}
-
-                 {/* Dribbble Style Target Pin on the right end */}
-                 <div className="w-12 h-68 pt-20 flex flex-col items-center -ml-4 z-10 relative">
-                     <div className="w-10 h-10 mt-10 rounded-full bg-[var(--foreground)] text-[var(--background)] shadow-2xl flex items-center justify-center font-black animate-pulse">
-                         <Target size={16} />
-                     </div>
                  </div>
-
-               </div>
-               
+               </WireframeBlock>
              </div>
            )}
 
            {/* ── Trilhas Paralelas (Step 2+) ── */}
            {step >= 2 && (
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-                <div className="flex flex-col gap-3">
-                  <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Users size={14} /> O que a nossa Associação Precisa Fazer</h4>
-                  <div className="flex flex-col gap-2 pt-2">
-                    {aiTrilhaInterna.map((item, idx) => (
-                      <div key={idx} className="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm text-sm font-medium text-[var(--foreground)] flex items-start gap-3">
-                         <span className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase mt-0.5 shrink-0">0{idx+1}</span>
-                         <span className="leading-snug">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Globe size={14} /> Como essa ação vai chegar no Público</h4>
-                  <div className="flex flex-col gap-2 pt-2">
-                    {aiTrilhaExterna.map((item, idx) => (
-                      <div key={idx} className="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm text-sm font-medium text-[var(--foreground)] flex items-start gap-3">
-                         <span className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase mt-0.5 shrink-0">0{idx+1}</span>
-                         <span className="leading-snug">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 w-full mt-4">
+               <WireframeBlock label="BLOCO 3: PAINEL DIVIDIDO (SPLIT L/R)" title="TRILHAS PARALELAS (INTERNA x EXTERNA)" subtitle="Divide o que o time precisa receber/treinar vs. o que o público recebe/experimenta.">
+                 <div className="flex flex-col md:flex-row border-2 border-[var(--border)] bg-[var(--background)] gap-[2px]">
+                     {/* Lado Interno */}
+                     <div className="flex-1 bg-[var(--surface)] p-6">
+                         <div className="border-b-2 border-[var(--border)] pb-2 mb-4 text-center text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--foreground)]">MÓDULO A — CAMADA INTERNA</div>
+                         <ul className="flex flex-col gap-3">
+                           {aiTrilhaInterna.map((item, idx) => (
+                              <li key={idx} className="flex items-start gap-3 text-xs md:text-sm font-medium text-[var(--muted-foreground)] p-3 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors">
+                                  <span className="text-[10px] font-bold text-[var(--foreground)] bg-[var(--border)] px-1.5 py-0.5 rounded uppercase shrink-0">0{idx+1}</span>
+                                  <span className="leading-relaxed">{item}</span>
+                              </li>
+                           ))}
+                         </ul>
+                     </div>
+                     {/* Linha Divisoria */}
+                     <div className="w-[2px] bg-[var(--border)] hidden md:block"></div>
+                     {/* Lado Externo */}
+                     <div className="flex-1 bg-[var(--surface)] p-6">
+                         <div className="border-b-2 border-[var(--border)] pb-2 mb-4 text-center text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--foreground)]">MÓDULO B — CAMADA EXTERNA</div>
+                         <ul className="flex flex-col gap-3">
+                           {aiTrilhaExterna.map((item, idx) => (
+                              <li key={idx} className="flex items-start gap-3 text-xs md:text-sm font-medium text-[var(--muted-foreground)] p-3 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors">
+                                  <span className="text-[10px] font-bold text-[var(--foreground)] bg-[var(--border)] px-1.5 py-0.5 rounded uppercase shrink-0">0{idx+1}</span>
+                                  <span className="leading-relaxed">{item}</span>
+                              </li>
+                           ))}
+                         </ul>
+                     </div>
+                 </div>
+               </WireframeBlock>
              </div>
            )}
 
-           {/* ── Notinha de Orçamento Editável (Step 3+) ── */}
-           {step >= 3 && (
-              <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-                 <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
-                    <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] flex items-center gap-2"><Receipt size={14} /> Distribuição Sugerida de Verba</h4>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-0.5 rounded-md">Editável! Fique à vontade para ajustar.</span>
+           {/* ── Componentes Flutuantes (Step 2+) ── */}
+           {step >= 2 && (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 w-full mt-4">
+               <WireframeBlock label="BLOCO 4: COMPONENTES FLUTUANTES / LÚDICO" title="BIBLIOTECA DE MÓDULOS (TOGGLES) — V2" subtitle="Cada módulo ON abre subdecisões + tarefas + linha de orçamento + prova de pronto.">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                   
+                   {/* EVENTO */}
+                   <div className={`p-4 border ${experiencia === "presencial" || experiencia === "hibrida" || modulos.evento ? "border-[var(--primary)] bg-[var(--surface)] shadow-sm" : "border-[var(--border)] bg-[var(--background)] opacity-50"} transition-all`}>
+                      <div className="font-bold text-xs uppercase mb-3 tracking-widest text-[var(--foreground)] flex justify-between items-center">
+                         <span>Evento · Acesso & Prog.</span>
+                         {(experiencia === "presencial" || experiencia === "hibrida" || modulos.evento) && <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />}
+                      </div>
+                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-[var(--muted-foreground)]">
+                         <li><b className="text-[var(--foreground)]">Modelo:</b> {experiencia}</li>
+                         <li>Inscrição, check-in, validação</li>
+                         <li>Programação, blocos, convidados</li>
+                      </ul>
+                   </div>
+
+                   {/* FÍSICO */}
+                   <div className={`p-4 border ${(modulos.fisico || experiencia === "presencial" || experiencia === "hibrida") ? "border-[var(--primary)] bg-[var(--surface)] shadow-sm" : "border-[var(--border)] bg-[var(--background)] opacity-50"} transition-all`}>
+                      <div className="font-bold text-xs uppercase mb-3 tracking-widest text-[var(--foreground)] flex justify-between items-center">
+                         <span>Físico · Infra & Materiais</span>
+                         {(modulos.fisico || experiencia === "presencial" || experiencia === "hibrida") && <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />}
+                      </div>
+                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-[var(--muted-foreground)]">
+                         <li>Impressos (tiragem por tier)</li>
+                         <li>Kits/Brindes, Uniformes/Credenciais</li>
+                         <li>Locação, Segurança, Coffee/Alimentação</li>
+                      </ul>
+                   </div>
+
+                   {/* DIGITAL */}
+                   <div className={`p-4 border ${(modulos.digital || experiencia === "digital" || experiencia === "hibrida") ? "border-[var(--primary)] bg-[var(--surface)] shadow-sm" : "border-[var(--border)] bg-[var(--background)] opacity-50"} transition-all`}>
+                      <div className="font-bold text-xs uppercase mb-3 tracking-widest text-[var(--foreground)] flex justify-between items-center">
+                         <span>Digital · Frentes & Entregáveis</span>
+                         {(modulos.digital || experiencia === "digital" || experiencia === "hibrida") && <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />}
+                      </div>
+                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-[var(--muted-foreground)]">
+                         <li>Landing Page (campos, destino, LGPD)</li>
+                         <li>E-mail/PR/WhatsApp (SLA, scripts)</li>
+                         <li>Tráfego/Ads (objetivo, criativos, verba)</li>
+                      </ul>
+                   </div>
+
+                   {/* GOVERNANÇA */}
+                   <div className={`p-4 border ${modulos.governanca || true ? "border-[var(--primary)] bg-[var(--surface)] shadow-sm" : "border-[var(--border)] bg-[var(--background)] opacity-50"} transition-all`}>
+                      <div className="font-bold text-xs uppercase mb-3 tracking-widest text-[var(--foreground)] flex justify-between items-center">
+                         <span>Governança · Aprovação & Risco</span>
+                         <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                      </div>
+                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-[var(--muted-foreground)]">
+                         <li>Aprovadores, prazos de corte</li>
+                         <li>LGPD, coleta de dados, termo de imagem</li>
+                         <li>Respostas difíceis (FAQ) e escalonamento</li>
+                      </ul>
+                   </div>
+
                  </div>
-                 
-                 <div className="mt-4 p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-sm flex flex-col gap-4">
-                    {aiOrcamentoLinhas.map((linha, idx) => (
-                       <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-[var(--background)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-colors group">
-                          <div className="flex flex-col flex-1">
-                             <span className="text-sm font-bold text-[var(--foreground)]">{linha.categoria}</span>
-                             <span className="text-xs text-[var(--muted-foreground)] line-clamp-1">{linha.motivo}</span>
+                 <div className="mt-5 text-[10px] text-[var(--muted-foreground)] font-bold uppercase tracking-widest border-t border-[var(--border)] pt-3">
+                   Definição “pronto” (padrão): todo módulo ativo precisa ter custo (R$), responsável, prazo e prova de pronto.
+                 </div>
+               </WireframeBlock>
+             </div>
+           )}
+
+           {/* ── Blueprint Text (Step 4+) - BLOCO 5 ── */}
+           {step >= 4 && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 w-full mt-4">
+                <WireframeBlock label="BLOCO 5: FLUXOGRAMA DE DECISÃO" title="ÁRVORE-MÃE (SE → ENTÃO) — V2 EXTREMA" subtitle="Decisão prática → abre módulos físicos/digitais/evento + define resultados verificáveis.">
+                   <div className="p-8 md:p-10 border-2 border-[var(--border)] bg-[var(--background)] relative">
+                       <div className="absolute top-0 right-0 bg-[var(--foreground)] text-[var(--background)] px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border-b-2 border-l-2 border-[var(--primary)]">
+                           Blueprint Compilado
+                       </div>
+                       <div className="flex items-center gap-4 mb-6 pb-6 border-b border-[var(--border)]">
+                          <div className="w-10 h-10 border-2 border-[var(--border)] bg-[var(--surface)] flex items-center justify-center">
+                            <FileText size={18} className="text-[var(--primary)]" />
                           </div>
-                          <div className="relative w-full sm:w-36 shrink-0">
-                             <span className="absolute left-3 top-[10px] text-xs font-bold text-[var(--muted-foreground)]">R$</span>
-                             <input 
-                               type="number"
-                               className="w-full bg-transparent border border-[var(--border)] rounded-lg pl-8 pr-3 py-2 text-sm font-bold font-mono text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 transition-all text-right group-hover:border-[var(--border-hover)]"
-                               value={linha.valor_estimado === 0 ? '' : linha.valor_estimado}
-                               onChange={(e) => {
-                                 const val = parseFloat(e.target.value) || 0;
-                                 const nextLinhas = [...aiOrcamentoLinhas];
-                                 nextLinhas[idx].valor_estimado = val;
-                                 setAiOrcamentoLinhas(nextLinhas);
-                               }}
-                             />
+                          <div className="flex flex-col">
+                             <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Síntese de Operação (Decision Tree)</span>
+                             <span className="text-lg font-bold font-heading text-[var(--foreground)]">Termo de Abertura / Blueprint</span>
                           </div>
                        </div>
-                    ))}
-                    
-                    <div className="mt-2 pt-4 border-t border-dashed border-[var(--border)] flex items-center justify-between px-2">
-                       <span className="text-sm font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Total Ajustado:</span>
-                       <span className="text-2xl font-black font-mono text-[var(--foreground)] tracking-tight">R$ {aiOrcamentoLinhas.reduce((acc, curr) => acc + curr.valor_estimado, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                 </div>
+                       <div className="prose prose-sm max-w-none font-medium whitespace-pre-wrap leading-relaxed text-[var(--foreground)] text-justify font-serif selection:bg-[var(--primary)] selection:text-[var(--primary-foreground)]">
+                           {blueprintTheory}
+                       </div>
+                   </div>
+                </WireframeBlock>
               </div>
            )}
 
-           {/* ── Blueprint Text (Step 4+) ── */}
-           {step >= 4 && (
-              <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-                 <div className="p-8 rounded-[2rem] bg-[var(--foreground)] text-[var(--background)] shadow-2xl relative overflow-hidden">
-                    
-                    {/* Badge Dossiê Oficial */}
-                    <div className="absolute top-0 right-0 bg-[var(--primary)] text-[var(--primary-foreground)] px-6 py-2 rounded-bl-3xl font-bold text-xs uppercase tracking-widest shadow-md">
-                       Blueprint Verificado
-                    </div>
-
-                    <div className="flex items-center gap-4 mb-8 border-b border-[var(--background)]/20 pb-6 pr-32">
-                       <div className="w-14 h-14 rounded-full bg-[var(--background)]/10 flex items-center justify-center font-mono">
-                         <Blocks size={24} className="text-[var(--background)]" />
+           {/* ── Notinha de Orçamento Editável (Step 3+) - BLOCO 6 ── */}
+           {step >= 3 && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 w-full mt-4">
+                <WireframeBlock label="BLOCO 6: DASHBOARD DE DADOS (CARDS E TABELAS)" title="PAINEL DE CONTROLE (DADOS + ALERTAS) — V2" subtitle="Status por módulo + gastos + metas + prova de pronto (auditável).">
+                   <div className="border border-[var(--border)] bg-[var(--background)]">
+                       {/* KPIs Topo (mock-style) */}
+                       <div className="flex border-b border-[var(--border)] divide-x divide-[var(--border)] bg-[var(--surface)]">
+                          <div className="flex-1 p-4 flex flex-col justify-between">
+                              <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Budget Utilizado</span>
+                              <span className="text-xl font-black font-mono mt-2 text-[var(--foreground)]">100%</span>
+                          </div>
+                          <div className="flex-1 p-4 flex flex-col justify-between">
+                              <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Módulos Ativos</span>
+                              <span className="text-xl font-black font-mono mt-2 text-[var(--foreground)]">{Object.values(modulos).filter(v=>v).length + 1}</span>
+                          </div>
+                          <div className="flex-[2] p-4 flex items-center justify-center bg-[var(--background)]/50">
+                              <span className="text-xs text-[var(--muted-foreground)] font-mono text-center">Alertas: 0 pendentes.<br/>KPIs monitorados pelo CoreAct.</span>
+                          </div>
                        </div>
-                       <div>
-                         <h3 className="text-3xl font-black tracking-tight mt-1">Resumo do Plano (Visão Executiva)</h3>
-                         <span className="text-sm opacity-60 font-medium tracking-wider uppercase">Para colocar todo mundo na mesma página</span>
+                       {/* Header da Tabela */}
+                       <div className="hidden sm:grid grid-cols-12 text-[10px] font-bold uppercase tracking-widest border-b border-[var(--border)] pb-3 pt-4 px-6 text-[var(--muted-foreground)] bg-[var(--surface)]">
+                           <div className="col-span-4">Categoria</div>
+                           <div className="col-span-4">Motivação</div>
+                           <div className="col-span-4 text-right">Alocação Estimada (R$)</div>
                        </div>
-                    </div>
-                    <div className="prose prose-invert max-w-none font-medium whitespace-pre-wrap leading-relaxed text-[var(--background)]/90 text-justify hyphens-auto font-serif">
-                       {blueprintTheory}
-                    </div>
-                 </div>
+                       {/* Linhas */}
+                       <div className="flex flex-col divide-y divide-[var(--border)]">
+                         {aiOrcamentoLinhas.map((linha, idx) => (
+                             <div key={idx} className="grid grid-cols-1 sm:grid-cols-12 items-center gap-4 py-4 px-6 hover:bg-[var(--surface)] transition-colors group">
+                                 <div className="sm:col-span-4 flex items-center gap-3">
+                                   <div className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] opacity-50 hidden sm:block"></div>
+                                   <div className="text-xs font-bold text-[var(--foreground)] tracking-wide">{linha.categoria}</div>
+                                 </div>
+                                 <div className="sm:col-span-4 text-[11px] font-medium text-[var(--muted-foreground)] leading-relaxed bg-[var(--background)]/50 sm:bg-transparent p-2 sm:p-0 rounded border border-[var(--border)] sm:border-transparent">
+                                   {linha.motivo}
+                                 </div>
+                                 <div className="sm:col-span-4 flex justify-end">
+                                     <div className="relative w-full sm:w-40">
+                                         <span className="absolute left-3 top-2 text-[10px] sm:text-xs font-bold text-[var(--muted-foreground)] uppercase">R$</span>
+                                         <input 
+                                            type="number"
+                                            className="w-full bg-[var(--background)] border border-[var(--border)] rounded px-3 py-1.5 text-sm font-bold font-mono text-[var(--foreground)] outline-none focus:border-[var(--primary)] transition-all text-right group-hover:border-[var(--foreground)]/30 hover:border-[var(--foreground)] shadow-sm"
+                                            value={linha.valor_estimado === 0 ? '' : linha.valor_estimado}
+                                            onChange={(e) => {
+                                              const val = parseFloat(e.target.value) || 0;
+                                              const nextLinhas = [...aiOrcamentoLinhas];
+                                              nextLinhas[idx].valor_estimado = val;
+                                              setAiOrcamentoLinhas(nextLinhas);
+                                            }}
+                                         />
+                                     </div>
+                                 </div>
+                             </div>
+                         ))}
+                       </div>
+                       {/* Footer Total */}
+                       <div className="border-t-2 border-[var(--border)] flex items-center justify-between px-6 py-4 bg-[var(--surface)]">
+                          <span className="text-xs font-black uppercase tracking-widest text-[var(--foreground)]">Custo Final Projetado</span>
+                          <span className="text-2xl font-black font-mono text-[var(--primary)] tracking-tight">R$ {aiOrcamentoLinhas.reduce((acc, curr) => acc + curr.valor_estimado, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                       </div>
+                   </div>
+                </WireframeBlock>
               </div>
            )}
         </div>

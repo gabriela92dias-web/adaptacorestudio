@@ -1,0 +1,697 @@
+[
+  {
+    "id": "family-0",
+    "name": "Family 0",
+    "hex": "#6904a7"
+  },
+  {
+    "id": "family-1",
+    "name": "Family 1",
+    "hex": "#f66e54"
+  },
+  {
+    "id": "family-2",
+    "name": "Family 2",
+    "hex": "#021ed3"
+  },
+  {
+    "id": "family-3",
+    "name": "Family 3",
+    "hex": "#45e0e4"
+  },
+  {
+    "id": "family-4",
+    "name": "Family 4",
+    "hex": "#8107e0"
+  },
+  {
+    "id": "family-5",
+    "name": "Family 5",
+    "hex": "#2e065d"
+  },
+  {
+    "id": "family-6",
+    "name": "Family 6",
+    "hex": "#f394a7"
+  },
+  {
+    "id": "family-7",
+    "name": "Family 7",
+    "hex": "#911e3e"
+  },
+  {
+    "id": "family-8",
+    "name": "Family 8",
+    "hex": "#656b92"
+  },
+  {
+    "id": "family-9",
+    "name": "Family 9",
+    "hex": "#fa25cf"
+  },
+  {
+    "id": "family-10",
+    "name": "Family 10",
+    "hex": "#189b87"
+  },
+  {
+    "id": "family-11",
+    "name": "Family 11",
+    "hex": "#c57c2a"
+  },
+  {
+    "id": "family-12",
+    "name": "Family 12",
+    "hex": "#a02b48"
+  },
+  {
+    "id": "family-13",
+    "name": "Family 13",
+    "hex": "#984492"
+  },
+  {
+    "id": "family-14",
+    "name": "Family 14",
+    "hex": "#b8bdd0"
+  },
+  {
+    "id": "family-15",
+    "name": "Family 15",
+    "hex": "#b32f77"
+  },
+  {
+    "id": "family-16",
+    "name": "Family 16",
+    "hex": "#2a1cb4"
+  },
+  {
+    "id": "family-17",
+    "name": "Family 17",
+    "hex": "#0f0f92"
+  },
+  {
+    "id": "family-18",
+    "name": "Family 18",
+    "hex": "#6117ce"
+  },
+  {
+    "id": "family-19",
+    "name": "Family 19",
+    "hex": "#be7b26"
+  },
+  {
+    "id": "family-20",
+    "name": "Family 20",
+    "hex": "#bfb520"
+  },
+  {
+    "id": "family-21",
+    "name": "Family 21",
+    "hex": "#33f5e8"
+  },
+  {
+    "id": "family-22",
+    "name": "Family 22",
+    "hex": "#4b3fa3"
+  },
+  {
+    "id": "family-23",
+    "name": "Family 23",
+    "hex": "#9687b2"
+  },
+  {
+    "id": "family-24",
+    "name": "Family 24",
+    "hex": "#6d53a9"
+  },
+  {
+    "id": "family-25",
+    "name": "Family 25",
+    "hex": "#aaecf4"
+  },
+  {
+    "id": "family-26",
+    "name": "Family 26",
+    "hex": "#423f66"
+  },
+  {
+    "id": "family-27",
+    "name": "Family 27",
+    "hex": "#ae8ede"
+  },
+  {
+    "id": "family-28",
+    "name": "Family 28",
+    "hex": "#36246e"
+  },
+  {
+    "id": "family-29",
+    "name": "Family 29",
+    "hex": "#55c9ff"
+  },
+  {
+    "id": "family-30",
+    "name": "Family 30",
+    "hex": "#a366fb"
+  },
+  {
+    "id": "family-31",
+    "name": "Family 31",
+    "hex": "#51f6f5"
+  },
+  {
+    "id": "family-32",
+    "name": "Family 32",
+    "hex": "#4c3a06"
+  },
+  {
+    "id": "family-33",
+    "name": "Family 33",
+    "hex": "#f37a63"
+  },
+  {
+    "id": "family-34",
+    "name": "Family 34",
+    "hex": "#211d3a"
+  },
+  {
+    "id": "family-35",
+    "name": "Family 35",
+    "hex": "#7552f2"
+  },
+  {
+    "id": "family-36",
+    "name": "Family 36",
+    "hex": "#6909b5"
+  },
+  {
+    "id": "family-37",
+    "name": "Family 37",
+    "hex": "#d949e5"
+  },
+  {
+    "id": "family-38",
+    "name": "Family 38",
+    "hex": "#af4f72"
+  },
+  {
+    "id": "family-39",
+    "name": "Family 39",
+    "hex": "#195ae4"
+  },
+  {
+    "id": "family-40",
+    "name": "Family 40",
+    "hex": "#4564a0"
+  },
+  {
+    "id": "family-41",
+    "name": "Family 41",
+    "hex": "#953dc1"
+  },
+  {
+    "id": "family-42",
+    "name": "Family 42",
+    "hex": "#ce0c7f"
+  },
+  {
+    "id": "family-43",
+    "name": "Family 43",
+    "hex": "#f6c9cb"
+  },
+  {
+    "id": "family-44",
+    "name": "Family 44",
+    "hex": "#aa98bd"
+  },
+  {
+    "id": "family-45",
+    "name": "Family 45",
+    "hex": "#6f30ce"
+  },
+  {
+    "id": "family-46",
+    "name": "Family 46",
+    "hex": "#d67cf8"
+  },
+  {
+    "id": "family-47",
+    "name": "Family 47",
+    "hex": "#3006d6"
+  },
+  {
+    "id": "family-48",
+    "name": "Family 48",
+    "hex": "#642e50"
+  },
+  {
+    "id": "family-49",
+    "name": "Family 49",
+    "hex": "#cec29a"
+  },
+  {
+    "id": "family-50",
+    "name": "Family 50",
+    "hex": "#5945b8"
+  },
+  {
+    "id": "family-51",
+    "name": "Family 51",
+    "hex": "#304deb"
+  },
+  {
+    "id": "family-52",
+    "name": "Family 52",
+    "hex": "#3800c1"
+  },
+  {
+    "id": "family-53",
+    "name": "Family 53",
+    "hex": "#d67dd3"
+  },
+  {
+    "id": "family-54",
+    "name": "Family 54",
+    "hex": "#6e12c3"
+  },
+  {
+    "id": "family-55",
+    "name": "Family 55",
+    "hex": "#0485d2"
+  },
+  {
+    "id": "family-56",
+    "name": "Family 56",
+    "hex": "#d962fe"
+  },
+  {
+    "id": "family-57",
+    "name": "Family 57",
+    "hex": "#4bc7d3"
+  },
+  {
+    "id": "family-58",
+    "name": "Family 58",
+    "hex": "#483d79"
+  },
+  {
+    "id": "family-59",
+    "name": "Family 59",
+    "hex": "#681b10"
+  },
+  {
+    "id": "family-60",
+    "name": "Family 60",
+    "hex": "#d279fc"
+  },
+  {
+    "id": "family-61",
+    "name": "Family 61",
+    "hex": "#e2bcee"
+  },
+  {
+    "id": "family-62",
+    "name": "Family 62",
+    "hex": "#65e6eb"
+  },
+  {
+    "id": "family-63",
+    "name": "Family 63",
+    "hex": "#d39f23"
+  },
+  {
+    "id": "family-64",
+    "name": "Family 64",
+    "hex": "#bf9510"
+  },
+  {
+    "id": "family-65",
+    "name": "Family 65",
+    "hex": "#380788"
+  },
+  {
+    "id": "family-66",
+    "name": "Family 66",
+    "hex": "#7a28ca"
+  },
+  {
+    "id": "family-67",
+    "name": "Family 67",
+    "hex": "#af2516"
+  },
+  {
+    "id": "family-68",
+    "name": "Family 68",
+    "hex": "#17463e"
+  },
+  {
+    "id": "family-69",
+    "name": "Family 69",
+    "hex": "#1960a1"
+  },
+  {
+    "id": "family-70",
+    "name": "Family 70",
+    "hex": "#f5219c"
+  },
+  {
+    "id": "family-71",
+    "name": "Family 71",
+    "hex": "#b20650"
+  },
+  {
+    "id": "family-72",
+    "name": "Family 72",
+    "hex": "#6606ed"
+  },
+  {
+    "id": "family-73",
+    "name": "Family 73",
+    "hex": "#6826ce"
+  },
+  {
+    "id": "family-74",
+    "name": "Family 74",
+    "hex": "#f6dcd0"
+  },
+  {
+    "id": "family-75",
+    "name": "Family 75",
+    "hex": "#7a01bd"
+  },
+  {
+    "id": "family-76",
+    "name": "Family 76",
+    "hex": "#d19bb9"
+  },
+  {
+    "id": "family-77",
+    "name": "Family 77",
+    "hex": "#6464c1"
+  },
+  {
+    "id": "family-78",
+    "name": "Family 78",
+    "hex": "#8a53e0"
+  },
+  {
+    "id": "family-79",
+    "name": "Family 79",
+    "hex": "#5287a9"
+  },
+  {
+    "id": "family-80",
+    "name": "Family 80",
+    "hex": "#af3e43"
+  },
+  {
+    "id": "family-81",
+    "name": "Family 81",
+    "hex": "#ffbbd4"
+  },
+  {
+    "id": "family-82",
+    "name": "Family 82",
+    "hex": "#62558d"
+  },
+  {
+    "id": "family-83",
+    "name": "Family 83",
+    "hex": "#e23670"
+  },
+  {
+    "id": "family-84",
+    "name": "Family 84",
+    "hex": "#b37307"
+  },
+  {
+    "id": "family-85",
+    "name": "Family 85",
+    "hex": "#be3187"
+  },
+  {
+    "id": "family-86",
+    "name": "Family 86",
+    "hex": "#645d7d"
+  },
+  {
+    "id": "family-87",
+    "name": "Family 87",
+    "hex": "#c3cdd8"
+  },
+  {
+    "id": "family-88",
+    "name": "Family 88",
+    "hex": "#1b144f"
+  },
+  {
+    "id": "family-89",
+    "name": "Family 89",
+    "hex": "#a1add0"
+  },
+  {
+    "id": "family-90",
+    "name": "Family 90",
+    "hex": "#3970df"
+  },
+  {
+    "id": "family-91",
+    "name": "Family 91",
+    "hex": "#4a0276"
+  },
+  {
+    "id": "family-92",
+    "name": "Family 92",
+    "hex": "#d74a74"
+  },
+  {
+    "id": "family-93",
+    "name": "Family 93",
+    "hex": "#ffe4c1"
+  },
+  {
+    "id": "family-94",
+    "name": "Family 94",
+    "hex": "#4a53c6"
+  },
+  {
+    "id": "family-95",
+    "name": "Family 95",
+    "hex": "#f904b7"
+  },
+  {
+    "id": "family-96",
+    "name": "Family 96",
+    "hex": "#d33ed8"
+  },
+  {
+    "id": "family-97",
+    "name": "Family 97",
+    "hex": "#a93f3b"
+  },
+  {
+    "id": "family-98",
+    "name": "Family 98",
+    "hex": "#8d59a0"
+  },
+  {
+    "id": "family-99",
+    "name": "Family 99",
+    "hex": "#0a5faa"
+  },
+  {
+    "id": "family-100",
+    "name": "Family 100",
+    "hex": "#690c53"
+  },
+  {
+    "id": "family-101",
+    "name": "Family 101",
+    "hex": "#eda038"
+  },
+  {
+    "id": "family-102",
+    "name": "Family 102",
+    "hex": "#d2cb0b"
+  },
+  {
+    "id": "family-103",
+    "name": "Family 103",
+    "hex": "#faecb6"
+  },
+  {
+    "id": "family-104",
+    "name": "Family 104",
+    "hex": "#9bc2dd"
+  },
+  {
+    "id": "family-105",
+    "name": "Family 105",
+    "hex": "#16d3f6"
+  },
+  {
+    "id": "family-106",
+    "name": "Family 106",
+    "hex": "#1a50f0"
+  },
+  {
+    "id": "family-107",
+    "name": "Family 107",
+    "hex": "#d862db"
+  },
+  {
+    "id": "family-108",
+    "name": "Family 108",
+    "hex": "#c132cd"
+  },
+  {
+    "id": "family-109",
+    "name": "Family 109",
+    "hex": "#b5a302"
+  },
+  {
+    "id": "family-110",
+    "name": "Family 110",
+    "hex": "#661c01"
+  },
+  {
+    "id": "family-111",
+    "name": "Family 111",
+    "hex": "#7962b0"
+  },
+  {
+    "id": "family-112",
+    "name": "Family 112",
+    "hex": "#b47ede"
+  },
+  {
+    "id": "family-113",
+    "name": "Family 113",
+    "hex": "#2702f5"
+  },
+  {
+    "id": "family-114",
+    "name": "Family 114",
+    "hex": "#c77641"
+  },
+  {
+    "id": "family-115",
+    "name": "Family 115",
+    "hex": "#176e8c"
+  },
+  {
+    "id": "family-116",
+    "name": "Family 116",
+    "hex": "#a34d47"
+  },
+  {
+    "id": "family-117",
+    "name": "Family 117",
+    "hex": "#9b39cd"
+  },
+  {
+    "id": "family-118",
+    "name": "Family 118",
+    "hex": "#f065ad"
+  },
+  {
+    "id": "family-119",
+    "name": "Family 119",
+    "hex": "#70e9df"
+  },
+  {
+    "id": "family-120",
+    "name": "Family 120",
+    "hex": "#175099"
+  },
+  {
+    "id": "family-121",
+    "name": "Family 121",
+    "hex": "#9c0cb9"
+  },
+  {
+    "id": "family-122",
+    "name": "Family 122",
+    "hex": "#ec190a"
+  },
+  {
+    "id": "family-123",
+    "name": "Family 123",
+    "hex": "#441b33"
+  },
+  {
+    "id": "family-124",
+    "name": "Family 124",
+    "hex": "#976b56"
+  },
+  {
+    "id": "family-125",
+    "name": "Family 125",
+    "hex": "#6c5249"
+  },
+  {
+    "id": "family-126",
+    "name": "Family 126",
+    "hex": "#0924ca"
+  },
+  {
+    "id": "family-127",
+    "name": "Family 127",
+    "hex": "#e80532"
+  },
+  {
+    "id": "family-128",
+    "name": "Family 128",
+    "hex": "#26afbb"
+  },
+  {
+    "id": "family-129",
+    "name": "Family 129",
+    "hex": "#4b2679"
+  },
+  {
+    "id": "family-130",
+    "name": "Family 130",
+    "hex": "#f57309"
+  },
+  {
+    "id": "family-131",
+    "name": "Family 131",
+    "hex": "#f89e5e"
+  },
+  {
+    "id": "family-132",
+    "name": "Family 132",
+    "hex": "#42018f"
+  },
+  {
+    "id": "family-133",
+    "name": "Family 133",
+    "hex": "#8d835b"
+  },
+  {
+    "id": "family-134",
+    "name": "Family 134",
+    "hex": "#f8e5a8"
+  },
+  {
+    "id": "family-135",
+    "name": "Family 135",
+    "hex": "#61559f"
+  },
+  {
+    "id": "family-136",
+    "name": "Family 136",
+    "hex": "#b0727d"
+  },
+  {
+    "id": "family-137",
+    "name": "Family 137",
+    "hex": "#88428a"
+  },
+  {
+    "id": "family-138",
+    "name": "Family 138",
+    "hex": "#e38d6f"
+  }
+]
