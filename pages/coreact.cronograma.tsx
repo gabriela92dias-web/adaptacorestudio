@@ -19,6 +19,7 @@ import { CronogramaGantt } from "../components/CronogramaGantt";
 import { CronogramaKanban } from "../components/CronogramaKanban";
 import { CronogramaLista } from "../components/CronogramaLista";
 import { CronogramaProcessos } from "../components/CronogramaProcessos";
+import { CronogramaCalendario } from "../components/CronogramaCalendario";
 import styles from "./coreact.cronograma.module.css";
 
 const statusMap: Record<string, string> = {
@@ -87,6 +88,7 @@ export default function CoreActCronograma() {
 
   const viewModes = [
     { id: 'gantt', label: 'Cronograma / Gráficos', icon: Layout },
+    { id: 'calendar', label: 'Calendário', icon: CalendarIcon },
     { id: 'kanban', label: 'Kanban', icon: Columns },
     { id: 'list', label: 'Lista', icon: LayoutList },
     { id: 'process', label: 'Timeline', icon: GitCommit },
@@ -96,7 +98,7 @@ export default function CoreActCronograma() {
     setViewMode(id as any);
   };
 
-  const needsDateNav = viewMode === "gantt" || viewMode === "kanban";
+  const needsDateNav = viewMode === "gantt" || viewMode === "kanban" || viewMode === "calendar";
 
   const swipeNavRef = useSwipeNavigation(
     (dir) => {
@@ -181,6 +183,37 @@ export default function CoreActCronograma() {
                     style={{ textTransform: 'capitalize' }}
                   >
                     {zoom.label}
+                  </button>
+                ))}
+              </div>
+              
+              <button 
+                className={styles.actionIcon} 
+                onClick={setToday}
+                title="Hoje"
+                style={{ width: 'auto', padding: '0 8px', fontSize: '12px', fontWeight: 600, marginLeft: '8px' }}
+              >
+                Hoje
+              </button>
+            </>
+          )}
+
+          {viewMode === 'calendar' && (
+            <>
+              <div className={styles.zoomPills}>
+                {[
+                  { id: 'year', label: locale === 'en' ? 'Year' : 'Ano' },
+                  { id: 'month', label: locale === 'en' ? 'Month' : 'Mês' },
+                  { id: 'week', label: locale === 'en' ? 'Week' : 'Sem.' },
+                ].map(cm => (
+                  <button
+                    key={cm.id}
+                    className={`${styles.zoomPill} ${cm.id === calendarMode ? styles.zoomPillActive : ''} notranslate`}
+                    onClick={() => setCalendarMode(cm.id as any)}
+                    title={cm.label}
+                    style={{ textTransform: 'capitalize' }}
+                  >
+                    {cm.label}
                   </button>
                 ))}
               </div>
@@ -321,6 +354,20 @@ export default function CoreActCronograma() {
                 ganttZoom={ganttZoom}
                 currentDate={currentDate}
                 level={level as any}
+                showStrategicDates={showStrategicDates}
+              />
+            )}
+            {viewMode === 'calendar' && (
+              <CronogramaCalendario 
+                tasks={filteredTasks}
+                projects={projectsData?.projects || []}
+                onTaskClick={(id) => setSelectedTaskId(id)}
+                level={level as any}
+                calendarMode={calendarMode}
+                currentDate={currentDate}
+                onDateChange={setCurrentDate}
+                onModeChange={(mode) => setCalendarMode(mode)}
+                onTaskUpdate={(taskId, updates) => updateTaskMutation.mutate({ id: taskId, updates })}
                 showStrategicDates={showStrategicDates}
               />
             )}

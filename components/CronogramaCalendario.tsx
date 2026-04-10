@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import type { TaskWithDetails } from "../endpoints/coreact/tasks/list_GET.schema";
 import { isTaskOnDay } from "../helpers/cronogramaTaskUtils";
 import { CronogramaQuickAdd } from "./CronogramaQuickAdd";
+import { STRATEGIC_DATES } from "../helpers/strategicDates";
 import styles from "./CronogramaCalendario.module.css";
 
 interface ViewProps {
@@ -15,6 +16,7 @@ interface ViewProps {
   onModeChange?: (mode: "year" | "month" | "week") => void;
   onDayClick?: (date: Date) => void;
   onTaskUpdate?: (taskId: string, updates: Partial<TaskWithDetails>) => void;
+  showStrategicDates?: boolean;
 }
 
 // Helper: Normalize date to midnight local time
@@ -125,7 +127,27 @@ export const CronogramaCalendario = ({
   onModeChange,
   onDayClick,
   onTaskUpdate,
+  showStrategicDates = false,
 }: ViewProps) => {
+
+  const typeColorMap: Record<string, string> = {
+    campaign: 'primary',
+    anchor: 'amber',
+    event: 'teal',
+    week: 'violet',
+  };
+
+  const strategicDatesParsed = useMemo(() => {
+    if (!showStrategicDates) return [];
+    const currentYear = currentDate.getFullYear();
+    return STRATEGIC_DATES.map((st) => {
+      const [sm, sd] = st.start.split("-").map(Number);
+      const [em, ed] = st.end.split("-").map(Number);
+      const sDate = new Date(currentYear, sm - 1, sd);
+      const eDate = new Date(currentYear, em - 1, ed, 23, 59, 59);
+      return { ...st, startMs: sDate.getTime(), endMs: eDate.getTime() };
+    });
+  }, [showStrategicDates, currentDate]);
 
   const [draggingTask, setDraggingTask] = React.useState<{
     taskId: string;
@@ -253,6 +275,9 @@ export const CronogramaCalendario = ({
                       const isOther = d.getMonth() !== mIdx;
                       const hasTasks = tasks.some(t => isTaskOnDay(t, d));
                       const isToday = isSameDay(d, new Date());
+                      const strategicHits = !isOther ? strategicDatesParsed.filter(st => d.getTime() >= st.startMs && d.getTime() <= st.endMs) : [];
+                      const sHit = strategicHits[0];
+
                       return (
                         <div 
                           key={i} 
@@ -263,7 +288,11 @@ export const CronogramaCalendario = ({
                                 onDayClick(d); 
                             }
                           }}
-                          style={{ cursor: !isOther && onDayClick ? "pointer" : "default" }}
+                          style={{
+                            cursor: !isOther && onDayClick ? "pointer" : "default",
+                            ...(sHit ? { borderBottom: `2px solid var(--v8-${typeColorMap[sHit.type] || 'gray'}-400)`, backgroundColor: `color-mix(in srgb, var(--v8-${typeColorMap[sHit.type] || 'gray'}-400) 10%, transparent)` } : {})
+                          }}
+                          title={sHit ? sHit.label : undefined}
                         >
                           {!isOther && d.getDate()}
                         </div>
@@ -306,8 +335,10 @@ export const CronogramaCalendario = ({
                     <div className={styles.monthWeekDaysBg}>
                       {week.map((d, i) => {
                         const isToday = isSameDay(d, new Date());
+                        const dayTime = startOfDay(d).getTime();
                         const isOtherMonth = d.getMonth() !== currentDate.getMonth();
                         const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                        const strategicHits = strategicDatesParsed.filter(st => dayTime >= st.startMs && dayTime <= st.endMs);
                         
                         return (
                           <div
@@ -327,6 +358,30 @@ export const CronogramaCalendario = ({
                             style={{ cursor: onDayClick ? "pointer" : "default", position: "relative" }}
                           >
                             <div className={styles.dayCellHeader}>{d.getDate()}</div>
+                            {strategicHits.length > 0 && (
+                               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', padding: '0 4px', marginTop: '2px' }}>
+                                 {strategicHits.map((st, idx) => (
+                                    <div 
+                                      key={idx} 
+                                      title={st.description}
+                                      style={{
+                                        fontSize: '9px',
+                                        padding: '2px 4px',
+                                        borderRadius: '4px',
+                                        backgroundColor: `color-mix(in srgb, var(--v8-${typeColorMap[st.type] || 'gray'}-500) 15%, transparent)`,
+                                        color: `var(--v8-${typeColorMap[st.type] || 'gray'}-700)`,
+                                        border: `1px solid color-mix(in srgb, var(--v8-${typeColorMap[st.type] || 'gray'}-500) 30%, transparent)`,
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        zIndex: 0
+                                      }}
+                                    >
+                                      {st.label}
+                                    </div>
+                                 ))}
+                               </div>
+                            )}
                             {hiddenTasksInSlot[i].length > 0 && (() => {
                               const hiddenList = hiddenTasksInSlot[i];
                               const statuses = Array.from(new Set(hiddenList.map(t => t.status || "open")));
@@ -452,8 +507,28 @@ export const CronogramaCalendario = ({
             <div className={styles.weekDaysGrid}>
               {gridDates.map((d, i) => {
                 const dayTasks = weekSingleTasks.filter(t => isTaskOnDay(t, d));
+                const dayTime = startOfDay(d).getTime();
+                const strategicHits = strategicDatesParsed.filter(st => dayTime >= st.startMs && dayTime <= st.endMs);
+
                 return (
                   <div key={i} className={styles.weekDayColumn} onClick={() => onDayClick?.(d)} style={{ cursor: onDayClick ? "pointer" : "default" }}>
+                    {strategicHits.map((st, idx) => (
+                      <div 
+                        key={`st-${idx}`} 
+                        title={st.description}
+                        style={{
+                          fontSize: '10px',
+                          padding: '4px 6px',
+                          margin: '4px',
+                          borderRadius: '4px',
+                          backgroundColor: `color-mix(in srgb, var(--v8-${st.themeColor}-500) 10%, transparent)`,
+                          color: `var(--v8-${st.themeColor}-700)`,
+                          border: `1px dashed color-mix(in srgb, var(--v8-${st.themeColor}-500) 40%, transparent)`,
+                        }}
+                      >
+                        {st.name}
+                      </div>
+                    ))}
                     {dayTasks.map(t => (
                       <div key={t.id} className={styles.weekSingleTask} onClick={(e) => { e.stopPropagation(); onTaskClick(t.id); }}>
                         <div className={styles.weekSingleTaskHeader}>

@@ -13,6 +13,14 @@ export default defineConfig({
   },
   build: {
     assetsDir: "_assets",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['lucide-react']
+        }
+      }
+    }
   },
   server: {
     host: true,
