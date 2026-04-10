@@ -805,6 +805,7 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 12000);
 
+    const next = JSON.parse(JSON.stringify(draft)) as ContentStore;
     try {
       const res = await fetch('/_api/pitch/translate', {
         method: 'POST',
@@ -815,33 +816,29 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: {
       clearTimeout(timeout);
       if (res.ok) {
         const { translations } = await res.json();
-        setDraft(prev => {
-          const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
-          for (const l of targetLangs) {
-            if (!translations[l]) continue;
-            const t = translations[l];
-            const slide = next[l][slideIndex];
-            if (t.title)    slide.title    = t.title;
-            if (t.subtitle) slide.subtitle = t.subtitle;
-            if (t.badge)    slide.badge    = t.badge;
-            if (t.content)  slide.content  = t.content;
-            if (t.topics && slide.topicBlock) {
-              slide.topicBlock.topics = slide.topicBlock.topics.map((tp, i) => ({
-                ...tp, text: (t.topics as string[])[i] ?? tp.text,
-              }));
-            }
+        for (const l of targetLangs) {
+          if (!translations[l]) continue;
+          const t = translations[l];
+          const slide = next[l][slideIndex];
+          if (t.title)    slide.title    = t.title;
+          if (t.subtitle) slide.subtitle = t.subtitle;
+          if (t.badge)    slide.badge    = t.badge;
+          if (t.content)  slide.content  = t.content;
+          if (t.topics && slide.topicBlock) {
+            slide.topicBlock.topics = slide.topicBlock.topics.map((tp, i) => ({
+              ...tp, text: (t.topics as string[])[i] ?? tp.text,
+            }));
           }
-          return next;
-        });
+        }
         setSaving('idle');
-        onSave(draft);
+        onSave(next);
         onClose();
         return;
       }
     } catch { /* timeout */ }
     clearTimeout(timeout);
     setSaving('error');
-    onSave(draft);
+    onSave(next);
     setTimeout(onClose, 1500);
   };
 
