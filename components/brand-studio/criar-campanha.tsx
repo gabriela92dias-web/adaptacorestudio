@@ -316,7 +316,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
   const {
     isGenerating, isSaved, isGeneratingPlan, step,
     aiGeneratedType, activeFunnels, aiTrilhaInterna, aiTrilhaExterna, aiOrcamentoLinhas, aiOrcamentoTotal, blueprintTheory,
-    modulos, experiencia, eventoDuracao
+    modulos, experiencia, eventoDuracao, direcao, orcamento, eventoPublico
   } = state;
   const { finishCreation, generateActionPlan, generateBlueprintDense, setAiOrcamentoLinhas } = actions;
 

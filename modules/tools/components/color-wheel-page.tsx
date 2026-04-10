@@ -81,7 +81,7 @@ export function ColorWheelPage() {
 
   const [harmonyMode, setHarmonyMode] = useState<HarmonyMode>("analogous");
   const [previewTab, setPreviewTab] = useState<PreviewTab>("produto");
-  const [coreFilter, setCoreFilter] = useState<CoreFilter>("all");
+  const [coreFilter, setCoreFilter] = useState<CoreFilter>("color");
   const [baseColorHex, setBaseColorHex] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragAngle, setDragAngle] = useState<number | null>(null);
@@ -189,8 +189,8 @@ export function ColorWheelPage() {
   const campaignPalette = useMemo(() => {
     if (!baseColorHex) return null;
     const rawColors = rawHarmonyGeometricColors.map(c => c.hex);
-    // getCampaignRoles aplica o auto-fix de acessibilidade e designa as funções
-    const roles = getCampaignRoles([baseColorHex, ...rawColors]);
+    // rawColors já possui o baseColorHex no índice 0 devido ao ângulo 0 da harmonia
+    const roles = getCampaignRoles(rawColors);
     
     // Buscar os nomes das cores na paleta para renderizar bonitinho
     const findName = (hex: string) => colorPalette.flatMap(g => g.colors).find(c => c.hex === hex)?.name || hex;
@@ -546,7 +546,7 @@ export function ColorWheelPage() {
 
                     return (
                       <circle
-                        key={c.hex}
+                        key={`${c.group}-${c.hex}`}
                         cx={c.x} cy={c.y}
                         r={r}
                         fill={c.hex}
