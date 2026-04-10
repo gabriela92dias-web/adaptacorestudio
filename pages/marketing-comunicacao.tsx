@@ -37,8 +37,8 @@ interface LibraryDoc {
 
 // ── Dados iniciais ────────────────────────────────────────────────────────
 const INITIAL_LIBRARY: LibraryDoc[] = [
-  { id: 1, title: "Cartilha de Comunicação Adapta", category: "cartilhas", setor: "comunicacao", type: "pdf", size: "2.6 KB", url: "/biblioteca/cartilha_comunicacao_adapta.pdf", description: "Guia de comunicação institucional da marca Adapta.", uploadedBy: "Adapta", uploadedAt: "2026-03-01", fillVariant: 2, patternVariant: 2, tiltDeg: -1, heightFactor: 0.90 },
-  { id: 2, title: "Manual Comunicação v2", category: "cartilhas", setor: "comunicacao", type: "pdf", size: "6.8 KB", url: "/biblioteca/comunicacao_adapta_v2_manual.pdf", description: "Manual completo de comunicação corporativa versão 2.", uploadedBy: "Adapta", uploadedAt: "2026-03-01", fillVariant: 0, patternVariant: 0, tiltDeg: 1, heightFactor: 1.0 },
+  { id: 1, title: "Cartilha de Comunicação Adapta", category: "cartilhas", setor: "comunicacao", type: "pdf", size: "87 KB", url: "/biblioteca/cartilha_comunicacao_adapta.html", description: "Guia de comunicação institucional da marca Adapta.", uploadedBy: "Adapta", uploadedAt: "2026-03-01", fillVariant: 2, patternVariant: 2, tiltDeg: -1, heightFactor: 0.90 },
+  { id: 2, title: "Manual Comunicação v2", category: "cartilhas", setor: "comunicacao", type: "pdf", size: "129 KB", url: "/biblioteca/comunicacao_adapta_v2_manual.pdf", description: "Manual completo de comunicação corporativa versão 2.", uploadedBy: "Adapta", uploadedAt: "2026-03-01", fillVariant: 0, patternVariant: 0, tiltDeg: 1, heightFactor: 1.0 },
 ];
 
 const SECTORS: { value: DocSetor; label: string; icon: React.ElementType }[] = [
