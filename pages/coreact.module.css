@@ -1,19 +1,46 @@
-.container {
+/* =============================================
+   COREACT DASHBOARD — ColdFlora Design System
+   Sistema limpo. Sem poluição. Dados reais.
+   ============================================= */
+
+.coreactContainer {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-5);
-  width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
+/* ---- LAYOUT PRINCIPAL ---- */
+
+.container {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: var(--spacing-4);
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: var(--spacing-5);
+}
+
+/* ---- HEADER ---- */
+
 .header {
   display: flex;
-  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
   gap: var(--spacing-4);
-  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
 }
 
 .headerContent {
@@ -24,123 +51,163 @@
 
 .title {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   margin: 0;
   color: var(--foreground);
+  line-height: var(--line-height-tight);
 }
 
 .subtitle {
   color: var(--muted-foreground);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   margin: 0;
 }
 
-.mainGrid {
+/* ---- KPI ROW ---- */
+
+.kpiGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-4);
-  flex: 1;
-  min-height: 0;
+  grid-template-columns: repeat(4, 1fr);   /* lg+ */
+  gap: var(--spacing-3);
 }
 
-.gridColumn {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4);
-  min-height: 0;
-}
-
-@media (max-width: 640px) {
-  .mainGrid {
-    grid-template-columns: 1fr;
-  }
+/* md: 2 colunas */
+@media (max-width: 1023px) {
   .kpiGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-.kpiGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-3);
-  flex-shrink: 0;
+/* sm: 1 coluna */
+@media (max-width: 639px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .kpiCard {
   background-color: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: var(--spacing-4);
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: var(--spacing-2);
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--animation-duration-fast) ease;
 }
 
-.kpiHeaderRow {
+.kpiCard:hover {
+  border-color: var(--border-hover);
+}
+
+.kpiAccent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--primary);
+  opacity: 0.4;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.kpiAccentWarning { background: var(--warning); opacity: 0.7; }
+.kpiAccentError { background: var(--error); opacity: 0.7; }
+.kpiAccentSuccess { background: var(--success); opacity: 0.9; }
+.kpiAccentInfo { background: var(--info); opacity: 0.7; }
+
+.kpiHeader {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: baseline;
-  gap: var(--spacing-2);
 }
 
 .kpiLabel {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--muted-foreground);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wider);
+}
+
+.kpiIcon {
+  color: var(--muted-foreground);
+  opacity: 0.6;
 }
 
 .kpiValue {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
   font-family: var(--font-family-heading);
-  line-height: 1.2;
+  line-height: 1;
   color: var(--foreground);
 }
 
-.textDanger {
-  color: var(--error);
-}
+.kpiValueDanger { color: var(--error-foreground); }
+.kpiValueSuccess { color: var(--success-foreground); }
 
-.successIcon {
-  color: var(--success);
-  vertical-align: middle;
-}
-
-.kpiMicroText {
+.kpiMeta {
   font-size: var(--font-size-xs);
   color: var(--muted-foreground);
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.alertsBanner {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-3);
-  background-color: color-mix(in srgb, var(--error) 15%, transparent);
-  border: 1px solid color-mix(in srgb, var(--error) 30%, transparent);
-  border-radius: var(--radius-md);
-  color: var(--error-foreground);
-  flex-shrink: 0;
+  gap: var(--spacing-1);
 }
 
-.alertBannerIcon {
-  color: var(--error);
-  flex-shrink: 0;
-}
-
-.alertBannerText {
-  font-size: var(--font-size-sm);
-  white-space: nowrap;
+.kpiProgress {
+  height: 3px;
+  background-color: var(--border);
+  border-radius: var(--radius-full);
   overflow: hidden;
-  text-overflow: ellipsis;
+  margin-top: var(--spacing-1);
 }
+
+.kpiProgressFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--primary);
+  transition: width 0.6s ease;
+}
+
+.kpiProgressFillWarning { background-color: var(--warning); }
+.kpiProgressFillError { background-color: var(--error); }
+.kpiProgressFillSuccess { background-color: var(--success-foreground); }
+
+/* ---- MAIN BODY GRID ---- */
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;    /* lg+: 2 colunas */
+  gap: var(--spacing-4);
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* md e abaixo: 1 coluna, overflow visível */
+@media (max-width: 1023px) {
+  .body {
+    grid-template-columns: 1fr;
+    overflow: visible;
+    overflow-y: auto;
+  }
+  .col {
+    overflow: visible;
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ---- CARD BASE ---- */
 
 .card {
   background-color: var(--card);
@@ -149,317 +216,416 @@
   padding: var(--spacing-4);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
+  overflow: hidden;
+}
+
+.cardFlex {
   flex: 1;
   min-height: 0;
-  overflow: hidden;
 }
 
 .cardHeader {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-1);
-}
-
-.cardTitleRow {
-  display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-}
-
-/* Alerts CSS removed to save space */
-
-.cardHeaderRow {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
+  flex-shrink: 0;
 }
 
 .cardTitle {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: 600;
   margin: 0;
   color: var(--foreground);
+  font-family: var(--font-family-heading);
 }
 
-.linkText {
-  font-size: var(--font-size-sm);
-  color: var(--primary);
+.cardLink {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
   text-decoration: none;
   font-weight: 500;
-  transition: opacity var(--animation-duration-fast) ease;
+  transition: color var(--animation-duration-fast) ease;
 }
 
-.linkText:hover {
-  opacity: 0.8;
+.cardLink:hover {
+  color: var(--foreground);
 }
 
-.teamList {
+/* ---- ALERTS STRIP ---- */
+
+.alertsStrip {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
-  overflow: hidden;
+  gap: var(--spacing-2);
+  overflow-y: auto;
 }
 
-.teamMemberRow {
+.alertRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-3);
-  padding: var(--spacing-2) 0;
-  border-bottom: 1px solid var(--border);
+  padding: var(--spacing-3);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
 }
 
-.teamMemberRow:last-child {
-  border-bottom: none;
+.alertRowWarning {
+  background-color: color-mix(in srgb, var(--warning) 10%, transparent);
+  border-color: color-mix(in srgb, var(--warning) 30%, transparent);
 }
 
-.teamAvatar {
-  width: 2.5rem;
-  height: 2.5rem;
+.alertRowError {
+  background-color: color-mix(in srgb, var(--error) 10%, transparent);
+  border-color: color-mix(in srgb, var(--error) 30%, transparent);
 }
 
-.teamMemberInfo {
+.alertDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background-color: var(--muted-foreground);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.alertDotWarning { background-color: var(--warning-foreground); }
+.alertDotError { background-color: var(--error-foreground); }
+
+.alertContent {
   display: flex;
   flex-direction: column;
   gap: 2px;
   flex: 1;
 }
 
-.teamMemberName {
-  font-size: var(--font-size-base);
+.alertTitle {
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--foreground);
 }
 
-.teamMemberTasks {
+.alertDesc {
   font-size: var(--font-size-xs);
   color: var(--muted-foreground);
 }
 
-.teamMemberWorkload {
-  width: 80px;
+.allClearBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-5) var(--spacing-4);
+  color: var(--success-foreground);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+/* ---- EQUIPE ---- */
+
+.teamList {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: 0;
+  overflow-y: auto;
 }
 
-.workloadHeader {
+.teamRow {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: var(--font-size-2xs);
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) 0;
+  border-bottom: 1px solid var(--border);
 }
 
-.workloadLabel {
-  color: var(--muted-foreground);
-  text-transform: uppercase;
+.teamRow:last-child {
+  border-bottom: none;
 }
 
-.workloadValue {
-  font-weight: 500;
-  color: var(--foreground);
-}
-
-.emptyState {
-  padding: var(--spacing-4);
-  text-align: center;
-  color: var(--muted-foreground);
-  font-size: var(--font-size-base);
+.teamAvatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-full);
   background-color: var(--surface);
-  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--foreground);
+  flex-shrink: 0;
 }
+
+.teamInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.teamName {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.teamMeta {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+}
+
+.teamWorkload {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-1);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.teamWorkloadLabel {
+  font-size: var(--font-size-2xs);
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.teamWorkloadBar {
+  width: 80px;
+  height: 4px;
+  background-color: var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.teamWorkloadFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--primary);
+  transition: width 0.5s ease;
+}
+
+.teamWorkloadFillDanger {
+  background-color: var(--error);
+}
+
+/* ---- PROJETOS ---- */
 
 .projectsList {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .projectRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--spacing-3);
   padding: var(--spacing-3);
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  gap: var(--spacing-4);
+  transition: border-color var(--animation-duration-fast) ease;
   flex-shrink: 0;
 }
 
-.projectInfo {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-1);
-  flex: 1;
+.projectRow:hover {
+  border-color: var(--border-hover);
 }
 
-.projectNameRow {
+.projectInfo {
+  flex: 1;
+  min-width: 0;
   display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .projectName {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  margin: 0;
   color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
 }
 
-.initiativeTag {
-  font-size: var(--font-size-2xs);
-  padding: 0 var(--spacing-2);
-  height: auto;
-  min-height: 1.25rem;
+.projectMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
 }
 
-.projectTasksMeta {
+.projectMetaText {
   font-size: var(--font-size-xs);
   color: var(--muted-foreground);
 }
 
-.projectActions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.projectInitiative {
+  font-size: var(--font-size-2xs);
+  font-weight: 600;
+  color: var(--muted-foreground);
+  background-color: var(--border);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
 }
 
-.projectProgressWrapper {
-  width: 80px;
+.projectProgress {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
   align-items: flex-end;
+  gap: var(--spacing-1);
   flex-shrink: 0;
+  min-width: 60px;
 }
 
-.progressBar {
-  height: 0.375rem;
+.projectProgressValue {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--foreground);
+  font-family: var(--font-family-heading);
 }
 
-.activitiesList {
+.projectBarWrap {
+  width: 60px;
+  height: 4px;
+  background-color: var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.projectBarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--primary);
+  transition: width 0.5s ease;
+}
+
+/* ---- ATIVIDADE RECENTE ---- */
+
+.activityList {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
-  overflow: hidden;
+  gap: 0;
+  overflow-y: auto;
 }
 
 .activityItem {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-3);
   padding: var(--spacing-2) 0;
-  border-bottom: 1px solid var(--surface);
-  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .activityItem:last-child {
   border-bottom: none;
 }
 
-.activityIconWrapper {
+.activityIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: var(--radius-sm);
-  background-color: var(--surface);
   color: var(--muted-foreground);
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .activityContent {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   flex: 1;
-  gap: var(--spacing-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-2);
 }
 
 .activityText {
   font-size: var(--font-size-sm);
   color: var(--foreground);
+  line-height: var(--line-height-normal);
 }
 
 .activityTime {
   font-size: var(--font-size-xs);
   color: var(--muted-foreground);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-/* Adaptive Level Declarations (required for CSS Modules export) */
+/* ---- ESTADO VAZIO ---- */
+
+.emptyState {
+  padding: var(--spacing-6) var(--spacing-4);
+  text-align: center;
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+  background-color: var(--surface);
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+}
+
+/* ---- SKELETON LOADING ---- */
+
+.skeletonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ---- TASK STATUS PILLS ---- */
+
+.taskStatusRow {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.statusPill {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+}
+
+/* ---- RESPONSIVIDADE ---- */
+
+@media (max-width: 900px) {
+  .body { grid-template-columns: 1fr; }
+  .kpiGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .container { padding: var(--spacing-3); }
+  .kpiGrid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---- Adaptive Levels (necessários para o hook) ---- */
 .level0 { }
 .level1 { }
 .level2 { }
 .level3 { }
-
-/* Adaptive Levels */
-.level1 .title, :global(.adaptive-level-1) .title {
-  font-size: var(--font-size-2xl);
-}
-.level1 .subtitle, :global(.adaptive-level-1) .subtitle {
-  font-size: var(--font-size-sm);
-}
-.level1 .kpiGrid, :global(.adaptive-level-1) .kpiGrid {
-  gap: var(--spacing-2);
-}
-.level1 .kpiCard, :global(.adaptive-level-1) .kpiCard {
-  padding: var(--spacing-2);
-}
-.level1 .kpiValue, :global(.adaptive-level-1) .kpiValue {
-  font-size: var(--font-size-xl);
-}
-.level1 .card, :global(.adaptive-level-1) .card {
-  padding: var(--spacing-3);
-  gap: var(--spacing-3);
-}
-
-.level2 .title, :global(.adaptive-level-2) .title {
-  font-size: var(--font-size-xl);
-}
-.level2 .subtitle, :global(.adaptive-level-2) .subtitle {
-  font-size: var(--font-size-xs);
-}
-.level2 .kpiGrid, :global(.adaptive-level-2) .kpiGrid {
-  grid-template-columns: repeat(2, 1fr);
-}
-.level2 .mainGrid, :global(.adaptive-level-2) .mainGrid {
-  grid-template-columns: 1fr;
-}
-.level2 .activitiesList, :global(.adaptive-level-2) .activitiesList {
-  display: none;
-}
-.level2 .gridColumn:nth-child(2) > section:nth-child(3), :global(.adaptive-level-2) .gridColumn:nth-child(2) > section:nth-child(3) {
-  display: none; /* Hide activities on mobile */
-}
-
-.level3 .title, :global(.adaptive-level-3) .title {
-  font-size: var(--font-size-lg);
-}
-.level3 .subtitle, :global(.adaptive-level-3) .subtitle {
-  display: none;
-}
-.level3 .kpiGrid, :global(.adaptive-level-3) .kpiGrid {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow: hidden;
-  gap: var(--spacing-2);
-  padding-bottom: var(--spacing-1);
-}
-.level3 .kpiCard, :global(.adaptive-level-3) .kpiCard {
-  flex: 0 0 140px;
-  padding: var(--spacing-2);
-}
-.level3 .mainGrid, :global(.adaptive-level-3) .mainGrid {
-  grid-template-columns: 1fr;
-}
-.level3 .teamMemberWorkload, :global(.adaptive-level-3) .teamMemberWorkload {
-  display: none;
-}
-.level3 .projectProgressWrapper, :global(.adaptive-level-3) .projectProgressWrapper {
-  display: none;
-}

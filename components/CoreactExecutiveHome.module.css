@@ -1,262 +1,395 @@
+/* =====================================================
+   CoreactExecutiveHome — ColdFlora Design System
+   Premium executive layout. Zero mocks.
+   ===================================================== */
+
 .dashboardContainer {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 0.5rem 0;
+  gap: var(--spacing-4);
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--spacing-5);
 }
 
+/* ---- TOP GRID: 2 colunas ---- */
 .topGrid {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 1rem;
+  gap: var(--spacing-4);
+  align-items: start;
 }
 
-/* Left Column */
+/* ---- COLUNA ESQUERDA ---- */
 .leftColumn {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-4);
 }
 
+/* Welcome Banner */
 .welcomeBanner {
-  background: var(--bg-primary);
-  border-radius: var(--radius-lg);
-  padding: 0.8rem 1.25rem;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: var(--shadow-sm);
+  background: var(--card);
   border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4) var(--spacing-5);
   position: relative;
   overflow: hidden;
 }
 
-
-
 .welcomeBanner::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
 }
 
 .welcomeText h1 {
-  font-size: 1.25rem;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
   font-weight: 700;
-  margin-bottom: 0.15rem;
+  color: var(--foreground);
+  margin: 0 0 var(--spacing-1) 0;
 }
 
 .welcomeText p {
-  font-size: 1rem;
-  opacity: 0.9;
-  max-width: 400px;
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
+  margin: 0;
 }
 
-.projectsByOwnerCard {
-  background: var(--bg-primary);
-  color: var(--text-primary);
+/* Alert Pills */
+.alertPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-3);
+}
+
+.alertPill {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border: 1px solid;
+}
+
+.alertPillWarning {
+  background: color-mix(in srgb, var(--warning) 12%, transparent);
+  border-color: color-mix(in srgb, var(--warning) 35%, transparent);
+  color: var(--warning-foreground);
+}
+
+.alertPillError {
+  background: color-mix(in srgb, var(--error) 12%, transparent);
+  border-color: color-mix(in srgb, var(--error) 35%, transparent);
+  color: var(--error-foreground);
+}
+
+.alertPillOk {
+  background: color-mix(in srgb, var(--success) 15%, transparent);
+  border-color: color-mix(in srgb, var(--success) 35%, transparent);
+  color: var(--success-foreground);
+}
+
+.alertDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Task Status Row (substituição do gráfico riscado) */
+.taskStatusCard {
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1rem;
-  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-4);
 }
 
 .cardTitle {
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  margin: 0 0 var(--spacing-3) 0;
 }
 
+.statusBars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.statusBarRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.statusBarLabel {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+  width: 100px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.statusBarTrack {
+  flex: 1;
+  height: 6px;
+  background: var(--surface);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.statusBarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+.statusBarCount {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--foreground);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+  font-family: var(--font-family-heading);
+}
+
+/* Dark bottom row: donut + gauges */
 .darkCardsRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: var(--spacing-4);
 }
 
 .darkCard {
-  background: var(--bg-primary);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1rem;
-  color: var(--text-primary);
-  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-4);
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-2);
 }
 
 .darkCardHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  gap: var(--spacing-2);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--muted-foreground);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wider);
 }
 
 .darkPanelsCombo {
-  background: var(--bg-primary);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1rem;
-  color: var(--text-primary);
-  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-4);
   display: flex;
   justify-content: space-around;
   align-items: center;
+  gap: var(--spacing-2);
 }
 
 .metricRing {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-2);
 }
 
 .metricValue {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--foreground);
+  font-family: var(--font-family-heading);
 }
 
 .metricLabel {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  font-size: var(--font-size-2xs);
+  color: var(--muted-foreground);
   text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  text-align: center;
 }
 
-/* Right Column */
+/* ---- COLUNA DIREITA ---- */
 .rightColumn {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-4);
 }
 
+/* Schedule Card */
 .scheduleCard {
-  background: var(--bg-primary);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1rem;
-  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-4);
 }
 
 .scheduleStrip {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.5rem;
+  margin-top: var(--spacing-3);
 }
 
 .scheduleDay {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-1);
 }
 
 .dayLabel {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
+  font-size: var(--font-size-2xs);
+  color: var(--muted-foreground);
   font-weight: 500;
+  text-transform: uppercase;
 }
 
 .dayCirc {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
+  background: var(--surface);
+  color: var(--muted-foreground);
+  border: 1px solid transparent;
+  position: relative;
 }
 
 .dayCircActive {
   background: var(--primary);
-  color: white;
+  color: var(--primary-foreground);
+  border-color: var(--primary);
 }
 
-.dayCircLight {
-  background: var(--primary-light);
-  color: var(--primary-dark);
+.dayCircHasTask {
+  border-color: var(--warning-foreground);
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--warning) 15%, var(--surface));
 }
 
+.dayTaskDot {
+  position: absolute;
+  bottom: -4px;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--warning-foreground);
+}
+
+/* Overall Progress Card */
 .overallProgressCard {
-  background: var(--bg-primary);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1rem;
-  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-4);
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
 }
 
 .inProgressList {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-3);
+}
+
+.inProgressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-1);
+}
+
+.inProgressTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--foreground);
 }
 
 .progressItem {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-3);
 }
 
 .progressRingCircle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.8rem;
-  position: relative;
+  font-size: var(--font-size-xs);
+  color: var(--foreground);
+  flex-shrink: 0;
+  background: var(--surface);
 }
 
 .progressItemInfo {
   display: flex;
   flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
 }
 
 .progressItemTitle {
   font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .progressItemSubtitle {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Bottom Matrix Timeline */
+/* ---- TIMELINE BOTTOM ---- */
 .timelineCard {
-  background: var(--bg-primary);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 1rem 1.5rem;
-  color: var(--text-primary);
-  box-shadow: var(--shadow-sm);
-  min-height: 120px;
+  padding: var(--spacing-4) var(--spacing-5);
   overflow-x: auto;
 }
 
 .timelineHeader {
-  font-size: 0.8rem;
+  font-size: var(--font-size-xs);
   font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--text-tertiary);
-  margin-bottom: 0.5rem;
+  letter-spacing: var(--tracking-wider);
+  color: var(--muted-foreground);
+  margin-bottom: var(--spacing-3);
   text-transform: uppercase;
 }
 
@@ -265,7 +398,8 @@
   width: 100%;
   display: flex;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: var(--spacing-8) 0;
+  min-width: 500px;
 }
 
 .timelineLine {
@@ -273,7 +407,7 @@
   top: 50%;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 1px;
   background: var(--border);
   z-index: 1;
 }
@@ -288,49 +422,50 @@
 }
 
 .nodeDiamond {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   background: var(--primary);
   transform: rotate(45deg);
-  border: 3px solid var(--bg-primary);
+  border: 2px solid var(--card);
   outline: 2px solid var(--primary);
-}
-
-.nodeContentTop {
-  position: absolute;
-  bottom: 18px;
-  text-align: center;
-  width: 200px;
 }
 
 .nodeContentBottom {
   position: absolute;
   top: 18px;
   text-align: center;
-  width: 200px;
+  width: 140px;
 }
 
 .nodeDate {
-  font-size: 0.7rem;
-  color: var(--primary);
-  margin-bottom: 0.15rem;
-  font-weight: 600;
+  font-size: var(--font-size-2xs);
+  color: var(--muted-foreground);
+  margin-bottom: 2px;
 }
 
 .nodeTitle {
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--foreground);
   text-transform: uppercase;
-  margin-bottom: 0.15rem;
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: 2px;
 }
 
 .nodeDesc {
-  font-size: 0.65rem;
-  color: var(--text-secondary);
+  font-size: var(--font-size-2xs);
+  color: var(--muted-foreground);
 }
 
-/* Recharts overrides to remove outlines */
+/* ---- EMPTY STATE ---- */
+.emptySmall {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+  padding: var(--spacing-3) 0;
+  text-align: center;
+}
+
+/* Recharts */
 :global(.recharts-wrapper) {
   outline: none;
 }
