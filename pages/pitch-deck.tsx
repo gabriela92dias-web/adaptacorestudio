@@ -57,6 +57,48 @@ interface ContentStore {
   de: SlideData[];
 }
 
+// ─── Utility ───────────────────────────────────────────────────────────────────
+
+export const getDynamicFontSize = (text: string | undefined, type: 'cover-title' | 'cover-subtitle' | 'part-title' | 'part-subtitle' | 'generic-title' | 'generic-content') => {
+  if (!text) return '';
+  const len = text.length;
+
+  if (type === 'cover-title') {
+    if (len < 15) return 'clamp(4rem, 10vw, 9rem)';
+    if (len < 30) return 'clamp(3.5rem, 8vw, 7.5rem)';
+    if (len < 60) return 'clamp(2.5rem, 6vw, 5.5rem)';
+    return 'clamp(2rem, 4vw, 4rem)';
+  }
+  if (type === 'cover-subtitle') {
+    if (len < 40) return 'clamp(1.5rem, 3vw, 2.5rem)';
+    if (len < 100) return 'clamp(1.2rem, 2vw, 1.75rem)';
+    return 'clamp(1rem, 1.5vw, 1.3rem)';
+  }
+  if (type === 'part-title') {
+    if (len < 20) return 'clamp(2rem, 4vw, 4rem)';
+    if (len < 40) return 'clamp(1.5rem, 3vw, 3rem)';
+    return 'clamp(1.2rem, 2vw, 2rem)';
+  }
+  if (type === 'part-subtitle') {
+    if (len < 20) return 'clamp(3.5rem, 7vw, 6rem)';
+    if (len < 50) return 'clamp(3rem, 6vw, 5rem)';
+    if (len < 100) return 'clamp(2rem, 4vw, 4rem)';
+    return 'clamp(1.5rem, 3vw, 3rem)';
+  }
+  if (type === 'generic-title') {
+    if (len < 20) return 'clamp(2.5rem, 5vw, 5rem)';
+    if (len < 50) return 'clamp(2rem, 4vw, 4rem)';
+    return 'clamp(1.5rem, 3vw, 3rem)';
+  }
+  if (type === 'generic-content') {
+    if (len < 100) return 'clamp(1.25rem, 2vw, 1.5rem)';
+    if (len < 250) return 'clamp(1.1rem, 1.5vw, 1.25rem)';
+    return 'clamp(1rem, 1.2vw, 1.1rem)';
+  }
+  
+  return '';
+};
+
 // ─── Default Content ─────────────────────────────────────────────────────────
 
 const DEFAULT_CONTENT: ContentStore = {
@@ -634,29 +676,35 @@ export default function PitchDeck() {
 
           {slide.type === 'cover' ? (
             <div className="text-center flex flex-col items-center">
-              <h1 className="text-7xl md:text-[8rem] font-bold tracking-tighter mb-8 text-[var(--foreground)] font-heading leading-tight drop-shadow-sm">
+              <h1 className="font-bold tracking-tighter mb-8 text-[var(--foreground)] font-heading leading-tight drop-shadow-sm"
+                  style={{ fontSize: getDynamicFontSize(slide.title, 'cover-title') }}>
                 {slide.title}
               </h1>
-              <p className="text-xl md:text-3xl text-[var(--muted-foreground)] font-medium max-w-4xl leading-relaxed text-center">
+              <p className="text-[var(--muted-foreground)] font-medium max-w-4xl leading-relaxed text-center"
+                 style={{ fontSize: getDynamicFontSize(slide.subtitle, 'cover-subtitle') }}>
                 {slide.subtitle}
               </p>
             </div>
           ) : slide.type === 'part' ? (
             <div className="text-center flex flex-col items-center justify-center">
-              <h1 className="text-3xl md:text-5xl font-bold tracking-[0.2em] mb-4 text-[var(--primary)] font-heading uppercase opacity-80">
+              <h1 className="font-bold tracking-[0.2em] mb-4 text-[var(--primary)] font-heading uppercase opacity-80"
+                  style={{ fontSize: getDynamicFontSize(slide.title, 'part-title') }}>
                 {slide.title}
               </h1>
-              <p className="text-5xl md:text-7xl text-[var(--foreground)] font-bold tracking-tight text-center leading-tight">
+              <p className="text-[var(--foreground)] font-bold tracking-tight text-center leading-tight"
+                 style={{ fontSize: getDynamicFontSize(slide.subtitle, 'part-subtitle') }}>
                 {slide.subtitle}
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
               <div>
-                <h2 className="text-5xl md:text-6xl font-bold tracking-tight mb-8 leading-[1.1] text-[var(--foreground)] font-heading">
+                <h2 className="font-bold tracking-tight mb-8 leading-[1.1] text-[var(--foreground)] font-heading"
+                    style={{ fontSize: getDynamicFontSize(slide.title, 'generic-title') }}>
                   {slide.title}
                 </h2>
-                <p className="text-xl text-[var(--muted-foreground)] leading-relaxed mb-10 font-medium">
+                <p className="text-[var(--muted-foreground)] leading-relaxed mb-10 font-medium"
+                   style={{ fontSize: getDynamicFontSize(slide.content, 'generic-content') }}>
                   {slide.content}
                 </p>
                 {slide.points && (() => {
