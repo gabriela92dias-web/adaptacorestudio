@@ -1,11 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   ArrowRight, ArrowLeft, ChevronRight, Layers, Globe, Moon, Sun,
   Pencil, X, Plus, Trash2, Star, ArrowRightCircle, Check, Dot,
   Flame, Rocket, Copy, ChevronUp, ChevronDown, Zap,
   CheckCircle2, LayoutTemplate, AlertCircle, PanelLeft, PanelRight, Square,
   Sparkles, Grid, Monitor, Wind, ArrowUp, ZoomIn, List, GitCommit,
-  LayoutGrid, Target, Tag, GitBranch, Flag,
+  LayoutGrid, Target, Tag, GitBranch, Flag, Undo, Save, Share2, Copy as CopyIcon, ExternalLink,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -82,10 +83,10 @@ const ICON_MAP: Record<string, LucideIcon> = Object.fromEntries(ICON_OPTIONS.map
 
 type ViewType = 'list' | 'cards' | 'sequence' | 'flow';
 const VIEW_CONFIG: Record<ViewType, { label: string; icon: LucideIcon; isFullWidth: boolean }> = {
-  list:     { label: 'Lista',     icon: List, isFullWidth: false },
-  flow:     { label: 'Fluxo',     icon: GitCommit, isFullWidth: false },
-  cards:    { label: 'Cards',     icon: LayoutGrid, isFullWidth: true  },
-  sequence: { label: 'Sequência', icon: ArrowRight, isFullWidth: true  },
+  list:     { label: 'Tópicos Rápidos',     icon: List, isFullWidth: false },
+  flow:     { label: 'Processo (Fluxo)',     icon: GitCommit, isFullWidth: false },
+  cards:    { label: 'Pilares em Destaque',     icon: LayoutGrid, isFullWidth: true  },
+  sequence: { label: 'Etapas (Sequência)', icon: ArrowRight, isFullWidth: true  },
 };
 
 const ALL_LANGS: Lang[] = ['pt', 'en', 'de'];
@@ -100,38 +101,36 @@ const DEFAULT_TOPIC_TEXTS: Record<Lang, { topic: string; child: string }> = {
   de: { topic: 'Neues Thema', child: 'Unterthema' },
 };
 
-// ─── Default Content ───────────────────────────────────────────────────────────
-
 const DEFAULT_CONTENT: ContentStore = {
   pt: [
-    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'TÍTULO DA APRESENTAÇÃO', subtitle: 'Subtítulo descritivo • Edite para o seu assunto', badge: 'TEMA' },
-    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Contexto', subtitle: 'Apresentação do Cenário Atual' },
-    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'O Desafio', content: 'Descreva o problema central que motiva esta apresentação.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Ponto de atenção 1'), newTopic('Ponto de atenção 2'), newTopic('Impacto estimado')] } },
-    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Solução', subtitle: 'Nossa Abordagem' },
-    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Pilar 1', content: 'Descreva o primeiro pilar da sua solução ou proposta.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('Benefício A'), newTopic('Benefício B'), newTopic('Diferencial')] } },
-    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Resultados', content: 'Principais resultados e métricas alcançadas.', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Resultado 1'), newTopic('Resultado 2'), newTopic('Resultado 3')] } },
-    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Próximos Passos', content: 'Defina o caminho a seguir e os marcos de implementação.', badge: 'CONCLUSÃO', topicBlock: { view: 'sequence', topics: [newTopic('Passo 1'), newTopic('Passo 2'), newTopic('Passo 3'), newTopic('Passo 4')] } },
-    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Obrigado!', subtitle: 'Dúvidas e próximos passos.' },
+    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'CRIE APRESENTAÇÕES EM 5 MINUTOS', subtitle: 'O guia definitivo de como usar o motor de slides do CoreStudio.', badge: 'TUTORIAL RÁPIDO' },
+    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Como Funciona', subtitle: 'Simples, direto e profissional.' },
+    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Esqueça o PowerPoint', content: 'Você não precisa gastar horas alinhando caixas de texto. O motor faz tudo por você focado apenas no seu conteúdo.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Layouts automáticos de alta conversão'), newTopic('Tipografia inteligente que auto-escala'), newTopic('Tudo salvo localmente no seu navegador')] } },
+    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Edição Tática', subtitle: 'Controle total na barra lateral' },
+    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Montando os blocos', content: 'Use o painel esquerdo para guiar a estrutura da sua apresentação.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('Botão [+] para injetar templates prontos'), newTopic('Setas para reordenar os slides na hora'), newTopic('Duplique para reaproveitar estruturas')] } },
+    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Estilização', content: 'Clique em "Editar Slide" para alterar o visual com 1 clique:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Layouts (Padrão L/R, Reverso, Centro)'), newTopic('Backgrounds (Glow, Grid, Mockup...)'), newTopic('Animações (Fade, Slide up, Zoom)')] } },
+    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'O Fluxo Perfeito', content: 'Como finalizar seu material e colocar na rua:', badge: 'CONCLUSÃO', topicBlock: { view: 'sequence', topics: [newTopic('Edite clicando nos textos'), newTopic('Revise os 3 idiomas no topo'), newTopic('Clique em Publicar no header'), newTopic('Distribua a URL (Read-only)')] } },
+    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Tudo Pronto!', subtitle: 'Pode deletar estes slides iniciais e começar a criar o seu.' },
   ],
   en: [
-    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'PRESENTATION TITLE', subtitle: 'Descriptive subtitle • Edit for your topic', badge: 'TOPIC' },
-    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Context', subtitle: 'Current Scenario Overview' },
-    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'The Challenge', content: 'Describe the core problem motivating this presentation.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Key concern 1'), newTopic('Key concern 2'), newTopic('Estimated impact')] } },
-    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Solution', subtitle: 'Our Approach' },
-    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Pillar 1', content: 'Describe the first pillar of your solution or proposal.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('Benefit A'), newTopic('Benefit B'), newTopic('Differentiator')] } },
-    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Results', content: 'Main results and metrics achieved.', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Result 1'), newTopic('Result 2'), newTopic('Result 3')] } },
-    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Next Steps', content: 'Define the path forward and implementation milestones.', badge: 'CONCLUSION', topicBlock: { view: 'sequence', topics: [newTopic('Step 1'), newTopic('Step 2'), newTopic('Step 3'), newTopic('Step 4')] } },
-    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Thank you!', subtitle: 'Questions and next steps.' },
+    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'BUILD PRESENTATIONS IN 5 MINUTES', subtitle: 'The ultimate guide to using the CoreStudio slide engine.', badge: 'QUICK TUTORIAL' },
+    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. How it Works', subtitle: 'Simple, direct, and professional.' },
+    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Forget PowerPoint', content: 'You don\'t need to spend hours aligning text boxes. The engine does it all for you, focusing only on your content.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('High-conversion automatic layouts'), newTopic('Smart tipography that auto-scales'), newTopic('Everything saved locally in your browser')] } },
+    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Tactical Editing', subtitle: 'Total control on the sidebar' },
+    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Building the blocks', content: 'Use the left panel to guide the structure of your presentation.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('[+] button to inject ready templates'), newTopic('Arrows to reorder slides instantly'), newTopic('Duplicate to reuse structures')] } },
+    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Styling', content: 'Click "Edit Slide" to change the look with 1 click:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Layouts (Standard L/R, Reverse, Center)'), newTopic('Backgrounds (Glow, Grid, Mockup...)'), newTopic('Animations (Fade, Slide up, Zoom)')] } },
+    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'The Perfect Flow', content: 'How to finish your material and ship it:', badge: 'CONCLUSION', topicBlock: { view: 'sequence', topics: [newTopic('Edit by clicking texts'), newTopic('Review the 3 languages at top'), newTopic('Click Publish on the header'), newTopic('Distribute the URL (Read-only)')] } },
+    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'All Set!', subtitle: 'You can delete these initial slides and start building your own.' },
   ],
   de: [
-    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'PRÄSENTATIONSTITEL', subtitle: 'Beschreibender Untertitel • Für Ihr Thema anpassen', badge: 'THEMA' },
-    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Kontext', subtitle: 'Überblick über die aktuelle Situation' },
-    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Die Herausforderung', content: 'Beschreiben Sie das zentrale Problem dieser Präsentation.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Hauptproblem 1'), newTopic('Hauptproblem 2'), newTopic('Erwartete Auswirkung')] } },
-    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Lösung', subtitle: 'Unser Ansatz' },
-    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Säule 1', content: 'Beschreiben Sie die erste Säule Ihrer Lösung.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('Vorteil A'), newTopic('Vorteil B'), newTopic('Unterscheidungsmerkmal')] } },
-    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Ergebnisse', content: 'Hauptergebnisse und erreichte Kennzahlen.', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Ergebnis 1'), newTopic('Ergebnis 2'), newTopic('Ergebnis 3')] } },
-    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Nächste Schritte', content: 'Definieren Sie den Weg vorwärts und Implementierungsmeilensteine.', badge: 'FAZIT', topicBlock: { view: 'sequence', topics: [newTopic('Schritt 1'), newTopic('Schritt 2'), newTopic('Schritt 3'), newTopic('Schritt 4')] } },
-    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Vielen Dank!', subtitle: 'Fragen und nächste Schritte.' },
+    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'PRÄSENTATIONEN IN 5 MINUTEN ERSTELLEN', subtitle: 'Der ultimative Leitfaden zur Nutzung der CoreStudio Slide-Engine.', badge: 'KURZES TUTORIAL' },
+    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Wie es funktioniert', subtitle: 'Einfach, direkt und professionell.' },
+    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Vergessen Sie PowerPoint', content: 'Sie müssen keine Stunden mehr damit verbringen, Textbereiche auszurichten. Die Engine erledigt alles für Sie – fokussiert nur auf Ihre Inhalte.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Hochkonvertierende automatische Layouts'), newTopic('Intelligente Typografie, die sich selbst skaliert'), newTopic('Alles wird lokal in Ihrem Browser gespeichert')] } },
+    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Taktische Bearbeitung', subtitle: 'Volle Kontrolle in der Seitenleiste' },
+    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Blöcke zusammensetzen', content: 'Nutzen Sie das linke Panel, um die Struktur Ihrer Präsentation zu steuern.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('[+]-Taste, um fertige Vorlagen einzufügen'), newTopic('Pfeile, um Folien sofort neu anzuordnen'), newTopic('Duplizieren, um Strukturen wiederzuverwenden')] } },
+    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Styling', content: 'Klicken Sie auf "Folie bearbeiten", um das Aussehen mit 1 Klick zu ändern:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Layouts (Standard L/R, Reverse, Mitte)'), newTopic('Hintergründe (Glow, Grid, Mockup...)'), newTopic('Animationen (Fade, Slide up, Zoom)')] } },
+    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Der perfekte Ablauf', content: 'So stellen Sie Ihr Material fertig und launchen es:', badge: 'FAZIT', topicBlock: { view: 'sequence', topics: [newTopic('Bearbeiten durch Anklicken der Texte'), newTopic('Überprüfen Sie die 3 Sprachen oben'), newTopic('Klicken Sie im Header auf Veröffentlichen'), newTopic('Verteilen Sie die URL (schreibgeschützt)')] } },
+    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Alles bereit!', subtitle: 'Sie können diese ersten Folien löschen und beginnen, Ihre eigenen zu erstellen.' },
   ],
 };
 
@@ -142,59 +141,35 @@ const SLIDE_TEMPLATES: {
   make: (id: number) => { pt: SlideData; en: SlideData; de: SlideData };
 }[] = [
   {
-    label: 'Capa', icon: Target,
+    label: 'Capa da Apresentação', icon: Target,
     make: id => ({
-      pt: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Título Principal', subtitle: 'Subtítulo da apresentação', badge: 'CATEGORIA' },
-      en: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Main Title', subtitle: 'Presentation subtitle', badge: 'CATEGORY' },
-      de: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Haupttitel', subtitle: 'Untertitel der Präsentation', badge: 'KATEGORIE' },
+      pt: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Título Principal', subtitle: 'Subtítulo da apresentação', badge: 'INÍCIO' },
+      en: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Main Title', subtitle: 'Presentation subtitle', badge: 'START' },
+      de: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Haupttitel', subtitle: 'Untertitel der Präsentation', badge: 'START' },
     }),
   },
   {
-    label: 'Divisor', icon: Tag,
+    label: 'Divisor de Assunto', icon: Tag,
     make: id => ({
-      pt: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Seção', subtitle: 'Descrição da seção' },
-      en: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Section', subtitle: 'Section description' },
-      de: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Abschnitt', subtitle: 'Abschnittsbeschreibung' },
+      pt: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Novo Assunto', subtitle: 'O que vamos ver agora?' },
+      en: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'New Topic', subtitle: 'What are we looking at next?' },
+      de: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Neues Thema', subtitle: 'Was sehen wir uns als Nächstes an?' },
     }),
   },
   {
-    label: 'Lista', icon: List,
+    label: 'Texto & Tópicos', icon: LayoutGrid,
     make: id => ({
-      pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Título', content: 'Contexto breve.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Ponto 1'), newTopic('Ponto 2'), newTopic('Ponto 3')] } },
-      en: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Title', content: 'Brief context.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Point 1'), newTopic('Point 2'), newTopic('Point 3')] } },
-      de: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Titel', content: 'Kurzer Kontext.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Punkt 1'), newTopic('Punkt 2'), newTopic('Punkt 3')] } },
+      pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Explore o Ponto', content: 'Use este slide para detalhar sua ideia em pontos-chave.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Primeiro Ponto'), newTopic('Segundo Ponto'), newTopic('Terceiro Ponto')] } },
+      en: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Explore the Point', content: 'Use this slide to detail your idea in key points.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('First Point'), newTopic('Second Point'), newTopic('Third Point')] } },
+      de: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Punkt untersuchen', content: 'Nutzen Sie diese Folie, um Ihre Idee detailliert darzustellen.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Erster Punkt'), newTopic('Zweiter Punkt'), newTopic('Dritter Punkt')] } },
     }),
   },
   {
-    label: 'Cards', icon: LayoutGrid,
+    label: 'Agradecimento Final', icon: Flag,
     make: id => ({
-      pt: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Título', content: '', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Elemento 1'), newTopic('Elemento 2'), newTopic('Elemento 3')] } },
-      en: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Title', content: '', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Element 1'), newTopic('Element 2'), newTopic('Element 3')] } },
-      de: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Titel', content: '', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Element 1'), newTopic('Element 2'), newTopic('Element 3')] } },
-    }),
-  },
-  {
-    label: 'Sequência', icon: ArrowRight,
-    make: id => ({
-      pt: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Processo', content: '', topicBlock: { view: 'sequence', topics: [newTopic('Passo 1'), newTopic('Passo 2'), newTopic('Passo 3'), newTopic('Passo 4')] } },
-      en: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Process', content: '', topicBlock: { view: 'sequence', topics: [newTopic('Step 1'), newTopic('Step 2'), newTopic('Step 3'), newTopic('Step 4')] } },
-      de: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Prozess', content: '', topicBlock: { view: 'sequence', topics: [newTopic('Schritt 1'), newTopic('Schritt 2'), newTopic('Schritt 3'), newTopic('Schritt 4')] } },
-    }),
-  },
-  {
-    label: 'Fluxo', icon: GitBranch,
-    make: id => ({
-      pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Fluxo', content: '', topicBlock: { view: 'flow', topics: [newTopic('Etapa 1'), newTopic('Etapa 2'), newTopic('Etapa 3')] } },
-      en: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Flow', content: '', topicBlock: { view: 'flow', topics: [newTopic('Stage 1'), newTopic('Stage 2'), newTopic('Stage 3')] } },
-      de: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Ablauf', content: '', topicBlock: { view: 'flow', topics: [newTopic('Phase 1'), newTopic('Phase 2'), newTopic('Phase 3')] } },
-    }),
-  },
-  {
-    label: 'Encerramento', icon: Flag,
-    make: id => ({
-      pt: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Próximos Passos', content: 'Defina o caminho a seguir.', badge: 'CONCLUSÃO' },
-      en: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Next Steps', content: 'Define the path forward.', badge: 'CONCLUSION' },
-      de: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Nächste Schritte', content: 'Definieren Sie den Weg vorwärts.', badge: 'FAZIT' },
+      pt: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Obrigado', content: 'Deixe aqui o seu contato ou próximo passo.', badge: 'FIM' },
+      en: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Thank you', content: 'Leave your contact or next step here.', badge: 'END' },
+      de: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Vielen Dank', content: 'Hinterlassen Sie hier Ihren Kontakt oder den nächsten Schritt.', badge: 'ENDE' },
     }),
   },
 ];
@@ -1035,12 +1010,30 @@ function SlideContentWrapper({ children }: { children: React.ReactNode }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function SlidePadrao() {
+  const { slug } = useParams<{slug?: string}>();
+  const isViewMode = !!slug;
+
+  const historyRef = useRef<ContentStore[]>([]);
+  const historyIndexRef = useRef(-1);
+
   const [content, setContent] = useState<ContentStore>(() => {
     try {
+      if (isViewMode && slug) {
+        const published = localStorage.getItem(`published_${slug}`);
+        if (published) return JSON.parse(published);
+        return JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+      }
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+         historyRef.current = [JSON.parse(saved)];
+         historyIndexRef.current = 0;
+         return JSON.parse(saved);
+      }
     } catch { /* ignore */ }
-    return JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+    const def = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+    historyRef.current = [def];
+    historyIndexRef.current = 0;
+    return def;
   });
 
   const [current, setCurrent]   = useState(0);
@@ -1048,41 +1041,96 @@ export default function SlidePadrao() {
   const [isDark, setIsDark]     = useState(true);
   const [editOpen, setEditOpen] = useState(false);
   const [addOpen, setAddOpen]   = useState(false);
-  const [panelOpen, setPanelOpen] = useState(true);
+  const [panelOpen, setPanelOpen] = useState(!isViewMode);
+
+  const [publishOpen, setPublishOpen] = useState(false);
+  const [publishSlug, setPublishSlug] = useState('');
+  const [saveToast, setSaveToast] = useState(false);
 
   const slideList = content[lang];
   const slide     = slideList[current];
 
+  const pushHistory = useCallback((newState: ContentStore) => {
+    if (isViewMode) return;
+    const i = historyIndexRef.current;
+    const newHistory = historyRef.current.slice(0, i + 1);
+    newHistory.push(newState);
+    if (newHistory.length > 50) newHistory.shift();
+    historyRef.current = newHistory;
+    historyIndexRef.current = newHistory.length - 1;
+  }, [isViewMode]);
+
+  const handleUndo = useCallback(() => {
+    if (isViewMode) return;
+    if (historyIndexRef.current > 0) {
+      historyIndexRef.current -= 1;
+      const prevState = historyRef.current[historyIndexRef.current];
+      setContent(prevState);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prevState)); } catch { /* quota */ }
+    }
+  }, [isViewMode]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+Z
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [handleUndo]);
+
   const persist = (updated: ContentStore) => {
+    if (isViewMode) return;
     setContent(updated);
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); } catch { /* quota */ }
+    pushHistory(updated);
+  };
+
+  const saveManual = () => {
+    if (isViewMode) return;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(content)); } catch { /* quota */ }
+    setSaveToast(true);
+    setTimeout(() => setSaveToast(false), 2000);
+  };
+
+  const handlePublish = () => {
+     if (!publishSlug) return;
+     try { localStorage.setItem(`published_${publishSlug}`, JSON.stringify(content)); } catch {}
+     window.open(`/apresentacao/${publishSlug}`, '_blank');
+     setPublishOpen(false);
   };
 
   const cycleLang = () => setLang(l => l === 'pt' ? 'en' : l === 'en' ? 'de' : 'pt');
 
   const moveUp = useCallback((idx: number) => {
-    if (idx === 0) return;
+    if (isViewMode || idx === 0) return;
     setContent(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
       for (const l of ALL_LANGS) [next[l][idx - 1], next[l][idx]] = [next[l][idx], next[l][idx - 1]];
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* quota */ }
+      pushHistory(next);
       setCurrent(idx - 1);
       return next;
     });
-  }, []);
+  }, [isViewMode, pushHistory]);
 
   const moveDown = useCallback((idx: number) => {
     setContent(prev => {
-      if (idx >= prev.pt.length - 1) return prev;
+      if (isViewMode || idx >= prev.pt.length - 1) return prev;
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
       for (const l of ALL_LANGS) [next[l][idx], next[l][idx + 1]] = [next[l][idx + 1], next[l][idx]];
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* quota */ }
+      pushHistory(next);
       setCurrent(idx + 1);
       return next;
     });
-  }, []);
+  }, [isViewMode, pushHistory]);
 
   const duplicateSlide = useCallback((idx: number) => {
+    if (isViewMode) return;
     const newId = Date.now();
     setContent(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
@@ -1091,33 +1139,38 @@ export default function SlidePadrao() {
         next[l].splice(idx + 1, 0, copy);
       }
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* quota */ }
+      pushHistory(next);
       setCurrent(idx + 1);
       return next;
     });
-  }, []);
+  }, [isViewMode, pushHistory]);
 
   const deleteSlide = useCallback((idx: number) => {
+    if (isViewMode) return;
     setContent(prev => {
       if (prev.pt.length <= 1) return prev;
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
       for (const l of ALL_LANGS) next[l].splice(idx, 1);
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* quota */ }
+      pushHistory(next);
       setCurrent(c => Math.min(c, next.pt.length - 1));
       return next;
     });
-  }, []);
+  }, [isViewMode, pushHistory]);
 
   const addSlide = useCallback((tpl: typeof SLIDE_TEMPLATES[0]) => {
+    if (isViewMode) return;
     const newId = Date.now();
     const made = tpl.make(newId);
     setContent(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as ContentStore;
       for (const l of ALL_LANGS) next[l].splice(current + 1, 0, made[l]);
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* quota */ }
+      pushHistory(next);
       setCurrent(current + 1);
       return next;
     });
-  }, [current]);
+  }, [current, isViewMode, pushHistory]);
 
   return (
     <div className={isDark ? 'dark' : ''} style={{ colorScheme: isDark ? 'dark' : 'light' }}>
@@ -1170,6 +1223,7 @@ export default function SlidePadrao() {
                 </div>
               ))}
             </div>
+            {!isViewMode && (
             <div className="p-3 border-t" style={{ borderColor: 'var(--border)' }}>
               <button onClick={() => setAddOpen(true)}
                 className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-xs font-semibold transition-all"
@@ -1179,6 +1233,7 @@ export default function SlidePadrao() {
                 <Plus className="w-3 h-3" /> Adicionar slide
               </button>
             </div>
+            )}
           </div>
         )}
 
@@ -1209,11 +1264,43 @@ export default function SlidePadrao() {
               <Layers className="w-3 h-3" /> {panelOpen ? 'Ocultar' : 'Slides'}
             </button>
             <div className="flex items-center gap-2">
-              <button onClick={() => setEditOpen(true)}
-                className="px-4 h-9 rounded-full flex items-center gap-2 text-sm font-medium transition-colors"
-                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--foreground)' }}>
-                <Pencil className="w-3.5 h-3.5" style={{ color: 'var(--primary)' }} /> Editar slide
-              </button>
+              {!isViewMode && (
+                <>
+                  <button onClick={handleUndo} title="Desfazer (Ctrl+Z)"
+                    className="w-9 h-9 flex items-center justify-center rounded-full transition-colors"
+                    style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--muted-foreground)' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--foreground)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted-foreground)')}>
+                    <Undo className="w-4 h-4" />
+                  </button>
+
+                  <button onClick={saveManual}
+                    className="px-3 h-9 rounded-full flex items-center gap-2 text-sm font-medium transition-colors"
+                    style={{ background: saveToast ? 'color-mix(in srgb, var(--primary) 15%, transparent)' : 'var(--surface)', border: `1px solid ${saveToast ? 'var(--primary)' : 'var(--border)'}`, color: saveToast ? 'var(--primary)' : 'var(--foreground)' }}>
+                    {saveToast ? <Check className="w-3.5 h-3.5" /> : <Save className="w-3.5 h-3.5" style={{ color: 'var(--primary)' }} />}
+                    {saveToast ? 'Salvo' : 'Salvar'}
+                  </button>
+
+                  <button onClick={() => setPublishOpen(true)}
+                    className="px-3 h-9 rounded-full flex items-center gap-2 text-sm font-medium transition-colors"
+                    style={{ background: 'var(--primary)', border: '1px solid var(--primary)', color: 'var(--primary-foreground)' }}>
+                    <Share2 className="w-3.5 h-3.5" /> Publicar
+                  </button>
+                  
+                  <div className="w-px h-5 mx-1" style={{ background: 'var(--border)' }} />
+                  
+                  <button onClick={() => setEditOpen(true)}
+                    className="px-4 h-9 rounded-full flex items-center gap-2 text-sm font-medium transition-colors"
+                    style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--foreground)' }}>
+                    <Pencil className="w-3.5 h-3.5" style={{ color: 'var(--primary)' }} /> Editar slide
+                  </button>
+                </>
+              )}
+              {isViewMode && (
+                <div className="px-3 h-9 flex items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>
+                  Visualização
+                </div>
+              )}
               <button onClick={cycleLang}
                 className="px-4 h-9 rounded-full flex items-center gap-2 text-sm font-medium uppercase"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--foreground)' }}>
@@ -1263,13 +1350,54 @@ export default function SlidePadrao() {
         </div>
       </div>
 
-      {/* Modals */}
-      {editOpen && (
+      {/* Modals ── */}
+      {publishOpen && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 backdrop-blur-sm" style={{ background: 'color-mix(in srgb, var(--background) 80%, transparent)' }}>
+          <div className="rounded-xl w-full max-w-md overflow-hidden flex flex-col shadow-2xl relative"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+            <div className="p-5 border-b flex justify-between items-center" style={{ borderColor: 'var(--border)' }}>
+              <div>
+                <h3 className="text-lg font-bold" style={{ color: 'var(--foreground)' }}>Publicar Apresentação</h3>
+                <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Crie um link de visualização pública.</p>
+              </div>
+              <button onClick={() => setPublishOpen(false)}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:opacity-75"
+                style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="p-5">
+               <label className="text-xs font-bold uppercase tracking-wider mb-2 block" style={{ color: 'var(--muted-foreground)' }}>Caminho Personalizado</label>
+               <div className="flex shadow-sm rounded-lg overflow-hidden border focus-within:ring-2 ring-[var(--primary)]" style={{ borderColor: 'var(--border)' }}>
+                  <div className="px-3 flex items-center justify-center text-xs border-r font-medium pb-0.5" style={{ background: 'var(--background)', borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>/apresentacao/</div>
+                  <input type="text" value={publishSlug} onChange={e => setPublishSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))} placeholder="caminho-unico-aqui" className="flex-1 px-3 py-2 text-sm bg-transparent outline-none" style={{ color: 'var(--foreground)' }} />
+               </div>
+               <p className="text-[10px] mt-2 opacity-60 flex gap-1 items-center" style={{ color: 'var(--muted-foreground)' }}><AlertCircle className="w-3 h-3"/> Use apenas letras minúsculas, números e hífens.</p>
+            </div>
+
+            <div className="p-4 border-t flex justify-end gap-2" style={{ borderColor: 'var(--border)', background: 'var(--background)' }}>
+              <button onClick={() => setPublishOpen(false)}
+                className="px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
+                style={{ color: 'var(--foreground)' }}>
+                Cancelar
+              </button>
+              <button onClick={handlePublish} disabled={!publishSlug}
+                className="px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-50"
+                style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+                Gerar Link
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editOpen && !isViewMode && (
         <EditModal slideIndex={current} activeLang={lang} content={content}
           onSave={updated => { persist(updated); setEditOpen(false); }}
           onClose={() => setEditOpen(false)} />
       )}
-      {addOpen && <AddSlideMenu onAdd={addSlide} onClose={() => setAddOpen(false)} />}
+      {addOpen && !isViewMode && <AddSlideMenu onAdd={addSlide} onClose={() => setAddOpen(false)} />}
     </div>
   );
 }

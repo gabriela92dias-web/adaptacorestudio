@@ -7,6 +7,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CriarCampanha } from "../components/brand-studio/criar-campanha";
 import { useCampaigns } from "../helpers/useApi";
+import { Skeleton } from "../components/Skeleton";
+import { EmptyState } from "../components/ui/empty-state";
 
 export default function Campanhas() {
   const { data, isLoading: loading, isError, refetch } = useCampaigns();
@@ -107,9 +109,9 @@ export default function Campanhas() {
 
         {/* -- Body -- */}
         {loading ? (
-          <div className="animate-pulse flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-28 w-full bg-[var(--surface)] border border-[var(--border)] rounded-xl" />
+              <Skeleton key={i} className="h-28 w-full border border-[var(--border)] rounded-xl" withHexagon />
             ))}
           </div>
         ) : isError ? (
@@ -122,16 +124,20 @@ export default function Campanhas() {
             </button>
           </div>
         ) : campaigns.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-[var(--border)] rounded-[2rem] bg-gradient-to-b from-[var(--surface)] to-[var(--background)]">
-            <div className="w-20 h-20 rounded-full bg-[var(--background)] border border-[var(--border)] mb-6 flex items-center justify-center text-[var(--muted-foreground)]">
-              <LayoutGrid size={32} strokeWidth={1} />
-            </div>
-            <h2 className="text-2xl font-black font-heading uppercase tracking-wide mb-3">Banco Vazio</h2>
-            <p className="text-[var(--muted-foreground)] mb-8 max-w-sm text-sm">Nenhuma campanha orquestrada. Inicialize o processo criativo no motor estrutural.</p>
-            <button onClick={() => setIsCreating(true)} className="h-12 px-8 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] text-sm font-bold uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all shadow-md">
-              INICIAR CONSTRUTOR V8
-            </button>
-          </div>
+          <EmptyState
+            className="border-2 border-dashed border-[var(--border)] rounded-[2rem] bg-gradient-to-b from-[var(--surface)] to-[var(--background)] py-24"
+            icon={<LayoutGrid size={32} strokeWidth={1} />}
+            title="Banco Vazio"
+            description="Nenhuma campanha orquestrada. Inicialize o processo criativo no motor estrutural."
+            action={
+              <button 
+                onClick={() => setIsCreating(true)} 
+                className="h-12 px-8 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] text-sm font-bold uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all shadow-md mt-4"
+              >
+                INICIAR CONSTRUTOR V8
+              </button>
+            }
+          />
         ) : (
           <div className="flex flex-col gap-4">
             {campaigns.map((camp: any) => {
