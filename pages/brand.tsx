@@ -77,23 +77,23 @@ const MockupUploadPlaceholder = ({ label, isDarkTheme }: { label: string, isDark
   const btnText = isDarkTheme ? 'text-white' : 'text-black';
 
   return (
-    <div className={`relative w-full h-full flex flex-col items-center justify-center border-2 border-dashed ${borderColor} rounded-[2rem] overflow-hidden group transition-colors duration-300 ${hoverBorderColor}`}>
+    <div className={`relative w-full h-full flex flex-col items-center justify-center border-2 border-dashed ${borderColor} rounded-2xl overflow-hidden group transition-colors duration-300 ${hoverBorderColor}`}>
       {imageSrc ? (
          <img src={imageSrc} className="absolute inset-0 w-full h-full object-cover" alt="Mockup preview" />
       ) : (
-         <div className="text-center p-6 relative z-10 flex flex-col items-center">
-            <span className={`${labelBg} ${labelText} text-[10px] font-mono uppercase px-3 py-1.5 rounded-full mb-4 backdrop-blur-md shadow-sm border border-current/10 font-bold tracking-widest`}>
+         <div className="text-center p-4 relative z-10 flex flex-col items-center">
+            <span className={`${labelBg} ${labelText} text-[9px] font-mono uppercase px-2 py-1 rounded-full mb-3 backdrop-blur-md shadow-sm border border-current/10 font-bold tracking-widest`}>
               {label}
             </span>
-            <span className={`text-xs ${spanText} mb-6 font-mono tracking-wider uppercase`}>Upload de Mockup</span>
-            <label className={`cursor-pointer ${btnBg} ${btnText} text-xs px-5 py-2.5 rounded-xl transition-all font-semibold flex items-center gap-2 hover:scale-105 active:scale-95`}>
+            <span className={`text-[10px] ${spanText} mb-4 font-mono tracking-wider uppercase`}>Upload de Mockup</span>
+            <label className={`cursor-pointer ${btnBg} ${btnText} text-[10px] px-4 py-1.5 rounded-lg transition-all font-semibold flex items-center gap-2 hover:scale-105 active:scale-95`}>
               Selecionar SVG / PNG
               <input type="file" accept="image/svg+xml,image/png,image/jpeg" className="hidden" onChange={handleFileChange} />
             </label>
          </div>
       )}
       {imageSrc && (
-         <label className={`absolute bottom-6 right-6 cursor-pointer ${labelBg} backdrop-blur-md text-current text-[10px] uppercase tracking-widest px-4 py-2 rounded-full transition-all z-20 shadow-xl border border-current/10 hover:scale-105 active:scale-95 flex items-center font-bold`}>
+         <label className={`absolute bottom-4 right-4 cursor-pointer ${labelBg} backdrop-blur-md text-current text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-full transition-all z-20 shadow-xl border border-current/10 hover:scale-105 active:scale-95 flex items-center font-bold`}>
             Trocar
             <input type="file" accept="image/svg+xml,image/png,image/jpeg" className="hidden" onChange={handleFileChange} />
          </label>
@@ -112,7 +112,7 @@ export default function Brand() {
   
   // Local Theme Simulation Toggle
   const [localDark, setLocalDark] = useState(false);
-  const [colorcoreSub, setColorcoreSub] = useState<"linalool" | "myrcene">("linalool");
+  const [colorcoreSub, setColorcoreSub] = useState<"linalool" | "myrcene">("myrcene");
 
   const BRAND_CONTEXTS = {
     coldflora: {
@@ -138,52 +138,71 @@ export default function Brand() {
   const context = BRAND_CONTEXTS[activeTab];
 
   // Dynamic Styles Mapping
-  let bg = "";
-  let text = "";
-  let faintText = "";
-  let border = "";
-  let familyId = "";
+  // ─── Sovereign Concept: Interface is ALWAYS ColdFlora ─────────
+  const interfaceBg = localDark ? "#0A0D0B" : "#FAFBFA";
+  const interfaceText = localDark ? "#FAFBFA" : "#141A17";
+  const interfaceFaintText = localDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)";
+  const interfaceBorder = localDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
+
+  let bentoConfigs = [];
 
   if (activeTab === "coldflora") {
-    bg = localDark ? "#0A0D0B" : "#FAFBFA";
-    text = localDark ? "#FAFBFA" : "#141A17";
-    faintText = localDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)";
-    border = localDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
-    familyId = localDark ? "neutrals-dark" : "neutrals-light";
+    bentoConfigs.push({
+      id: "coldflora",
+      contentBg: interfaceBg,
+      contentText: interfaceText,
+      contentFaintText: interfaceFaintText,
+      contentBorder: interfaceBorder,
+      familyId: localDark ? "neutrals-dark" : "neutrals-light",
+      colors: colorPalette.find(f => f.id === (localDark ? "neutrals-dark" : "neutrals-light"))?.colors || [],
+      typog: 'Otimizada para telas e métricas de conversão. Aliada à "Inter" para fluxos longos de leitura cirúrgica. Sem ruídos ornamentais.',
+      mockups: context.mockups
+    });
   } else if (activeTab === "verdecore") {
-    bg = localDark ? "#12251F" : "#F2F8EA";
-    text = localDark ? "#F2F8EA" : "#1B4235";
-    faintText = localDark ? "rgba(242,248,234,0.5)" : "rgba(27,66,53,0.5)";
-    border = localDark ? "rgba(242,248,234,0.1)" : "rgba(27,66,53,0.1)";
-    familyId = "og-hybrid-blend"; 
+    bentoConfigs.push({
+      id: "verdecore",
+      contentBg: localDark ? "#12251F" : "#F2F8EA",
+      contentText: localDark ? "#F2F8EA" : "#1B4235",
+      contentFaintText: localDark ? "rgba(242,248,234,0.5)" : "rgba(27,66,53,0.5)",
+      contentBorder: localDark ? "rgba(242,248,234,0.1)" : "rgba(27,66,53,0.1)",
+      familyId: "og-hybrid-blend",
+      colors: colorPalette.find(f => f.id === "og-hybrid-blend")?.colors || [],
+      typog: 'Variante Display pesada (ExtraBold/Black) para materialização e escala macro. Peso estrutural traz segurança corporativa sólida.',
+      mockups: context.mockups
+    });
   } else if (activeTab === "colorcore") {
-    if (colorcoreSub === "linalool") {
-      bg = localDark ? "#251D45" : "#FCF5FF";
-      text = localDark ? "#FCF5FF" : "#483D79";
-      faintText = localDark ? "rgba(252,245,255,0.5)" : "rgba(72,61,121,0.5)";
-      border = localDark ? "rgba(252,245,255,0.1)" : "rgba(72,61,121,0.1)";
-      familyId = "linalool-sky";
-    } else {
-      bg = localDark ? "#4A1C2C" : "#FFF5F5";
-      text = localDark ? "#FFF5F5" : "#AF4F72";
-      faintText = localDark ? "rgba(255,245,245,0.5)" : "rgba(175,79,114,0.5)";
-      border = localDark ? "rgba(255,245,245,0.1)" : "rgba(175,79,114,0.1)";
-      familyId = "myrcene-soul";
-    }
+    bentoConfigs.push({
+      id: colorcoreSub === "myrcene" ? "myrcene" : "linalool",
+      contentBg: colorcoreSub === "myrcene" 
+        ? (localDark ? "#4A1C2C" : "#FFF5F5") 
+        : (localDark ? "#251D45" : "#FCF5FF"),
+      contentText: colorcoreSub === "myrcene"
+        ? (localDark ? "#FFF5F5" : "#AF4F72")
+        : (localDark ? "#FCF5FF" : "#483D79"),
+      contentFaintText: colorcoreSub === "myrcene"
+        ? (localDark ? "rgba(255,245,245,0.5)" : "rgba(175,79,114,0.5)")
+        : (localDark ? "rgba(252,245,255,0.5)" : "rgba(72,61,121,0.5)"),
+      contentBorder: colorcoreSub === "myrcene"
+        ? (localDark ? "rgba(255,245,245,0.1)" : "rgba(175,79,114,0.1)")
+        : (localDark ? "rgba(252,245,255,0.1)" : "rgba(72,61,121,0.1)"),
+      familyId: colorcoreSub === "myrcene" ? "myrcene-soul" : "linalool-sky",
+      colors: colorPalette.find(f => f.id === (colorcoreSub === "myrcene" ? "myrcene-soul" : "linalool-sky"))?.colors || [],
+      typog: colorcoreSub === "myrcene" 
+        ? 'Ousadia táctica. Peso extremo contraposto a espaços negativos altos para guiar atenções de forma rápida.'
+        : 'Abordagem clínica focada. Promove a calma em interações críticas voltadas ao cuidado associativo.',
+      mockups: context.mockups
+    });
   }
 
-  const activeFamily = colorPalette.find(f => f.id === familyId);
-  const primaryColors = activeFamily?.colors || [];
-
   return (
-    <div className="w-full min-h-screen font-sans flex flex-col transition-colors duration-700" style={{ backgroundColor: bg, color: text }}>
+    <div className="w-full h-screen overflow-hidden font-sans flex flex-col transition-colors duration-700" style={{ backgroundColor: interfaceBg, color: interfaceText }}>
       <Helmet>
         <title>Brand Architecture | Adapta CoreStudio</title>
       </Helmet>
 
       {/* ── Global Tab Navigation ──────────────────────────────── */}
-      <nav className="sticky top-0 z-50 backdrop-blur-xl border-b" style={{ borderColor: border, backgroundColor: `${bg}Cc` }}>
-        <div className="max-w-[1600px] mx-auto px-6 md:px-12 h-20 flex flex-col md:flex-row md:items-center justify-between gap-4 py-4 md:py-0">
+      <nav className="shrink-0 z-50 backdrop-blur-xl border-b transition-colors duration-700" style={{ borderColor: interfaceBorder, backgroundColor: `${interfaceBg}Cc` }}>
+        <div className="max-w-[1600px] w-full mx-auto px-6 md:px-8 h-20 flex flex-col md:flex-row md:items-center justify-between gap-4 py-4 md:py-0">
           <div className="flex items-center gap-4">
             <div className="w-8 h-8 rounded flex items-center justify-center bg-current text-current shadow-lg shadow-black/5">
               <Fingerprint size={16} className="mix-blend-difference invert" />
@@ -193,7 +212,7 @@ export default function Brand() {
             </span>
           </div>
 
-          <div className="flex gap-2 p-1.5 rounded-full border hide-scrollbar overflow-x-auto w-full md:w-auto" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.02)' }}>
+          <div className="flex gap-2 p-1.5 rounded-full border hide-scrollbar overflow-x-auto w-full md:w-auto" style={{ borderColor: interfaceBorder, backgroundColor: 'rgba(0,0,0,0.02)' }}>
             {[
               { id: 'coldflora', label: 'Coldflora UI' },
               { id: 'verdecore', label: 'VerdeCore' },
@@ -204,8 +223,8 @@ export default function Brand() {
                 onClick={() => { setActiveTab(tab.id as any); setLocalDark(false); }}
                 className={`px-5 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all whitespace-nowrap outline-none`}
                 style={{
-                  backgroundColor: activeTab === tab.id ? text : 'transparent',
-                  color: activeTab === tab.id ? bg : text,
+                  backgroundColor: activeTab === tab.id ? interfaceText : 'transparent',
+                  color: activeTab === tab.id ? interfaceBg : interfaceText,
                   opacity: activeTab === tab.id ? 1 : 0.6,
                   boxShadow: activeTab === tab.id ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
                 }}
@@ -218,141 +237,151 @@ export default function Brand() {
       </nav>
 
       {/* ── Active Context Dashboard ────────────────────────────── */}
-      <main className="max-w-[1600px] w-full mx-auto px-6 md:px-12 flex-1 pt-12 md:pt-20 pb-32">
+      <main className="max-w-[1600px] w-full h-[calc(100vh-5rem)] mx-auto px-6 md:px-8 flex flex-col py-4 md:py-6 overflow-hidden">
         
         {/* Context Hero Header */}
-        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-10 mb-16 md:mb-24 border-b pb-12 md:pb-16" style={{ borderColor: border }}>
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-4 mb-4 border-b pb-4 xl:pb-6 shrink-0 transition-colors duration-700" style={{ borderColor: interfaceBorder }}>
            <div className="max-w-4xl">
-              <span className="text-[10px] md:text-xs font-mono uppercase tracking-widest px-4 py-2 rounded-full inline-block mb-8 border backdrop-blur-sm" style={{ borderColor: border, color: text, backgroundColor: 'rgba(0,0,0,0.02)' }}>
+              <span className="text-[9px] font-mono uppercase tracking-widest px-3 py-1.5 rounded-full inline-block mb-3 border backdrop-blur-sm transition-colors duration-700" style={{ borderColor: interfaceBorder, color: interfaceText, backgroundColor: 'rgba(0,0,0,0.02)' }}>
                 {context.type}
               </span>
-              <h1 className="text-5xl sm:text-7xl md:text-[7.5rem] font-black tracking-tighter mb-8 leading-[0.9]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-2 leading-none">
                 {context.title}
               </h1>
-              <p className="text-xl md:text-2xl leading-relaxed font-light" style={{ color: faintText }}>
+              <p className="text-sm md:text-base leading-relaxed font-light line-clamp-2 transition-colors duration-700" style={{ color: interfaceFaintText }}>
                 {context.desc}
               </p>
            </div>
            
            {/* Context Local Controls */}
-           <div className="flex flex-row xl:flex-col items-center xl:items-end gap-6 shrink-0 w-full xl:w-auto justify-between xl:justify-start">
+           <div className="flex flex-row items-center gap-4 shrink-0 w-full xl:w-auto justify-between xl:justify-start">
              
              {activeTab === "colorcore" && (
-                <div className="flex flex-col sm:flex-row gap-2 p-1.5 rounded-3xl sm:rounded-full border w-full sm:w-auto" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.02)' }}>
-                   <button 
-                     onClick={() => setColorcoreSub('linalool')} 
-                     className="px-6 py-3 rounded-2xl sm:rounded-full text-xs font-bold uppercase transition-all" 
-                     style={colorcoreSub === 'linalool' ? {backgroundColor: text, color: bg, boxShadow: '0 4px 12px rgba(0,0,0,0.05)'} : {color: text, opacity: 0.6}}
-                   >
-                     Linalool (Índica)
-                   </button>
-                   <button 
-                     onClick={() => setColorcoreSub('myrcene')} 
-                     className="px-6 py-3 rounded-2xl sm:rounded-full text-xs font-bold uppercase transition-all" 
-                     style={colorcoreSub === 'myrcene' ? {backgroundColor: text, color: bg, boxShadow: '0 4px 12px rgba(0,0,0,0.05)'} : {color: text, opacity: 0.6}}
-                   >
-                     Myrcene (Sativa)
-                   </button>
-                </div>
-             )}
-             
-             <div className="flex flex-col items-end gap-3">
-               <div className="flex items-center gap-2 p-1.5 rounded-full border backdrop-blur-md" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.02)' }}>
-                 <button
-                   onClick={() => setLocalDark(false)}
-                   className="w-14 h-14 rounded-full flex items-center justify-center transition-all bg-transparent"
-                   style={!localDark ? {backgroundColor: text, color: bg, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transform: 'scale(1)'} : {color: text, opacity: 0.4, transform: 'scale(0.8)'}}
-                   title="Simular Aplicação Clara"
-                 >
-                   <Sun size={24} strokeWidth={2} />
-                 </button>
-                 <button
-                   onClick={() => setLocalDark(true)}
-                   className="w-14 h-14 rounded-full flex items-center justify-center transition-all bg-transparent"
-                   style={localDark ? {backgroundColor: text, color: bg, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transform: 'scale(1)'} : {color: text, opacity: 0.4, transform: 'scale(0.8)'}}
-                   title="Simular Aplicação Escura"
-                 >
-                   <Moon size={24} strokeWidth={2} />
-                 </button>
+               <div className="flex items-center p-1 rounded-full border backdrop-blur-md transition-colors duration-700" style={{ borderColor: interfaceBorder, backgroundColor: 'rgba(0,0,0,0.02)' }}>
+                  <button
+                    onClick={() => setColorcoreSub('myrcene')}
+                    className="px-4 py-1.5 rounded-full text-[9px] font-bold tracking-widest uppercase transition-all whitespace-nowrap outline-none"
+                    style={{
+                      backgroundColor: colorcoreSub === 'myrcene' ? interfaceText : 'transparent',
+                      color: colorcoreSub === 'myrcene' ? interfaceBg : interfaceText,
+                      opacity: colorcoreSub === 'myrcene' ? 1 : 0.5,
+                    }}
+                  >
+                     Myrcene
+                  </button>
+                  <button
+                    onClick={() => setColorcoreSub('linalool')}
+                    className="px-4 py-1.5 rounded-full text-[9px] font-bold tracking-widest uppercase transition-all whitespace-nowrap outline-none"
+                    style={{
+                      backgroundColor: colorcoreSub === 'linalool' ? interfaceText : 'transparent',
+                      color: colorcoreSub === 'linalool' ? interfaceBg : interfaceText,
+                      opacity: colorcoreSub === 'linalool' ? 1 : 0.5,
+                    }}
+                  >
+                     Linalool
+                  </button>
                </div>
-               <span className="text-[10px] font-mono uppercase tracking-widest text-right mt-1" style={{ color: faintText }}>
-                 Testar Variações de Tema
-               </span>
+             )}
+
+             <div className="flex items-center gap-1.5 p-1 rounded-full border backdrop-blur-md transition-colors duration-700" style={{ borderColor: interfaceBorder, backgroundColor: 'rgba(0,0,0,0.02)' }}>
+               <button
+                 onClick={() => setLocalDark(false)}
+                 className="w-8 h-8 rounded-full flex items-center justify-center transition-all bg-transparent"
+                 style={!localDark ? {backgroundColor: interfaceText, color: interfaceBg, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transform: 'scale(1)'} : {color: interfaceText, opacity: 0.4, transform: 'scale(0.8)'}}
+                 title="Simular Aplicação Clara"
+               >
+                 <Sun size={14} strokeWidth={2} />
+               </button>
+               <button
+                 onClick={() => setLocalDark(true)}
+                 className="w-8 h-8 rounded-full flex items-center justify-center transition-all bg-transparent"
+                 style={localDark ? {backgroundColor: interfaceText, color: interfaceBg, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transform: 'scale(1)'} : {color: interfaceText, opacity: 0.4, transform: 'scale(0.8)'}}
+                 title="Simular Aplicação Escura"
+               >
+                 <Moon size={14} strokeWidth={2} />
+               </button>
              </div>
 
            </div>
         </div>
 
-        {/* ── Dashboard Bento Grid ────────────────────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
-           
-           {/* Mockup 1 (Principal) */}
-           <div className="md:col-span-8 aspect-square sm:aspect-[4/3] rounded-[2.5rem] border overflow-hidden p-3" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.03)' }}>
-              <MockupUploadPlaceholder label={context.mockups[0]} isDarkTheme={localDark} />
-           </div>
-
-           {/* Tactical Info Panel */}
-           <div className="md:col-span-4 flex flex-col gap-6 md:gap-8">
-              
-              {/* Identity Token */}
-              <div className="rounded-[2.5rem] border p-8 md:p-12 flex items-center justify-center flex-1 relative group" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.02)' }}>
-                 {localDark ? <LogoLight className="w-32 md:w-40 opacity-90 transition-transform duration-700 group-hover:scale-110" /> : <LogoDark className="w-32 md:w-40 opacity-90 mix-blend-multiply transition-transform duration-700 group-hover:scale-110" />}
-                 <div className="absolute top-6 left-6 text-[10px] font-mono uppercase tracking-widest" style={{ color: faintText }}>Base Logo</div>
-                 <div className="absolute bottom-6 right-6">
-                    <Shield size={24} style={{ color: faintText, opacity: 0.5 }} strokeWidth={1} />
-                 </div>
-              </div>
-
-              {/* Color Tones Extraction */}
-              <div className="rounded-[2.5rem] border p-8 md:p-10 flex flex-col justify-between" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.02)' }}>
-                 <div className="flex justify-between items-center mb-8">
-                   <div className="text-[10px] font-mono uppercase tracking-widest" style={{ color: faintText }}>Família Tática</div>
-                   <div className="text-xs font-bold uppercase py-1 px-3 rounded-full border" style={{ borderColor: border, color: text }}>{familyId}</div>
-                 </div>
+        {/* ── Dashboard Bento Grid(s) ─────────────────────────────── */}
+        <div className={`flex-1 min-h-0 flex flex-col xl:flex-row gap-4 pb-2 overflow-hidden`}>
+          {bentoConfigs.map(config => (
+            <div key={config.id} className="flex-1 min-h-0 flex flex-col h-full bg-transparent overflow-hidden">
+               {/* Label for Split View */}
+               {bentoConfigs.length > 1 && (
+                  <div className="text-[9px] font-mono uppercase tracking-widest mb-2 opacity-50 font-bold ml-2 shrink-0">
+                     {config.familyId}
+                  </div>
+               )}
+               
+               <div className="flex-1 min-h-0 grid grid-cols-12 grid-rows-3 gap-3 md:gap-4">
                  
-                 <div className="flex w-full h-20 rounded-2xl overflow-hidden border" style={{ borderColor: border }}>
-                   {primaryColors.slice(0, 8).map(c => (
-                     <div key={c.hex} className="flex-1 h-full hover:flex-[2.5] transition-all duration-300 shadow-inner" style={{ backgroundColor: c.hex }} title={`${c.name} - ${c.hex}`} />
-                   ))}
+                 {/* Mockup 1 (Principal) */}
+                 <div className="col-span-12 md:col-span-8 row-span-2 rounded-3xl border overflow-hidden p-1.5 transition-colors duration-700" style={{ borderColor: config.contentBorder, backgroundColor: config.contentBg }}>
+                    <MockupUploadPlaceholder label={config.mockups[0]} isDarkTheme={localDark} />
                  </div>
-                 
-                 <div className="mt-8 flex justify-between items-end">
-                    <span className="text-sm md:text-base font-semibold leading-tight">Paleta<br/>Contextual</span>
-                    <span className="text-xl font-mono opacity-50">{primaryColors.length} T</span>
+
+                 {/* Tactical Info Panel - Identity Token */}
+                 <div className="col-span-12 md:col-span-4 row-span-1 rounded-3xl border p-4 md:p-6 flex items-center justify-center relative group overflow-hidden transition-colors duration-700" style={{ borderColor: config.contentBorder, backgroundColor: config.contentBg, color: config.contentText }}>
+                    {localDark ? <LogoLight className="w-16 md:w-20 lg:w-24 opacity-90 transition-transform duration-700 group-hover:scale-110" /> : <LogoDark className="w-16 md:w-20 lg:w-24 opacity-90 mix-blend-multiply transition-transform duration-700 group-hover:scale-110" />}
+                    <div className="absolute top-4 left-5 text-[9px] font-mono uppercase tracking-widest" style={{ color: config.contentFaintText }}>Base Logo</div>
+                    <div className="absolute bottom-4 right-5">
+                       <Shield size={16} style={{ color: config.contentFaintText, opacity: 0.5 }} strokeWidth={1} />
+                    </div>
                  </div>
-              </div>
-           </div>
 
-           {/* Mockups 2 e 3 (Secundários) */}
-           <div className="md:col-span-6 aspect-[4/3] sm:aspect-video rounded-[2.5rem] border overflow-hidden p-3" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.03)' }}>
-              <MockupUploadPlaceholder label={context.mockups[1]} isDarkTheme={localDark} />
-           </div>
-
-           <div className="md:col-span-6 aspect-[4/3] sm:aspect-video rounded-[2.5rem] border overflow-hidden p-3" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.03)' }}>
-              <MockupUploadPlaceholder label={context.mockups[2]} isDarkTheme={localDark} />
-           </div>
-
-           {/* Typography Callout */}
-           <div className="md:col-span-12 rounded-[2.5rem] border p-12 md:p-20 flex flex-col md:flex-row justify-between items-center gap-12 mt-4 md:mt-8 relative overflow-hidden group" style={{ borderColor: border, backgroundColor: 'rgba(0,0,0,0.02)' }}>
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-5 scale-150 pointer-events-none group-hover:scale-125 group-hover:opacity-10 transition-all duration-1000">
-                <Type size={300} strokeWidth={0.5} style={{ color: text }} />
-              </div>
-              <div className="relative z-10">
-                 <div className="text-[10px] font-mono uppercase tracking-widest mb-6 flex items-center gap-3" style={{ color: faintText }}>
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: text }} /> Padrão Tipográfico
+                 {/* Color Tones Extraction */}
+                 <div className="col-span-12 md:col-span-4 row-span-1 rounded-3xl border p-4 md:p-6 flex flex-col justify-between transition-colors duration-700" style={{ borderColor: config.contentBorder, backgroundColor: config.contentBg, color: config.contentText }}>
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="text-[9px] font-mono uppercase tracking-widest" style={{ color: config.contentFaintText }}>Família Tática</div>
+                      <div className="text-[9px] font-bold uppercase py-1 px-2.5 rounded-full border hide-scrollbar overflow-hidden text-ellipsis whitespace-nowrap max-w-[100px] md:max-w-[none]" style={{ borderColor: config.contentBorder }}>{config.familyId}</div>
+                    </div>
+                    
+                    <div className="flex w-full flex-1 min-h-[24px] sm:min-h-[30px] rounded-xl overflow-hidden border" style={{ borderColor: config.contentBorder }}>
+                      {config.colors.slice(0, 8).map(c => (
+                        <div key={c.hex} className="flex-1 h-full hover:flex-[2.5] transition-all duration-300 shadow-inner" style={{ backgroundColor: c.hex }} title={`${c.name} - ${c.hex}`} />
+                      ))}
+                    </div>
+                    
+                    <div className="mt-3 flex justify-between items-end">
+                       <span className="text-[10px] md:text-xs font-semibold leading-tight">Paleta<br/>Contextual</span>
+                       <span className="text-sm font-mono opacity-50">{config.colors.length} T</span>
+                    </div>
                  </div>
-                 <div className="text-5xl md:text-7xl font-black mb-6 tracking-tight">Geist Sans</div>
-                 <p className="text-lg md:text-xl max-w-2xl font-light leading-relaxed" style={{ color: faintText }}>
-                   {activeTab === 'coldflora' ? 'Tipografia otimizada para telas e métricas de conversão. Aliada à "Inter" para fluxos longos de leitura cirúrgica. Sem ruídos ornamentais.' 
-                   : activeTab === 'verdecore' ? 'Variante Display pesada (ExtraBold/Black) para materialização e escala macro. Peso estrutural traz segurança corporativa sólida.' 
-                   : 'Ousadia táctica. Peso extremo contraposto a espaços negativos altos para guiar atenções do associado de forma instintiva e rápida.'}
-                 </p>
-              </div>
-              <div className="relative z-10 text-8xl md:text-[12rem] font-bold font-serif italic tracking-tighter text-center md:text-right mt-8 md:mt-0 opacity-20" style={{ color: text }}>
-                 Aa
-              </div>
-           </div>
 
+                 {/* Mockups 2 e 3 (Secundários) */}
+                 <div className="col-span-6 md:col-span-3 row-span-1 rounded-3xl border overflow-hidden p-1.5 transition-colors duration-700" style={{ borderColor: config.contentBorder, backgroundColor: config.contentBg }}>
+                    <MockupUploadPlaceholder label={config.mockups[1]} isDarkTheme={localDark} />
+                 </div>
+
+                 <div className="col-span-6 md:col-span-3 row-span-1 rounded-3xl border overflow-hidden p-1.5 transition-colors duration-700" style={{ borderColor: config.contentBorder, backgroundColor: config.contentBg }}>
+                    <MockupUploadPlaceholder label={config.mockups[2]} isDarkTheme={localDark} />
+                 </div>
+
+                 {/* Typography Callout */}
+                 <div className="col-span-12 md:col-span-6 row-span-1 rounded-3xl border p-4 md:p-6 flex flex-row justify-between items-center relative overflow-hidden group transition-colors duration-700" style={{ borderColor: config.contentBorder, backgroundColor: config.contentBg, color: config.contentText }}>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-5 scale-150 pointer-events-none group-hover:scale-125 group-hover:opacity-10 transition-all duration-1000">
+                      <Type size={180} strokeWidth={0.5} style={{ color: config.contentText }} />
+                    </div>
+                    <div className="relative z-10 w-full max-w-[200px] md:max-w-[280px]">
+                       <div className="text-[9px] font-mono uppercase tracking-widest mb-1.5 flex items-center gap-2" style={{ color: config.contentFaintText }}>
+                          <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full" style={{ backgroundColor: config.contentText }} /> Tipografia
+                       </div>
+                       <div className="text-xl md:text-2xl font-black mb-1.5 tracking-tight truncate">Geist Sans</div>
+                       <p className="text-[10px] md:text-xs font-light leading-snug lg:leading-relaxed line-clamp-3 md:line-clamp-2" style={{ color: config.contentFaintText }}>
+                         {config.typog}
+                       </p>
+                    </div>
+                    <div className="relative z-10 text-4xl md:text-5xl font-bold font-serif italic tracking-tighter opacity-20" style={{ color: config.contentText }}>
+                       Aa
+                    </div>
+                 </div>
+
+               </div>
+            </div>
+          ))}
         </div>
       </main>
     </div>
