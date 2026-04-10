@@ -56,7 +56,7 @@ const LAYOUT_OPTIONS = [
 
 const BG_OPTIONS = [
   { value: 'solid',       label: 'Limpo',   icon: Square },
-  { value: 'glow',        label: 'Glow',    icon: Sparkles },
+  { value: 'glow',        label: 'Aurora (Glow)',    icon: Sparkles },
   { value: 'grid',        label: 'Grid',    icon: Grid },
   { value: 'layers',      label: 'Layers',  icon: Layers },
 ];
@@ -1190,9 +1190,10 @@ export default function SlidePadrao() {
 
           {/* Ambient Background Engine */}
           {slide.bgStyle === 'glow' && (
-            <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
-              <div className={`w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] rounded-full blur-[120px] opacity-10 animate-pulse transition-transform duration-1000 ${slide.layout === 'split-right' ? 'translate-x-1/4' : slide.layout === 'split-left' ? '-translate-x-1/4' : ''}`}
-                style={{ background: 'var(--primary)' }} />
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+               {/* Asymmetrical modern 'aurora' mesh gradients */}
+               <div className={`absolute w-[120vw] h-[60vh] blur-[140px] opacity-[0.08] transition-transform duration-1000 ${slide.layout === 'split-right' ? 'translate-x-[15%]' : slide.layout === 'split-left' ? '-translate-x-[15%]' : 'translate-y-[15%]'}`} style={{ background: 'var(--primary)', bottom: '-20%', left: '-10%' }} />
+               <div className={`absolute w-[70vw] h-[70vw] rounded-full blur-[140px] opacity-[0.05] transition-transform duration-1000 ${slide.layout === 'split-right' ? 'translate-x-1/4' : slide.layout === 'split-left' ? '-translate-x-1/4' : '-translate-y-1/4'}`} style={{ background: 'var(--primary)', top: '-20%', right: '-10%' }} />
             </div>
           )}
           {slide.bgStyle === 'grid' && (
@@ -1265,9 +1266,9 @@ export default function SlidePadrao() {
           {/* Slide Content Safe Zone */}
           <SlideContentWrapper>
             <div key={`${current}-${lang}-${slide.animation}`} className={`w-full ${
-              slide.animation === 'fade' ? 'animate-in fade-in duration-700 ease-out' :
-              slide.animation === 'slide-up' ? 'animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out' :
-              slide.animation === 'zoom' ? 'animate-in fade-in zoom-in-95 duration-700 ease-out' : ''
+              slide.animation === 'fade' ? 'animate-in fade-in duration-[800ms] ease-out' :
+              slide.animation === 'slide-up' ? 'animate-in fade-in slide-in-from-bottom-4 duration-[800ms] ease-out' :
+              slide.animation === 'zoom' ? 'animate-in fade-in zoom-in-[0.98] duration-[1200ms] ease-out' : ''
             }`}>
               <SlideVisual slide={slide} />
             </div>
