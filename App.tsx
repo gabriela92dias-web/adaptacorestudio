@@ -19,7 +19,6 @@ class GlobalErrorBoundary extends Component<{children: ReactNode}, {hasError: bo
   }
 }
 import { GlobalContextProviders } from "./components/_globalContextProviders";
-import { DevBuilder } from "./components/DevBuilder";
 const Page_0 = React.lazy(() => import("./pages/login"));
 import PageLayout_0 from "./pages/login.pageLayout.tsx";
 const Page_1 = React.lazy(() => import("./pages/_index.tsx"));
@@ -276,7 +275,6 @@ export function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </React.Suspense>
-        <DevBuilder />
       </GlobalContextProviders>
     </BrowserRouter>
     </GlobalErrorBoundary>
