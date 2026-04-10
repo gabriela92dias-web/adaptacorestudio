@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { Hexagon } from "lucide-react"
+import { AdaptaHexagon } from "../icons/adapta-hexagon"
 import { cn } from "./utils"
 
 interface EmptyStateProps {
@@ -23,10 +23,8 @@ export function EmptyState({
     <div className={cn("flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-500", className)}>
       <div className="relative flex items-center justify-center w-24 h-24 mb-6">
         {withHexagon && (
-          <Hexagon 
+          <AdaptaHexagon 
             className="absolute w-full h-full text-primary/10" 
-            strokeWidth={1}
-            style={{ transform: "rotate(-90deg)" }} // Pointing up
           />
         )}
         <div className="z-10 text-primary">

@@ -91,7 +91,7 @@ const VIEW_CONFIG: Record<ViewType, { label: string; icon: LucideIcon; isFullWid
 
 const ALL_LANGS: Lang[] = ['pt', 'en', 'de'];
 const LANG_LABELS: Record<Lang, string> = { pt: 'Português', en: 'English', de: 'Deutsch' };
-const STORAGE_KEY = 'slide_padrao_content_v3';
+const STORAGE_KEY = 'slide_padrao_content_v4';
 
 const newTopic = (text: string): Topic => ({ id: `t_${Math.random().toString(36).slice(2, 8)}`, text });
 
@@ -141,35 +141,51 @@ const SLIDE_TEMPLATES: {
   make: (id: number) => { pt: SlideData; en: SlideData; de: SlideData };
 }[] = [
   {
-    label: 'Capa da Apresentação', icon: Target,
+    label: 'Introdução', icon: Target,
     make: id => ({
-      pt: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Título Principal', subtitle: 'Subtítulo da apresentação', badge: 'INÍCIO' },
-      en: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Main Title', subtitle: 'Presentation subtitle', badge: 'START' },
-      de: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Haupttitel', subtitle: 'Untertitel der Präsentation', badge: 'START' },
+      pt: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Introdução', subtitle: 'O título principal da sua apresentação entra aqui.', badge: 'INÍCIO' },
+      en: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Introduction', subtitle: 'Your main presentation title goes here.', badge: 'START' },
+      de: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Einführung', subtitle: 'Ihr Hauptpräsentationstitel kommt hier.', badge: 'START' },
     }),
   },
   {
-    label: 'Divisor de Assunto', icon: Tag,
+    label: 'Aterrizagem: de onde viemos / o que veremos', icon: Globe,
     make: id => ({
-      pt: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Novo Assunto', subtitle: 'O que vamos ver agora?' },
-      en: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'New Topic', subtitle: 'What are we looking at next?' },
-      de: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Neues Thema', subtitle: 'Was sehen wir uns als Nächstes an?' },
+      pt: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Aterrizagem', subtitle: 'De onde viemos e o que veremos' },
+      en: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Landing', subtitle: 'Where we came from and what we will see' },
+      de: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Landung', subtitle: 'Woher wir kommen und was wir sehen werden' },
     }),
   },
   {
-    label: 'Texto & Tópicos', icon: LayoutGrid,
+    label: 'Slide geral: conteúdos construíveis', icon: LayoutGrid,
     make: id => ({
-      pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Explore o Ponto', content: 'Use este slide para detalhar sua ideia em pontos-chave.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Primeiro Ponto'), newTopic('Segundo Ponto'), newTopic('Terceiro Ponto')] } },
-      en: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Explore the Point', content: 'Use this slide to detail your idea in key points.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('First Point'), newTopic('Second Point'), newTopic('Third Point')] } },
-      de: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Punkt untersuchen', content: 'Nutzen Sie diese Folie, um Ihre Idee detailliert darzustellen.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Erster Punkt'), newTopic('Zweiter Punkt'), newTopic('Dritter Punkt')] } },
+      pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Argumento Principal', content: 'Desenvolva suas ideias, processos ou pontos importantes aqui.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Ideia 1'), newTopic('Ideia 2'), newTopic('Ideia 3')] } },
+      en: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Main Argument', content: 'Develop your ideas, processes, or important points here.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Idea 1'), newTopic('Idea 2'), newTopic('Idea 3')] } },
+      de: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Hauptargument', content: 'Entwickeln Sie hier Ihre Ideen, Prozesse oder wichtigen Punkte.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Idee 1'), newTopic('Idee 2'), newTopic('Idee 3')] } },
     }),
   },
   {
-    label: 'Agradecimento Final', icon: Flag,
+    label: 'Resultados', icon: CheckCircle2,
     make: id => ({
-      pt: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Obrigado', content: 'Deixe aqui o seu contato ou próximo passo.', badge: 'FIM' },
-      en: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Thank you', content: 'Leave your contact or next step here.', badge: 'END' },
-      de: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Vielen Dank', content: 'Hinterlassen Sie hier Ihren Kontakt oder den nächsten Schritt.', badge: 'ENDE' },
+      pt: { id, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Resultados', content: 'O impacto gerado pelos nossos esforços:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Métrica 1'), newTopic('Métrica 2'), newTopic('Métrica 3')] } },
+      en: { id, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Results', content: 'The impact generated by our efforts:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Metric 1'), newTopic('Metric 2'), newTopic('Metric 3')] } },
+      de: { id, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Ergebnisse', content: 'Die Auswirkungen unserer Bemühungen:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Metrik 1'), newTopic('Metrik 2'), newTopic('Metrik 3')] } },
+    }),
+  },
+  {
+    label: 'Próximos Passos', icon: Rocket,
+    make: id => ({
+      pt: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Próximos Passos', content: 'O caminho que temos à frente e como vamos executar:', badge: 'AÇÃO', topicBlock: { view: 'sequence', topics: [newTopic('Fase 1'), newTopic('Fase 2'), newTopic('Fase 3'), newTopic('Fase 4')] } },
+      en: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Next Steps', content: 'The path ahead and how we will execute:', badge: 'ACTION', topicBlock: { view: 'sequence', topics: [newTopic('Phase 1'), newTopic('Phase 2'), newTopic('Phase 3'), newTopic('Phase 4')] } },
+      de: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Nächste Schritte', content: 'Der vor uns liegende Weg und die Ausführung:', badge: 'AKTION', topicBlock: { view: 'sequence', topics: [newTopic('Phase 1'), newTopic('Phase 2'), newTopic('Phase 3'), newTopic('Phase 4')] } },
+    }),
+  },
+  {
+    label: 'Até logo', icon: Flag,
+    make: id => ({
+      pt: { id, type: 'cover', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Até logo.', subtitle: 'Obrigado!', badge: 'FIM' },
+      en: { id, type: 'cover', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'See you.', subtitle: 'Thank you!', badge: 'END' },
+      de: { id, type: 'cover', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Bis bald.', subtitle: 'Vielen Dank!', badge: 'ENDE' },
     }),
   },
 ];
@@ -184,7 +200,8 @@ export const getDynamicFontSize = (text: string | undefined, type: 'cover-title'
     if (len < 15) return 'clamp(4rem, 10vw, 9rem)';
     if (len < 30) return 'clamp(3.5rem, 8vw, 7.5rem)';
     if (len < 60) return 'clamp(2.5rem, 6vw, 5.5rem)';
-    return 'clamp(2rem, 4vw, 4rem)';
+    if (len < 100) return 'clamp(1.5rem, 4vw, 4rem)';
+    return 'clamp(1.2rem, 2vw, 2.5rem)';
   }
   if (type === 'cover-subtitle') {
     if (len < 40) return 'clamp(1.5rem, 3vw, 2.5rem)';
@@ -194,18 +211,21 @@ export const getDynamicFontSize = (text: string | undefined, type: 'cover-title'
   if (type === 'part-title') {
     if (len < 20) return 'clamp(2rem, 4vw, 4rem)';
     if (len < 40) return 'clamp(1.5rem, 3vw, 3rem)';
-    return 'clamp(1.2rem, 2vw, 2rem)';
+    if (len < 100) return 'clamp(1.2rem, 2vw, 2rem)';
+    return 'clamp(1rem, 1.5vw, 1.5rem)';
   }
   if (type === 'part-subtitle') {
     if (len < 20) return 'clamp(3.5rem, 7vw, 6rem)';
     if (len < 50) return 'clamp(3rem, 6vw, 5rem)';
     if (len < 100) return 'clamp(2rem, 4vw, 4rem)';
-    return 'clamp(1.5rem, 3vw, 3rem)';
+    if (len < 200) return 'clamp(1.5rem, 2.5vw, 2.5rem)';
+    return 'clamp(1.1rem, 1.5vw, 1.5rem)';
   }
   if (type === 'generic-title') {
     if (len < 20) return 'clamp(2.5rem, 5vw, 5rem)';
     if (len < 50) return 'clamp(2rem, 4vw, 4rem)';
-    return 'clamp(1.5rem, 3vw, 3rem)';
+    if (len < 100) return 'clamp(1.5rem, 3vw, 3rem)';
+    return 'clamp(1.2rem, 2vw, 2rem)';
   }
   if (type === 'generic-content') {
     if (len < 100) return 'clamp(1.25rem, 2vw, 1.5rem)';
@@ -214,6 +234,16 @@ export const getDynamicFontSize = (text: string | undefined, type: 'cover-title'
   }
   
   return '';
+};
+
+export const getTypeLabel = (slideType: string, idx: number, total: number) => {
+  if (slideType === 'cover') return idx === 0 ? 'Introdução' : 'Até logo';
+  if (slideType === 'part') return 'Aterrizagem';
+  if (slideType === 'generic') return 'Slide geral';
+  if (slideType === 'solution') return 'Resultados';
+  if (slideType === 'future') return 'Próximos passos';
+  if (slideType === 'problem') return 'Desafio';
+  return slideType;
 };
 
 // ─── V8 Mock visual ────────────────────────────────────────────────────────────
@@ -1197,7 +1227,7 @@ export default function SlidePadrao() {
                       {idx + 1}. {s.title}
                     </div>
                     <div className="text-[10px] flex items-center gap-1 mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-                      <span>{s.type}</span>
+                      <span>{getTypeLabel(s.type, idx, slideList.length)}</span>
                       {s.topicBlock && (
                         <>
                           <span className="opacity-40">•</span>

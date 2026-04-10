@@ -1,5 +1,5 @@
 import { cn } from "./ui/utils"
-import { Hexagon } from "lucide-react"
+import { AdaptaHexagon } from "./icons/adapta-hexagon"
 
 export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   withHexagon?: boolean;
@@ -16,10 +16,8 @@ function Skeleton({
       {...props}
     >
       {withHexagon && (
-        <Hexagon
+        <AdaptaHexagon
           className="absolute text-primary/10 w-8 h-8 md:w-12 md:h-12"
-          strokeWidth={1}
-          style={{ transform: "rotate(-90deg)" }} // Pointing up
         />
       )}
     </div>

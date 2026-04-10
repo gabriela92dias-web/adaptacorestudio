@@ -1,7 +1,8 @@
 "use client";
 
 import { Toaster as Sonner } from "sonner";
-import { Hexagon, AlertCircle, AlertTriangle, Info } from "lucide-react";
+import { AlertCircle, AlertTriangle, Info } from "lucide-react";
+import { AdaptaHexagon } from "./icons/adapta-hexagon";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
@@ -26,7 +27,7 @@ export const SonnerToaster = ({ className, ...props }: ToasterProps) => {
       icons={{
         success: (
           <div className="relative flex items-center justify-center w-6 h-6 mr-1">
-            <Hexagon className="absolute text-[var(--success)] w-full h-full" strokeWidth={2} style={{ transform: "rotate(-90deg)" }} />
+            <AdaptaHexagon className="absolute text-[var(--success)] w-full h-full" />
             <div className="w-1.5 h-1.5 rounded-full bg-[var(--success)] z-10" />
           </div>
         ),
