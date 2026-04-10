@@ -217,13 +217,20 @@ export function useCampaignWizard(onClose: () => void) {
       let text = "";
       try {
         const payload = await callOpenAI(
-          `Gere a Árvore-mãe Tática (Blueprint Motor V8). Responda EXATAMENTE um JSON: { "blueprint": "markdown longo" }. Siga a estrutura:
-1. "Gancho Principal" Criativo: Uma big idea genial para tracionar.
-2. O Funil Completo: Mapeie de 7 a 10 funções/etapas estratégicas cobrindo Ativação, Engajamento e Retenção.
-3. Projetos de Oportunidades: Visão brilhante de marketing e conversão.
-4. Logística e Riscos.
-Seja o mais inteligente, ousado e brilhante estrategista. (Incorpore infraestrutura presencial se a duração > 3h e público > 30, mas não foque só nisso, brilhe no funil criativo).`,
-          `Tema: "${rawName}". Direção: ${direcao}, Exp: ${experiencia}. Prev. Duração: ${eventoDuracao}h. Prev. Público: ${eventoPublico}. Orçamento: R$ ${aiOrcamentoTotal}.`
+          `Você é o mestre da Estratégia de Campanhas (Nível C-Level/Diretor de Criação). Gere uma Árvore-mãe Tática (Blueprint Motor V8) incrivelmente profunda e brilhante. Responda EXATAMENTE um JSON: { "blueprint": "markdown longo" }.
+Siga EXATAMENTE esta estrutura no markdown, desenvolvendo com profundidade extrema:
+## 1. O Gancho Principal (A Grande Ideia)
+Crie uma narrativa central fora da caixa, magnética e irresistível para o público.
+
+## 2. O Funil de Conversão Completo (A Jornada)
+Mapeie um funil monstro com 7 a 10 etapas detalhadas! Desde a Captação/Atenção, Aquecimento, Conversão até a Retenção/Follow-up. Descreva a intenção psicológica e as iscas de cada etapa.
+
+## 3. Oportunidades & Gatilhos Práticos
+Estratégias de growth, parcerias ou ativações surpreendentes durante a campanha.
+
+## 4. Governança e Riscos
+Resumo executivo do que pode dar errado na mensagem e como o Hedge atua.`,
+          `Tema: "${rawName}". Tese/Objetivo: "${proposicao}". Direção: ${direcao}, Exp: ${experiencia}. Prev. Duração: ${eventoDuracao}h. Prev. Público: ${eventoPublico}. Orçamento: R$ ${aiOrcamentoTotal}.`
         );
         const parsed = JSON.parse(payload.replace(/```json|```/gi, "").trim());
         const validation = aiBlueprintSchema.safeParse(parsed);
@@ -267,52 +274,48 @@ Seja o mais inteligente, ousado e brilhante estrategista. (Incorpore infraestrut
   const generateActionPlan = async () => {
     setIsGeneratingPlan(true);
     try {
-      // 1. CARREGAR LÓGICA DETERMINÍSTICA (Economizando Tokens em tarefas genéricas)
-      let deterministicGates = {
-        governanca_risco: ["Solicitar aval formal e alinhamento do jurídico", "Garantir Termo de LGPD e autorização de uso de imagem"],
-        producao_fisica: [] as string[],
-        evento_logistica: [] as string[],
-        digital_distribuicao: [] as string[]
-      };
+      // 1. CARREGAR LÓGICA DETERMINÍSTICA (Infraestrutura Base Mínima)
+      let deterministicTasks: string[] = [
+        "Solicitar aval formal e alinhamento do jurídico", 
+        "Garantir Termo de LGPD e autorização de uso de imagem"
+      ];
 
       if (experiencia === "presencial" || experiencia === "hibrida") {
-        deterministicGates.evento_logistica.push("Definir local do evento e verificar acessibilidade", "Criar programação oficial do evento");
-        deterministicGates.producao_fisica.push("Providenciar camisas ou identificação para o Staff de apoio");
+        deterministicTasks.push("Definir local do evento e verificar acessibilidade", "Criar programação oficial do evento");
+        deterministicTasks.push("Providenciar camisas ou identificação para o Staff de apoio");
         
         if (eventoDuracao >= 3) {
-          deterministicGates.evento_logistica.push("Estruturar e orçar Coffee Break (Mandatório para duração longa)");
+          deterministicTasks.push("Estruturar e orçar Coffee Break (Mandatório para duração longa)");
         }
         if (eventoPublico >= 30) {
-          deterministicGates.evento_logistica.push("Verificar estrutura e capacidade de banheiros no local (> 30 pessoas)");
+          deterministicTasks.push("Verificar estrutura e capacidade de banheiros no local (> 30 pessoas)");
         }
       }
 
       if (experiencia === "digital" || experiencia === "hibrida") {
-        deterministicGates.digital_distribuicao.push("Configurar e aprovar Landing Page de cadastro/informações", "Disparar régua de convites digitais", "Acompanhar campanha de Ads geolocalizada");
+        deterministicTasks.push("Configurar e aprovar Landing Page de cadastro/informações", "Disparar régua de convites digitais", "Acompanhar campanha de Ads geolocalizada");
       }
 
-      // 2. BUSCAR APENAS OPORTUNIDADES ESPECÍFICAS (NOVIDADES DO TEMA) VIA IA
-      let aiGates = { governanca_risco: [], producao_fisica: [], evento_logistica: [], digital_distribuicao: [] };
+      // 2. BUSCAR O FUNIL MONSTRO E ESTRATÉGIAS EXAUSTIVAS VIA IA
+      let aiFunnels: Record<string, string[]> = {};
 
       try {
         const payload = await callOpenAI(
-          `Gere de 6 a 12 tarefas ESTRATÉGICAS e CRIATIVAS DE ALTO VALOR para o tema "${rawName}". Traga ideias brilhantes para o funil (ganchos de captação, ativações surpreendentes). Responda JSON: { "governanca_risco": ["..."], "producao_fisica": ["..."], "evento_logistica": ["..."], "digital_distribuicao": ["..."] }. Seja EXTREMAMENTE criativo, focado no gancho principal. Não precisa se preocupar com Coffee Break ou banheiros, isso já está garantido pela máquina. Foco na inteligência da campanha!`,
-          `Blueprint: ${blueprintTheory.substring(0, 300)}... Exp: ${experiencia}.`
+          `Você é o mestre de Estratégia de Growth e Diretor de Criação C-Level. 
+Construa o funil completo e exaustivo de execução para o Blueprint fornecido. 
+Pense em "910210 funções" macro! Segmente em etatas profundas.
+Crie estágios criativos como "CAPTAÇÃO PÚBLICO FRÍO", "AQUECIMENTO LEAD", "GATILHO DE EXCLUSIVIDADE", "FOLLOW UP MONSTRO", "RETENÇÃO". 
+Responda APENAS um JSON válido mapeando NOME DO ESTÁGIO (CHAVE) para um array de TAREFAS CRUCIAIS DE ALTÍSSIMO VALOR ESTRATÉGICO (VALOR). 
+Exemplo: { "FASE 1 - GERAÇÃO DE DEMANDA": ["Criar gancho central...", "Lançar isca digital..."], "FASE 2 - FILTRO DE LEADS": ["..."] }.
+Crie DE 6 A 10 ETAPAS DE FUNIL COMPLETAS.`,
+          `Tema: "${rawName}". Blueprint: ${blueprintTheory.substring(0, 1500)}... Exp: ${experiencia}. Direção: ${direcao}.`
         );
         const parsed = JSON.parse(payload.replace(/```json|```/gi, "").trim());
         const validation = aiActionPlanSchema.safeParse(parsed);
-        if (validation.success) aiGates = validation.data as any;
+        if (validation.success) aiFunnels = validation.data;
       } catch (e: any) {
-        console.warn("Falha no aditivo de oportunidades Inteligentes (Fallback para puramente estrutural)", e);
+        console.warn("Falha ao gerar funil monstro", e);
       }
-
-      // 3. MESCLAR E CONSTRUIR AS TAREFAS
-      let gates = {
-        governanca_risco: [...deterministicGates.governanca_risco, ...(aiGates.governanca_risco || [])],
-        producao_fisica: [...deterministicGates.producao_fisica, ...(aiGates.producao_fisica || [])],
-        evento_logistica: [...deterministicGates.evento_logistica, ...(aiGates.evento_logistica || [])],
-        digital_distribuicao: [...deterministicGates.digital_distribuicao, ...(aiGates.digital_distribuicao || [])],
-      };
 
       toast.info("Processando Integração B2B de Eventos...");
       const initObj = await createInitiative({ name: `V8 [${direcao.toUpperCase()}]: ${rawName}` });
@@ -322,13 +325,23 @@ Seja o mais inteligente, ousado e brilhante estrategista. (Incorpore infraestrut
       const projectId = projObj.project.id;
 
       let hasTasks = false;
-      for (const [gateName, tasks] of Object.entries(gates)) {
-        // Filter empty items and deduplicate to ensure a clean plan
-        const uniqueTasks = Array.from(new Set(tasks.filter(t => t.trim() !== "")));
-        if (!Array.isArray(uniqueTasks) || uniqueTasks.length === 0) continue;
-        const gateClean = gateName.replace("_", " ").toUpperCase();
-        const stageObj = await createStage({ projectId, name: `L-GATE: ${gateClean}` });
+      
+      // Criar estágio determinístico primeiro
+      const baseStageObj = await createStage({ projectId, name: `L-GATE: INFRA E COMPLIANCE` });
+      for (const t of deterministicTasks) {
+          hasTasks = true;
+          await createTask({ projectId, stageId: baseStageObj.stage.id, name: String(t), status: "open", priority: "high", shift: "morning" });
+      }
+
+      // Criar os estágios estratégicos do funil monstro
+      for (const [stageName, tasks] of Object.entries(aiFunnels)) {
+        const uniqueTasks = Array.from(new Set(tasks.filter(t => typeof t === 'string' && t.trim() !== "")));
+        if (uniqueTasks.length === 0) continue;
+        
+        const stageClean = stageName.replace("_", " ").toUpperCase();
+        const stageObj = await createStage({ projectId, name: `ESTRUTURA: ${stageClean}` });
         const stageId  = stageObj.stage.id;
+        
         for (const t of uniqueTasks) {
           hasTasks = true;
           await createTask({ projectId, stageId, name: String(t), status: "open", priority: "medium", shift: "morning" });

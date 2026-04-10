@@ -24,9 +24,5 @@ export const aiBlueprintSchema = z.object({
   blueprint: z.string(),
 });
 
-export const aiActionPlanSchema = z.object({
-  governanca_risco: z.array(z.string()).optional().default([]),
-  producao_fisica: z.array(z.string()).optional().default([]),
-  evento_logistica: z.array(z.string()).optional().default([]),
-  digital_distribuicao: z.array(z.string()).optional().default([]),
-});
+export const aiActionPlanSchema = z.record(z.array(z.string()));
+

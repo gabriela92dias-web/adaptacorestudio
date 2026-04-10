@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { 
+  Activity, 
+  AlertTriangle, 
+  CheckCircle2, 
+  Zap, 
+  Clock, 
+  ShieldAlert, 
+  Blocks,
+  ArrowRight
+} from "lucide-react";
 
 export default function V8Dashboard() {
   const [data, setData] = useState<any[]>([]);
@@ -44,364 +54,265 @@ export default function V8Dashboard() {
   const campaign = data[selectedIdx];
 
   if (loading) {
-    return <div style={{fontFamily: "monospace", padding: 40}}>Inicializando Motor V8...</div>;
-  }
-
-  if (!campaign) {
     return (
-      <div style={{fontFamily: "monospace", padding: 40}}>
-        <h1>BANCO V8 VAZIO</h1>
-        <p>Crie sua primeira campanha no construtor para popular os módulos.</p>
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 text-[var(--muted-foreground)]">
+          <Zap size={32} className="animate-pulse text-[var(--primary)]" />
+          <p className="font-heading uppercase tracking-wider text-sm font-bold">Carregando Dashboard...</p>
+        </div>
       </div>
     );
   }
 
-  // Desestruturando para ficar como o ensaio v002
+  if (!campaign) {
+    return (
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-6">
+        <div className="text-center max-w-md bg-[var(--card)] border border-[var(--border)] p-10 rounded-3xl shadow-sm">
+          <Blocks size={48} className="mx-auto text-[var(--muted-foreground)] opacity-50 mb-6" />
+          <h1 className="text-2xl font-bold mb-3 font-heading text-[var(--foreground)]">Banco de Campanhas Vazio</h1>
+          <p className="text-[var(--muted-foreground)] text-sm mb-8 leading-relaxed">
+            Não há campanhas ativas no momento. Inicie um novo ciclo no construtor de campanhas para visualizar os painéis estratégicos.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const { modulos = [], gates = [] } = campaign;
 
   const activeModulesCount = modulos.filter((m: any) => m.status === 'on').length;
-  const blocks: string[] = [];
-  const alerts: string[] = [];
+  const criticalIssues: string[] = [];
+  const actionRequired: string[] = [];
   
   modulos.forEach((m: any) => {
     if (m.status !== 'on') return;
     const missing = [];
-    if (!m.owner) missing.push("Dono");
-    // if (!m.cost) missing.push("Custo");
-    // if (!m.dueDate) missing.push("Prazo");
-    if (missing.length) blocks.push(`MÓDULO OFF-SPEC [${m.nome}]: faltam ${missing.join(", ")}.`);
-    if (!m.ok) blocks.push(`MÓDULO NÃO PRODUZIDO [${m.nome}]: falta evidência.`);
+    if (!m.owner) missing.push("Responsável");
+    if (missing.length) criticalIssues.push(`O módulo estratégico "${m.nome}" precisa de ${missing.join(", ")} definido.`);
+    if (!m.ok) criticalIssues.push(`Falta evidência de conclusão no módulo "${m.nome}".`);
   });
 
-  if (activeModulesCount === 0) blocks.push("CAMPANHA VAZIA: Nenhum módulo ativo.");
+  if (activeModulesCount === 0) criticalIssues.push("Atenção: A configuração atual indica que nenhum módulo está ativado para esta campanha.");
 
   gates.forEach((g: any) => {
-    if (g.critical && !g.ok) blocks.push(`SOFT GATE CRÍTICO PENDENTE: ${g.name}`);
-    if (!g.critical && !g.ok) alerts.push(`Gate não crítico pendente: ${g.name}`);
+    if (g.critical && !g.ok) criticalIssues.push(`Requisito Crítico Pendente: ${g.name}`);
+    if (!g.critical && !g.ok) actionRequired.push(`Ação Recomendada: ${g.name}`);
   });
 
-  const isPublishReady = blocks.length === 0;
+  const isPublishReady = criticalIssues.length === 0;
 
   return (
-    <>
-      <Helmet><title>CoreStudio | v8 Dashboard</title></Helmet>
-      <style dangerouslySetInnerHTML={{__html: `
-        /* =========================================================
-          ENSAIO DE VERSÃO — LAYOUT-LOCKED v2 (CONTRATO)
-          Regra: NÃO alterar layout/estrutura entre versões
-          sem "EVOLUTION_MAP" explícito.
-        ========================================================== */
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans antialiased flex flex-col items-center pb-20">
+      <Helmet><title>CoreStudio | Painel de Controle</title></Helmet>
 
-        .v8-theme {
-          --bg: #fafafa;
-          --fg: #111;
-          --muted: #666;
-          --border: #2a2a2a;
-          --border-soft: #bdbdbd;
-          --panel: #fff;
-          --panel-2: #f2f2f2;
-
-          --pad-1: 10px;
-          --pad-2: 14px;
-          --pad-3: 18px;
-
-          --radius: 0px; 
-          --font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
-          --h1: 18px;
-          --h2: 13px;
-          --h3: 12px;
-          --p: 11.5px;
-          --small: 10px;
-          --line: 1.45;
-          
-          background: var(--bg);
-          color: var(--fg);
-          font-family: var(--font);
-          line-height: var(--line);
-          min-height: 100vh;
-        }
-
-        .v8-theme * { box-sizing: border-box; }
+      <div className="w-full max-w-7xl px-6 py-10 flex flex-col lg:flex-row gap-8">
         
-        .v8-theme .page {
-          max-width: 1180px;
-          margin: 0 auto;
-          padding: 22px 18px 40px;
-          display: grid;
-          grid-template-columns: 360px 1fr;
-          gap: 18px;
-        }
-
-        .v8-theme .sidebar {
-          position: sticky;
-          top: 14px;
-          align-self: start;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .v8-theme .main {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .v8-theme .card {
-          background: var(--panel);
-          border: 2px solid var(--border);
-          border-radius: var(--radius);
-          padding: var(--pad-2);
-        }
-
-        .v8-theme .card.soft {
-          border-color: var(--border-soft);
-          background: var(--panel-2);
-        }
-
-        .v8-theme .label {
-          display: inline-block;
-          border: 2px solid var(--border);
-          padding: 2px 8px;
-          font-size: var(--small);
-          font-weight: 700;
-          text-transform: uppercase;
-          margin-bottom: 8px;
-          background: var(--bg);
-        }
-
-        .v8-theme h1, .v8-theme h2, .v8-theme h3 {
-          margin: 0 0 6px 0;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: .3px;
-        }
-        .v8-theme h1 { font-size: var(--h1); }
-        .v8-theme h2 { font-size: var(--h2); }
-        .v8-theme h3 { font-size: var(--h3); }
-
-        .v8-theme p {
-          margin: 0 0 8px 0;
-          font-size: var(--p);
-          color: var(--fg);
-        }
-        .v8-theme .muted { color: var(--muted); }
-
-        .v8-theme .row { display:flex; gap: 10px; flex-wrap: wrap; }
-        .v8-theme .col { display:flex; flex-direction: column; gap: 8px; }
-
-        .v8-theme .btn {
-          border: 2px solid var(--border);
-          background: #fff;
-          padding: 8px 10px;
-          font-family: var(--font);
-          font-size: var(--p);
-          cursor: pointer;
-          text-transform: uppercase;
-          font-weight: 700;
-        }
-        .v8-theme .btn:active{ transform: translateY(1px); }
-
-        .v8-theme .kv {
-          display:grid;
-          grid-template-columns: 120px 1fr;
-          gap: 6px 10px;
-          font-size: var(--small);
-          color: var(--fg);
-        }
-        .v8-theme .kv b { text-transform: uppercase; }
-
-        .v8-theme .mono {
-          font-size: var(--small);
-          white-space: pre-wrap;
-          word-break: break-word;
-          border: 2px dashed var(--border-soft);
-          padding: 10px;
-          background: #fff;
-        }
-
-        .v8-theme .pill {
-          border: 2px solid var(--border);
-          padding: 2px 8px;
-          text-transform: uppercase;
-          font-weight: 800;
-          font-size: var(--small);
-          background: #fff;
-          display:inline-block;
-        }
-
-        .v8-theme .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-        .v8-theme .wf-box { border: 2px dashed var(--border-soft); background:#fff; padding: 10px; }
-
-        .v8-theme table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: var(--small);
-          background:#fff;
-          border: 2px solid var(--border);
-        }
-        .v8-theme th, .v8-theme td {
-          border: 1px solid var(--border-soft);
-          padding: 8px;
-          vertical-align: top;
-        }
-        .v8-theme th {
-          text-transform: uppercase;
-          font-weight: 900;
-          background: #f0f0f0;
-          text-align: left;
-        }
-
-        @media (max-width: 980px){
-          .v8-theme .page { grid-template-columns: 1fr; }
-          .v8-theme .sidebar { position: static; }
-        }
-      `}} />
-      
-      <div className="v8-theme">
-        <div className="page">
+        {/* SIDEBAR: Resumo de Saúde da Campanha */}
+        <aside className="w-full lg:w-[320px] flex flex-col gap-6 shrink-0">
           
-          {/* SIDEBAR */}
-          <aside className="sidebar">
-            <div className="card">
-              <div className="label">Painel de Controle</div>
-              <h1>Motor V8 (Fábrica)</h1>
-              <p className="muted">Validação de Soft Gates e Workflow Assíncrono da Campanha Ativa.</p>
-
-              <div style={{height: 2, background: 'var(--border)', opacity: 0.2, margin: '8px 0'}}></div>
-
-              <div className="kv">
-                <b>Versão</b><span>v002</span>
-                <b>Data</b><span>{new Date(campaign.created_at).toLocaleDateString()}</span>
-                <b>Origem</b><span>Supabase API</span>
-                <b>Layout</b><span className="pill">LOCKED-v2</span>
-              </div>
-            </div>
-
-            <div className="card soft">
-              <div className="label">Validador P0</div>
-              <p className="muted">Lista bloqueadores/alertas + readiness.</p>
-              
-              <div style={{height: 2, background: 'var(--border)', opacity: 0.2, margin: '8px 0'}}></div>
-              
-              <div className="mono">
-                {`PRONTO PRO AR: ${isPublishReady ? "SIM" : "NÃO"}\n=========================\n`}
-                {`BLOQUEADORES P0 (${blocks.length}):\n`}
-                {blocks.map(b => `- ${b}\n`).join("")}
-                {`\nALERTAS (${alerts.length}):\n`}
-                {alerts.map(a => `- ${a}\n`).join("")}
-              </div>
-            </div>
-          </aside>
-
-          {/* MAIN */}
-          <main className="main">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[var(--primary)]/10 to-transparent rounded-full -mr-10 -mt-10 blur-2xl"></div>
             
-            <section className="card">
-              <div className="label">HUD Motor V8 / Painel Final</div>
-              {data.length > 1 && (
-                <div className="row" style={{marginBottom: 10}}>
-                  <span style={{fontSize: 10, fontWeight: 700, textTransform: 'uppercase', alignSelf: 'center'}}>Campanha:</span>
-                  <select
-                    style={{fontFamily: 'inherit', fontSize: 10, border: '2px solid var(--border)', padding: '4px 8px', background: '#fff', cursor: 'pointer'}}
-                    value={selectedIdx}
-                    onChange={e => setSelectedIdx(Number(e.target.value))}
-                  >
-                    {data.map((c: any, i: number) => (
-                      <option key={c.id} value={i}>{c.objetivo_primario} — {new Date(c.created_at).toLocaleDateString()}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-              <div className="row">
-                <span className="pill">Publish: <span>{isPublishReady ? "SIM" : "NÃO"}</span></span>
-                <span className="pill">Bloqueadores: <span>{blocks.length}</span></span>
+            <div className="flex items-center gap-2 mb-4 text-[var(--muted-foreground)]">
+              <Activity size={16} />
+              <span className="text-xs font-bold uppercase tracking-wider">Painel Executivo</span>
+            </div>
+            
+            <h1 className="text-2xl font-black font-heading leading-tight mb-2 tracking-tight">Status Geral</h1>
+            <p className="text-[var(--muted-foreground)] text-sm mb-6 leading-relaxed">
+              Visão macro de prontidão e conformidade das ativações mapeadas.
+            </p>
+
+            {data.length > 1 && (
+              <div className="mb-6">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-1 block">Campanha Selecionada</label>
+                <select
+                  className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm font-medium focus:border-[var(--primary)] focus:outline-none transition-colors appearance-none cursor-pointer"
+                  value={selectedIdx}
+                  onChange={e => setSelectedIdx(Number(e.target.value))}
+                >
+                  {data.map((c: any, i: number) => (
+                    <option key={c.id} value={i}>{c.objetivo_primario || "Campanha Sazonal"} — {new Date(c.created_at).toLocaleDateString()}</option>
+                  ))}
+                </select>
               </div>
-              <p className="muted" style={{marginTop: 8}}>
-                Console de voo. Sem "OK" nos gates críticos e módulos completos, a campanha online continua bloqueada.
-              </p>
-            </section>
+            )}
 
-            <section className="card">
-              <div className="label">Visão Geral Módulos vs Gates</div>
-              <h2>Painel Ativo da Campanha</h2>
-              <p className="muted">Os módulos não são em cascata, ocorrem todos paralelamente se não houver gates pendentes.</p>
-
-              <div className="grid2" style={{marginTop: 10}}>
-                <div className="wf-box">
-                  <h3>Módulos Carregados (DNA)</h3>
-                  <div className="mono" style={{fontSize: 11, marginTop: 5, padding: 5, borderColor: '#ddd'}}>
-                    {modulos.map((m: any) => (
-                      <div key={m.id}>[{m.ok ? "X" : " "}] {m.nome} (R${m.cost || '??'} / {m.owner || '??'})</div>
-                    ))}
-                    {modulos.length === 0 && "--"}
-                  </div>
-                </div>
-                <div className="wf-box">
-                  <h3>Soft Gates (Gargalos)</h3>
-                  <div className="mono" style={{fontSize: 11, marginTop: 5, padding: 5, borderColor: '#ddd'}}>
-                    {gates.map((g: any) => (
-                      <div key={g.id}>[{g.ok ? "OK" : "PENDENTE"}] {g.name}</div>
-                    ))}
-                    {gates.length === 0 && "--"}
-                  </div>
-                </div>
+            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-xs font-semibold text-[var(--muted-foreground)]">Prontidão de Lançamento</span>
+                {isPublishReady ? (
+                  <span className="flex items-center gap-1 text-[var(--success)] text-xs font-bold px-2 py-0.5 rounded bg-[var(--success)]/10"><CheckCircle2 size={12}/> PRONTO</span>
+                ) : (
+                  <span className="flex items-center gap-1 text-[var(--error)] text-xs font-bold px-2 py-0.5 rounded bg-[var(--error)]/10"><ShieldAlert size={12}/> BLOQUEADO</span>
+                )}
               </div>
+              <div className="w-full bg-[var(--border)] h-1.5 rounded-full mt-3 overflow-hidden">
+                <div className={`h-full ${isPublishReady ? 'bg-[var(--success)] w-full' : 'bg-[var(--error)] w-1/3'} transition-all`}></div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="bg-[var(--surface)] p-3 rounded-lg border border-[var(--border)]">
+                <div className="text-[var(--muted-foreground)] text-[10px] font-bold uppercase mb-1">Criada em</div>
+                <div className="font-semibold">{new Date(campaign.created_at).toLocaleDateString()}</div>
+              </div>
+              <div className="bg-[var(--surface)] p-3 rounded-lg border border-[var(--border)]">
+                <div className="text-[var(--muted-foreground)] text-[10px] font-bold uppercase mb-1">Origem</div>
+                <div className="font-semibold tracking-tight">Motor V8</div>
+              </div>
+            </div>
+          </div>
 
-              <div style={{marginTop: 10}}>
-                <h3>Relatório Consolidado de Execução</h3>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Componente / Módulo / Gate</th>
-                      <th>Status</th>
-                      <th>Evidência / OK Trigger</th>
-                      <th>Owner</th>
+          <div className="bg-[var(--error)]/5 border border-[var(--error)]/20 text-[var(--error)] rounded-2xl p-6 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle size={18} />
+               <span className="text-sm font-bold tracking-tight">Atenção Prioritária ({criticalIssues.length})</span>
+            </div>
+            {criticalIssues.length > 0 ? (
+              <ul className="space-y-3">
+                {criticalIssues.map((issue, idx) => (
+                  <li key={idx} className="text-sm leading-relaxed flex items-start gap-2">
+                    <span className="mt-1 w-1.5 h-1.5 shrink-0 bg-[var(--error)] rounded-full" />
+                    <span>{issue}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm flex items-center gap-2 font-medium opacity-90"><CheckCircle2 size={16}/> Excelente! Nenhum bloqueio crítico.</p>
+            )}
+
+            {actionRequired.length > 0 && (
+              <div className="mt-6 pt-5 border-t border-[var(--error)]/10">
+                <span className="text-xs font-bold uppercase tracking-wider mb-3 block opacity-80">Recomendações ({actionRequired.length})</span>
+                <ul className="space-y-2">
+                  {actionRequired.map((act, idx) => (
+                    <li key={idx} className="text-sm leading-relaxed text-[var(--error)]/80 flex items-start gap-2">
+                      <span className="mt-1.5 w-1 h-1 shrink-0 bg-current rounded-full" />
+                      <span>{act}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+        </aside>
+
+        {/* MAIN: Detalhamento Operacional */}
+        <main className="flex-1 flex flex-col gap-6">
+          
+          {/* Header Dashboard Visual */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                <span className="text-[10px] uppercase font-bold text-[var(--muted-foreground)] tracking-widest mb-2">Meta Principal</span>
+                <span className="text-3xl font-heading font-black mb-1 text-[var(--foreground)]">500</span>
+                <span className="text-xs text-[var(--muted-foreground)] font-medium">Cadastros Qualificados</span>
+             </div>
+             <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                <span className="text-[10px] uppercase font-bold text-[var(--muted-foreground)] tracking-widest mb-2">Engajamento Previsto</span>
+                <span className="text-3xl font-heading font-black mb-1 text-[var(--foreground)]">2.4%</span>
+                <span className="text-xs text-[var(--muted-foreground)] font-medium">Taxa de Conversão</span>
+             </div>
+             <div className="bg-gradient-to-br from-[var(--primary)] to-[var(--primary)]/80 text-[var(--primary-foreground)] rounded-2xl p-6 shadow-md flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-32 h-32 bg-[var(--primary-foreground)]/10 rounded-full blur-2xl"></div>
+                <span className="text-[10px] uppercase font-bold text-[var(--primary-foreground)]/80 tracking-widest mb-2">Investimento Total</span>
+                <span className="text-3xl font-heading font-black mb-1">R$ --</span>
+                <span className="text-xs text-[var(--primary-foreground)]/90 font-medium">Orçamento Consolidado</span>
+             </div>
+          </section>
+
+          <section className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-8 shadow-sm">
+            <h2 className="text-xl font-heading font-black mb-2">Detalhamento da Execução</h2>
+            <p className="text-[var(--muted-foreground)] text-sm mb-8 leading-relaxed max-w-2xl">
+              Nesta visão, você acompanha o progresso de cada etapa criativa e de governança. Marque os requisitos como concluídos conforme for adquirindo as evidências necessárias.
+            </p>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-[var(--border)]">
+                    <th className="pb-3 text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] min-w-[200px]">Ativação Estratégica</th>
+                    <th className="pb-3 text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] w-[160px]">Status</th>
+                    <th className="pb-3 text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] min-w-[150px]">Evidência Exigida</th>
+                    <th className="pb-3 text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] w-[180px]">Responsável</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--border)]/50">
+                  {modulos.filter((m: any) => m.status === 'on').map((m: any) => (
+                    <tr key={m.id} className="group hover:bg-[var(--surface)] transition-colors">
+                      <td className="py-4 pr-4">
+                        <div className="font-semibold text-sm mb-1">{m.nome}</div>
+                        <div className="text-xs text-[var(--muted-foreground)]">{m.ok ? "Concluído" : "Em andamento"}</div>
+                      </td>
+                      <td className="py-4 pr-4 align-middle">
+                        <button 
+                          onClick={() => updateModuleField(m.id, 'ok', !m.ok)}
+                          className={`h-8 px-3 rounded-full text-xs font-bold transition-all border shrink-0 ${m.ok ? 'bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/20 hover:bg-[var(--success)]/20' : 'bg-[var(--surface)] text-[var(--foreground)] border-[var(--border)] hover:bg-[var(--card)] hover:border-[var(--primary)]'}`}
+                        >
+                          {m.ok ? "Concluído" : "Marcar Pronto"}
+                        </button>
+                      </td>
+                      <td className="py-4 pr-4">
+                        <div className="text-sm font-medium border border-dashed border-[var(--border)] bg-[var(--surface)] inline-flex px-3 py-1.5 rounded-lg text-[var(--muted-foreground)]">
+                          {m.ok_trigger || "Nenhum exigido"}
+                        </div>
+                      </td>
+                      <td className="py-4 align-middle">
+                        <input 
+                          className="w-full bg-transparent border border-transparent hover:border-[var(--border)] focus:border-[var(--primary)] focus:bg-[var(--surface)] rounded-md px-3 py-2 text-sm font-medium transition-all outline-none"
+                          placeholder="Atribuir responsável..." 
+                          defaultValue={m.owner || ''}
+                          onBlur={(e) => updateModuleField(m.id, 'owner', e.target.value)} 
+                        />
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {modulos.filter((m: any) => m.status === 'on').map((m: any) => (
-                      <tr key={m.id}>
-                        <td>Módulo: {m.nome}</td>
-                        <td style={{width: 140}}>
-                          <button className="btn" style={{width: '100%', fontSize: 9}} onClick={() => updateModuleField(m.id, 'ok', !m.ok)}>
-                            {m.ok ? "MARCAR PENDENTE" : "MARCAR CONCLUÍDO"}
-                          </button>
-                        </td>
-                        <td>{m.ok_trigger}</td>
-                        <td style={{width: 140}}>
-                          <input 
-                            className="input" 
-                            style={{padding: 4, height: 26, fontSize: 10}} 
-                            placeholder="Dono" 
-                            defaultValue={m.owner || ''}
-                            onBlur={(e) => updateModuleField(m.id, 'owner', e.target.value)} 
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                    {gates.map((g: any) => (
-                      <tr key={g.id}>
-                        <td>Soft Gate: {g.name}</td>
-                        <td style={{width: 140}}>
-                          <button className="btn" style={{width: '100%', fontSize: 9}} onClick={() => toggleGate(g.id, g.ok)}>
-                            {g.ok ? "REVOGAR OK" : "APROVAR"}
-                          </button>
-                        </td>
-                        <td>{g.artifact || "-"}</td>
-                        <td><span className="muted">Liderança / Sistema</span></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
+                  ))}
 
-          </main>
-        </div>
+                  {/* Soft Gates */}
+                  {gates.map((g: any) => (
+                    <tr key={g.id} className="group hover:bg-[var(--surface)] transition-colors">
+                      <td className="py-4 pr-4">
+                        <div className="font-semibold text-sm mb-1 flex justify-start items-center gap-2">
+                           {g.name}
+                           {g.critical && <ShieldAlert size={14} className="text-[var(--warning)]" />}
+                        </div>
+                        <div className="text-xs text-[var(--muted-foreground)]">Checkpoint de Segurança</div>
+                      </td>
+                      <td className="py-4 pr-4 align-middle">
+                        <button 
+                          onClick={() => toggleGate(g.id, g.ok)}
+                          className={`h-8 px-3 rounded-full text-xs font-bold transition-all border shrink-0 ${g.ok ? 'bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)] hover:opacity-90' : 'bg-[var(--surface)] text-[var(--foreground)] border-[var(--border)] hover:bg-[var(--card)] hover:border-[var(--primary)]'}`}
+                        >
+                          {g.ok ? "Aprovado" : "Validar Etapa"}
+                        </button>
+                      </td>
+                      <td className="py-4 pr-4">
+                        <div className="text-sm font-medium text-[var(--muted-foreground)]">
+                          {g.artifact || "Documentação"}
+                        </div>
+                      </td>
+                      <td className="py-4 align-middle">
+                        <span className="text-sm font-medium text-[var(--muted-foreground)] px-2">Assinatura Liderança</span>
+                      </td>
+                    </tr>
+                  ))}
+
+                  {modulos.length === 0 && gates.length === 0 && (
+                     <tr>
+                        <td colSpan={4} className="py-12 text-center text-[var(--muted-foreground)] text-sm">
+                           Nenhuma etapa registrada para esta campanha.
+                        </td>
+                     </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            
+          </section>
+
+        </main>
       </div>
-    </>
+    </div>
   );
 }
