@@ -6,7 +6,7 @@ import {
   Flame, Rocket, Copy, ChevronUp, ChevronDown, Zap,
   CheckCircle2, LayoutTemplate, AlertCircle, PanelLeft, PanelRight, Square,
   Sparkles, Grid, Monitor, Wind, ArrowUp, ZoomIn, List, GitCommit,
-  LayoutGrid, Target, Tag, GitBranch, Flag, Undo, Save, Share2, Copy as CopyIcon, ExternalLink,
+  LayoutGrid, Target, Tag, GitBranch, Flag, Undo, Save, Share2, Copy as CopyIcon, ExternalLink, Lock,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -1180,8 +1180,9 @@ export default function SlidePadrao() {
                   }}
                   onClick={() => setCurrent(idx)}>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-semibold truncate" style={{ color: idx === current ? 'var(--primary)' : 'var(--foreground)' }}>
-                      {idx + 1}. {s.title}
+                    <div className="text-xs font-semibold truncate flex items-center justify-between gap-2" style={{ color: idx === current ? 'var(--primary)' : 'var(--foreground)' }}>
+                      <span className="truncate">{idx + 1}. {s.title}</span>
+                      {s.type !== 'generic' && <Lock className="w-[10px] h-[10px] opacity-[0.25] flex-shrink-0" title="Slide Estrutural (Fixo)" />}
                     </div>
                     <div className="text-[10px] flex items-center gap-1 mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
                       <span>{getTypeLabel(s.type, idx, slideList.length)}</span>
