@@ -40,6 +40,50 @@ CONTEXTO:
 - Comunicação é infraestrutura de cuidado, não ferramenta de persuasão.
 `.trim();
 
+// ─────────────────────────────────────────────────────────────
+// SANITIZADOR DE VOCABULÁRIO — Barreira final obrigatória
+// Intercepta qualquer saída da IA e substitui termos proibidos
+// ANTES de renderizar na UI. Não depende do system prompt.
+// ─────────────────────────────────────────────────────────────
+const VOCAB_SUBSTITUTIONS: [RegExp, string][] = [
+  // Termos comerciais diretos
+  [/\bclientes?\b/gi, "associados"],
+  [/\bcliente\b/gi, "associado"],
+  [/\bvenda[s]?\b/gi, "acesso"],
+  [/\bvendendo\b/gi, "ampliando o acesso"],
+  [/\bvender\b/gi, "ampliar o acesso"],
+  [/\blead[s]?\b/gi, "pessoas interessadas"],
+  [/\bmarketing\b/gi, "comunicação institucional"],
+  [/\bcampanha publicit[aá]ria\b/gi, "iniciativa institucional"],
+  [/\bpúblico[- ]alvo\b/gi, "comunidade"],
+  [/\bfideliz\w+\b/gi, "engajar"],
+  [/\bretên[çc][aã]o\b/gi, "continuidade do cuidado"],
+  [/\bupsell\b/gi, "ampliação de acesso"],
+  [/\btaxa de convers[aã]o\b/gi, "taxa de adesão"],
+  [/\bconvers[aã]o\b/gi, "adesão"],
+  [/\bCAC\b/g, "custo de acesso"],
+  [/\bROI\b/g, "impacto acumulado"],
+  [/\bescalar\b/gi, "ampliar"],
+  [/\binfluenciadora?s?\b/gi, "parceiras de comunicação"],
+  [/\bsua marca\b/gi, "a Adapta"],
+  [/\bfunil de vendas\b/gi, "jornada do associado"],
+  [/\blucro\b/gi, "sustentabilidade financeira"],
+  [/\bcompras?\b/gi, "acesso"],
+  [/\bconsumidor[as]?\b/gi, "associado"],
+];
+
+function sanitizeVocabulary(text: string): string {
+  let result = text;
+  for (const [pattern, replacement] of VOCAB_SUBSTITUTIONS) {
+    result = result.replace(pattern, replacement);
+  }
+  return result;
+}
+
+function sanitizePropositions(props: string[]): string[] {
+  return props.map(sanitizeVocabulary);
+}
+
 const NATUREZA_CONTEUDO_OPTIONS = ["técnico", "institucional", "educativo", "cultural", "acadêmico", "político-social"];
 
 export function useCampaignWizard(onClose: () => void) {
@@ -176,8 +220,9 @@ Exemplo válido: "Empatia Sistêmica — Dia das Mães: Estruturar acesso ao cui
 
     setAiGeneratedType(type);
     setActiveFunnels(funnels);
-    setSuggestedPropositions(aiProps);
+    setSuggestedPropositions(sanitizePropositions(aiProps)); // barreira de vocabulário
     setIsGenerating(false);
+
     setStep(1);
   };
 
