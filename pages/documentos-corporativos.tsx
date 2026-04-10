@@ -517,9 +517,11 @@ export default function DocumentosCorporativos() {
                       <span className={styles.dimensionsText}>16:9</span>
                     </div>
                     <h3 className={styles.cardTitle}>{tpl.name}</h3>
-                    <Button variant="outline" className={styles.actionButton} onClick={handleUseTemplate}>
-                      Abrir Template
-                    </Button>
+                    <Link to="/tools/gerar-doc/slide-padrao" className={styles.btnFullWidth}>
+                      <Button variant="outline" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>
+                        Abrir Construtor de Slides
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               ))}
