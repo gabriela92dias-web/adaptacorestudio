@@ -13,12 +13,23 @@
   z-index: 10;
   display: flex;
   align-items: center;
-  padding: 0 var(--spacing-6);
+  padding: 0 var(--spacing-4);
   border-bottom: 1px solid var(--border);
   background-color: var(--surface);
   flex-shrink: 0;
-    height: 4.5rem;
-  gap: var(--spacing-6);
+  height: 4.5rem;
+  gap: var(--spacing-4);
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .header {
+    height: auto;
+    min-height: 3.5rem;
+    padding: var(--spacing-2) var(--spacing-3);
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+  }
 }
 
 .titleLink {
@@ -42,10 +53,13 @@
 .tabBar {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: var(--spacing-1);
   overflow-x: auto;
   scrollbar-width: none;
   height: 100%;
+  /* scroll suave em touch */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
 }
 
 .tabBar::-webkit-scrollbar {
@@ -56,7 +70,8 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-3);
+  min-height: 2.75rem;                /* ≥44px touch target — Regra #2 */
   border-radius: var(--radius-full);
   color: var(--muted-foreground);
   text-decoration: none;
@@ -64,6 +79,14 @@
   white-space: nowrap;
   font-size: var(--font-size-base);
   font-weight: 500;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 767px) {
+  .navItem {
+    padding: var(--spacing-2);
+    font-size: var(--font-size-sm);
+  }
 }
 
 .navItem:hover {
@@ -93,16 +116,24 @@
   display: flex;
   flex-direction: row;
   flex: 1;
+  min-height: 0;             /* flex shrink correto sem colapso */
   overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .body {
+    flex-direction: column; /* mobile: empilha verticalmente */
+  }
 }
 
 .main {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   padding: var(--spacing-6);
-  gap: var(--spacing-6);
-  overflow: hidden;
+  overflow-y: auto;          /* scroll interno — Regra #2: nunca overflow:hidden em main */
+  overflow-x: hidden;
   background-color: var(--background);
 }
 

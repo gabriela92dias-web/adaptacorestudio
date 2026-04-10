@@ -243,3 +243,47 @@
 .linkText:hover {
   text-decoration: underline;
 }
+
+/* ── Breakpoints Mobile — Regra #2 ────────────────────────────── */
+@media (max-width: 767px) {
+  .greeting {
+    font-size: var(--font-size-2xl);
+  }
+
+  .summaryBar {
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .summaryItem {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--spacing-3);
+  }
+
+  .summaryItem:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .actionItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actionControls {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 479px) {
+  .greeting {
+    font-size: var(--font-size-xl);
+  }
+
+  .taskTitleRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

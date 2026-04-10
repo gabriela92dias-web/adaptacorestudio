@@ -17,7 +17,9 @@
   padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--radius-md);
   flex-shrink: 0;
-  height: 56px;
+  min-height: 56px;              /* min-height permite crescer em mobile */
+  flex-wrap: wrap;               /* empilha se necessário */
+  gap: var(--spacing-3);
 }
 
 .kpiItem {
@@ -92,10 +94,15 @@
 
 .overviewStrip {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);   /* md+ */
   gap: var(--spacing-3);
   flex-shrink: 0;
-  max-height: 180px;
+}
+
+@media (max-width: 767px) {
+  .overviewStrip {
+    grid-template-columns: 1fr;  /* empilha em mobile */
+  }
 }
 
 .compactCard {

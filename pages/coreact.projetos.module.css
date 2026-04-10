@@ -1,21 +1,32 @@
 .container {
-  padding: 2rem;
+  padding: var(--spacing-8);
   width: 100%;
-  min-height: calc(100vh - 80px); /* Account for header */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: var(--spacing-4);
+  }
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
 }
 
 .title {
-  font-size: 2rem;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--foreground);
   letter-spacing: -0.02em;
+  margin: 0;
 }
 
 .searchContainer {
@@ -31,14 +42,15 @@
 }
 
 .searchInput {
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border-radius: 999px;
+  padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) 2.5rem;
+  border-radius: var(--radius-full);
   border: 1px solid var(--border);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 0.875rem;
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: var(--font-size-sm);
   width: 250px;
-  transition: all 0.2s;
+  height: 2.75rem;               /* ≥44px touch target — Regra #2 */
+  transition: all var(--animation-duration-fast);
 }
 
 .searchInput:focus {
@@ -57,18 +69,18 @@
 /* Big Card Styling */
 .card {
   position: relative;
-  border-radius: 24px;
-  padding: 2rem;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-8);
   min-height: 240px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: var(--bg-secondary);
+  background-color: var(--surface);
   background-size: cover;
   background-position: center;
   overflow: hidden;
   border: 1px solid var(--border);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--animation-duration-fast) ease, box-shadow var(--animation-duration-fast) ease;
   cursor: pointer;
 }
 
@@ -135,8 +147,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--bg-secondary);
-  background: var(--bg-primary);
+  border: 2px solid var(--surface);
+  background: var(--card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -155,47 +167,41 @@
   object-fit: cover;
 }
 
+.tag {
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  background: var(--card);
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+}
+
 .avatarPlaceholder {
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--muted-foreground);
 }
 
 .avatarMore {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 0.75rem;
+  background: var(--card);
+  color: var(--foreground);
+  font-size: var(--font-size-xs);
   font-weight: 600;
   border: 1px solid var(--border);
 }
 
-.tag {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-}
-
-/* Bottom Section */
-.cardBottom {
-  margin-top: auto;
-  padding-top: 2rem;
-}
-
 .meta {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
+  margin-bottom: var(--spacing-2);
   font-weight: 500;
 }
 
 .projectName {
-  font-size: 1.75rem;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--foreground);
   line-height: 1.1;
   letter-spacing: -0.02em;
 }

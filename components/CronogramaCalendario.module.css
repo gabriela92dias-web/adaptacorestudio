@@ -40,7 +40,8 @@
   }
 
   .modeBtn {
-    padding: var(--spacing-1) var(--spacing-3);
+    padding: var(--spacing-2) var(--spacing-3);
+    min-height: 2.75rem;           /* ≥44px touch target — Regra #2 */
     font-size: var(--font-size-xs);
     font-weight: 500;
     background: transparent;
@@ -186,7 +187,7 @@
   .monthWeekRow {
     position: relative;
     background: var(--surface);
-    height: 160px; /* robust min-height for max 4 tasks */
+    min-height: 160px;             /* min-height — cresce com tarefas */
   }
 
   .monthWeekDaysBg {
@@ -276,7 +277,7 @@
   .moreTaskDot[data-status="blocked"] {     background: var(--priority-critical); }
   .moreTaskDot[data-status="standby"] { background: var(--warning); }
   .moreTaskDot[data-status="completed"] { background: var(--success); }
-  .moreTaskDot[data-status="overdue"] { background: #f97316; }
+  .moreTaskDot[data-status="overdue"] { background: var(--chart-3, #f97316); } /* orange semântico */
 
   .monthWeekTasksGrid {
     position: relative;
@@ -394,7 +395,7 @@
     --task-color: var(--success);
   }
   .monthTask[data-status="overdue"] {
-    --task-color: #f97316; /* custom orange */
+    --task-color: var(--chart-3, #f97316); /* orange semântico — não existe token exato */
   }
 
   /* --- Week Mode --- */

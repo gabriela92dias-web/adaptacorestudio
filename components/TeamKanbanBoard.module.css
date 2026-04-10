@@ -10,6 +10,23 @@
     padding: var(--spacing-2);
   }
 
+  /* –– mobile: board empilha paineis verticalmente via level3 class ––
+     level3 já define flex-direction: column nos paineis.
+     Para breakpoint system não depender de JS, adicionamos fallback: */
+  @media (max-width: 639px) {
+    .board {
+      flex-direction: column;
+      overflow-y: auto;
+      height: auto;
+      min-height: 0;
+    }
+    .leftPanel, .rightPanel {
+      width: 100%;
+      height: auto;
+      min-height: 300px;
+    }
+  }
+
   .leftPanel, .rightPanel {
     display: flex;
     flex-direction: column;
@@ -754,7 +771,7 @@
     padding: 2px var(--spacing-2);
     cursor: grab;
     user-select: none;
-    height: 1.25rem; /* ~20px */
+    height: 1.25rem; /* ~20px — elemento de densidade visual, não interativo primário */
     transition: background-color var(--animation-duration-fast) ease;
   }
 

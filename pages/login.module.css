@@ -1,5 +1,5 @@
 .container {
-  min-height: 100vh;
+  min-height: 100dvh;              /* 100dvh — Regra #2 */
   width: 100%;
   display: flex;
   align-items: center;

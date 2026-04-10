@@ -22,17 +22,31 @@
   }
 
   .expandedSidebar {
-    width: 280px;
+    width: 280px;                  /* md+ */
     height: 100%;
     border-left: 1px solid var(--border);
     background-color: var(--sidebar);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    overflow: hidden; /* Strict Zero-Scroll Rule enforcement */
-    box-shadow: var(--shadow-lg); /* Gives depth since it expands over layout usually */
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
     position: relative;
     z-index: var(--z-overlay);
+  }
+
+  @media (max-width: 767px) {
+    .expandedSidebar {
+      position: fixed;             /* overlay em mobile — não empurra o layout */
+      top: 0;
+      right: 0;
+      width: min(280px, 100vw);   /* nunca estoura a tela */
+      height: 100dvh;              /* 100dvh — Regra #2 */
+      z-index: var(--z-modal);
+    }
+    .collapsedSidebar {
+      display: none;               /* mobile: sidebar toggle via header button */
+    }
   }
 
   .calendarHeader {

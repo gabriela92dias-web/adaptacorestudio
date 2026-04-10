@@ -1,6 +1,6 @@
 .sidebar {
   width: 16rem;
-  height: 100vh;
+  height: 100dvh;            /* Regra #2 — dvh obrigatório */
   background-color: var(--sidebar);
   border-right: 1px solid var(--border);
   display: flex;
@@ -459,7 +459,7 @@
   width: 100%;
   justify-content: center;
   color: var(--sidebar-foreground);
-  height: 2rem;
+  height: 2.75rem;           /* ≥44px touch target — Regra #2 */
   border: 1px solid var(--border);
   transition: all var(--animation-duration-fast) ease;
 }
@@ -497,4 +497,21 @@
 }
 .sidebar.collapsed .expandedOnly {
   display: none !important;
+}
+
+/* ── Responsividade Mobile — Regra #2 ─────────────────────────── */
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 200;
+    transform: translateX(0);
+    transition: transform var(--animation-duration-normal) cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+    width: 16rem;              /* mantém largura ao voltar */
+  }
 }

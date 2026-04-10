@@ -9,7 +9,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* overflow gerenciado pelo CoreActLayout.main — não bloquear aqui */
 }
 
 /* ---- LAYOUT PRINCIPAL ---- */
@@ -21,8 +21,8 @@
   width: 100%;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
   padding: var(--spacing-5);
+  /* overflow gerenciado pelo pai — sem overflow aqui */
 }
 
 /* ---- HEADER ---- */

@@ -133,7 +133,8 @@
   background: color-mix(in srgb, var(--surface) 80%, transparent);
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
-  padding: 5px var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
+  min-height: 2.75rem;             /* ≥44px touch target — Regra #2 */
   cursor: pointer;
   transition: all 0.16s ease;
   flex-shrink: 0;
@@ -213,7 +214,8 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
-  padding: 5px var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
+  min-height: 2.75rem;             /* ≥44px touch target — Regra #2 */
   cursor: pointer;
   transition: all 0.16s ease;
 }
@@ -324,7 +326,7 @@
   mask-position: bottom;
   
   /* Verde escuro natural no modo claro */
-  background-color: #2b3b20;
+  background-color: color-mix(in srgb, var(--primary) 30%, #1a2e10);
 
   pointer-events: none;
   user-select: none;
@@ -612,8 +614,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 2.75rem;
+  height: 2.75rem;                 /* ≥44px touch target — Regra #2 */
   border-radius: var(--radius-sm);
   background: transparent;
   border: 1px solid var(--border);

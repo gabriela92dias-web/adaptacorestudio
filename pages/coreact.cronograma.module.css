@@ -75,8 +75,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 2.75rem;                /* ≥44px touch target — Regra #2 */
+  height: 2.75rem;
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
@@ -140,7 +140,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 28px;
+  height: 2.75rem;               /* ≥44px touch target — Regra #2 */
   width: auto;
   padding: 0 var(--spacing-3);
   font-size: var(--font-size-xs);
@@ -175,8 +175,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 2.75rem;                /* ≥44px touch target — Regra #2 */
+  height: 2.75rem;
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);

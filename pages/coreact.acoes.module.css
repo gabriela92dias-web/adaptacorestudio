@@ -1,49 +1,66 @@
 .container {
-  padding: 2rem;
-  min-height: calc(100vh - 80px);
+  padding: var(--spacing-6);
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: var(--spacing-4);
+    gap: var(--spacing-4);
+  }
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
 }
 
 .title {
-  font-size: 2rem;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--foreground);
   letter-spacing: -0.02em;
+  margin: 0;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 2rem;
+  grid-template-columns: 1fr 340px;   /* lg+ */
+  gap: var(--spacing-6);
   align-items: start;
+}
+
+@media (max-width: 1023px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Checklist Cards (Left Column) */
 .cardsList {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--spacing-5);
 }
 
 .actionCard {
-  background: var(--bg-primary);
+  background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-5);
   transition: all 0.3s ease;
 }
 
 .actionCard.collapsed {
   opacity: 0.6;
-  padding: 1rem 1.5rem;
+  padding: var(--spacing-4) var(--spacing-5);
 }
 
 .actionCard.collapsed:hover {
@@ -54,19 +71,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--spacing-4);
 }
 
 .cardTitle {
-  font-size: 1.25rem;
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
+  margin: 0;
 }
 
 .collapsed .cardTitle {
   text-decoration: line-through;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
 }
 
 .collapsed .checklist {
@@ -76,49 +94,50 @@
 .checklist {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--spacing-3);
 }
 
 .checklistItem {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.5rem;
-  border-radius: 8px;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2);
+  min-height: 2.75rem;          /* ≥44px touch target — Regra #2 */
+  border-radius: var(--radius-sm);
   transition: background 0.2s;
 }
 
 .checklistItem:hover {
-  background: var(--bg-secondary);
+  background: var(--muted);
 }
 
 .checkbox {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   flex-shrink: 0;
-  border: 2px solid var(--text-tertiary);
-  border-radius: 4px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white; /* Only visible when checked */
+  color: var(--primary-foreground);
   background: transparent;
   transition: all 0.2s;
 }
 
 .checkbox.checked {
-  background: var(--text-primary);
-  border-color: var(--text-primary);
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
 .checkbox.checked svg {
-  stroke: var(--bg-primary);
+  stroke: var(--primary-foreground);
 }
 
 .itemLabel {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  color: var(--muted-foreground);
   line-height: 1.4;
   cursor: pointer;
   user-select: none;
@@ -126,83 +145,79 @@
 
 .itemLabel.checked {
   text-decoration: line-through;
-  color: var(--text-tertiary);
+  color: var(--muted-foreground);
+  opacity: 0.5;
 }
 
 /* Tracker Widget (Right Column) */
 .trackerWidget {
-  background: var(--bg-secondary);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
   position: sticky;
-  top: 2rem;
-  box-shadow: var(--shadow-sm);
+  top: var(--spacing-6);
 }
 
 .trackerHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-5);
 }
 
 .trackerTitle {
-  font-size: 1.125rem;
+  font-size: var(--font-size-md);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--foreground);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-2);
+  margin: 0;
 }
 
 .trackerStats {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
   font-weight: 500;
 }
 
 /* Dot Matrix Grid */
 .matrixGrid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columns for 7 days */
-  gap: 8px;
-  margin-bottom: 1rem;
+  grid-template-columns: repeat(7, 1fr); /* 7 dias fixo — intencional */
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
 }
 
 .matrixCol {
   display: flex;
   flex-direction: column-reverse; /* Bottom to top */
-  gap: 8px;
+  gap: var(--spacing-2);
   align-items: center;
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
   border-radius: 50%;
-  background-color: var(--border); /* Default inactive */
+  background-color: var(--border);
   transition: background-color 0.3s ease, transform 0.1s;
 }
 
 .dot.active {
-  /* Using primary text token or a specific highlight if the app had one. Since we are mono, we use primary text with glow if possible, but keeping it clean */
-  background-color: var(--text-primary);
-  box-shadow: 0 0 8px rgba(0,0,0,0.1); 
-}
-
-:global(.dark) .dot.active {
-  box-shadow: 0 0 8px rgba(255,255,255,0.4);
+  background-color: var(--primary);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--primary) 40%, transparent);
 }
 
 .matrixLabels {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  gap: var(--spacing-2);
   text-align: center;
-  font-size: 0.65rem;
+  font-size: var(--font-size-2xs);
   font-weight: 600;
-  color: var(--text-tertiary);
+  color: var(--muted-foreground);
   text-transform: uppercase;
 }
 

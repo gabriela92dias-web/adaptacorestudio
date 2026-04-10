@@ -305,3 +305,26 @@
 .level3 .tabsContainer {
   gap: var(--spacing-1);
 }
+
+/* ── Breakpoints Mobile — Regra #2 ────────────────────────────── */
+@media (max-width: 767px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+@media (max-width: 479px) {
+  .title {
+    font-size: var(--font-size-xl);
+  }
+}

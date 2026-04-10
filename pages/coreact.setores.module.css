@@ -55,7 +55,7 @@
   padding: var(--spacing-5);
   border-bottom: 1px solid var(--border);
   transition: padding var(--animation-duration-normal) ease;
-  height: 5.5rem;
+  min-height: 5.5rem;            /* estrutural — flex permite crescer */
   box-sizing: border-box;
 }
 
@@ -130,6 +130,7 @@
   gap: var(--spacing-3);
   width: 100%;
   padding: var(--spacing-3);
+  min-height: 2.75rem;           /* ≥44px touch target — Regra #2 */
   border: none;
   background-color: transparent;
   color: var(--foreground);
@@ -218,7 +219,7 @@
   width: 100%;
   justify-content: center;
   color: var(--muted-foreground);
-  height: 2rem;
+  height: 2.75rem;               /* ≥44px touch target — Regra #2 */
   border: 1px solid var(--border);
   transition: all var(--animation-duration-fast) ease;
 }

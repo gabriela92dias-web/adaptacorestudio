@@ -1,6 +1,6 @@
 .container {
   padding: 2rem;
-  height: 100vh;
+  height: 100dvh;            /* Regra #2 — dvh obrigatório */
   overflow-y: auto;
   background-color: var(--background);
 }

@@ -8,7 +8,7 @@
   gap: var(--spacing-4);
   box-shadow: var(--shadow);
   height: 100%;
-  max-height: 550px;
+  min-height: 200px;             /* nunca colapsa — cresce com o container */
   overflow: hidden;
 }
 
@@ -38,7 +38,8 @@
   font-size: var(--font-size-xs);
   color: var(--muted-foreground);
   cursor: pointer;
-  padding: var(--spacing-1) var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  min-height: 2.75rem;           /* ≥44px touch target — Regra #2 */
   border-radius: var(--radius-sm);
   transition: all var(--animation-duration-fast);
 }

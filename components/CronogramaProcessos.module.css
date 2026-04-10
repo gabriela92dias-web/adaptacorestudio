@@ -16,7 +16,7 @@
 .initiativeColumn {
   display: flex;
   flex-direction: column;
-  width: 420px;
+  width: clamp(280px, 420px, 90vw);   /* responsivo — não estoura mobile */
   flex-shrink: 0;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -25,6 +25,19 @@
   box-shadow: var(--shadow-sm);
   max-height: 100%;
   transition: width var(--animation-duration-normal) cubic-bezier(0.25, 1, 0.5, 1), background var(--animation-duration-fast) ease;
+}
+
+@media (max-width: 639px) {
+  .container {
+    flex-direction: column;         /* empilha colunas em mobile */
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+  }
+  .initiativeColumn {
+    width: 100%;                    /* full width em mobile */
+    max-height: none;
+  }
 }
 
 .initiativeColumn.collapsed {
@@ -86,8 +99,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 2.75rem;                  /* ≥44px touch target — Regra #2 */
+  height: 2.75rem;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted-foreground);
@@ -277,8 +290,8 @@
 }
 
 .addBtn {
-  width: 32px;
-  height: 32px;
+  width: 2.75rem;                  /* ≥44px touch target — Regra #2 */
+  height: 2.75rem;
   background: var(--card);
   border-radius: 50%;
   display: flex;
