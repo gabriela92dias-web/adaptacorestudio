@@ -12,7 +12,81 @@ import { Badge } from "../components/Badge";
 import { useDocumentGenerator } from "../helpers/useDocumentGenerator";
 import { useBrand } from "../helpers/useApi";
 import { useAdaptiveLevel } from "../helpers/useAdaptiveLevel";
-import styles from "./documentos-corporativos.module.css";
+const styles: Record<string, string> = {
+  pageContainer: "flex flex-col gap-4 h-full",
+  header: "flex justify-between items-center sm:items-start flex-wrap gap-4 border-b border-white/10 pb-4",
+  titleWrapper: "flex flex-col sm:flex-row items-start sm:items-center gap-4",
+  iconContainer: "flex shrink-0 items-center justify-center w-16 h-16 rounded-md bg-zinc-900 border border-white/10 text-amethyst-500",
+  title: "font-heading text-2xl font-semibold m-0 text-white tracking-tight",
+  subtitle: "text-base text-zinc-400 m-0",
+  statsBar: "flex items-center flex-wrap gap-3 text-base font-medium text-zinc-400",
+  statsDot: "text-white/10",
+  banner: "flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-3 rounded-lg text-base my-2",
+  bannerIcon: "shrink-0 text-blue-400",
+  bannerLink: "text-blue-400 font-semibold underline underline-offset-2 hover:opacity-80",
+  content: "flex flex-col",
+  tabsList: "mb-6",
+  tabTrigger: "flex gap-2 items-center",
+  tabIcon: "opacity-70",
+  tabContent: "animate-in fade-in slide-in-from-bottom-2 duration-300",
+  grid: "grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6",
+  card: "flex flex-col bg-zinc-900/50 border border-white/10 rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:-translate-x-1 hover:border-amethyst-500/50 hover:shadow-2xl hover:shadow-amethyst-500/10",
+  previewContainer: "relative flex h-[200px] items-center justify-center overflow-hidden border-b border-white/10 bg-zinc-800/50 p-4 opacity-90",
+  previewShape: "z-10 flex flex-col gap-2 rounded bg-zinc-900 border border-white/10 p-2 shadow-xl",
+  
+  shapeA4: "aspect-[1/1.414] w-full max-w-[100px]",
+  shapeDocument: "relative aspect-[1/1.414] w-full max-w-[100px] p-3",
+  shapeCertLandscape: "flex aspect-[1.414/1] w-full max-w-[160px] items-center justify-center border-[6px] border-double border-white/10",
+  shapeCardHorizontal: "aspect-[1.8/1] w-full max-w-[140px] p-3",
+  shapeCardVertical: "aspect-[1/1.8] w-full max-w-[70px]",
+  shapeCardSquare: "aspect-square w-full max-w-[90px] rounded-md",
+  shapeCardDigital: "aspect-[9/16] w-full max-w-[70px] rounded-lg border-2 border-white/10",
+  shapeDigital: "aspect-[16/9] w-full max-w-[140px]",
+  shapeDigitalBorder: "border-2 border-dashed border-amethyst-500",
+  shapeDigitalAvatar: "border-2 border-dashed border-amethyst-500 rounded-full aspect-square w-24 h-24",
+  
+  previewInnerText: "p-4 text-center text-xs opacity-70 flex items-center justify-center h-full",
+  
+  skelLine: "h-1 w-full rounded-sm bg-white/10",
+  short: "w-[60%]",
+  skelLineHM: "h-2 mb-2",
+  skelLineW70MB: "h-2 w-[70%] my-2",
+  skelMT12: "mt-3",
+  skelLineW50MB: "h-2 w-[50%] mb-4",
+  skelLineW80: "w-[80%]",
+  skelLineW60: "w-[60%]",
+  skelLineW40: "h-[6px] w-[40%]",
+  skelLineW20: "h-1 w-[20%] mb-auto",
+  skelLineW30: "w-[30%]",
+  flexCenterCol: "m-auto flex flex-col items-center gap-2",
+  flexCenterColW100: "m-auto flex w-full flex-col items-center gap-2",
+  skelAvatar: "h-6 w-6 rounded-full bg-white/10",
+  
+  cardBody: "flex flex-1 flex-col p-5",
+  cardHeader: "mb-3 flex min-h-[24px] items-center justify-between",
+  formatBadge: "text-[10px] sm:text-xs uppercase tracking-wider",
+  platformBadge: "text-[10px] sm:text-xs uppercase tracking-wider bg-amethyst-500/20 text-amethyst-300",
+  dimensionsText: "font-mono text-[10px] sm:text-xs text-zinc-400",
+  cardTitle: "font-heading m-0 text-base sm:text-lg pb-1 font-semibold leading-tight text-white",
+  cardDescription: "m-0 mb-5 flex-1 text-xs sm:text-sm leading-relaxed text-zinc-400",
+  actionButton: "mt-auto flex w-full items-center justify-center gap-2",
+  btnFullWidth: "w-full",
+  btnFullWidthMt: "w-full mt-4",
+  
+  aspectPreview: "z-10 w-full max-h-[100%] max-w-[120px] rounded-sm border border-white/10 bg-gradient-to-br from-zinc-800 to-zinc-900 shadow-xl",
+  emailPreview: "z-10 flex aspect-[3/4] w-full max-w-[140px] flex-col gap-2 rounded-sm border border-white/10 bg-zinc-900 p-2 shadow-xl",
+  emailSkeletonHeader: "h-6 w-full rounded-sm bg-white/10",
+  emailSkeletonBody: "h-3 w-full rounded-sm bg-white/10",
+  emailSkeletonBodyShort: "h-3 w-[70%] rounded-sm bg-white/10",
+  
+  adPreview: "z-10 flex items-center justify-center rounded-sm border border-white/10 bg-gradient-to-r from-zinc-800 to-zinc-900",
+  adPreviewText: "font-mono text-[10px] text-zinc-500",
+  
+  level0: "",
+  level1: "",
+  level2: "",
+  level3: "",
+};
 
 const PAPELARIA_TEMPLATES = [
   { id: 1, name: "Papel Timbrado Oficial", format: "Formato A4", desc: "Papel timbrado padrão com cabeçalho e rodapé da marca.", shapeClass: styles.shapeA4, orientation: "Retrato", generatorKey: "generatePapelTimbrado" as const },
