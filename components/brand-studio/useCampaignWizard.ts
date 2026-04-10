@@ -99,7 +99,7 @@ export function useCampaignWizard(onClose: () => void) {
       const t = rawName.trim() ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : "Ação";
       aiProps = [
         `[OPERACIONAL] Estruturação Presencial (${t}): Logística centralizada e acesso escalonado.`,
-        `[LOGÍSTICO] Captação e Distribuição Ativa: Malha digital orientada a leads com SLA rígido para "${t}".`,
+        `[LOGÍSTICO] Captação e Distribuição Ativa: Malha digital orientada para a audiência alvo com SLA rígido para "${t}".`,
         `[HÍBRIDO] Evento Multi-Fases: Alinhamento on-site suportado por contingenciamento digital e aprovações estritas.`,
       ];
     }
@@ -222,11 +222,11 @@ Siga EXATAMENTE esta estrutura no markdown, desenvolvendo com profundidade extre
 ## 1. O Gancho Principal (A Grande Ideia)
 Crie uma narrativa central fora da caixa, magnética e irresistível para o público.
 
-## 2. O Funil de Conversão Completo (A Jornada)
-Mapeie um funil monstro com 7 a 10 etapas detalhadas! Desde a Captação/Atenção, Aquecimento, Conversão até a Retenção/Follow-up. Descreva a intenção psicológica e as iscas de cada etapa.
+## 2. A Jornada Completa (Estratégia de Captação e Adesão)
+Mapeie uma jornada exaustiva com 7 a 10 etapas detalhadas! Desde a Captação/Atenção, Aquecimento, Adesão até a Retenção/Follow-up. Descreva a intenção psicológica e os gatilhos de engajamento de cada etapa. Não use palavras como "lead", "cliente" ou "fechamento", use "audiência", "participante", "adesão".
 
 ## 3. Oportunidades & Gatilhos Práticos
-Estratégias de growth, parcerias ou ativações surpreendentes durante a campanha.
+Estratégias de expansão, parcerias ou ativações surpreendentes durante a campanha.
 
 ## 4. Governança e Riscos
 Resumo executivo do que pode dar errado na mensagem e como o Hedge atua.`,
@@ -301,13 +301,13 @@ Resumo executivo do que pode dar errado na mensagem e como o Hedge atua.`,
 
       try {
         const payload = await callOpenAI(
-          `Você é o mestre de Estratégia de Growth e Diretor de Criação C-Level. 
-Construa o funil completo e exaustivo de execução para o Blueprint fornecido. 
-Pense em "910210 funções" macro! Segmente em etatas profundas.
-Crie estágios criativos como "CAPTAÇÃO PÚBLICO FRÍO", "AQUECIMENTO LEAD", "GATILHO DE EXCLUSIVIDADE", "FOLLOW UP MONSTRO", "RETENÇÃO". 
+          `Você é o mestre de Estratégia B2B e Diretor de Operações C-Level. 
+Construa a jornada completa e exaustiva de execução para o Blueprint fornecido. 
+Pense em "910210 funções" macro! Segmente em etapas profundas.
+Crie estágios criativos como "CAPTAÇÃO DE PÚBLICO", "AQUECIMENTO DE AUDIÊNCIA", "GATILHO DE EXCLUSIVIDADE", "FOLLOW UP DE ENGAJAMENTO", "RETENÇÃO". NUNCA use palavras de marketing como "lead", "cliente", "venda", "funil", use "audiência", "participantes", "adesão", "jornada".
 Responda APENAS um JSON válido mapeando NOME DO ESTÁGIO (CHAVE) para um array de TAREFAS CRUCIAIS DE ALTÍSSIMO VALOR ESTRATÉGICO (VALOR). 
-Exemplo: { "FASE 1 - GERAÇÃO DE DEMANDA": ["Criar gancho central...", "Lançar isca digital..."], "FASE 2 - FILTRO DE LEADS": ["..."] }.
-Crie DE 6 A 10 ETAPAS DE FUNIL COMPLETAS.`,
+Exemplo: { "FASE 1 - GERAÇÃO DE DEMANDA": ["Criar gancho central...", "Sincronizar base de convidados..."], "FASE 2 - FILTRO DE AUDIÊNCIA": ["..."] }.
+Crie DE 6 A 10 ETAPAS DE JORNADA COMPLETAS.`,
           `Tema: "${rawName}". Blueprint: ${blueprintTheory.substring(0, 1500)}... Exp: ${experiencia}. Direção: ${direcao}.`
         );
         const parsed = JSON.parse(payload.replace(/```json|```/gi, "").trim());
