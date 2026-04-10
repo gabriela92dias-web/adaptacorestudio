@@ -46,6 +46,12 @@ export function CoreactHelpModal({ isCollapsed }: { isCollapsed?: boolean }) {
             Este manual foi desenhado para ajudar você a liderar, executar e acompanhar projetos com o máximo de clareza e eficiência.
           </p>
 
+          <div style={{ marginBottom: '1.5rem' }}>
+            <Button variant="outline" size="sm" onClick={() => window.open('/pitch', '_blank')}>
+              🎤 Abrir Pitch Oficial
+            </Button>
+          </div>
+
           <hr style={{ margin: '1.5rem 0', borderColor: 'var(--border)' }} />
 
           <h3 style={{ color: 'var(--text-primary)', marginTop: '1.5rem', marginBottom: '0.5rem' }}>

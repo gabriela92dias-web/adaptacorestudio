@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FileText, FileEdit, IdCard, FileSignature, Award, FileDown, Info,
   Layers, Mail, MonitorPlay, Presentation
@@ -68,14 +68,10 @@ const AD_TEMPLATES = [
   { id: 5, name: "Mobile", dims: "320x50", width: 320, height: 50 },
 ];
 
-const PRES_TEMPLATES = [
-  { id: 2, name: "Relatório Trimestral", slides: 8 },
-  { id: 3, name: "Proposta Comercial", slides: 10 },
-];
-
 type GeneratorKey = typeof PAPELARIA_TEMPLATES[number]["generatorKey"] | typeof CARTOES_TEMPLATES[number]["generatorKey"] | typeof CONTRATOS_TEMPLATES[number]["generatorKey"] | typeof CERTIFICADOS_TEMPLATES[number]["generatorKey"];
 
 export default function DocumentosCorporativos() {
+  const navigate = useNavigate();
   const { ref, level, className: adaptiveClass } = useAdaptiveLevel();
   const generators = useDocumentGenerator();
   const { data: brandResponse } = useBrand();
@@ -181,7 +177,7 @@ export default function DocumentosCorporativos() {
               <MonitorPlay size={16} className={styles.tabIcon} />
               Anúncios
             </TabsTrigger>
-            <TabsTrigger value="apresentacoes" className={styles.tabTrigger}>
+            <TabsTrigger value="apresentacoes" className={styles.tabTrigger} onClick={() => navigate("/tools/gerar-doc/slide-padrao")}>
               <Presentation size={16} className={styles.tabIcon} />
               Apresentações
             </TabsTrigger>
@@ -464,69 +460,6 @@ export default function DocumentosCorporativos() {
             </div>
           </TabsContent>
 
-          {/* ── APRESENTAÇÕES ── */}
-          <TabsContent value="apresentacoes" className={styles.tabContent}>
-            <div className={styles.grid}>
-
-              {/* ── Featured: Adapta CoreAct Pitch ── */}
-              <div className={styles.card} style={{ gridColumn: '1 / -1', background: 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 8%, var(--surface)), var(--surface))', border: '1px solid color-mix(in srgb, var(--primary) 30%, var(--border))' }}>
-                <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', padding: '0.5rem', flexWrap: 'wrap' }}>
-                  {/* Mini preview */}
-                  <div className={styles.previewContainer} style={{ minWidth: 160, maxWidth: 200, flex: '0 0 auto' }}>
-                    <div className={styles.presentationPreview} style={{ background: '#0a0a0a', position: 'relative', overflow: 'hidden' }}>
-                      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: 8 }}>
-                        <div style={{ width: '60%', height: 3, borderRadius: 99, background: 'var(--primary)', opacity: 0.9 }} />
-                        <div style={{ width: '80%', height: 2, borderRadius: 99, background: '#fff', opacity: 0.5 }} />
-                        <div style={{ width: '70%', height: 2, borderRadius: 99, background: '#fff', opacity: 0.3 }} />
-                      </div>
-                    </div>
-                  </div>
-                  {/* Info */}
-                  <div className={styles.cardBody} style={{ flex: 1, padding: 0 }}>
-                    <div className={styles.cardHeader}>
-                      <Badge variant="secondary" className={styles.formatBadge}>Pitch Deck</Badge>
-                      <span className={styles.dimensionsText}>11 slides • PT / EN / DE</span>
-                    </div>
-                    <h3 className={styles.cardTitle}>Adapta CoreAct — Apresentação Oficial</h3>
-                    <p className={styles.cardDescription}>
-                      Pitch interativo da plataforma com suporte multilíngue. Edite os textos de cada slide diretamente pela apresentação, sem sair da plataforma.
-                    </p>
-                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                      <Link to="/pitch">
-                        <Button variant="primary" className={styles.actionButton}>
-                          ✏️ Editar &amp; Apresentar
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Other templates */}
-              {PRES_TEMPLATES.map((tpl) => (
-                <div key={tpl.id} className={styles.card}>
-                  <div className={styles.previewContainer}>
-                    <div className={styles.presentationPreview}>
-                      <div className={styles.presSidebar} />
-                      <div className={styles.presMain} />
-                    </div>
-                  </div>
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardHeader}>
-                      <Badge variant="outline">{tpl.slides} slides</Badge>
-                      <span className={styles.dimensionsText}>16:9</span>
-                    </div>
-                    <h3 className={styles.cardTitle}>{tpl.name}</h3>
-                    <Link to="/tools/gerar-doc/slide-padrao" className={styles.btnFullWidth}>
-                      <Button variant="outline" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>
-                        Abrir Construtor de Slides
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
         </Tabs>
       </div>
     </div>
