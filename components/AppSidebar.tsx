@@ -132,9 +132,9 @@ export const AppSidebar = () => {
       label: "Brand",
       icon: Palette,
       subItems: [
-        { label: "Identidade", disabled: true, badge: { text: "Em breve", variant: "outline" } },
-        { label: "Guidelines", disabled: true },
-        { label: "Cartilhas", disabled: true },
+        { label: "Identidade", path: "/brand#identidade" },
+        { label: "Cartilha", path: "/brand#cartilha" },
+        { label: "Guidelines", path: "/brand#guidelines" },
       ],
     },
     {

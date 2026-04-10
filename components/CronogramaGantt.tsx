@@ -3,6 +3,7 @@ import { useUpdateTask } from "../helpers/useCoreActApi";
 import { toast } from "sonner";
 import { TaskWithDetails } from "../endpoints/coreact/tasks/list_GET.schema";
 import { TaskDependencyWithDetails } from "../endpoints/coreact/dependencies/list_GET.schema";
+import { STRATEGIC_DATES } from "../helpers/strategicDates";
 import { CronogramaGanttSidebar } from "./CronogramaGanttSidebar";
 import { useResponsiveColumns, SOVEREIGN_MIN_COL_WIDTH } from "../helpers/useResponsiveColumns";
 import {
@@ -35,6 +36,7 @@ export interface CronogramaGanttProps {
   businessDaysOnly?: boolean;
   onNavigate?: (dir: 1 | -1) => void;
   onDayClick?: (date: Date) => void;
+  showStrategicDates?: boolean;
 }
 
 interface TreeNode {
@@ -63,6 +65,7 @@ export function CronogramaGantt({
   businessDaysOnly = false,
   onNavigate,
   onDayClick,
+  showStrategicDates = false,
 }: CronogramaGanttProps) {
   const updateTask = useUpdateTask();
   const updateTaskRef = useRef(updateTask);
@@ -643,6 +646,20 @@ export function CronogramaGantt({
       allGroupIds,
       groupIdsByDepth,
       taskStatusMap,
+      strategicMarkers: STRATEGIC_DATES.map((sd) => {
+        const year = currentDate.getFullYear();
+        const startT = new Date(`${year}-${sd.start}T00:00:00`).getTime();
+        const endT = new Date(`${year}-${sd.end}T23:59:59`).getTime();
+        const left = dateToPercent(Math.max(startT, minT));
+        const right = dateToPercent(Math.min(endT, maxT));
+        const width = right - left;
+        return {
+          ...sd,
+          left,
+          width,
+          isVisible: right > 0 && left < 100,
+        };
+      }).filter(m => m.isVisible),
     };
   }, [tasks, projects, initiatives, sectors, ganttZoom, currentDate, businessDaysOnly, collapsedGroups, containerWidth, level]);
 
@@ -947,6 +964,19 @@ export function CronogramaGantt({
 
               {/* Drag guide line */}
               <div id="dragGuideLine" className={styles.dragGuide} style={{ display: "none" }}></div>
+
+              {/* Strategic Dates Layer */}
+              {showStrategicDates && ganttData.strategicMarkers.map((marker, i) => {
+                const isMinimal = ganttZoom !== "mes" && ganttZoom !== "trimestre" && ganttZoom !== "semestre";
+                return (
+                  <div
+                    key={`sd-${i}`}
+                    className={`${styles.strategicMarker} ${styles[`strategicType-${marker.type}`]} ${isMinimal ? styles.minimalMarker : ""}`}
+                    style={{ left: `${marker.left}%`, width: `${Math.max(0.1, marker.width)}%` }}
+                    title={`${marker.label}${marker.description ? " - " + marker.description : ""}`}
+                  />
+                );
+              })}
 
               {/* Task Bars Area */}
               <div className={styles.ganttBarsArea}>

@@ -43,6 +43,19 @@ export function useCronogramaState() {
     priorities: []
   });
 
+  const [showStrategicDates, setShowStrategicDates] = useState(() => {
+    const saved = localStorage.getItem("coreact_showStrategicDates");
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  const toggleStrategicDates = useCallback(() => {
+    setShowStrategicDates(prev => {
+      const next = !prev;
+      localStorage.setItem("coreact_showStrategicDates", JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
   const goToDay = useCallback((date: Date) => {
     setCurrentDate(date);
     setSearchParams(prev => {
@@ -180,6 +193,8 @@ export function useCronogramaState() {
     clearFilters,
     activeFilterCount,
     toolbarTitle,
-    toolbarTitleShort
+    toolbarTitleShort,
+    showStrategicDates,
+    toggleStrategicDates
   };
 }

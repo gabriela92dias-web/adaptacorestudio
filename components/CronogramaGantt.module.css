@@ -561,3 +561,45 @@ margin-right: 4px;
   color: var(--muted-foreground);
   font-weight: 500;
 }
+
+/* Strategic Dates Layer */
+.strategicMarker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: var(--primary);
+  opacity: 0.15;
+  pointer-events: auto;
+  border-left: 2px dashed var(--primary);
+  z-index: 2;
+  cursor: help;
+  transition: opacity var(--animation-duration-fast) ease;
+}
+
+.strategicMarker:hover {
+  opacity: 0.4;
+}
+
+.minimalMarker {
+  background-color: transparent;
+  border-left-width: 1px;
+  border-left-style: dotted;
+  opacity: 0.3;
+}
+
+.strategicType-campaign {
+  border-left-color: var(--chart-1, #0ea5e9);
+  background-color: color-mix(in srgb, var(--chart-1, #0ea5e9) 15%, transparent);
+}
+.strategicType-anchor {
+  border-left-color: var(--chart-2, #8b5cf6);
+  background-color: color-mix(in srgb, var(--chart-2, #8b5cf6) 15%, transparent);
+}
+.strategicType-event {
+  border-left-color: var(--chart-3, #f59e0b);
+  background-color: color-mix(in srgb, var(--chart-3, #f59e0b) 15%, transparent);
+}
+.strategicType-week {
+  border-left-color: var(--chart-4, #10b981);
+  background-color: color-mix(in srgb, var(--chart-4, #10b981) 15%, transparent);
+}

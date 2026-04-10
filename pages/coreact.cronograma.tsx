@@ -67,6 +67,8 @@ export default function CoreActCronograma() {
     activeFilterCount,
     toolbarTitle,
     toolbarTitleShort,
+    showStrategicDates,
+    toggleStrategicDates
   } = useCronogramaState();
 
   const filteredTasks = (tasksData?.tasks || []).filter(t => {
@@ -284,7 +286,11 @@ export default function CoreActCronograma() {
                   </Select>
                 </div>
 
-                <div className={styles.filterFooter}>
+                <div className={styles.filterFooter} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Button variant="ghost" size="sm" onClick={toggleStrategicDates} style={{ fontSize: '11px', color: showStrategicDates ? 'var(--v8-primary-500)' : 'var(--v8-gray-400)' }}>
+                    <CalendarIcon size={12} style={{ marginRight: 6 }} />
+                    {showStrategicDates ? "Ocultar Datas Estratégicas" : "Ver Datas Estratégicas"}
+                  </Button>
                   <Button variant="ghost" size="sm" onClick={clearFilters}>Limpar filtros</Button>
                 </div>
               </div>
@@ -315,6 +321,7 @@ export default function CoreActCronograma() {
                 ganttZoom={ganttZoom}
                 currentDate={currentDate}
                 level={level as any}
+                showStrategicDates={showStrategicDates}
               />
             )}
             {viewMode === 'kanban' && (
