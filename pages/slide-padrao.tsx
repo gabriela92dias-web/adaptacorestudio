@@ -31,7 +31,7 @@ interface SlideData {
   id: number;
   type: 'cover' | 'part' | 'problem' | 'generic' | 'solution' | 'future';
   layout?: 'split-right' | 'split-left' | 'center';
-  bgStyle?: 'solid' | 'glow' | 'layers' | 'grid' | 'mockup';
+  bgStyle?: 'solid' | 'glow' | 'layers' | 'grid';
   animation?: 'none' | 'fade' | 'slide-up' | 'zoom';
   title: string;
   subtitle?: string;
@@ -59,7 +59,6 @@ const BG_OPTIONS = [
   { value: 'glow',        label: 'Glow',    icon: Sparkles },
   { value: 'grid',        label: 'Grid',    icon: Grid },
   { value: 'layers',      label: 'Layers',  icon: Layers },
-  { value: 'mockup',      label: 'Mockup',  icon: Monitor },
 ];
 
 const ANIM_OPTIONS = [
@@ -91,7 +90,7 @@ const VIEW_CONFIG: Record<ViewType, { label: string; icon: LucideIcon; isFullWid
 
 const ALL_LANGS: Lang[] = ['pt', 'en', 'de'];
 const LANG_LABELS: Record<Lang, string> = { pt: 'Português', en: 'English', de: 'Deutsch' };
-const STORAGE_KEY = 'slide_padrao_content_v4';
+const STORAGE_KEY = 'slide_padrao_content_v7';
 
 const newTopic = (text: string): Topic => ({ id: `t_${Math.random().toString(36).slice(2, 8)}`, text });
 
@@ -103,34 +102,25 @@ const DEFAULT_TOPIC_TEXTS: Record<Lang, { topic: string; child: string }> = {
 
 const DEFAULT_CONTENT: ContentStore = {
   pt: [
-    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'CRIE APRESENTAÇÕES EM 5 MINUTOS', subtitle: 'O guia definitivo de como usar o motor de slides do CoreStudio.', badge: 'TUTORIAL RÁPIDO' },
-    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Como Funciona', subtitle: 'Simples, direto e profissional.' },
-    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Esqueça o PowerPoint', content: 'Você não precisa gastar horas alinhando caixas de texto. O motor faz tudo por você focado apenas no seu conteúdo.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Layouts automáticos de alta conversão'), newTopic('Tipografia inteligente que auto-escala'), newTopic('Tudo salvo localmente no seu navegador')] } },
-    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Edição Tática', subtitle: 'Controle total na barra lateral' },
-    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Montando os blocos', content: 'Use o painel esquerdo para guiar a estrutura da sua apresentação.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('Botão [+] para injetar templates prontos'), newTopic('Setas para reordenar os slides na hora'), newTopic('Duplique para reaproveitar estruturas')] } },
-    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Estilização', content: 'Clique em "Editar Slide" para alterar o visual com 1 clique:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Layouts (Padrão L/R, Reverso, Centro)'), newTopic('Backgrounds (Glow, Grid, Mockup...)'), newTopic('Animações (Fade, Slide up, Zoom)')] } },
-    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'O Fluxo Perfeito', content: 'Como finalizar seu material e colocar na rua:', badge: 'CONCLUSÃO', topicBlock: { view: 'sequence', topics: [newTopic('Edite clicando nos textos'), newTopic('Revise os 3 idiomas no topo'), newTopic('Clique em Publicar no header'), newTopic('Distribua a URL (Read-only)')] } },
-    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Tudo Pronto!', subtitle: 'Pode deletar estes slides iniciais e começar a criar o seu.' },
+    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Bem-vindo, time Adapta!', subtitle: 'Essa é nossa ferramenta padrão de criar apresentações. Ela nos ajuda por muitos motivos, vamos conferir?', badge: 'ONBOARDING' },
+    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Nosso Cenário', subtitle: 'Por que decidimos mudar a forma como criamos apresentações.' },
+    { id: 3, type: 'generic',  layout: 'split-right', bgStyle: 'layers', animation: 'fade', title: 'Montando os Blocos', content: 'Você não edita o visual diretamente. Você cria o roteiro usando as ferramentas da barra tática.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('Use [+] para injetar slides'), newTopic('Arraste usando as setas para reordenar'), newTopic('Clique nos textos para editar o conteúdo')] } },
+    { id: 4, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'O Impacto Real', content: 'O que ganhamos como equipe ao adotar este formato para reuniões e imersões:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Velocidade (De 2h para 5 min)'), newTopic('Consistência (Padrão Adapta)'), newTopic('Idiomas (PT, EN, DE in-house)')] } },
+    { id: 5, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Mão na Massa', content: 'Siga este fluxo para publicar sua primeira apresentação:', badge: 'AÇÃO', topicBlock: { view: 'sequence', topics: [newTopic('Substitua os textos'), newTopic('Altere o visual (bg/layout)'), newTopic('Clique em Publicar'), newTopic('Copie a URL e apresente')] } },
   ],
   en: [
-    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'BUILD PRESENTATIONS IN 5 MINUTES', subtitle: 'The ultimate guide to using the CoreStudio slide engine.', badge: 'QUICK TUTORIAL' },
-    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. How it Works', subtitle: 'Simple, direct, and professional.' },
-    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Forget PowerPoint', content: 'You don\'t need to spend hours aligning text boxes. The engine does it all for you, focusing only on your content.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('High-conversion automatic layouts'), newTopic('Smart tipography that auto-scales'), newTopic('Everything saved locally in your browser')] } },
-    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Tactical Editing', subtitle: 'Total control on the sidebar' },
-    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Building the blocks', content: 'Use the left panel to guide the structure of your presentation.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('[+] button to inject ready templates'), newTopic('Arrows to reorder slides instantly'), newTopic('Duplicate to reuse structures')] } },
-    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Styling', content: 'Click "Edit Slide" to change the look with 1 click:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Layouts (Standard L/R, Reverse, Center)'), newTopic('Backgrounds (Glow, Grid, Mockup...)'), newTopic('Animations (Fade, Slide up, Zoom)')] } },
-    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'The Perfect Flow', content: 'How to finish your material and ship it:', badge: 'CONCLUSION', topicBlock: { view: 'sequence', topics: [newTopic('Edit by clicking texts'), newTopic('Review the 3 languages at top'), newTopic('Click Publish on the header'), newTopic('Distribute the URL (Read-only)')] } },
-    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'All Set!', subtitle: 'You can delete these initial slides and start building your own.' },
+    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Welcome, Adapta Team!', subtitle: 'This is our standard tool for creating presentations. It helps us in many ways, let\'s check it out?', badge: 'ONBOARDING' },
+    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Our Scenario', subtitle: 'Why we decided to change the way we create presentations.' },
+    { id: 3, type: 'generic',  layout: 'split-right', bgStyle: 'layers', animation: 'fade', title: 'Building the Blocks', content: 'You don\'t edit visuals directly. You build the script using the tactical sidebar tools.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('Use [+] to inject slides'), newTopic('Drag using arrows to reorder'), newTopic('Click on texts to edit content')] } },
+    { id: 4, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Real Impact', content: 'What we gain as a team by adopting this format for meetings and immersions:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Speed (From 2h to 5 min)'), newTopic('Consistency (Adapta Standard)'), newTopic('Languages (PT, EN, DE in-house)')] } },
+    { id: 5, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Hands On', content: 'Follow this workflow to publish your first presentation:', badge: 'ACTION', topicBlock: { view: 'sequence', topics: [newTopic('Replace our text'), newTopic('Tweak visuals (bg/layout)'), newTopic('Click Publish'), newTopic('Copy URL and present')] } },
   ],
   de: [
-    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'PRÄSENTATIONEN IN 5 MINUTEN ERSTELLEN', subtitle: 'Der ultimative Leitfaden zur Nutzung der CoreStudio Slide-Engine.', badge: 'KURZES TUTORIAL' },
-    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Wie es funktioniert', subtitle: 'Einfach, direkt und professionell.' },
-    { id: 3, type: 'problem',  layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Vergessen Sie PowerPoint', content: 'Sie müssen keine Stunden mehr damit verbringen, Textbereiche auszurichten. Die Engine erledigt alles für Sie – fokussiert nur auf Ihre Inhalte.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Hochkonvertierende automatische Layouts'), newTopic('Intelligente Typografie, die sich selbst skaliert'), newTopic('Alles wird lokal in Ihrem Browser gespeichert')] } },
-    { id: 4, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '02. Taktische Bearbeitung', subtitle: 'Volle Kontrolle in der Seitenleiste' },
-    { id: 5, type: 'generic',  layout: 'split-right', bgStyle: 'mockup', animation: 'fade', title: 'Blöcke zusammensetzen', content: 'Nutzen Sie das linke Panel, um die Struktur Ihrer Präsentation zu steuern.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('[+]-Taste, um fertige Vorlagen einzufügen'), newTopic('Pfeile, um Folien sofort neu anzuordnen'), newTopic('Duplizieren, um Strukturen wiederzuverwenden')] } },
-    { id: 6, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Styling', content: 'Klicken Sie auf "Folie bearbeiten", um das Aussehen mit 1 Klick zu ändern:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Layouts (Standard L/R, Reverse, Mitte)'), newTopic('Hintergründe (Glow, Grid, Mockup...)'), newTopic('Animationen (Fade, Slide up, Zoom)')] } },
-    { id: 7, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Der perfekte Ablauf', content: 'So stellen Sie Ihr Material fertig und launchen es:', badge: 'FAZIT', topicBlock: { view: 'sequence', topics: [newTopic('Bearbeiten durch Anklicken der Texte'), newTopic('Überprüfen Sie die 3 Sprachen oben'), newTopic('Klicken Sie im Header auf Veröffentlichen'), newTopic('Verteilen Sie die URL (schreibgeschützt)')] } },
-    { id: 8, type: 'cover',    layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Alles bereit!', subtitle: 'Sie können diese ersten Folien löschen und beginnen, Ihre eigenen zu erstellen.' },
+    { id: 1, type: 'cover',    layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Willkommen, Adapta-Team!', subtitle: 'Dies ist unser Standard-Tool zur Erstellung von Präsentationen. Es hilft uns in vielerlei Hinsicht, wollen wir mal sehen?', badge: 'ONBOARDING' },
+    { id: 2, type: 'part',     layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Unser Szenario', subtitle: 'Warum wir beschlossen haben, die Art und Weise, wie wir Präsentationen erstellen, zu ändern.' },
+    { id: 3, type: 'generic',  layout: 'split-right', bgStyle: 'layers', animation: 'fade', title: 'Blöcke aufbauen', content: 'Sie bearbeiten das Visuelle nicht direkt. Sie erstellen das Skript mithilfe der taktischen Seitenleisten-Tools.', topicBlock: { view: 'list', icon: 'check', topics: [newTopic('Verwenden Sie [+], um Folien einzufügen'), newTopic('Ziehen Sie mit Pfeilen, um neu anzuordnen'), newTopic('Klicken Sie auf Texte, um Inhalte zu bearbeiten')] } },
+    { id: 4, type: 'solution', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: 'Echte Auswirkungen', content: 'Was wir als Team gewinnen, wenn wir dieses Format für Meetings und Eintauchen übernehmen:', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Geschwindigkeit (Von 2h auf 5 Min)'), newTopic('Konsistenz (Adapta-Standard)'), newTopic('Sprachen (PT, EN, DE in-house)')] } },
+    { id: 5, type: 'future',   layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Hands On', content: 'Befolgen Sie diesen Workflow, um Ihre erste Präsentation zu veröffentlichen:', badge: 'AKTION', topicBlock: { view: 'sequence', topics: [newTopic('Ersetzen Sie unseren Text'), newTopic('Visuals anpassen (Bg/Layout)'), newTopic('Klicken Sie auf Veröffentlichen'), newTopic('URL kopieren und präsentieren')] } },
   ],
 };
 
@@ -157,11 +147,11 @@ const SLIDE_TEMPLATES: {
     }),
   },
   {
-    label: 'Slide geral: conteúdos construíveis', icon: LayoutGrid,
+    label: 'Conteúdo', icon: LayoutGrid,
     make: id => ({
-      pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Argumento Principal', content: 'Desenvolva suas ideias, processos ou pontos importantes aqui.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Ideia 1'), newTopic('Ideia 2'), newTopic('Ideia 3')] } },
-      en: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Main Argument', content: 'Develop your ideas, processes, or important points here.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Idea 1'), newTopic('Idea 2'), newTopic('Idea 3')] } },
-      de: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Hauptargument', content: 'Entwickeln Sie hier Ihre Ideen, Prozesse oder wichtigen Punkte.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Idee 1'), newTopic('Idee 2'), newTopic('Idee 3')] } },
+      pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Conteúdo', content: 'Desenvolva suas ideias, processos ou pontos importantes aqui.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Ideia 1'), newTopic('Ideia 2'), newTopic('Ideia 3')] } },
+      en: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Content', content: 'Develop your ideas, processes, or important points here.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Idea 1'), newTopic('Idea 2'), newTopic('Idea 3')] } },
+      de: { id, type: 'generic', layout: 'split-right', bgStyle: 'solid', animation: 'fade', title: 'Inhalt', content: 'Entwickeln Sie hier Ihre Ideen, Prozesse oder wichtigen Punkte.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Idee 1'), newTopic('Idee 2'), newTopic('Idee 3')] } },
     }),
   },
   {
@@ -239,42 +229,12 @@ export const getDynamicFontSize = (text: string | undefined, type: 'cover-title'
 export const getTypeLabel = (slideType: string, idx: number, total: number) => {
   if (slideType === 'cover') return idx === 0 ? 'Introdução' : 'Até logo';
   if (slideType === 'part') return 'Aterrizagem';
-  if (slideType === 'generic') return 'Slide geral';
+  if (slideType === 'generic') return 'Conteúdo';
   if (slideType === 'solution') return 'Resultados';
   if (slideType === 'future') return 'Próximos passos';
   if (slideType === 'problem') return 'Desafio';
   return slideType;
 };
-
-// ─── V8 Mock visual ────────────────────────────────────────────────────────────
-
-const V8Mock = () => (
-  <div className="relative w-full aspect-[4/3] rounded-[var(--radius-lg)] bg-[var(--surface)] border border-[var(--border)] overflow-hidden shadow-[var(--shadow-lg)] flex flex-col font-sans">
-    <div className="flex flex-1">
-      <div className="w-36 border-r border-[var(--border)] bg-[var(--sidebar)] flex-col gap-2 p-4 hidden md:flex">
-        <div className="font-bold text-[var(--sidebar-foreground)] mb-4 text-sm">CoreStudio</div>
-        <div className="h-7 rounded bg-[var(--primary)] flex items-center px-2 opacity-80"><span className="text-xs font-semibold text-[var(--primary-foreground)] truncate">+ Nova</span></div>
-        <div className="h-5 rounded bg-[var(--muted)] opacity-40 mt-1" />
-        <div className="h-5 rounded bg-[var(--muted)] opacity-40" />
-      </div>
-      <div className="flex-1 p-5 flex flex-col gap-4">
-        <h3 className="text-[var(--foreground)] font-bold text-base flex items-center gap-2"><Zap className="w-4 h-4 text-[var(--primary)]" /> Wizard V8</h3>
-        <div className="h-8 rounded-[var(--radius)] border border-[var(--border)] flex items-center px-3 font-mono text-xs text-[var(--foreground)]">
-          <span className="animate-pulse border-r border-[var(--primary)] pr-1">DNA da campanha...</span>
-        </div>
-        <div className="h-8 rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center font-bold text-xs">Gerar Roteiro</div>
-        <div className="p-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] flex gap-3">
-          <div className="w-8 h-8 rounded-full bg-[var(--muted)] flex items-center justify-center"><LayoutTemplate className="w-4 h-4 text-[var(--foreground)]" /></div>
-          <div><div className="text-[var(--foreground)] font-semibold text-xs">UX/UI Design</div><div className="text-[var(--muted-foreground)] text-xs">Alta Prioridade</div></div>
-        </div>
-        <div className="p-3 rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] flex gap-3 opacity-70">
-          <div className="w-8 h-8 rounded-full bg-[var(--success)] flex items-center justify-center"><CheckCircle2 className="w-4 h-4 text-white" /></div>
-          <div><div className="text-[var(--foreground)] font-semibold text-xs">Automação</div><div className="text-[var(--muted-foreground)] text-xs">Pronto para Revisão</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
 
 // ─── Topic Block Renderer ──────────────────────────────────────────────────────
 
@@ -392,8 +352,6 @@ function TopicBlockRenderer({ block }: { block: TopicBlock }) {
 // ─── Stage Element (Right-column visual) ───────────────────────────────────
 
 function StageElement({ style }: { style?: string }) {
-  if (style === 'mockup') return <V8Mock />;
-  
   if (style === 'layers') return (
     <div className="w-full aspect-[4/3] rounded-[var(--radius-lg)] flex items-center justify-center group"
       style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
@@ -412,8 +370,7 @@ function StageElement({ style }: { style?: string }) {
 
 function SlideVisual({ slide }: { slide: SlideData }) {
   const isLayers = slide.bgStyle === 'layers';
-  const isMockup = slide.bgStyle === 'mockup';
-  const hasObject = isLayers || isMockup;
+  const hasObject = isLayers;
 
   const Badge = ({ text }: { text: string }) => (
     <div className="mb-6 flex">
