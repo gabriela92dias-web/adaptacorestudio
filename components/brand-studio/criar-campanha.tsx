@@ -1,13 +1,14 @@
 import React from "react";
 import {
-  ArrowLeft, ArrowRight, Target, Zap, CheckCircle2, Sparkles, FileText, X
+  ArrowLeft, ArrowRight, Target, Zap, CheckCircle2, Sparkles, FileText, X,
+  Blocks, Users, Globe, Receipt, Hexagon
 } from "lucide-react";
 import { useCampaignWizard } from "./useCampaignWizard";
 import { ACTION_TYPES, FUNNELS } from "./wizard-constants";
 
 function StepTema({ state, actions }: { state: ReturnType<typeof useCampaignWizard>["state"], actions: ReturnType<typeof useCampaignWizard>["actions"] }) {
-  const { isGenerating, step, rawName, direcao, experiencia, modulos } = state;
-  const { setRawName, setDirecao, setExperiencia, setModulos, nextStepTema, setStep } = actions;
+  const { isGenerating, step, rawName, direcao, experiencia, modulos, eventoPublico, eventoDuracao } = state;
+  const { setRawName, setDirecao, setExperiencia, setModulos, setEventoPublico, setEventoDuracao, nextStepTema, setStep } = actions;
 
   const isActive = step === 0;
   const isPast = step > 0;
@@ -18,8 +19,8 @@ function StepTema({ state, actions }: { state: ReturnType<typeof useCampaignWiza
       
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="text-lg font-bold uppercase tracking-wide">Núcleo da Tese</h2>
-          <p className="text-sm text-[var(--muted-foreground)]">Defina o nome da campanha e os parâmetros estruturais do DNA.</p>
+          <h2 className="text-lg font-bold tracking-wide">Sua Ideia Central</h2>
+          <p className="text-sm text-[var(--muted-foreground)]">Sobre o que é essa ação e para quem estamos fazendo?</p>
         </div>
 
         {isActive ? (
@@ -38,15 +39,15 @@ function StepTema({ state, actions }: { state: ReturnType<typeof useCampaignWiza
               
               {/* Direcao */}
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Orientação de Direção</span>
-                <div className="flex bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] w-fit">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Público-alvo Principal</span>
+                <div className="flex bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] w-fit flex-wrap gap-1">
                   {(["interna", "externa", "hibrida"] as const).map((dir) => (
                     <button
                       key={dir}
                       className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-all ${direcao === dir ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm" : "hover:bg-[var(--surface)] text-[var(--muted-foreground)]"}`}
                       onClick={() => setDirecao(dir)}
                     >
-                      {dir}
+                      {dir === "interna" ? "Staff / Associação" : dir === "externa" ? "Público Externo" : "Ambos (Híbrida)"}
                     </button>
                   ))}
                 </div>
@@ -54,23 +55,60 @@ function StepTema({ state, actions }: { state: ReturnType<typeof useCampaignWiza
 
               {/* Experiencia */}
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Formato de Experiência</span>
-                <div className="flex bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] w-fit">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Qual será o formato?</span>
+                <div className="flex bg-[var(--background)] p-1 rounded-lg border border-[var(--border)] w-fit flex-wrap gap-1">
                   {(["presencial", "digital", "hibrida"] as const).map((exp) => (
                     <button
                       key={exp}
                       className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-all ${experiencia === exp ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm" : "hover:bg-[var(--surface)] text-[var(--muted-foreground)]"}`}
                       onClick={() => setExperiencia(exp)}
                     >
-                      {exp}
+                      {exp === "presencial" ? "Presencial" : exp === "digital" ? "100% Digital" : "Misto (Fís./Dig.)"}
                     </button>
                   ))}
                 </div>
               </div>
 
+              {/* Parametros Logísticos */}
+              {(experiencia === "presencial" || experiencia === "hibrida") && (
+                <div className="flex flex-col gap-4 p-4 rounded-xl border border-[var(--border)] bg-[var(--background)]/30 mt-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Target size={12} /> Detalhes Essenciais de Logística</span>
+                  
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 flex flex-col gap-2">
+                       <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Quantas pessoas esperamos?</span>
+                       <input 
+                         type="number"
+                         min={0}
+                         className="w-full bg-[var(--background)] border border-[var(--border)] rounded-md px-3 py-2 text-sm font-bold font-mono text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 transition-all placeholder:font-sans placeholder:font-normal"
+                         value={eventoPublico || ''}
+                         onChange={(e) => setEventoPublico(parseInt(e.target.value) || 0)}
+                         placeholder="Ex: 50"
+                         disabled={isGenerating}
+                         onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); nextStepTema(); } }}
+                       />
+                    </div>
+                    
+                    <div className="flex-1 flex flex-col gap-2">
+                       <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Qual a duração média? (Hrs)</span>
+                       <input 
+                         type="number"
+                         min={0}
+                         className="w-full bg-[var(--background)] border border-[var(--border)] rounded-md px-3 py-2 text-sm font-bold font-mono text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 transition-all placeholder:font-sans placeholder:font-normal"
+                         value={eventoDuracao || ''}
+                         onChange={(e) => setEventoDuracao(parseInt(e.target.value) || 0)}
+                         placeholder="Ex: 4"
+                         disabled={isGenerating}
+                         onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); nextStepTema(); } }}
+                       />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Modulos */}
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Módulos Ativos</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Que áreas vamos envolver?</span>
                 <div className="flex flex-wrap gap-2">
                   {Object.keys(modulos).map((mod) => (
                     <button
@@ -92,9 +130,9 @@ function StepTema({ state, actions }: { state: ReturnType<typeof useCampaignWiza
               disabled={isGenerating || !rawName.trim()}
             >
               {isGenerating ? (
-                <><Sparkles size={16} className="animate-spin opacity-70" /> Processando dados base...</>
+                <><Sparkles size={16} className="animate-spin opacity-70" /> Salvando...</>
               ) : (
-                <>Sintetizar & Avançar <ArrowRight size={16} /></>
+                <>Continuar Planejamento <ArrowRight size={16} /></>
               )}
             </button>
           </div>
@@ -103,11 +141,17 @@ function StepTema({ state, actions }: { state: ReturnType<typeof useCampaignWiza
             <div>
               <h3 className="text-xl font-bold font-heading mb-2">{rawName}</h3>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-transparent border border-[var(--primary)] text-[var(--primary)]">Dir: {direcao}</span>
-                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-transparent border border-[var(--primary)] text-[var(--primary)]">Exp: {experiencia}</span>
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-transparent border border-[var(--primary)] text-[var(--primary)]">Alvo: {direcao}</span>
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-transparent border border-[var(--primary)] text-[var(--primary)]">Formato: {experiencia}</span>
+                {(experiencia === "presencial" || experiencia === "hibrida") && (
+                  <>
+                    {eventoPublico > 0 && <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]">Pax: {eventoPublico}</span>}
+                    {eventoDuracao > 0 && <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]">Dur.: {eventoDuracao}h</span>}
+                  </>
+                )}
                 {Object.keys(modulos).filter((k) => modulos[k as keyof typeof modulos]).map((k) => (
                   <span key={k} className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]">
-                    {k === "governanca" ? "Gov." : k === "fisico" ? "Fís." : k}
+                    {k === "governanca" ? "Gov" : k === "fisico" ? "Física" : k}
                   </span>
                 ))}
               </div>
@@ -133,15 +177,15 @@ function StepProposicao({ state, actions }: { state: ReturnType<typeof useCampai
       
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="text-lg font-bold uppercase tracking-wide">Arquitetura de Proposição</h2>
-          <p className="text-sm text-[var(--muted-foreground)]">A inteligência sugere ganchos táticos baseados no setor. Escolha ou defina.</p>
+          <h2 className="text-lg font-bold tracking-wide mt-1">Qual o Gancho Principal?</h2>
+          <p className="text-sm text-[var(--muted-foreground)]">Selecione uma ideia da nossa base ou escreva a sua própria visão criativa.</p>
         </div>
 
         {isActive ? (
           <div className="flex flex-col gap-6 bg-[var(--surface)] p-6 rounded-2xl border border-[var(--border)]">
             
             <div className="flex flex-col gap-3">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Sugestões (Base de Conhecimento Clínica/Setorial)</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Ideias Sugeridas pela Adapta</span>
               {suggestedPropositions.map((sug, idx) => (
                 <button
                   key={idx}
@@ -158,7 +202,7 @@ function StepProposicao({ state, actions }: { state: ReturnType<typeof useCampai
 
             <div className="flex items-center gap-4 py-2">
               <div className="h-px bg-[var(--border)] flex-1" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">ou escreva a sua própria matriz</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">ou se preferir, descreva com suas palavras</span>
               <div className="h-px bg-[var(--border)] flex-1" />
             </div>
 
@@ -166,7 +210,7 @@ function StepProposicao({ state, actions }: { state: ReturnType<typeof useCampai
               className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm font-medium text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 transition-all min-h-[100px] resize-y"
               value={proposicao}
               onChange={(e) => setProposicao(e.target.value)}
-              placeholder="Digite o core argument, problema a ser resolvido ou narrativa central..."
+              placeholder="Qual dor queremos resolver? Qual narrativa/mensagem queremos passar?"
               disabled={isGenerating}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); nextStepProposicao(); } }}
             />
@@ -174,11 +218,11 @@ function StepProposicao({ state, actions }: { state: ReturnType<typeof useCampai
             <div className="flex gap-3">
               {proposicao.trim() ? (
                 <button className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-[var(--foreground)] text-[var(--background)] font-bold uppercase tracking-wider text-sm hover:opacity-90 disabled:opacity-50 transition-all font-heading" onClick={() => nextStepProposicao()} disabled={isGenerating}>
-                  {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Enraizando...</> : "Confirmar Proposta Autoral"}
+                  {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Carregando...</> : "Usar Esta Ideia"}
                 </button>
               ) : (
                 <button className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-transparent border border-[var(--border)] text-[var(--foreground)] font-bold uppercase tracking-wider text-sm hover:bg-[var(--surface)] hover:border-[var(--border-hover)] disabled:opacity-50 transition-all" onClick={() => nextStepProposicao("")} disabled={isGenerating}>
-                  {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Processando...</> : "Pular — Deixar I.A. Abstrair"}
+                  {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Carregando...</> : "Deixar a Inteligência Inventar"}
                 </button>
               )}
             </div>
@@ -210,8 +254,8 @@ function StepOrcamento({ state, actions }: { state: ReturnType<typeof useCampaig
       
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="text-lg font-bold uppercase tracking-wide">Viabilidade & KPIs</h2>
-          <p className="text-sm text-[var(--muted-foreground)]">Estimativa de custos determina os canais e o alcance.</p>
+          <h2 className="text-lg font-bold tracking-wide mt-1">Fazendo as Contas</h2>
+          <p className="text-sm text-[var(--muted-foreground)]">Quanto a associação pretende investir nessa empreitada?</p>
         </div>
 
         {isActive ? (
@@ -230,19 +274,19 @@ function StepOrcamento({ state, actions }: { state: ReturnType<typeof useCampaig
             </div>
             <div className="flex gap-3">
               <button className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-[var(--foreground)] text-[var(--background)] font-bold uppercase tracking-wider text-sm hover:opacity-90 disabled:opacity-50 transition-all font-heading" onClick={nextStepOrcamento} disabled={isGenerating}>
-                {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Projetando ROI...</> : <>Projetar Impacto Máximo <ArrowRight size={16} /></>}
+                {isGenerating ? <><Sparkles size={16} className="animate-spin opacity-70" /> Fatiando verba...</> : <>Distribuir Verba Simbólica <ArrowRight size={16} /></>}
               </button>
               {!orcamento && (
                 <button className="w-auto px-6 h-12 flex items-center justify-center gap-2 rounded-xl bg-transparent border border-[var(--border)] text-[var(--foreground)] font-bold uppercase tracking-wider text-sm hover:bg-[var(--surface)] hover:border-[var(--border-hover)] disabled:opacity-50 transition-all" onClick={nextStepOrcamento} disabled={isGenerating}>
-                  Ignorar
+                  Não tenho orçamento definido
                 </button>
               )}
             </div>
           </div>
         ) : isPast ? (
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-sm hover:border-[var(--border-hover)] transition-all group">
-            <span className="text-2xl font-black font-mono tracking-tight text-[var(--foreground)]">{orcamento ? `R$ ${orcamento}` : "Mídia Orgânica"}</span>
-            <button className="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)] hover:text-[var(--foreground)] opacity-0 group-hover:opacity-100 transition-opacity underline decoration-1 underline-offset-4" onClick={() => setStep(2)}>Reavaliar Capital</button>
+            <span className="text-2xl font-black font-mono tracking-tight text-[var(--foreground)]">{orcamento ? `R$ ${orcamento}` : "Sem orçamento estipulado"}</span>
+            <button className="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)] hover:text-[var(--foreground)] opacity-0 group-hover:opacity-100 transition-opacity underline decoration-1 underline-offset-4" onClick={() => setStep(2)}>Ajustar Valores</button>
           </div>
         ) : null}
       </div>
@@ -254,9 +298,9 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
   const { state, actions } = useCampaignWizard(onClose);
   const {
     isGenerating, isSaved, isGeneratingPlan, step,
-    aiGeneratedType, activeFunnels, aiBriefing, aiChannels, aiKpi, blueprintTheory
+    aiGeneratedType, activeFunnels, aiTrilhaInterna, aiTrilhaExterna, aiOrcamentoLinhas, aiOrcamentoTotal, blueprintTheory
   } = state;
-  const { finishCreation, generateActionPlan, generateBlueprintDense } = actions;
+  const { finishCreation, generateActionPlan, generateBlueprintDense, setAiOrcamentoLinhas } = actions;
 
   if (!isOpen) return null;
 
@@ -274,7 +318,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
               <button className="p-1 rounded-sm hover:bg-[var(--border)] hover:text-[var(--foreground)] transition-colors" onClick={onClose}><ArrowLeft size={14} /></button>
               Voltar ao Hub
             </span>
-            <h1 className="text-2xl font-black font-heading mt-1 uppercase tracking-tight">Síntese Estratégica</h1>
+            <h1 className="text-2xl font-black font-heading mt-1 tracking-tight">Monte sua Campanha</h1>
           </div>
 
           <div className="flex items-center gap-3">
@@ -293,9 +337,9 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                {step === 3 && (
                  <button className="w-full h-14 flex items-center justify-center gap-3 rounded-2xl bg-[var(--foreground)] text-[var(--background)] font-black uppercase tracking-wider text-sm shadow-xl hover:scale-[1.02] hover:shadow-[var(--shadow-focus)] disabled:opacity-50 transition-all font-heading" onClick={generateBlueprintDense} disabled={isGenerating}>
                     {isGenerating ? (
-                      <><Sparkles size={18} className="animate-spin opacity-70" /> Compilando Dossiê Estratégico...</>
+                      <><Sparkles size={18} className="animate-spin opacity-70" /> Escrevendo Diretivas...</>
                     ) : (
-                      <>Gerar Documento Orientador Completo <Zap size={18} /></>
+                      <>Gerar Meu Plano Completo <Zap size={18} /></>
                     )}
                  </button>
                )}
@@ -311,12 +355,12 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
            <div className="flex items-center gap-3 pointer-events-auto">
              {step >= 4 && !isSaved && (
                 <button className="h-10 px-5 rounded-full bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-[var(--card)] transition-all shadow-sm" onClick={finishCreation}>
-                  Registrar Blueprint <CheckCircle2 size={14} />
+                  Aceitar Este Plano <CheckCircle2 size={14} />
                 </button>
               )}
               {step >= 4 && isSaved && (
                 <button className="h-10 px-5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:opacity-90 transition-all shadow-md" onClick={generateActionPlan} disabled={isGeneratingPlan}>
-                  {isGeneratingPlan ? "Enviando ao Maestro..." : "Submeter ao CoreAct"} <Zap size={14} className={isGeneratingPlan ? "animate-pulse" : ""} />
+                  {isGeneratingPlan ? "Criando Tarefas..." : "Enviar Tarefas pro CoreAct"} <Zap size={14} className={isGeneratingPlan ? "animate-pulse" : ""} />
                 </button>
               )}
            </div>
@@ -325,10 +369,25 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         <div className="flex-1 w-full max-w-4xl mx-auto px-12 pt-4 pb-20 flex flex-col gap-8">
            
            {step === 0 && (
-             <div className="flex-1 flex flex-col items-center justify-center text-center opacity-40 mix-blend-luminosity">
-                <Target size={80} strokeWidth={0.5} className="mb-6 text-[var(--muted-foreground)] opacity-20" />
-                <h3 className="text-3xl font-black font-heading uppercase text-[var(--foreground)]">Canvas de Inteligência</h3>
-                <p className="text-[var(--muted-foreground)] max-w-md mt-4 font-medium text-lg leading-relaxed">O dossiê estrutural da campanha e matrizes de canais aparecerão projetados aqui conforme o avanço das orientações de contexto no painel esquerdo.</p>
+             <div className="flex-1 flex flex-col items-center justify-center text-center">
+                <div className="flex flex-col items-center text-[var(--muted-foreground)] opacity-[0.15] mb-12 scale-110">
+                  <div className="w-32 h-12 border-2 border-current bg-transparent text-center text-xs flex items-center justify-center font-bold tracking-widest uppercase">Gatilho</div>
+                  <div className="w-px h-6 bg-current"></div>
+                  <div className="relative flex items-center justify-center">
+                    <Hexagon size={64} strokeWidth={1} className="transform -rotate-90" />
+                    <span className="absolute text-[10px] font-bold">V8</span>
+                  </div>
+                  <div className="flex w-64 justify-between -mt-[1px]">
+                      <div className="w-1/2 h-8 border-t-2 border-l-2 border-current rounded-tl-xl object-none"></div>
+                      <div className="w-1/2 h-8 border-t-2 border-r-2 border-current rounded-tr-xl"></div>
+                  </div>
+                  <div className="flex w-96 justify-between gap-12">
+                      <div className="w-32 h-16 border-2 border-current flex items-center justify-center rounded-lg"><span className="text-[10px] font-bold uppercase tracking-widest">Trilha A</span></div>
+                      <div className="w-32 h-16 border-2 border-dashed border-current flex items-center justify-center rounded-lg"><span className="text-[10px] font-bold uppercase tracking-widest">Trilha B</span></div>
+                  </div>
+                </div>
+                <h3 className="text-3xl font-black tracking-tight text-[var(--foreground)] opacity-50 mix-blend-luminosity">O Seu Plano Vai Aparecer Aqui</h3>
+                <p className="text-[var(--muted-foreground)] max-w-md mt-4 font-medium text-lg leading-relaxed opacity-50 mix-blend-luminosity">Siga os passos à esquerda para visualizar como a plataforma vai distribuir as tarefas, orçamentos e a estrutura do seu projeto.</p>
              </div>
            )}
 
@@ -336,7 +395,7 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
            {step >= 1 && (
              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                <div className="flex items-center justify-between mb-4 border-b border-[var(--border)] pb-2">
-                 <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)]">Engenharia de Funil</h4>
+                 <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)]">Funil Sugerido</h4>
                  <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)] flex items-center gap-2 shadow-sm">
                    <TypeIcon size={12} /> {typeData.name}
                  </span>
@@ -365,38 +424,70 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
              </div>
            )}
 
-           {/* ── Briefing e Canais (Step 2+) ── */}
+           {/* ── Trilhas Paralelas (Step 2+) ── */}
            {step >= 2 && (
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
                 <div className="flex flex-col gap-3">
-                  <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><FileText size={14} /> Memorando Tático</h4>
-                  <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-sm">
-                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--card-foreground)] font-medium font-serif italic">{aiBriefing}</p>
+                  <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Users size={14} /> O que a nossa Associação Precisa Fazer</h4>
+                  <div className="flex flex-col gap-2 pt-2">
+                    {aiTrilhaInterna.map((item, idx) => (
+                      <div key={idx} className="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm text-sm font-medium text-[var(--foreground)] flex items-start gap-3">
+                         <span className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase mt-0.5 shrink-0">0{idx+1}</span>
+                         <span className="leading-snug">{item}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-3">
-                  <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Zap size={14} /> Topologia de Canais</h4>
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {aiChannels.map(ch => (
-                      <span key={ch} className="px-4 py-2 rounded-xl bg-[var(--background)] border border-[var(--border)] text-sm font-bold shadow-sm shadow-[var(--shadow-md)] text-[var(--foreground)] flex-grow text-center">{ch}</span>
+                  <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Globe size={14} /> Como essa ação vai chegar no Público</h4>
+                  <div className="flex flex-col gap-2 pt-2">
+                    {aiTrilhaExterna.map((item, idx) => (
+                      <div key={idx} className="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm text-sm font-medium text-[var(--foreground)] flex items-start gap-3">
+                         <span className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase mt-0.5 shrink-0">0{idx+1}</span>
+                         <span className="leading-snug">{item}</span>
+                      </div>
                     ))}
                   </div>
                 </div>
              </div>
            )}
 
-           {/* ── KPI (Step 3+) ── */}
+           {/* ── Notinha de Orçamento Editável (Step 3+) ── */}
            {step >= 3 && (
               <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-                 <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] pb-2 flex items-center gap-2"><Target size={14} /> Projeção Analítica (Estimativa)</h4>
-                 <div className="mt-4 p-6 rounded-2xl bg-gradient-to-br from-[var(--surface)] to-[var(--background)] border border-[var(--border)] shadow flex items-start gap-5">
-                    <div className="w-12 h-12 rounded-xl bg-[var(--background)] border border-[var(--border)] text-[var(--primary)] flex items-center justify-center shrink-0">
-                       <Target size={24} strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">{aiKpi.meta}</span>
-                      <p className="mt-1 text-xl font-bold font-heading leading-snug">{aiKpi.goal}</p>
+                 <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
+                    <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] flex items-center gap-2"><Receipt size={14} /> Distribuição Sugerida de Verba</h4>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-0.5 rounded-md">Editável! Fique à vontade para ajustar.</span>
+                 </div>
+                 
+                 <div className="mt-4 p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-sm flex flex-col gap-4">
+                    {aiOrcamentoLinhas.map((linha, idx) => (
+                       <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-[var(--background)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-colors group">
+                          <div className="flex flex-col flex-1">
+                             <span className="text-sm font-bold text-[var(--foreground)]">{linha.categoria}</span>
+                             <span className="text-xs text-[var(--muted-foreground)] line-clamp-1">{linha.motivo}</span>
+                          </div>
+                          <div className="relative w-full sm:w-36 shrink-0">
+                             <span className="absolute left-3 top-[10px] text-xs font-bold text-[var(--muted-foreground)]">R$</span>
+                             <input 
+                               type="number"
+                               className="w-full bg-transparent border border-[var(--border)] rounded-lg pl-8 pr-3 py-2 text-sm font-bold font-mono text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 transition-all text-right group-hover:border-[var(--border-hover)]"
+                               value={linha.valor_estimado === 0 ? '' : linha.valor_estimado}
+                               onChange={(e) => {
+                                 const val = parseFloat(e.target.value) || 0;
+                                 const nextLinhas = [...aiOrcamentoLinhas];
+                                 nextLinhas[idx].valor_estimado = val;
+                                 setAiOrcamentoLinhas(nextLinhas);
+                               }}
+                             />
+                          </div>
+                       </div>
+                    ))}
+                    
+                    <div className="mt-2 pt-4 border-t border-dashed border-[var(--border)] flex items-center justify-between px-2">
+                       <span className="text-sm font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Total Ajustado:</span>
+                       <span className="text-2xl font-black font-mono text-[var(--foreground)] tracking-tight">R$ {aiOrcamentoLinhas.reduce((acc, curr) => acc + curr.valor_estimado, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
                  </div>
               </div>
@@ -417,8 +508,8 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                          <Blocks size={24} className="text-[var(--background)]" />
                        </div>
                        <div>
-                         <h3 className="text-3xl font-black font-heading tracking-tight uppercase">Doutrina e Contexto da Ação</h3>
-                         <span className="text-sm opacity-60 font-medium tracking-wider uppercase">Documento Guia Corporativo</span>
+                         <h3 className="text-3xl font-black tracking-tight mt-1">Resumo do Plano (Visão Executiva)</h3>
+                         <span className="text-sm opacity-60 font-medium tracking-wider uppercase">Para colocar todo mundo na mesma página</span>
                        </div>
                     </div>
                     <div className="prose prose-invert max-w-none font-medium whitespace-pre-wrap leading-relaxed text-[var(--background)]/90 text-justify hyphens-auto font-serif">

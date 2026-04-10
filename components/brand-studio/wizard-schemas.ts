@@ -5,13 +5,19 @@ export const aiTemaSchema = z.object({
 });
 
 export const aiProposicaoSchema = z.object({
-  briefing: z.string(),
-  channels: z.array(z.string()),
+  trilha_interna: z.array(z.string()).optional().default([]),
+  trilha_externa: z.array(z.string()).optional().default([]),
 });
 
 export const aiOrcamentoSchema = z.object({
-  meta: z.string(),
-  goal: z.string(),
+  linhas: z.array(
+    z.object({
+      categoria: z.string(),
+      valor_estimado: z.number(),
+      motivo: z.string(),
+    })
+  ),
+  total_estimado: z.number(),
 });
 
 export const aiBlueprintSchema = z.object({
@@ -19,7 +25,8 @@ export const aiBlueprintSchema = z.object({
 });
 
 export const aiActionPlanSchema = z.object({
-  governanca: z.array(z.string()).optional().default([]),
-  producao: z.array(z.string()).optional().default([]),
-  distribuicao: z.array(z.string()).optional().default([]),
+  governanca_risco: z.array(z.string()).optional().default([]),
+  producao_fisica: z.array(z.string()).optional().default([]),
+  evento_logistica: z.array(z.string()).optional().default([]),
+  digital_distribuicao: z.array(z.string()).optional().default([]),
 });
