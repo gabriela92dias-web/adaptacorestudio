@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useTheme } from "../utils/theme-context";
 import { colorPalette } from "../utils/color-data";
@@ -118,6 +119,9 @@ function RuleBlock({
 export default function Brand() {
   const { isDark, t } = useTheme();
   const { mode, switchToDarkMode, switchToLightMode } = useThemeMode();
+
+  const [activePaletteIndex, setActivePaletteIndex] = useState(0);
+  const [localThemeDark, setLocalThemeDark] = useState(false);
 
   return (
     <div className="w-full min-h-screen font-sans pb-32" style={{ backgroundColor: t.bg }}>
@@ -319,68 +323,179 @@ export default function Brand() {
           </div>
         </section>
 
-        {/* ── 03. High-End Color Constellations ──────────────────── */}
+        {/* ── 03. High-End Color Constellations (Tabbed Bento) ──────── */}
         <section className="mb-32">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 border-b border-black/5 dark:border-white/5 pb-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 border-b-0 pb-0">
             <div>
               <span className="text-[10px] font-mono font-bold tracking-widest uppercase bg-[#19302A] text-[#DFEDD8] px-3 py-1.5 rounded-full inline-block mb-4">
                 03.00 Chromatic
               </span>
               <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4" style={{ color: t.text }}>
-                Spectrum Rules
+                Brand Identity Palettes
               </h2>
               <p className="text-sm md:text-base max-w-xl leading-relaxed m-0" style={{ color: t.textMuted }}>
-                39 variáveis oficiais mapeadas. É terminantemente proibido inserir blends externos. Software auditor rastreia correspondências paramétricas e bloqueia <span className="font-mono bg-black/5 dark:bg-white/10 px-1 rounded">ΔE &gt; limite</span>.
+                Explore as paletas e aplicações práticas (mockups, aplicações de logotipo e tipografia) para cada frente da arquitetura da marca.
               </p>
             </div>
+            
+            {/* Global Theme Toggle for the Palettes preview is optional, we will use a local one inside the box */}
           </div>
 
-          <div className="flex flex-col gap-20">
-            {colorPalette.map((family) => (
-              <div key={family.name} className="relative">
-                <div className="flex flex-col xl:flex-row gap-8 xl:gap-16">
-                  
-                  {/* Family Meta */}
-                  <div className="w-full xl:w-72 shrink-0">
-                    <h3 className="text-2xl font-bold mb-3" style={{ color: t.text }}>{family.name}</h3>
-                    <p className="text-sm leading-relaxed" style={{ color: t.textMuted }}>{family.description}</p>
-                  </div>
+          {/* Palette Tabs */}
+          <div className="flex gap-2 md:gap-6 mb-8 overflow-x-auto hide-scrollbar border-b" style={{ borderColor: t.line }}>
+            {colorPalette.map((family, idx) => (
+              <button 
+                key={family.id}
+                onClick={() => setActivePaletteIndex(idx)}
+                className={`pb-4 px-2 font-mono uppercase tracking-widest text-xs transition-all whitespace-nowrap outline-none focus:outline-none`}
+                style={{ 
+                  color: activePaletteIndex === idx ? t.text : t.textMuted,
+                  borderBottom: `2px solid ${activePaletteIndex === idx ? t.text : 'transparent'}`,
+                  opacity: activePaletteIndex === idx ? 1 : 0.6
+                }}
+              >
+                {family.name}
+              </button>
+            ))}
+          </div>
 
-                  {/* Swatches as a fluid masonry/strip */}
-                  <div className="flex-1 overflow-x-auto pb-8 hide-scrollbar cursor-grab">
-                    <div className="flex gap-3 w-max">
-                      {family.colors.map((color, i) => {
-                        const light = isLightColor(color.hex);
-                        return (
-                          <div 
-                            key={color.hex} 
-                            className="group relative w-24 md:w-32 lg:w-40 h-56 md:h-72 rounded-[2rem] flex flex-col justify-between p-5 overflow-hidden shadow-sm transition-all duration-500 hover:w-36 md:hover:w-48 hover:-translate-y-4 hover:shadow-2xl hover:z-10 bg-white"
-                            style={{ background: color.hex }}
-                          >
-                            <span 
-                              className="text-[10px] font-mono font-bold tracking-widest mix-blend-overlay"
-                              style={{ color: light ? 'black' : 'white', opacity: 0.5 }}
-                            >
-                              {color.level || `VAR-${i}`}
-                            </span>
-                            <div className="translate-y-12 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                              <div className="text-[13px] font-extrabold truncate mb-1.5" style={{ color: light ? '#000' : '#FFF' }}>
-                                {color.name}
-                              </div>
-                              <div className="text-[10px] font-mono" style={{ color: light ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.6)' }}>
-                                {color.hex.toUpperCase()}
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      })}
+          {/* Active Palette Bento Box */}
+          {(() => {
+            const family = colorPalette[activePaletteIndex];
+            const baseColors = family.colors;
+            const primaryColor = baseColors[baseColors.length - 3]?.hex || '#000';
+            const lightColor = baseColors[1]?.hex || '#FFF';
+            const darkColor = baseColors[baseColors.length - 1]?.hex || '#000';
+            
+            // Use local theme to define background and text of the bento box
+            const bentoBg = localThemeDark ? darkColor : lightColor;
+            const bentoText = localThemeDark ? lightColor : darkColor;
+            
+            // Placeholder Mockup Paths (the user will replace these with the actual files)
+            const mockupImg1 = `/mockups/${family.id}-1.png`;
+            const mockupImg2 = `/mockups/${family.id}-2.png`;
+            const mockupImg3 = `/mockups/${family.id}-3.png`;
+
+            return (
+              <div 
+                className="rounded-[2.5rem] p-6 md:p-10 transition-colors duration-700 ease-in-out border border-black/5 dark:border-white/5"
+                style={{ backgroundColor: bentoBg }}
+              >
+                {/* Header of Bento Box */}
+                <div className="flex justify-between items-center mb-8">
+                  <div>
+                    <h3 className="text-2xl font-bold tracking-tight" style={{ color: bentoText }}>{family.name}</h3>
+                    <p className="text-sm opacity-70 mt-1 max-w-md" style={{ color: bentoText }}>{family.description}</p>
+                  </div>
+                  <div className="flex items-center gap-2 p-1 rounded-full bg-black/10 dark:bg-white/10">
+                    <button
+                      onClick={() => setLocalThemeDark(false)}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${!localThemeDark ? 'bg-white shadow text-black' : 'text-current opacity-50 hover:opacity-100'}`}
+                      style={{ color: !localThemeDark ? '#000' : bentoText }}
+                    >
+                      <Sun size={14} strokeWidth={2} />
+                    </button>
+                    <button
+                      onClick={() => setLocalThemeDark(true)}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${localThemeDark ? 'bg-black shadow text-white' : 'text-current opacity-50 hover:opacity-100'}`}
+                      style={{ color: localThemeDark ? '#FFF' : bentoText }}
+                    >
+                      <Moon size={14} strokeWidth={2} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bento Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+                  
+                  {/* Top Left: Mockup 1 (e.g. Poster / Product) */}
+                  <div className="md:col-span-5 relative rounded-[2rem] overflow-hidden group aspect-[4/5] bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 flex items-center justify-center">
+                    {/* Placeholder image representation */}
+                    <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-80" style={{ backgroundImage: `url(${mockupImg1})` }} />
+                    <div className="text-center p-8 relative z-10 w-full h-full flex flex-col items-center justify-center bg-black/5 backdrop-blur-[2px]">
+                      <span className="bg-black/80 text-white text-[10px] font-mono uppercase px-3 py-1.5 rounded-full mb-3">Mockup Placeholder 1</span>
+                      <p className="text-xs max-w-[200px]" style={{ color: bentoText }}>Substitua por: {mockupImg1}</p>
                     </div>
                   </div>
 
+                  {/* Top Right Box */}
+                  <div className="md:col-span-7 flex flex-col gap-4 md:gap-6">
+                    
+                    {/* Top Row inside Right Box */}
+                    <div className="flex flex-col sm:flex-row gap-4 md:gap-6 flex-1">
+                      {/* Product Mockup 2 */}
+                      <div className="flex-1 relative rounded-[2rem] overflow-hidden group bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 min-h-[220px] flex items-center justify-center">
+                         <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-80" style={{ backgroundImage: `url(${mockupImg2})` }} />
+                         <div className="relative z-10 text-center bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
+                            <span className="bg-black/80 text-white text-[10px] font-mono uppercase px-2 py-1 rounded-full block mb-2">Mockup 2</span>
+                            <span className="text-[10px] opacity-70" style={{ color: bentoText }}>{mockupImg2}</span>
+                         </div>
+                      </div>
+                      
+                      {/* Logo variations */}
+                      <div className="w-full sm:w-48 flex flex-col gap-4 md:gap-6">
+                        <div className="flex-1 rounded-[2rem] bg-white border border-black/5 flex items-center justify-center p-4 min-h-[100px]">
+                          <LogoDark className="w-20 mix-blend-multiply opacity-80" />
+                        </div>
+                        <div className="flex-1 rounded-[2rem] bg-[#141A17] border border-white/5 flex items-center justify-center p-4 min-h-[100px]">
+                          <LogoLight className="w-20 opacity-90" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Row inside Right Box */}
+                    <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
+                      {/* Color Strip */}
+                      <div className="flex-1 rounded-[2rem] bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 p-6 flex flex-col justify-end min-h-[200px]">
+                        <div className="flex gap-2 w-full h-16 rounded-xl overflow-hidden mb-4">
+                          {family.colors.slice(0, 6).map(c => (
+                            <div key={c.hex} className="flex-1 h-full" style={{ backgroundColor: c.hex }} title={c.name} />
+                          ))}
+                        </div>
+                        <span className="text-[11px] font-mono uppercase opacity-60 tracking-widest" style={{ color: bentoText }}>
+                          Color Sequence ({family.colors.length} vars)
+                        </span>
+                      </div>
+
+                      {/* Typo Block */}
+                      <div className="flex-1 rounded-[2rem] p-6 border border-black/5 dark:border-white/5 min-h-[200px]" style={{ backgroundColor: primaryColor }}>
+                        <div className="text-[10px] font-mono uppercase tracking-widest mb-4 opacity-70 text-white">
+                          Typography
+                        </div>
+                        <div className="text-3xl font-extrabold text-white mb-2 tracking-tight">Geist Sans</div>
+                        <div className="text-xs text-white/70 font-mono overflow-hidden whitespace-nowrap text-ellipsis">
+                          Aa Bb Cc Dd Ee Ff Gg Hh
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                {/* Optional Bottom Row: Third mockup or big text display */}
+                <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+                  {/* Mockup 3 */}
+                  <div className="md:col-span-4 rounded-[2rem] bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 aspect-square relative flex items-center justify-center overflow-hidden group">
+                     <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-80" style={{ backgroundImage: `url(${mockupImg3})` }} />
+                     <div className="relative z-10 text-center bg-black/10 backdrop-blur-sm p-4 rounded-xl border border-black/10">
+                        <span className="bg-white/80 text-black text-[10px] font-mono uppercase px-2 py-1 rounded-full block mb-2">Mockup 3</span>
+                        <span className="text-[10px] opacity-90" style={{ color: bentoBg }}>{mockupImg3}</span>
+                     </div>
+                  </div>
+                  
+                  {/* Large Message Display */}
+                  <div className="md:col-span-8 rounded-[2rem] bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 p-8 md:p-12 flex flex-col justify-center">
+                    <h4 className="text-2xl md:text-4xl font-light leading-tight tracking-tight mb-4" style={{ color: bentoText }}>
+                      "Redefinindo o cuidado e o acolhimento sistêmico."
+                    </h4>
+                    <span className="text-xs font-mono uppercase opacity-50 tracking-widest" style={{ color: bentoText }}>
+                      Brand Voice Manifest
+                    </span>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </section>
 
         {/* ── 04. Protocols Board ─────────────────────────────────── */}
