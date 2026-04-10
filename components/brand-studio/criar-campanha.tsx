@@ -1,7 +1,6 @@
-import React from "react";
 import {
   ArrowLeft, ArrowRight, Target, Zap, CheckCircle2, Sparkles, FileText, X,
-  Blocks, Users, Globe, Receipt, Hexagon
+  Blocks, Users, Globe, Receipt, Hexagon, Tent, Package, Shield
 } from "lucide-react";
 import { useCampaignWizard } from "./useCampaignWizard";
 import { ACTION_TYPES } from "./wizard-constants";
@@ -294,16 +293,17 @@ function StepOrcamento({ state, actions }: { state: ReturnType<typeof useCampaig
   );
 }
 
-function WireframeBlock({ label, title, subtitle, children, className = "" }: { label: string, title?: string, subtitle?: string, children: React.ReactNode, className?: string }) {
+function CampaignBlock({ label, title, subtitle, children, className = "" }: { label: string, title?: string, subtitle?: string, children: React.ReactNode, className?: string }) {
   return (
-    <div className={`relative border-2 border-[var(--border)] bg-[var(--surface)] p-6 md:p-8 ${className}`}>
-      <div className="absolute -top-[11px] left-4 md:left-6 bg-[var(--surface)] px-3 border-l-2 border-r-2 border-[var(--border)] text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] shrink-0 max-w-[calc(100%-2rem)] overflow-hidden text-ellipsis whitespace-nowrap">
+    <div className={`relative border border-[var(--border)] bg-[var(--surface)] p-8 rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.02)] transition-all duration-300 ${className}`}>
+      <div className="absolute -top-3.5 left-8 bg-[var(--background)] px-4 py-1 text-[10px] font-bold uppercase tracking-widest text-[var(--primary)] border border-[var(--border)] rounded-full shadow-sm flex items-center gap-2">
+        <div className="w-1.5 h-1.5 rounded-full bg-[var(--primary)]" />
         {label}
       </div>
       {(title || subtitle) && (
-        <div className="mb-6 pb-4 border-b border-[var(--border)]">
-          {title && <h2 className="text-xl md:text-2xl font-black font-heading uppercase tracking-wider text-[var(--foreground)]">{title}</h2>}
-          {subtitle && <p className="text-sm font-sans font-medium text-[var(--muted-foreground)] mt-2">{subtitle}</p>}
+        <div className="mb-8 pb-6 border-b border-[var(--border)]/50">
+          {title && <h2 className="text-xl md:text-2xl font-black font-heading tracking-tight text-[var(--foreground)]">{title}</h2>}
+          {subtitle && <p className="text-sm font-medium text-[var(--muted-foreground)] mt-2 leading-relaxed">{subtitle}</p>}
         </div>
       )}
       <div>{children}</div>
@@ -387,51 +387,57 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
         <div className="flex-1 w-full max-w-5xl mx-auto px-8 md:px-12 pt-4 pb-24 flex flex-col gap-10">
            
            <div className={`transition-all duration-700 ${step >= 0 ? "opacity-100 mt-8" : "hidden"}`}>
-             <WireframeBlock label="BLOCO 1: HUB OMNICANAL (RADIAL)" title="DNA DA CAMPANHA (ESCORE + ESCOPO)" subtitle="Centro = decisão mínima que ativa todo o resto. Nodes = pilares que a campanha obrigatoriamente define.">
+             <CampaignBlock label="1. Hub Omnicanal (Radial)" title="DNA da Campanha (Escore + Escopo)" subtitle="Centro = decisão mínima que ativa todo o resto. Nodes = pilares que a campanha obrigatoriamente define.">
                {step === 0 ? (
-                 <div className="flex flex-col items-center justify-center py-16 opacity-40 mix-blend-luminosity">
-                    <div className="w-24 h-24 border-2 border-[var(--primary)] border-dashed rounded-full flex items-center justify-center relative bg-[var(--background)]">
-                        <span className="text-[10px] tracking-widest uppercase text-[var(--primary)] font-bold">NODE</span>
-                        <div className="absolute w-16 h-0 border-t-2 border-[var(--primary)] border-dashed" style={{ top: '50%', left: '-66px' }}></div>
-                        <div className="absolute w-16 h-0 border-t-2 border-[var(--primary)] border-dashed" style={{ top: '50%', right: '-66px' }}></div>
-                        <div className="absolute h-16 w-0 border-l-2 border-[var(--primary)] border-dashed" style={{ left: '50%', top: '-66px' }}></div>
-                        <div className="absolute h-16 w-0 border-l-2 border-[var(--primary)] border-dashed" style={{ left: '50%', bottom: '-66px' }}></div>
+                 <div className="flex flex-col items-center justify-center py-20">
+                    <div className="w-32 h-32 rounded-full border border-[var(--border)] flex items-center justify-center bg-[var(--card)] shadow-[0_0_40px_rgba(var(--primary-rgb),0.05)] relative">
+                       <div className="w-16 h-16 rounded-full bg-[var(--primary)]/10 flex items-center justify-center animate-pulse">
+                         <div className="w-8 h-8 rounded-full bg-[var(--primary)] shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]"></div>
+                       </div>
+                       {/* Hub Orbitals */}
+                       <div className="absolute inset-0 border border-[var(--border)] rounded-full animate-[spin_20s_linear_infinite]" style={{ margin: '-20px' }}></div>
+                       <div className="absolute inset-0 border border-[var(--primary)]/20 rounded-full animate-[spin_15s_linear_infinite_reverse]" style={{ margin: '-40px' }}></div>
                     </div>
-                    <h3 className="text-2xl font-black tracking-tight text-[var(--foreground)] mt-12">O Seu Plano Vai Aparecer Aqui</h3>
-                    <p className="text-[var(--muted-foreground)] max-w-md mt-2 font-medium text-sm leading-relaxed text-center">Siga os passos à esquerda para visualizar como a plataforma vai distribuir as tarefas, orçamentos e a estrutura do seu projeto.</p>
+                    <h3 className="text-xl font-black font-heading tracking-tight text-[var(--foreground)] mt-16">O Seu Plano Vai Aparecer Aqui</h3>
+                    <p className="text-[var(--muted-foreground)] max-w-md mt-3 font-medium text-sm leading-relaxed text-center">Siga os passos à esquerda para visualizar como a plataforma vai distribuir as tarefas, orçamentos e a estrutura do seu projeto.</p>
                  </div>
                ) : (
                  <div className="flex flex-col md:flex-row gap-8 py-4">
                    <div className="flex-[2] text-[var(--foreground)] text-sm">
-                     <ul className="list-disc pl-5 space-y-2">
-                       <li><b className="uppercase">Direção:</b> {direcao === "interna" ? "Interna" : direcao === "externa" ? "Externa" : "Híbrida"}</li>
-                       <li><b className="uppercase">Experiência:</b> {experiencia === "digital" ? "Digital" : experiencia === "presencial" ? "Presencial" : "Híbrida"}</li>
-                       <li><b className="uppercase">Públicos / Pax:</b> {eventoPublico > 0 ? eventoPublico + " pessoas" : "Indefinido"}</li>
-                       <li><b className="uppercase">Duração / Janela:</b> {eventoDuracao > 0 ? eventoDuracao + " horas" : "Indefinido"}</li>
-                       <li><b className="uppercase">Módulos Ativos:</b> {Object.keys(modulos).filter(k => modulos[k as keyof typeof modulos]).map(k => k.toUpperCase()).join(', ') || "Padrão"}</li>
+                     <ul className="list-none space-y-4">
+                       <li className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[10px] font-bold text-[var(--primary)]">DR</div> <span className="font-medium"><b>Direção:</b> {direcao === "interna" ? "Interna" : direcao === "externa" ? "Externa" : "Híbrida"}</span></li>
+                       <li className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[10px] font-bold text-[var(--primary)]">EX</div> <span className="font-medium"><b>Experiência:</b> {experiencia === "digital" ? "Digital" : experiencia === "presencial" ? "Presencial" : "Híbrida"}</span></li>
+                       <li className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[10px] font-bold text-[var(--primary)]">OA</div> <span className="font-medium"><b>Orçamento / Escopo:</b> {orcamento.toString()}</span></li>
+                       <li className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[10px] font-bold text-[var(--primary)]">DU</div> <span className="font-medium"><b>Duração / Janela:</b> {eventoDuracao > 0 ? eventoDuracao + " horas" : "Indefinido"}</span></li>
+                       <li className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[10px] font-bold text-[var(--primary)]">MD</div> <span className="font-medium"><b>Módulos Ativos:</b> {Object.keys(modulos).filter(k => modulos[k as keyof typeof modulos]).map(k => k.toUpperCase()).join(', ') || "Padrão"}</span></li>
                      </ul>
-                     <div className="mt-6 text-[var(--muted-foreground)] border-l-2 border-[var(--primary)] pl-4 italic text-xs font-medium bg-[var(--surface)] p-3">
-                        Regra: se for híbrida, a camada interna existe sempre (kit + alinhamento + risco).
+                     <div className="mt-8 text-[var(--muted-foreground)] border border-[var(--border)] rounded-lg pl-4 italic text-xs font-medium bg-[var(--card)] p-4 shadow-sm flex items-start gap-3">
+                        <div className="mt-0.5"><Zap size={14} className="text-[var(--primary)]" /></div>
+                        Regra da plataforma: se for híbrida, a camada interna existe sempre (kit + alinhamento + risco).
                      </div>
                    </div>
-                   <div className="flex-1 flex flex-col items-center justify-center h-48 border border-[var(--border)] bg-[var(--background)] shadow-inner">
-                     <div className="w-16 h-16 border-2 border-dashed border-[var(--primary)] rounded-full flex items-center justify-center relative bg-[var(--surface)] text-[var(--foreground)] font-bold text-[9px] tracking-widest uppercase shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
-                         Node
-                         <div className="absolute w-12 h-0 border-t-2 border-[var(--primary)] border-dashed opacity-70" style={{ top: '50%', left: '-50px' }}></div>
-                         <div className="absolute w-12 h-0 border-t-2 border-[var(--primary)] border-dashed opacity-70" style={{ top: '50%', right: '-50px' }}></div>
-                         <div className="absolute h-12 w-0 border-l-2 border-[var(--primary)] border-dashed opacity-70" style={{ left: '50%', top: '-50px' }}></div>
-                         <div className="absolute h-12 w-0 border-l-2 border-[var(--primary)] border-dashed opacity-70" style={{ left: '50%', bottom: '-50px' }}></div>
-                     </div>
+                   <div className="flex-1 flex flex-col items-center justify-center h-48 rounded-xl bg-[var(--surface)]/50 border border-[var(--border)] shadow-inner relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-[var(--background)] to-[var(--surface)]" />
+                      <div className="w-16 h-16 rounded-full border border-[var(--primary)]/30 flex items-center justify-center relative bg-[var(--background)] shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)] z-10">
+                         <div className="w-8 h-8 rounded-full bg-[var(--primary)]/20 flex items-center justify-center">
+                            <div className="w-4 h-4 rounded-full bg-[var(--primary)]" />
+                         </div>
+                         {/* Connection lines */}
+                         <div className="absolute w-16 h-[1px] bg-gradient-to-l from-[var(--primary)]/50 to-transparent" style={{ top: '50%', left: '-64px' }}></div>
+                         <div className="absolute w-16 h-[1px] bg-gradient-to-r from-[var(--primary)]/50 to-transparent" style={{ top: '50%', right: '-64px' }}></div>
+                         <div className="absolute h-16 w-[1px] bg-gradient-to-t from-[var(--primary)]/50 to-transparent" style={{ left: '50%', top: '-64px' }}></div>
+                         <div className="absolute h-16 w-[1px] bg-gradient-to-b from-[var(--primary)]/50 to-transparent" style={{ left: '50%', bottom: '-64px' }}></div>
+                      </div>
                    </div>
                  </div>
                )}
-             </WireframeBlock>
+             </CampaignBlock>
            </div>
 
            {/* ── Arquitetura de Funil (Vignette Moderno) ── */}
            {step >= 1 && (
              <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 w-full mt-8">
-               <WireframeBlock label="BLOCO 2: ESTRUTURA PROGRESSIVA (FUNIL)" title="GATES DE EXECUÇÃO (DO PLANEJAMENTO AO “NO AR”)" subtitle="Cada layer é um “portão”: se não fechar, a campanha não pode avançar.">
+               <CampaignBlock label="2. Estrutura Progressiva" title="Gates de Execução (Layer Funnel)" subtitle="Cada layer é um “portão”: se não fechar, a campanha não pode avançar.">
                  <div className="flex w-full relative items-start h-[360px] pt-4">
 
                    {/* FUNÇÕES DE RENDERIZAÇÃO INTERNA */}
@@ -532,200 +538,241 @@ export function CriarCampanha({ isOpen, onClose }: { isOpen: boolean; onClose: (
                    </div>
 
                  </div>
-               </WireframeBlock>
+               </CampaignBlock>
              </div>
            )}
 
            {/* ── Trilhas Paralelas (Step 2+) ── */}
            {step >= 2 && (
-             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 w-full mt-4">
-               <WireframeBlock label="BLOCO 3: PAINEL DIVIDIDO (SPLIT L/R)" title="TRILHAS PARALELAS (INTERNA x EXTERNA)" subtitle="Divide o que o time precisa receber/treinar vs. o que o público recebe/experimenta.">
-                 <div className="flex flex-col md:flex-row border-2 border-[var(--border)] bg-[var(--background)] gap-[2px]">
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 w-full mt-8">
+               <CampaignBlock label="3. Split L/R" title="Trilhas Paralelas (Interna x Externa)" subtitle="Divide o que o time precisa receber/treinar vs. o que o público recebe/experimenta.">
+                 <div className="flex flex-col md:flex-row gap-6">
                      {/* Lado Interno */}
-                     <div className="flex-1 bg-[var(--surface)] p-6">
-                         <div className="border-b-2 border-[var(--border)] pb-2 mb-4 text-center text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--foreground)]">MÓDULO A — CAMADA INTERNA</div>
-                         <ul className="flex flex-col gap-3">
+                     <div className="flex-1 bg-[var(--surface)] p-6 rounded-2xl border border-[var(--border)] hover:border-[var(--primary)]/50 transition-colors shadow-sm">
+                         <div className="border-b border-[var(--border)]/50 pb-4 mb-6 text-[10px] font-black uppercase tracking-widest text-[var(--muted-foreground)] flex items-center justify-between">
+                             <span>Módulo A — Camada Interna</span>
+                             <div className="w-8 h-1 rounded-full bg-[var(--border)]"></div>
+                         </div>
+                         <ul className="flex flex-col gap-4">
                            {aiTrilhaInterna.map((item, idx) => (
-                              <li key={idx} className="flex items-start gap-3 text-xs md:text-sm font-medium text-[var(--muted-foreground)] p-3 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors">
-                                  <span className="text-[10px] font-bold text-[var(--foreground)] bg-[var(--border)] px-1.5 py-0.5 rounded uppercase shrink-0">0{idx+1}</span>
-                                  <span className="leading-relaxed">{item}</span>
+                              <li key={idx} className="flex items-start gap-3 text-sm font-medium text-[var(--muted-foreground)] transition-colors group">
+                                  <span className="text-[9px] font-black text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-1 rounded-md uppercase shrink-0 mt-0.5 shadow-sm group-hover:bg-[var(--primary)] group-hover:text-[var(--background)] transition-colors">0{idx+1}</span>
+                                  <span className="leading-relaxed text-[var(--foreground)]/80 group-hover:text-[var(--foreground)]">{item}</span>
                               </li>
                            ))}
                          </ul>
                      </div>
-                     {/* Linha Divisoria */}
-                     <div className="w-[2px] bg-[var(--border)] hidden md:block"></div>
                      {/* Lado Externo */}
-                     <div className="flex-1 bg-[var(--surface)] p-6">
-                         <div className="border-b-2 border-[var(--border)] pb-2 mb-4 text-center text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--foreground)]">MÓDULO B — CAMADA EXTERNA</div>
-                         <ul className="flex flex-col gap-3">
+                     <div className="flex-1 bg-[var(--surface)] p-6 rounded-2xl border border-[var(--border)] hover:border-[var(--primary)]/50 transition-colors shadow-sm">
+                         <div className="border-b border-[var(--border)]/50 pb-4 mb-6 text-[10px] font-black uppercase tracking-widest text-[var(--muted-foreground)] flex items-center justify-between">
+                             <span>Módulo B — Camada Externa</span>
+                             <div className="w-8 h-1 rounded-full bg-[var(--primary)]/30"></div>
+                         </div>
+                         <ul className="flex flex-col gap-4">
                            {aiTrilhaExterna.map((item, idx) => (
-                              <li key={idx} className="flex items-start gap-3 text-xs md:text-sm font-medium text-[var(--muted-foreground)] p-3 border border-[var(--border)] bg-[var(--background)] hover:border-[var(--foreground)] transition-colors">
-                                  <span className="text-[10px] font-bold text-[var(--foreground)] bg-[var(--border)] px-1.5 py-0.5 rounded uppercase shrink-0">0{idx+1}</span>
-                                  <span className="leading-relaxed">{item}</span>
+                              <li key={idx} className="flex items-start gap-3 text-sm font-medium text-[var(--muted-foreground)] transition-colors group">
+                                  <span className="text-[9px] font-black text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-1 rounded-md uppercase shrink-0 mt-0.5 shadow-sm group-hover:bg-[var(--primary)] group-hover:text-[var(--background)] transition-colors">0{idx+1}</span>
+                                  <span className="leading-relaxed text-[var(--foreground)]/80 group-hover:text-[var(--foreground)]">{item}</span>
                               </li>
                            ))}
                          </ul>
                      </div>
                  </div>
-               </WireframeBlock>
+               </CampaignBlock>
              </div>
            )}
 
            {/* ── Componentes Flutuantes (Step 2+) ── */}
            {step >= 2 && (
-             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 w-full mt-4">
-               <WireframeBlock label="BLOCO 4: COMPONENTES FLUTUANTES / LÚDICO" title="BIBLIOTECA DE MÓDULOS (TOGGLES) — V2" subtitle="Cada módulo ON abre subdecisões + tarefas + linha de orçamento + prova de pronto.">
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 w-full mt-8">
+               <CampaignBlock label="4. Componentes Flutuantes" title="Biblioteca de Módulos (Toggles)" subtitle="Cada módulo ON abre subdecisões + tarefas + linha de orçamentos + provas de executabilidade.">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                    
                    {/* EVENTO */}
-                   <div className={`p-4 border ${experiencia === "presencial" || experiencia === "hibrida" || modulos.evento ? "border-[var(--primary)] bg-[var(--surface)] shadow-sm" : "border-[var(--border)] bg-[var(--background)] opacity-50"} transition-all`}>
-                      <div className="font-bold text-xs uppercase mb-3 tracking-widest text-[var(--foreground)] flex justify-between items-center">
-                         <span>Evento · Acesso & Prog.</span>
-                         {(experiencia === "presencial" || experiencia === "hibrida" || modulos.evento) && <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />}
+                   <div className={`p-5 rounded-2xl border ${experiencia === "presencial" || experiencia === "hibrida" || modulos.evento ? "border-[var(--primary)]/50 bg-[var(--primary)]/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]" : "border-[var(--border)] bg-[var(--surface)] opacity-70"} transition-all duration-300`}>
+                      <div className="font-black text-xs uppercase mb-4 tracking-widest text-[var(--foreground)] flex justify-between items-center">
+                         <span className="flex items-center gap-2"><div className={`p-1.5 rounded-md ${experiencia === "presencial" || experiencia === "hibrida" || modulos.evento ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "bg-[var(--border)] text-[var(--muted-foreground)]"}`}><Tent size={14} /></div> Evento · Acesso & Prog.</span>
+                         {(experiencia === "presencial" || experiencia === "hibrida" || modulos.evento) ? <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" /> : <div className="w-2 h-2 rounded-full bg-[var(--border)]" />}
                       </div>
-                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-[var(--muted-foreground)]">
-                         <li><b className="text-[var(--foreground)]">Modelo:</b> {experiencia}</li>
-                         <li>Inscrição, check-in, validação</li>
-                         <li>Programação, blocos, convidados</li>
+                      <ul className="flex flex-col gap-2 text-xs font-medium text-[var(--muted-foreground)]">
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> <b className="text-[var(--foreground)]">Modelo:</b> {experiencia}</li>
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Inscrição, check-in, validação</li>
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Programação, blocos, convidados</li>
                       </ul>
                    </div>
 
                    {/* FÍSICO */}
-                   <div className={`p-4 border ${(modulos.fisico || experiencia === "presencial" || experiencia === "hibrida") ? "border-[var(--primary)] bg-[var(--surface)] shadow-sm" : "border-[var(--border)] bg-[var(--background)] opacity-50"} transition-all`}>
-                      <div className="font-bold text-xs uppercase mb-3 tracking-widest text-[var(--foreground)] flex justify-between items-center">
-                         <span>Físico · Infra & Materiais</span>
-                         {(modulos.fisico || experiencia === "presencial" || experiencia === "hibrida") && <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />}
+                   <div className={`p-5 rounded-2xl border ${(modulos.fisico || experiencia === "presencial" || experiencia === "hibrida") ? "border-[var(--primary)]/50 bg-[var(--primary)]/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]" : "border-[var(--border)] bg-[var(--surface)] opacity-70"} transition-all duration-300`}>
+                      <div className="font-black text-xs uppercase mb-4 tracking-widest text-[var(--foreground)] flex justify-between items-center">
+                         <span className="flex items-center gap-2"><div className={`p-1.5 rounded-md ${(modulos.fisico || experiencia === "presencial" || experiencia === "hibrida") ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "bg-[var(--border)] text-[var(--muted-foreground)]"}`}><Package size={14} /></div> Físico · Infra & Mat.</span>
+                         {(modulos.fisico || experiencia === "presencial" || experiencia === "hibrida") ? <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" /> : <div className="w-2 h-2 rounded-full bg-[var(--border)]" />}
                       </div>
-                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-[var(--muted-foreground)]">
-                         <li>Impressos (tiragem por tier)</li>
-                         <li>Kits/Brindes, Uniformes/Credenciais</li>
-                         <li>Locação, Segurança, Coffee/Alimentação</li>
+                      <ul className="flex flex-col gap-2 text-xs font-medium text-[var(--muted-foreground)]">
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Impressos (tiragem por tier)</li>
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Kits/Brindes, Uniformes/Ids</li>
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Locação, Segurança, Coffee</li>
                       </ul>
                    </div>
 
                    {/* DIGITAL */}
-                   <div className={`p-4 border ${(modulos.digital || experiencia === "digital" || experiencia === "hibrida") ? "border-[var(--primary)] bg-[var(--surface)] shadow-sm" : "border-[var(--border)] bg-[var(--background)] opacity-50"} transition-all`}>
-                      <div className="font-bold text-xs uppercase mb-3 tracking-widest text-[var(--foreground)] flex justify-between items-center">
-                         <span>Digital · Frentes & Entregáveis</span>
-                         {(modulos.digital || experiencia === "digital" || experiencia === "hibrida") && <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />}
+                   <div className={`p-5 rounded-2xl border ${(modulos.digital || experiencia === "digital" || experiencia === "hibrida") ? "border-[var(--primary)]/50 bg-[var(--primary)]/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]" : "border-[var(--border)] bg-[var(--surface)] opacity-70"} transition-all duration-300`}>
+                      <div className="font-black text-xs uppercase mb-4 tracking-widest text-[var(--foreground)] flex justify-between items-center">
+                         <span className="flex items-center gap-2"><div className={`p-1.5 rounded-md ${(modulos.digital || experiencia === "digital" || experiencia === "hibrida") ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "bg-[var(--border)] text-[var(--muted-foreground)]"}`}><Globe size={14} /></div> Digital · Tráfego & Ads</span>
+                         {(modulos.digital || experiencia === "digital" || experiencia === "hibrida") ? <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" /> : <div className="w-2 h-2 rounded-full bg-[var(--border)]" />}
                       </div>
-                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-[var(--muted-foreground)]">
-                         <li>Landing Page (campos, destino, LGPD)</li>
-                         <li>E-mail/PR/WhatsApp (SLA, scripts)</li>
-                         <li>Tráfego/Ads (objetivo, criativos, verba)</li>
+                      <ul className="flex flex-col gap-2 text-xs font-medium text-[var(--muted-foreground)]">
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Landing Page e Captura</li>
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> E-mail, Régua de Disparos</li>
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Gestão de Tráfego e Dados</li>
                       </ul>
                    </div>
 
                    {/* GOVERNANÇA */}
-                   <div className={`p-4 border ${modulos.governanca || true ? "border-[var(--primary)] bg-[var(--surface)] shadow-sm" : "border-[var(--border)] bg-[var(--background)] opacity-50"} transition-all`}>
-                      <div className="font-bold text-xs uppercase mb-3 tracking-widest text-[var(--foreground)] flex justify-between items-center">
-                         <span>Governança · Aprovação & Risco</span>
-                         <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                   <div className={`p-5 rounded-2xl border ${modulos.governanca || true ? "border-[var(--primary)]/50 bg-[var(--primary)]/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]" : "border-[var(--border)] bg-[var(--surface)] opacity-70"} transition-all duration-300`}>
+                      <div className="font-black text-xs uppercase mb-4 tracking-widest text-[var(--foreground)] flex justify-between items-center">
+                         <span className="flex items-center gap-2"><div className={`p-1.5 rounded-md ${modulos.governanca || true ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "bg-[var(--border)] text-[var(--muted-foreground)]"}`}><Shield size={14} /></div> Gov · Aprovação & Risco</span>
+                         <div className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" />
                       </div>
-                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-[var(--muted-foreground)]">
-                         <li>Aprovadores, prazos de corte</li>
-                         <li>LGPD, coleta de dados, termo de imagem</li>
-                         <li>Respostas difíceis (FAQ) e escalonamento</li>
+                      <ul className="flex flex-col gap-2 text-xs font-medium text-[var(--muted-foreground)]">
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Aprovadores, prazos de corte</li>
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> LGPD e Termo de Imagem</li>
+                         <li className="flex gap-2 items-center"><div className="w-1 h-1 rounded-full bg-[var(--border)]"></div> Escalonamento e Gestão de Risco</li>
                       </ul>
                    </div>
 
                  </div>
-                 <div className="mt-5 text-[10px] text-[var(--muted-foreground)] font-bold uppercase tracking-widest border-t border-[var(--border)] pt-3">
-                   Definição “pronto” (padrão): todo módulo ativo precisa ter custo (R$), responsável, prazo e prova de pronto.
+                 <div className="mt-8 text-[11px] text-[var(--muted-foreground)] font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+                   <CheckCircle2 size={14} className="text-[var(--primary)]" /> Definição de Pronto Padrão: Todo módulo requer responsável, verba e prova.
                  </div>
-               </WireframeBlock>
+               </CampaignBlock>
              </div>
            )}
 
-           {/* ── Blueprint Text (Step 4+) - BLOCO 5 ── */}
-           {step >= 4 && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 w-full mt-4">
-                <WireframeBlock label="BLOCO 5: FLUXOGRAMA DE DECISÃO" title="ÁRVORE-MÃE (SE → ENTÃO) — V2 EXTREMA" subtitle="Decisão prática → abre módulos físicos/digitais/evento + define resultados verificáveis.">
-                   <div className="p-8 md:p-10 border-2 border-[var(--border)] bg-[var(--background)] relative">
-                       <div className="absolute top-0 right-0 bg-[var(--foreground)] text-[var(--background)] px-4 py-1.5 text-[10px] font-black uppercase tracking-widest border-b-2 border-l-2 border-[var(--primary)]">
-                           Blueprint Compilado
-                       </div>
-                       <div className="flex items-center gap-4 mb-6 pb-6 border-b border-[var(--border)]">
-                          <div className="w-10 h-10 border-2 border-[var(--border)] bg-[var(--surface)] flex items-center justify-center">
-                            <FileText size={18} className="text-[var(--primary)]" />
+           {/* ── Blueprint Text (Step 3+) - BLOCO 5 ── */}
+           {step >= 3 && (
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 w-full mt-8">
+               <CampaignBlock label="5. Blueprint Compilado" title="Árvore de Decisão Lógica" subtitle="Visão global de como a campanha escala, cruzando canais com experiência.">
+                 <div className="p-1 rounded-2xl bg-gradient-to-br from-[var(--border)] via-[var(--background)] to-[var(--surface)]">
+                   <div className="p-8 rounded-xl bg-[var(--surface)]/80 backdrop-blur-sm border border-[var(--border)]/50 flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden shadow-inner">
+                      {/* Background decorativo criptico */}
+                      <div className="absolute inset-0 opacity-5 pointer-events-none">
+                         <div className="w-[200%] h-[200%] max-w-none text-[8px] leading-none text-[var(--foreground)] font-mono break-all font-bold">
+                             {JSON.stringify({ direcao, experiencia, eventoPublico, eventoDuracao, orcamento, modulos }).repeat(20)}
+                         </div>
+                      </div>
+                      
+                      <div className="bg-[var(--background)]/80 backdrop-blur-md border border-[var(--primary)]/30 rounded-2xl px-10 py-8 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.1)] z-10 flex flex-col items-center w-full max-w-3xl">
+                          <div className="flex items-center gap-3 mb-6">
+                              <div className="w-10 h-10 rounded-full bg-[var(--primary)]/20 flex items-center justify-center">
+                                 <FileText size={20} className="text-[var(--primary)]" />
+                              </div>
+                              <div className="text-xs font-black text-[var(--primary)] uppercase tracking-widest">Payload Termo de Abertura</div>
                           </div>
-                          <div className="flex flex-col">
-                             <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Síntese de Operação (Decision Tree)</span>
-                             <span className="text-lg font-bold font-heading text-[var(--foreground)]">Termo de Abertura / Blueprint</span>
+                          
+                          <div className="w-full text-center mb-6">
+                              <span className="text-xl font-heading font-black text-[var(--foreground)]">
+                                  {Object.keys(modulos).filter(k=>modulos[k as keyof typeof modulos]).length} Módulos · {aiTrilhaInterna.length + aiTrilhaExterna.length} Nós de Ação
+                              </span>
                           </div>
-                       </div>
-                       <div className="prose prose-sm max-w-none font-medium whitespace-pre-wrap leading-relaxed text-[var(--foreground)] text-justify font-serif selection:bg-[var(--primary)] selection:text-[var(--primary-foreground)]">
-                           {blueprintTheory}
-                       </div>
+                          
+                          <div className="w-full h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent mb-6"></div>
+                          
+                          <div className="w-full text-sm font-medium text-[var(--muted-foreground)] whitespace-pre-wrap leading-relaxed text-justify font-serif selection:bg-[var(--primary)] selection:text-[var(--primary-foreground)] bg-gradient-to-b from-[var(--foreground)] to-[var(--muted-foreground)] bg-clip-text text-transparent opacity-80 h-[100px] overflow-hidden relative">
+                              {blueprintTheory}
+                              <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--background)] to-transparent"></div>
+                          </div>
+                          
+                          <div className="mt-4 px-6 py-2.5 rounded-full bg-[var(--surface)] border border-[var(--border)] text-[var(--muted-foreground)] text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-[var(--muted-foreground)]/50"></div>
+                              Somente View (Estrutural)
+                          </div>
+                      </div>
                    </div>
-                </WireframeBlock>
-              </div>
+                 </div>
+               </CampaignBlock>
+             </div>
            )}
 
-           {/* ── Notinha de Orçamento Editável (Step 3+) - BLOCO 6 ── */}
+           {/* ── Dashboard de Dados (Step 3+) - BLOCO 6 ── */}
            {step >= 3 && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 w-full mt-4">
-                <WireframeBlock label="BLOCO 6: DASHBOARD DE DADOS (CARDS E TABELAS)" title="PAINEL DE CONTROLE (DADOS + ALERTAS) — V2" subtitle="Status por módulo + gastos + metas + prova de pronto (auditável).">
-                   <div className="border border-[var(--border)] bg-[var(--background)]">
-                       {/* KPIs Topo (mock-style) */}
-                       <div className="flex border-b border-[var(--border)] divide-x divide-[var(--border)] bg-[var(--surface)]">
-                          <div className="flex-1 p-4 flex flex-col justify-between">
-                              <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Budget Utilizado</span>
-                              <span className="text-xl font-black font-mono mt-2 text-[var(--foreground)]">100%</span>
-                          </div>
-                          <div className="flex-1 p-4 flex flex-col justify-between">
-                              <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">Módulos Ativos</span>
-                              <span className="text-xl font-black font-mono mt-2 text-[var(--foreground)]">{Object.values(modulos).filter(v=>v).length + 1}</span>
-                          </div>
-                          <div className="flex-[2] p-4 flex items-center justify-center bg-[var(--background)]/50">
-                              <span className="text-xs text-[var(--muted-foreground)] font-mono text-center">Alertas: 0 pendentes.<br/>KPIs monitorados pelo CoreAct.</span>
-                          </div>
-                       </div>
-                       {/* Header da Tabela */}
-                       <div className="hidden sm:grid grid-cols-12 text-[10px] font-bold uppercase tracking-widest border-b border-[var(--border)] pb-3 pt-4 px-6 text-[var(--muted-foreground)] bg-[var(--surface)]">
-                           <div className="col-span-4">Categoria</div>
-                           <div className="col-span-4">Motivação</div>
-                           <div className="col-span-4 text-right">Alocação Estimada (R$)</div>
-                       </div>
-                       {/* Linhas */}
-                       <div className="flex flex-col divide-y divide-[var(--border)]">
-                         {aiOrcamentoLinhas.map((linha, idx) => (
-                             <div key={idx} className="grid grid-cols-1 sm:grid-cols-12 items-center gap-4 py-4 px-6 hover:bg-[var(--surface)] transition-colors group">
-                                 <div className="sm:col-span-4 flex items-center gap-3">
-                                   <div className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] opacity-50 hidden sm:block"></div>
-                                   <div className="text-xs font-bold text-[var(--foreground)] tracking-wide">{linha.categoria}</div>
-                                 </div>
-                                 <div className="sm:col-span-4 text-[11px] font-medium text-[var(--muted-foreground)] leading-relaxed bg-[var(--background)]/50 sm:bg-transparent p-2 sm:p-0 rounded border border-[var(--border)] sm:border-transparent">
-                                   {linha.motivo}
-                                 </div>
-                                 <div className="sm:col-span-4 flex justify-end">
-                                     <div className="relative w-full sm:w-40">
-                                         <span className="absolute left-3 top-2 text-[10px] sm:text-xs font-bold text-[var(--muted-foreground)] uppercase">R$</span>
-                                         <input 
-                                            type="number"
-                                            className="w-full bg-[var(--background)] border border-[var(--border)] rounded px-3 py-1.5 text-sm font-bold font-mono text-[var(--foreground)] outline-none focus:border-[var(--primary)] transition-all text-right group-hover:border-[var(--foreground)]/30 hover:border-[var(--foreground)] shadow-sm"
-                                            value={linha.valor_estimado === 0 ? '' : linha.valor_estimado}
-                                            onChange={(e) => {
-                                              const val = parseFloat(e.target.value) || 0;
-                                              const nextLinhas = [...aiOrcamentoLinhas];
-                                              nextLinhas[idx].valor_estimado = val;
-                                              setAiOrcamentoLinhas(nextLinhas);
-                                            }}
-                                         />
-                                     </div>
-                                 </div>
-                             </div>
-                         ))}
-                       </div>
-                       {/* Footer Total */}
-                       <div className="border-t-2 border-[var(--border)] flex items-center justify-between px-6 py-4 bg-[var(--surface)]">
-                          <span className="text-xs font-black uppercase tracking-widest text-[var(--foreground)]">Custo Final Projetado</span>
-                          <span className="text-2xl font-black font-mono text-[var(--primary)] tracking-tight">R$ {aiOrcamentoLinhas.reduce((acc, curr) => acc + curr.valor_estimado, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                       </div>
-                   </div>
-                </WireframeBlock>
-              </div>
+             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 w-full mt-8">
+               <CampaignBlock label="6. Dashboard Base (Simulado)" title="Controle Operacional" subtitle="Impacto previsto baseado nas diretrizes de módulo e orçamentos inseridos.">
+                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                     {/* STAT CARD 1 */}
+                     <div className="bg-[var(--background)] border border-[var(--border)] rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-[var(--primary)]/30 transition-colors shadow-sm">
+                         <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--primary)]/5 rounded-bl-full translate-x-12 -translate-y-12 group-hover:bg-[var(--primary)]/10 transition-colors"></div>
+                         <div className="text-[10px] font-black uppercase tracking-widest text-[var(--muted-foreground)] mb-4 flex items-center gap-2"><Receipt size={14} className="text-[var(--primary)] opacity-50" /> Budget Global</div>
+                         <div className="flex items-baseline gap-1">
+                             <span className="text-xs font-bold text-[var(--muted-foreground)]">R$</span>
+                             <span className="text-2xl font-black font-heading text-[var(--foreground)] tracking-tight">{orcamento.toLocaleString()}</span>
+                         </div>
+                     </div>
+
+                     {/* STAT CARD 2 */}
+                     <div className="bg-[var(--background)] border border-[var(--border)] rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-[var(--primary)]/30 transition-colors shadow-sm">
+                         <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--primary)]/5 rounded-bl-full translate-x-12 -translate-y-12 group-hover:bg-[var(--primary)]/10 transition-colors"></div>
+                         <div className="text-[10px] font-black uppercase tracking-widest text-[var(--muted-foreground)] mb-4 flex items-center gap-2"><Blocks size={14} className="text-[var(--primary)] opacity-50" /> Custo / Módulo</div>
+                         <div className="flex items-baseline gap-1">
+                             <span className="text-xs font-bold text-[var(--muted-foreground)]">R$</span>
+                             <span className="text-2xl font-black font-heading text-[var(--foreground)] tracking-tight">{Object.keys(modulos).filter(k=>modulos[k as keyof typeof modulos]).length > 0 ? Math.floor(orcamento / Object.keys(modulos).filter(k=>modulos[k as keyof typeof modulos]).length).toLocaleString() : "..."}</span>
+                         </div>
+                     </div>
+
+                     {/* STAT CARD 3 */}
+                     <div className="bg-[var(--background)] border border-[var(--border)] rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-[var(--primary)]/30 transition-colors shadow-sm">
+                         <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--primary)]/5 rounded-bl-full translate-x-12 -translate-y-12 group-hover:bg-[var(--primary)]/10 transition-colors"></div>
+                         <div className="text-[10px] font-black uppercase tracking-widest text-[var(--muted-foreground)] mb-4 flex items-center gap-2"><Users size={14} className="text-[var(--primary)] opacity-50" /> Headcount Estimado</div>
+                         <div className="flex items-baseline gap-2">
+                             <span className="text-2xl font-black font-heading text-[var(--foreground)] tracking-tight">{aiTrilhaInterna.length + aiTrilhaExterna.length}</span>
+                             <span className="text-[9px] font-bold text-[var(--muted-foreground)] uppercase tracking-wide pt-1">Tarefas</span>
+                         </div>
+                     </div>
+
+                     {/* STAT CARD 4 */}
+                     <div className="bg-[var(--background)] border border-[var(--border)] rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-[var(--primary)]/30 transition-colors shadow-sm">
+                         <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--primary)]/5 rounded-bl-full translate-x-12 -translate-y-12 group-hover:bg-[var(--primary)]/10 transition-colors"></div>
+                         <div className="text-[10px] font-black uppercase tracking-widest text-[var(--muted-foreground)] mb-4 flex items-center gap-2"><Target size={14} className="text-[var(--primary)] opacity-50" /> Deploy SLA Estimado</div>
+                         <div className="flex items-baseline gap-2">
+                             <span className="text-2xl font-black font-heading text-[var(--foreground)] tracking-tight">15</span>
+                             <span className="text-[9px] font-bold text-[var(--muted-foreground)] uppercase tracking-wide pt-1">Dias úteis</span>
+                         </div>
+                     </div>
+                 </div>
+                 
+                 {/* BOTÃO FINAL / CALL TO ACTION EXECUTIVA */}
+                 <div className="mt-12 pt-8 border-t border-[var(--border)]/50 flex flex-col md:flex-row items-center justify-between gap-6">
+                     <div className="text-sm font-medium text-[var(--muted-foreground)] max-w-sm ml-2">
+                         O plano de ação será compilado e as atividades CoreAct provisionadas para a sua equipe.
+                     </div>
+                     <button
+                        onClick={generateActionPlan}
+                        disabled={isGeneratingPlan}
+                        className={`group relative overflow-hidden flex items-center gap-3 px-8 py-4 rounded-xl font-black text-xs tracking-[0.2em] uppercase transition-all ${
+                          isGeneratingPlan 
+                            ? "bg-[var(--surface)] text-[var(--muted-foreground)] border border-[var(--border)] cursor-wait" 
+                            : "bg-[var(--foreground)] text-[var(--background)] hover:shadow-[0_10px_40px_rgba(var(--foreground),0.15)] hover:-translate-y-1"
+                        }`}
+                     >
+                       {/* Efeito Glow Hover */}
+                       {!isGeneratingPlan && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[150%] skew-x-[-30deg] group-hover:animate-[shimmer_1.5s_infinite]"></div>}
+                       
+                       {isGeneratingPlan ? (
+                         <>
+                           <div className="w-5 h-5 rounded-full border-2 border-[var(--muted-foreground)] border-t-transparent animate-spin"></div>
+                           <span>Compilando Blueprint...</span>
+                         </>
+                       ) : (
+                         <>
+                           <span className="relative z-10 pt-0.5">Executar Plano CoreAct</span>
+                           <div className="w-8 h-8 rounded-full bg-[var(--background)]/10 flex items-center justify-center relative z-10 group-hover:bg-[var(--background)]/20 group-hover:translate-x-1 transition-all">
+                               <ArrowRight size={14} className="text-[var(--background)]" />
+                           </div>
+                         </>
+                       )}
+                     </button>
+                 </div>
+               </CampaignBlock>
+             </div>
            )}
         </div>
       </main>

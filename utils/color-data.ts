@@ -47,7 +47,10 @@ export function getContrastRatio(hex1: string, hex2: string): number {
 }
 
 const VERDE_GROUP_IDS: string[] = ["verde-core", "verde-meio"];
-const COLOR_GROUP_IDS: string[] = ["linalool-sky", "myrcene-soul"];
+const COLOR_GROUP_IDS: string[] = [
+  "red-core", "deep-orange-core", "orange-core", "yellow-orange-core", 
+  "deep-purple-core", "purple-core", "magenta-purple-core", "deep-pink-core", "rose-red-core"
+];
 const NEUTRAL_GROUP_IDS: string[] = ["neutrals-light", "neutrals-dark"];
 
 // ── Paleta oficial ColdFlora ──────────────────────────────────
@@ -83,39 +86,106 @@ export const colorPalette: ColorGroup[] = [
     ],
   },
 
-  // ── Linalool Sky (Cor de apoio expressivo - Índica) ─────────────
+  // ── Cores Fundamentais Curadas (Campanha) ───────────────────
   {
-    id: "linalool-sky",
-    name: "Linalool Sky",
-    description: "Espectro de roxos e azuis",
+    id: "red-core",
+    name: "Red Core",
+    description: "Espectro curado Red Core",
     roles: ["campaign"],
     colors: [
-      { hex: "#fcf5ff", name: "Linalool 50" },
-      { hex: "#e2efff", name: "Linalool 100" },
-      { hex: "#fbe0ff", name: "Linalool 200" },
-      { hex: "#e4ddfa", name: "Linalool 300" },
-      { hex: "#9687b2", name: "Linalool 500" },
-      { hex: "#984492", name: "Linalool 700" },
-      { hex: "#642e50", name: "Linalool 800" },
-      { hex: "#483d79", name: "Linalool 900" },
+      { hex: "#E1B1B0", name: "Red 200" },
+      { hex: "#D28987", name: "Red 300" },
+      { hex: "#C3615F", name: "Red 400" }
     ],
   },
-
-  // ── Myrcene Soul (Cor de apoio expressivo - Sativa) ─────────────
   {
-    id: "myrcene-soul",
-    name: "Myrcene Soul",
-    description: "Espectro de rosas, laranjas e amarelos",
+    id: "deep-orange-core",
+    name: "Deep Orange Core",
+    description: "Espectro curado Deep Orange Core",
     roles: ["campaign"],
     colors: [
-      { hex: "#fff5f5", name: "Myrcene 50" },
-      { hex: "#fffee3", name: "Myrcene 100" },
-      { hex: "#ffe4c1", name: "Myrcene 200" },
-      { hex: "#f8e5a8", name: "Myrcene 300" },
-      { hex: "#fbdbdb", name: "Myrcene 400" },
-      { hex: "#f394a7", name: "Myrcene 500" },
-      { hex: "#f37a63", name: "Myrcene 700" },
-      { hex: "#af4f72", name: "Myrcene 900" },
+      { hex: "#FDD2BD", name: "Orange 100" },
+      { hex: "#FA9B6B", name: "Orange 200" }
+    ],
+  },
+  {
+    id: "orange-core",
+    name: "Orange Core",
+    description: "Espectro curado Orange Core",
+    roles: ["campaign"],
+    colors: [
+      { hex: "#F6B56F", name: "Orange 300" },
+      { hex: "#F39C3F", name: "Orange 400" },
+      { hex: "#F67409", name: "Orange 500" },
+      { hex: "#CF4200", name: "Orange 600" }
+    ],
+  },
+  {
+    id: "yellow-orange-core",
+    name: "Yellow Orange Core",
+    description: "Espectro curado Yellow Orange Core",
+    roles: ["campaign"],
+    colors: [
+      { hex: "#FDF7E7", name: "Yellow 50" },
+      { hex: "#FBECC8", name: "Yellow 100" },
+      { hex: "#F7D689", name: "Yellow 200" }
+    ],
+  },
+  {
+    id: "deep-purple-core",
+    name: "Deep Purple Core",
+    description: "Espectro curado Deep Purple Core",
+    roles: ["campaign"],
+    colors: [
+      { hex: "#CECDFD", name: "Purple 100" },
+      { hex: "#2C006D", name: "Purple 800" },
+      { hex: "#100029", name: "Purple 950" }
+    ],
+  },
+  {
+    id: "purple-core",
+    name: "Purple Core",
+    description: "Espectro curado Purple Core",
+    roles: ["campaign"],
+    colors: [
+      { hex: "#B69BFA", name: "Purple 200" },
+      { hex: "#8500C7", name: "Purple 600" },
+      { hex: "#1B0029", name: "Purple 950" }
+    ],
+  },
+  {
+    id: "magenta-purple-core",
+    name: "Magenta Purple Core",
+    description: "Espectro curado Magenta Purple Core",
+    roles: ["campaign"],
+    colors: [
+      { hex: "#8C009C", name: "Magenta 600" },
+      { hex: "#51005A", name: "Magenta 800" }
+    ],
+  },
+  {
+    id: "deep-pink-core",
+    name: "Deep Pink Core",
+    description: "Espectro curado Deep Pink Core",
+    roles: ["campaign"],
+    colors: [
+      { hex: "#FCD2E8", name: "Pink 100" },
+      { hex: "#F9A8D2", name: "Pink 200" },
+      { hex: "#F67EBC", name: "Pink 300" },
+      { hex: "#F5249E", name: "Pink 500" },
+      { hex: "#790057", name: "Pink 800" },
+      { hex: "#430030", name: "Pink 900" }
+    ],
+  },
+  {
+    id: "rose-red-core",
+    name: "Rose Red Core",
+    description: "Espectro curado Rose Red Core",
+    roles: ["campaign"],
+    colors: [
+      { hex: "#F86276", name: "Rose 300" },
+      { hex: "#940031", name: "Rose 700" },
+      { hex: "#690023", name: "Rose 800" }
     ],
   },
 

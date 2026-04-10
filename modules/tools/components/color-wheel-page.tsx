@@ -150,11 +150,11 @@ export function ColorWheelPage() {
         if (!mode.angles) return;
         const result: ColorData[] = [];
         mode.angles.forEach((angleOffset) => {
-          const targetHue = normalizeAngle(baseColor.hue + angleOffset);
+          const targetAngle = normalizeAngle(baseColor.wheelAngle! + angleOffset);
           let closest = adaptaColors[0];
-          let minDiff = adaptaColors.length > 0 ? hueDiff(targetHue, adaptaColors[0].hue) : 0;
+          let minDiff = adaptaColors.length > 0 ? hueDiff(targetAngle, adaptaColors[0].wheelAngle!) : 0;
           adaptaColors.forEach((c) => {
-            const diff = hueDiff(targetHue, c.hue);
+            const diff = hueDiff(targetAngle, c.wheelAngle!);
             if (diff < minDiff) { minDiff = diff; closest = c; }
           });
           result.push(closest);
@@ -202,6 +202,22 @@ export function ColorWheelPage() {
        rawNodes: rawColors // Apenas para a roda geométrica acender as bolinhas originais
     };
   }, [baseColorHex, rawHarmonyGeometricColors]);
+
+  const inferredMood = useMemo(() => {
+    if (!campaignPalette || adaptaColors.length === 0) return null;
+    const bgNode = adaptaColors.find(c => c.hex === campaignPalette.background.hex);
+    if (!bgNode) return MOODS[0];
+    
+    let closest = MOODS[0];
+    let minDiff = 9999;
+    MOODS.forEach(m => {
+       const hDiff = Math.min(Math.abs(bgNode.hue - m.targetHue), 360 - Math.abs(bgNode.hue - m.targetHue)) / 180;
+       const lDiff = Math.abs(bgNode.lum - m.targetLum);
+       const diff = (hDiff * 0.7) + (lDiff * 0.3);
+       if (diff < minDiff) { minDiff = diff; closest = m; }
+    });
+    return closest;
+  }, [campaignPalette, adaptaColors]);
 
   const validatedColors = useMemo(() => {
     // Retirado o filtro rígido de tons no validatedColors para permitir UI Mode ver tudo
@@ -347,22 +363,6 @@ export function ColorWheelPage() {
             {/* Sidebar de controles */}
             <aside className={styles.controlsSidebar}>
 
-              <div className={styles.sidebarSection}>
-                <label className={styles.sidebarLabel}>Aroma / Mood</label>
-                <div className={styles.moodGrid}>
-                  {MOODS.map(mood => (
-                    <button 
-                      key={mood.id} 
-                      className={styles.moodBtn}
-                      onClick={() => applyMood(mood.id)}
-                    >
-                      <span className={styles.moodEmoji} style={{ display: 'flex', alignItems: 'center' }}><mood.icon size={16} /></span>
-                      <span>{mood.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Modos de harmonia (Com nomes táticos) */}
               <div className={styles.sidebarSection}>
                 <label className={styles.sidebarLabel}>Vibe da Campanha</label>
@@ -388,9 +388,17 @@ export function ColorWheelPage() {
 
               {/* Roles Atribuidas pela Inteligência */}
               <div className={styles.sidebarSection}>
-                <label className={styles.sidebarLabel}>
-                  Cápsula Gerada (Automático)
-                </label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <label className={styles.sidebarLabel} style={{ marginBottom: 0 }}>
+                    Cápsula Gerada
+                  </label>
+                  {inferredMood && campaignPalette && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', background: 'var(--bg-secondary)', padding: '2px 6px', borderRadius: '4px', color: 'var(--text-secondary)' }}>
+                       <inferredMood.icon size={10} />
+                       <span style={{ fontWeight: 600 }}>{inferredMood.name} / {inferredMood.desc}</span>
+                    </div>
+                  )}
+                </div>
                 {!campaignPalette ? (
                   <p className={styles.emptyMsg}>Clique na roda para focar uma cor âncora.</p>
                 ) : (

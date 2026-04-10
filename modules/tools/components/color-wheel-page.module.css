@@ -499,3 +499,23 @@
   margin-top: 0.5rem;
 }
 
+.mockupContainer {
+  position: relative;
+  border-radius: var(--radius-xl);
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tipCenter {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  text-align: center;
+}
