@@ -16,10 +16,9 @@ import styles from "./documentos-corporativos.module.css";
 
 const PAPELARIA_TEMPLATES = [
   { id: 1, name: "Papel Timbrado Oficial", format: "Formato A4", desc: "Papel timbrado padrão com cabeçalho e rodapé da marca.", shapeClass: styles.shapeA4, orientation: "Retrato", generatorKey: "generatePapelTimbrado" as const },
-  { id: 2, name: "Envelope Corporativo", format: "DL (220x110mm)", desc: "Envelope padrão para correspondências institucionais.", shapeClass: styles.shapeEnvelope, orientation: "Paisagem", generatorKey: "generateEnvelope" as const },
-  { id: 3, name: "Pasta de Apresentação", format: "A4 Dobrado", desc: "Pasta com bolsa interna para entrega de documentos e propostas.", shapeClass: styles.shapeFolder, orientation: "Retrato", generatorKey: "generatePastaApresentacao" as const },
-  { id: 4, name: "Bloco de Notas", format: "Formato A5", desc: "Bloco de anotações com pauta e marca d'água.", shapeClass: styles.shapeNotepad, orientation: "Retrato", generatorKey: "generateBlocoNotas" as const },
-  { id: 5, name: "Capa de Relatório", format: "Formato A4", desc: "Capa padrão para relatórios e documentos extensos.", shapeClass: styles.shapeA4Cover, orientation: "Retrato", generatorKey: "generateCapaRelatorio" as const },
+  { id: 2, name: "Relatório Corporativo", format: "Formato A4", desc: "Capa e estrutura padrão para relatórios e documentos extensos.", shapeClass: styles.shapeDocument, orientation: "Retrato", generatorKey: "generateCapaRelatorio" as const },
+  { id: 3, name: "Contrato de Prestação de Serviço", format: "Formato A4", desc: "Modelo jurídico completo para prestação de serviços a terceiros.", shapeClass: styles.shapeDocument, orientation: "Retrato", generatorKey: "generateContratoPrestacao" as const },
+  { id: 4, name: "Certificado de Conclusão", format: "Paisagem", desc: "Design clássico com moldura para cursos e treinamentos.", shapeClass: styles.shapeCertLandscape, orientation: "Paisagem", generatorKey: "generateCertificadoConclusao" as const },
 ];
 
 const CARTOES_TEMPLATES = [
@@ -27,21 +26,6 @@ const CARTOES_TEMPLATES = [
   { id: 2, name: "Cartão Moderno Vertical", dims: "50x90mm", desc: "Design minimalista e elegante em orientação vertical.", shapeClass: styles.shapeCardVertical, generatorKey: "generateCartaoVertical" as const },
   { id: 3, name: "Cartão Premium Quadrado", dims: "65x65mm", desc: "Formato diferenciado para destaque e memorabilidade.", shapeClass: styles.shapeCardSquare, generatorKey: "generateCartaoQuadrado" as const },
   { id: 4, name: "Cartão Digital (vCard)", dims: "Digital", desc: "Cartão otimizado para smartphones, compartilhável por link.", shapeClass: styles.shapeCardDigital, generatorKey: "generateCartaoDigital" as const },
-];
-
-const CONTRATOS_TEMPLATES = [
-  { id: 1, name: "Contrato de Prestação de Serviço", pages: "6 páginas", desc: "Modelo jurídico completo para prestação de serviços a terceiros.", generatorKey: "generateContratoPrestacao" as const },
-  { id: 2, name: "Proposta Comercial", pages: "4 páginas", desc: "Estrutura persuasiva para apresentação de escopo e valores.", generatorKey: "generatePropostaComercial" as const },
-  { id: 3, name: "Termo de Confidencialidade (NDA)", pages: "3 páginas", desc: "Documento padrão para proteção de informações sigilosas.", generatorKey: "generateNDA" as const },
-  { id: 4, name: "Ordem de Serviço", pages: "2 páginas", desc: "Formulário operacional para registro e autorização de demandas.", generatorKey: "generateOrdemServico" as const },
-  { id: 5, name: "Briefing de Projeto", pages: "3 páginas", desc: "Questionário estruturado para coleta de requisitos e kickoff.", generatorKey: "generateBriefing" as const },
-];
-
-const CERTIFICADOS_TEMPLATES = [
-  { id: 1, name: "Certificado de Conclusão", orient: "Paisagem", desc: "Design clássico com moldura para cursos e treinamentos.", shapeClass: styles.shapeCertLandscape, generatorKey: "generateCertificadoConclusao" as const },
-  { id: 2, name: "Certificado de Participação", orient: "Paisagem", desc: "Modelo dinâmico para workshops e eventos corporativos.", shapeClass: styles.shapeCertLandscape, generatorKey: "generateCertificadoParticipacao" as const },
-  { id: 3, name: "Diploma de Excelência", orient: "Paisagem", desc: "Layout premium para reconhecimento e premiações.", shapeClass: styles.shapeCertLandscape, generatorKey: "generateDiplomaExcelencia" as const },
-  { id: 4, name: "Declaração Institucional", orient: "Retrato", desc: "Documento oficial simples para comprovações diversas.", shapeClass: styles.shapeA4, generatorKey: "generateDeclaracaoInstitucional" as const },
 ];
 
 const SOCIAL_TEMPLATES = [
@@ -143,11 +127,11 @@ export default function DocumentosCorporativos() {
       </div>
 
       <div className={styles.content}>
-        <Tabs defaultValue="papelaria">
+        <Tabs defaultValue="geradores">
           <TabsList className={styles.tabsList}>
             <TabsTrigger value="geradores" className={styles.tabTrigger}>
               <Award size={16} className={styles.tabIcon} />
-              Geradores & Especiais
+              Gerar doc
             </TabsTrigger>
             <TabsTrigger value="papelaria" className={styles.tabTrigger}>
               <FileEdit size={16} className={styles.tabIcon} />
@@ -156,14 +140,6 @@ export default function DocumentosCorporativos() {
             <TabsTrigger value="cartoes" className={styles.tabTrigger}>
               <IdCard size={16} className={styles.tabIcon} />
               Cartões de Visita
-            </TabsTrigger>
-            <TabsTrigger value="contratos" className={styles.tabTrigger}>
-              <FileSignature size={16} className={styles.tabIcon} />
-              Contratos & Propostas
-            </TabsTrigger>
-            <TabsTrigger value="certificados" className={styles.tabTrigger}>
-              <Award size={16} className={styles.tabIcon} />
-              Certificados
             </TabsTrigger>
             <TabsTrigger value="redes-sociais" className={styles.tabTrigger}>
               <Layers size={16} className={styles.tabIcon} />
@@ -177,15 +153,29 @@ export default function DocumentosCorporativos() {
               <MonitorPlay size={16} className={styles.tabIcon} />
               Anúncios
             </TabsTrigger>
-            <TabsTrigger value="apresentacoes" className={styles.tabTrigger} onClick={() => navigate("/tools/gerar-doc/slide-padrao")}>
-              <Presentation size={16} className={styles.tabIcon} />
-              Apresentações
-            </TabsTrigger>
           </TabsList>
 
-          {/* ── GERADORES & ESPECIAIS ── */}
+          {/* ── GERAR DOC ── */}
           <TabsContent value="geradores" className={styles.tabContent}>
             <div className={styles.grid}>
+              <div className={styles.card}>
+                <div className={styles.previewContainer}>
+                  <div className={`${styles.previewShape} ${styles.shapeDigital} ${styles.shapeDigitalBorder}`}>
+                    <div className={styles.previewInnerText}>🖥️ Apresentação</div>
+                  </div>
+                </div>
+                <div className={styles.cardBody}>
+                  <div className={styles.cardHeader}>
+                    <Badge variant="secondary" className={styles.formatBadge}>Tela (16:9)</Badge>
+                  </div>
+                  <h3 className={styles.cardTitle}>Construtor de Slides</h3>
+                  <p className={styles.cardDescription}>Crie apresentações profissionais e interativas gerando blocos de slides.</p>
+                  <Link to="/tools/gerar-doc/slide-padrao" className={styles.btnFullWidth}>
+                    <Button variant="primary" className={`${styles.actionButton} ${styles.btnFullWidthMt}`}>Começar a Construir</Button>
+                  </Link>
+                </div>
+              </div>
+
               <div className={styles.card}>
                 <div className={styles.previewContainer}>
                   <div className={`${styles.previewShape} ${styles.shapeDigital} ${styles.shapeDigitalBorder}`}>
@@ -257,6 +247,26 @@ export default function DocumentosCorporativos() {
                           <div className={`${styles.skelLine} ${styles.short}`} />
                         </>
                       )}
+                      {tpl.shapeClass === styles.shapeDocument && (
+                        <>
+                          <div className={`${styles.skelLine} ${styles.skelLineW70MB}`} />
+                          <div className={styles.skelLine} />
+                          <div className={styles.skelLine} />
+                          <div className={styles.skelLine} />
+                          <div className={`${styles.skelLine} ${styles.short}`} />
+                          <div className={`${styles.skelLine} ${styles.skelMT12}`} />
+                          <div className={styles.skelLine} />
+                          <div className={`${styles.skelLine} ${styles.short}`} />
+                        </>
+                      )}
+                      {tpl.shapeClass === styles.shapeCertLandscape && (
+                        <div className={styles.flexCenterColW100}>
+                          <div className={`${styles.skelLine} ${styles.skelLineW50MB}`} />
+                          <div className={`${styles.skelLine} ${styles.skelLineW80}`} />
+                          <div className={`${styles.skelLine} ${styles.skelLineW80}`} />
+                          <div className={`${styles.skelLine} ${styles.skelLineW60}`} />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className={styles.cardBody}>
@@ -302,73 +312,6 @@ export default function DocumentosCorporativos() {
                   <div className={styles.cardBody}>
                     <div className={styles.cardHeader}>
                       <span className={styles.dimensionsText}>{tpl.dims}</span>
-                    </div>
-                    <h3 className={styles.cardTitle}>{tpl.name}</h3>
-                    <p className={styles.cardDescription}>{tpl.desc}</p>
-                    <Button variant="outline" className={styles.actionButton} onClick={() => handleGeneratePdf(tpl.generatorKey)}>
-                      <FileDown size={16} />
-                      Gerar PDF
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* ── CONTRATOS ── */}
-          <TabsContent value="contratos" className={styles.tabContent}>
-            <div className={styles.grid}>
-              {CONTRATOS_TEMPLATES.map((tpl) => (
-                <div key={tpl.id} className={styles.card}>
-                  <div className={styles.previewContainer}>
-                    <div className={`${styles.previewShape} ${styles.shapeDocument}`}>
-                      <div className={`${styles.skelLine} ${styles.skelLineW70MB}`} />
-                      <div className={styles.skelLine} />
-                      <div className={styles.skelLine} />
-                      <div className={styles.skelLine} />
-                      <div className={`${styles.skelLine} ${styles.short}`} />
-                      <div className={`${styles.skelLine} ${styles.skelMT12}`} />
-                      <div className={styles.skelLine} />
-                      <div className={`${styles.skelLine} ${styles.short}`} />
-                    </div>
-                  </div>
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardHeader}>
-                      <Badge variant="outline">{tpl.pages}</Badge>
-                      <span className={styles.dimensionsText}>A4</span>
-                    </div>
-                    <h3 className={styles.cardTitle}>{tpl.name}</h3>
-                    <p className={styles.cardDescription}>{tpl.desc}</p>
-                    <Button variant="outline" className={styles.actionButton} onClick={() => handleGeneratePdf(tpl.generatorKey)}>
-                      <FileDown size={16} />
-                      Gerar PDF
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* ── CERTIFICADOS ── */}
-          <TabsContent value="certificados" className={styles.tabContent}>
-            <div className={styles.grid}>
-              {CERTIFICADOS_TEMPLATES.map((tpl) => (
-                <div key={tpl.id} className={styles.card}>
-                  <div className={styles.previewContainer}>
-                    <div className={`${styles.previewShape} ${tpl.shapeClass}`}>
-                      {tpl.shapeClass === styles.shapeA4 && (
-                        <div className={styles.flexCenterColW100}>
-                          <div className={`${styles.skelLine} ${styles.skelLineW50MB}`} />
-                          <div className={`${styles.skelLine} ${styles.skelLineW80}`} />
-                          <div className={`${styles.skelLine} ${styles.skelLineW80}`} />
-                          <div className={`${styles.skelLine} ${styles.skelLineW60}`} />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardHeader}>
-                      <Badge variant="secondary" className={styles.formatBadge}>{tpl.orient}</Badge>
                     </div>
                     <h3 className={styles.cardTitle}>{tpl.name}</h3>
                     <p className={styles.cardDescription}>{tpl.desc}</p>
