@@ -1140,9 +1140,9 @@ export default function SlidePadrao() {
                   }}
                   onClick={() => setCurrent(idx)}>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-semibold truncate flex items-center justify-between gap-2" style={{ color: idx === current ? 'var(--primary)' : 'var(--foreground)' }}>
+                    <div className="text-xs font-semibold truncate flex items-center justify-between gap-2" style={{ color: idx === current ? 'var(--primary)' : (s.type !== 'generic' ? 'var(--muted-foreground)' : 'var(--foreground)') }}>
                       <span className="truncate">{idx + 1}. {s.title}</span>
-                      {s.type !== 'generic' && <Lock className="w-[10px] h-[10px] opacity-[0.25] flex-shrink-0" title="Slide Estrutural (Fixo)" />}
+                      {s.type !== 'generic' && <Lock className={`w-[10px] h-[10px] flex-shrink-0 ${idx === current ? 'opacity-50' : 'opacity-[0.25]'}`} title="Slide Estrutural (Fixo)" />}
                     </div>
                     <div className="text-[10px] flex items-center gap-1 mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
                       <span>{getTypeLabel(s.type, idx, slideList.length)}</span>
@@ -1158,7 +1158,7 @@ export default function SlidePadrao() {
                     {[
                       { title: '↑', action: () => moveUp(idx),        disabled: idx === 0,                  Icon: ChevronUp   },
                       { title: '↓', action: () => moveDown(idx),      disabled: idx === slideList.length-1, Icon: ChevronDown },
-                      { title: '⧉', action: () => duplicateSlide(idx), disabled: false,                     Icon: Copy        },
+                      { title: 'Editar', action: () => setCurrent(idx), disabled: false,                     Icon: Pencil        },
                       { title: '✕', action: () => deleteSlide(idx),   disabled: s.type !== 'generic' || slideList.length <= 5, Icon: Trash2      },
                     ].map(({ title, action, disabled, Icon }) => (
                       <button key={title} onClick={e => { e.stopPropagation(); action(); }} disabled={disabled} title={title}
