@@ -315,6 +315,7 @@ export const AppSidebar = () => {
     {
       id: "marketing", label: "Marketing", icon: Megaphone,
       subItems: [
+        { label: "Dashboard V8", path: "/v8-dashboard", badge: { text: "LIVE", variant: "success" } },
         { label: "Campanhas", path: "/campanhas" },
         { label: "Relatórios", path: "/relatorios" },
       ],

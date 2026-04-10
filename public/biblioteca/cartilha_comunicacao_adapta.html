@@ -46,17 +46,17 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html {
-    font-size: 18px;
+    font-size: 17px;
     -webkit-text-size-adjust: 100%;
-    background: #535353;
+    background: #3d3d3d;
   }
 
   body {
     font-family: var(--sans);
     color: var(--ink-body);
-    background: #535353;
+    background: #3d3d3d;
     -webkit-font-smoothing: antialiased;
-    padding: 48px 24px;
+    padding: 56px 0;
     line-height: 1;
   }
 
@@ -64,7 +64,7 @@
      WRAPPER DO DOCUMENTO — simula papel na tela
   ═══════════════════════════════════════════════════════════════ */
   .doc {
-    max-width: 700px;
+    max-width: 794px;
     margin: 0 auto;
   }
 
@@ -73,13 +73,13 @@
   ═══════════════════════════════════════════════════════════════ */
   p {
     font-family: var(--sans);
-    font-size: 0.94rem;     /* ≈11pt em impressão */
+    font-size: 0.96rem;     /* ≈11pt em impressão */
     font-weight: 400;
-    line-height: 1.8;
+    line-height: 1.82;
     color: var(--ink-body);
-    text-align: justify;
-    hyphens: auto;
-    margin-bottom: 0.9em;
+    text-align: left;
+    hyphens: none;
+    margin-bottom: 1em;
   }
 
   p:last-child { margin-bottom: 0; }
@@ -92,34 +92,36 @@
   ═══════════════════════════════════════════════════════════════ */
   .cover {
     background: var(--paper);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 4px;
-    box-shadow: 0 2px 24px rgba(0,0,0,0.25);
+    height: calc(100vh - 0px);
+    min-height: 900px;
+    display: grid;
+    grid-template-columns: 7px 1fr;
+    margin-bottom: 6px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.3);
     page-name: cover;
     page-break-after: always;
     break-after: page;
+    overflow: hidden;
   }
 
   .cover-topbar {
-    height: 10px;
     background: var(--green);
-    flex-shrink: 0;
+    width: 7px;
+    height: 100%;
   }
 
   .cover-body {
-    flex: 1;
-    padding: 48px 56px 40px;
     display: flex;
     flex-direction: column;
+    padding: 56px 72px 48px 60px;
+    height: 100%;
   }
 
   .cover-org {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: auto;
+    gap: 12px;
+    margin-bottom: 0;
   }
 
   .cover-org-name {
@@ -132,7 +134,11 @@
   }
 
   .cover-center {
-    padding: 60px 0 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 0 32px;
   }
 
   .cover-eyebrow {
@@ -203,9 +209,9 @@
   ═══════════════════════════════════════════════════════════════ */
   .page {
     background: var(--paper);
-    padding: 48px 56px 52px;
-    margin-bottom: 4px;
-    box-shadow: 0 2px 24px rgba(0,0,0,0.18);
+    padding: 52px 68px 64px;
+    margin-bottom: 6px;
+    box-shadow: 0 4px 28px rgba(0,0,0,0.22);
     page-break-after: always;
     break-after: page;
     position: relative;
@@ -240,9 +246,9 @@
   /* Rodapé de página */
   .pf {
     position: absolute;
-    bottom: 20px;
-    left: 56px;
-    right: 56px;
+    bottom: 22px;
+    left: 68px;
+    right: 68px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -251,7 +257,7 @@
     font-family: var(--sans);
     font-size: 0.6rem;
     color: #bbb;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -259,10 +265,11 @@
   ═══════════════════════════════════════════════════════════════ */
   .chapter-open {
     background: var(--green);
-    min-height: 640px;
-    padding: 56px 56px 56px;
-    margin-bottom: 4px;
-    box-shadow: 0 2px 24px rgba(0,0,0,0.25);
+    height: calc(100vh - 0px);
+    min-height: 900px;
+    padding: 64px 72px 60px 68px;
+    margin-bottom: 6px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.3);
     page-break-after: always;
     break-after: page;
     display: flex;
@@ -435,12 +442,12 @@
 
   .motor-text {
     font-family: var(--sans);
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: var(--ink-muted);
-    line-height: 1.7;
+    line-height: 1.72;
     text-align: left;
     margin: 0;
-    hyphens: auto;
+    hyphens: none;
   }
 
   /* ── Nota do editor ── */
@@ -556,13 +563,16 @@
   ═══════════════════════════════════════════════════════════════ */
   @media print {
     html, body {
-      font-size: 11pt;
-      background: white;
+      font-size: 10.5pt;
+      background: white !important;
       padding: 0;
       margin: 0;
     }
 
-    .doc { max-width: 100%; margin: 0; }
+    .doc {
+      max-width: 100%;
+      margin: 0;
+    }
 
     .cover,
     .page,
@@ -572,31 +582,41 @@
       max-width: 100%;
     }
 
+    /* Capa e abertura de módulo ocupam a página inteira */
     .cover {
+      height: 100vh;
       min-height: 0;
-      height: 100vh; /* vira uma página completa */
     }
 
     .chapter-open {
-      min-height: 0;
       height: 100vh;
+      min-height: 0;
     }
 
-    /* O @page cuida das margens, então zeramos o padding interno */
+    /* Páginas internas: o @page define margens, aqui mantemos padding generoso */
     .page {
-      padding: 0;
+      padding: 0 14mm 14mm;
     }
 
-    /* Esconde os falsos headers/footers de tela */
-    .ph, .pf { display: none; }
+    /* Cabeçalho fica como running head leve */
+    .ph {
+      margin-bottom: 18pt;
+      padding-bottom: 8pt;
+    }
 
-    /* Chapter opens não têm margem do @page (full bleed) */
-    .cover { page: cover; }
+    /* Rodapé fixo na base */
+    .pf {
+      position: fixed;
+      bottom: 8mm;
+      left: 14mm;
+      right: 14mm;
+    }
 
     p { orphans: 3; widows: 3; }
     .callout, .pullquote, .motor, .editor-note { break-inside: avoid; }
     .s-block { break-inside: avoid; }
     .s-rule { break-after: avoid; }
+    .s-label + .s-title { break-before: avoid; }
     .s-label, .s-title { break-after: avoid; }
 
     a { text-decoration: none; color: inherit; }

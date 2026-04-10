@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Plus, ChevronLeft, ChevronRight, Building2, Settings } from "lucide-react";
 import { z } from "zod";
@@ -56,10 +57,17 @@ export default function CoreActSetores() {
   });
   const createMutation = useCreateSector();
 
-  const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [activeSettingsTab, setActiveSettingsTab] = useState("membros");
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  // ── Eixo 4: Deep link — setor refletido na URL (UX Soberana) ──
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedSectorId = searchParams.get("setor");
+  const setSelectedSectorId = (id: string | null) => {
+    if (id) setSearchParams({ setor: id }, { replace: true });
+    else setSearchParams({}, { replace: true });
+  };
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [activeSettingsTab, setActiveSettingsTab] = React.useState("membros");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
 

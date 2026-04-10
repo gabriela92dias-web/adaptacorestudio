@@ -230,8 +230,35 @@ export function App() {
       <ScrollManager />
       <GlobalContextProviders>
         <React.Suspense fallback={
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text-secondary)'}}>
-            Carregando interface...
+          /* ── Eixo 1 + 6: Skeleton global de rota + sem texto cru (UX Soberana) ── */
+          <div style={{
+            display: 'flex',
+            minHeight: '100vh',
+            background: 'var(--bg-primary)',
+          }}>
+            {/* sidebar skeleton */}
+            <div style={{
+              width: '220px', minWidth: '220px',
+              background: 'var(--surface)',
+              borderRight: '1px solid var(--border)',
+              display: 'flex', flexDirection: 'column',
+              gap: '8px', padding: '20px 12px',
+            }}>
+              <div style={{ height: '32px', borderRadius: '6px', background: 'var(--border)', marginBottom: '16px', opacity: 0.6 }} />
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} style={{ height: '36px', borderRadius: '6px', background: 'var(--border)', opacity: 0.3 + i * 0.05 }} />
+              ))}
+            </div>
+            {/* content skeleton */}
+            <div style={{ flex: 1, padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ height: '40px', width: '200px', borderRadius: '6px', background: 'var(--border)', opacity: 0.5 }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} style={{ height: '100px', borderRadius: '8px', background: 'var(--border)', opacity: 0.3 }} />
+                ))}
+              </div>
+              <div style={{ height: '300px', borderRadius: '8px', background: 'var(--border)', opacity: 0.2 }} />
+            </div>
           </div>
         }>
           <Routes>

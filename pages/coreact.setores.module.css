@@ -410,3 +410,22 @@
 .level3 .sidebar:not(.collapsed) .sidebarFooter, :global(.adaptive-level-3) .sidebar:not(.collapsed) .sidebarFooter {
   display: none;
 }
+
+/* ── Eixo 3: Mobile override — adaptive levels nunca quebram o layout mobile (UX Soberana) ── */
+@media (max-width: 768px) {
+  .layout .sidebar:not(.hiddenOnMobile) {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-right: none !important;
+  }
+
+  /* Botão de colapsar não faz sentido em mobile — ocultar */
+  .layout .sidebarFooter {
+    display: none;
+  }
+
+  /* Garante que o header fique legível em mobile */
+  .layout .sidebarHeader {
+    padding: var(--spacing-4) !important;
+  }
+}

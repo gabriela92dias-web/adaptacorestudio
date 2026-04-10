@@ -179,32 +179,29 @@
 
 /* ---- MAIN BODY GRID ---- */
 
-.body {
+.mainGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;    /* lg+: 2 colunas */
   gap: var(--spacing-4);
   min-height: 0;
-  overflow: hidden;
 }
 
 /* md e abaixo: 1 coluna, overflow visível */
-@media (max-width: 1023px) {
-  .body {
+@media (max-width: 900px) {
+  .mainGrid {
     grid-template-columns: 1fr;
     overflow: visible;
-    overflow-y: auto;
   }
-  .col {
+  .gridColumn {
     overflow: visible;
   }
 }
 
-.col {
+.gridColumn {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
   min-height: 0;
-  overflow: hidden;
 }
 
 /* ---- CARD BASE ---- */
@@ -615,7 +612,7 @@
 /* ---- RESPONSIVIDADE ---- */
 
 @media (max-width: 900px) {
-  .body { grid-template-columns: 1fr; }
+  .mainGrid { grid-template-columns: 1fr; }
   .kpiGrid { grid-template-columns: repeat(2, 1fr); }
 }
 

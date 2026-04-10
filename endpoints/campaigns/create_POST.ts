@@ -39,7 +39,47 @@ export async function handle(request: Request) {
       );
     }
 
-    // ── 2. Auto-generate posts ─────────────────────────────────────────────
+    // ── 2. V8 Integration (Operationalize Blueprint 3D) ──────────────────
+    // Se a campanha possui DNA V8, espelhamos nas tabelas do dashboard C-Level
+    if (input.dna_direcao) {
+      const { error: v8Error } = await supabase
+        .from("v8_campaigns")
+        .insert({
+          id: campaignId,
+          direcao: input.dna_direcao,
+          experiencia: input.dna_experiencia,
+          objetivo_primario: input.name,
+          segmento_publico: input.targetAudience || "Comunidade Adapta",
+          created_at: new Date().toISOString(),
+        });
+
+      if (!v8Error) {
+        // Inicializar Módulos V8 baseados nos flags do DNA
+        const v8Modules = [];
+        const mods = input.dna_modulos as any;
+        
+        if (mods?.governanca) v8Modules.push({ campaign_id: campaignId, bloco: 1, nome: "Governança & Compliance", descricao: "Aprovação formal, LGPD e Risco", status: "on", ok_trigger: "Assinatura" });
+        if (mods?.digital)    v8Modules.push({ campaign_id: campaignId, bloco: 2, nome: "Ativação Digital", descricao: "Landing pages, Ads e Social", status: "on", ok_trigger: "Link Ativo" });
+        if (mods?.fisico)     v8Modules.push({ campaign_id: campaignId, bloco: 3, nome: "Produção Física", descricao: "Materiais, Brindes e Logística", status: "on", ok_trigger: "Foto" });
+        if (mods?.evento)     v8Modules.push({ campaign_id: campaignId, bloco: 4, nome: "Evento/Ação Local", descricao: "Execução presencial e Check-in", status: "on", ok_trigger: "Relatório" });
+
+        if (v8Modules.length > 0) {
+          await supabase.from("v8_modules").insert(v8Modules);
+        }
+
+        // Inicializar Gates de Segurança V8 (Canônicos)
+        const v8Gates = [
+          { campaign_id: campaignId, name: "Aprovação Médica/Jurídica", critical: true, artifact: "Termo Assinado" },
+          { campaign_id: campaignId, name: "Verificação LGPD", critical: true, artifact: "Política OK" },
+          { campaign_id: campaignId, name: "Disponibilidade de Orçamento", critical: false, artifact: "Financeiro" },
+        ];
+        await supabase.from("v8_gates").insert(v8Gates);
+      } else {
+        console.error("[campaigns/create] Supabase error (v8_campaigns):", v8Error);
+      }
+    }
+
+    // ── 3. Auto-generate posts ─────────────────────────────────────────────
     const now = Date.now();
     const generatedPosts: object[] = [];
 
@@ -79,7 +119,6 @@ export async function handle(request: Request) {
         .select();
 
       if (postsError) {
-        // Não bloqueia — campanha já foi salva, só loga o erro de posts
         console.error("[campaigns/create] Supabase error (posts):", postsError);
       } else {
         insertedPosts = posts ?? [];
@@ -97,4 +136,4 @@ export async function handle(request: Request) {
       { status: 400, headers: { "Content-Type": "application/json" } }
     );
   }
-}
+}

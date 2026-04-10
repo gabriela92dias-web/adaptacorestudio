@@ -114,21 +114,39 @@
     display: flex;
     flex-direction: row;
     gap: 2px;
-    overflow: hidden;
+    overflow-x: auto; /* Habilitado scroll horizontal */
+    overflow-y: hidden;
     flex: 1;
     align-items: stretch;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Esconde scrollbar em Firefox */
+  }
+
+  .sectorsContainer::-webkit-scrollbar {
+    display: none; /* Esconde scrollbar em Chrome/Safari */
   }
 
   .sectorColumn {
     display: flex;
     flex-direction: column;
-    background-color: var(--surface);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
+    background-color: color-mix(in srgb, var(--surface) 40%, transparent);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
     transition: all var(--animation-duration-fast) ease;
     overflow: hidden;
-    height: auto;
-    min-height: 0;
+    flex-shrink: 0; /* Impede esmagamento automático */
+  }
+
+  .sectorColumnCollapsed {
+    width: 2.5em; /* Desktop base */
+    min-width: 2.5em;
+  }
+
+  @media (max-width: 767px) {
+    .sectorColumnCollapsed {
+      width: 4.5em; /* Mobile: um pouco mais largo para legibilidade */
+      min-width: 4.5em;
+    }
   }
 
   .sectorColumn:hover {
@@ -178,7 +196,7 @@
   .memberNameBlock {
     width: 100%;
     min-height: 2em;
-    padding: 0.2em;
+    padding: 0.2em 0.4em;
     border-radius: var(--radius-sm);
     background-color: transparent;
     color: var(--foreground);
@@ -194,6 +212,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+    max-width: 100%;
   }
 
   .memberNameBlock:hover {
