@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Book, Mic, Target, Folder, ListTodo } from "lucide-react";
 import { Button } from "./Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./Dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
@@ -36,8 +36,8 @@ export function CoreactHelpModal({ isCollapsed }: { isCollapsed?: boolean }) {
       </DialogTrigger>
       <DialogContent style={{ maxWidth: '800px', maxHeight: '85vh', overflowY: 'auto' }}>
         <DialogHeader>
-          <DialogTitle style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
-            📕 Cartilha de Onboarding: Adapta CoreAct
+          <DialogTitle style={{ fontSize: '1.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
+            <Book size={24} style={{ marginRight: '0.5rem', color: 'var(--brand-primary)' }} /> Cartilha de Onboarding: Adapta CoreAct
           </DialogTitle>
         </DialogHeader>
         <div style={{ lineHeight: '1.6', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
@@ -47,8 +47,8 @@ export function CoreactHelpModal({ isCollapsed }: { isCollapsed?: boolean }) {
           </p>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <Button variant="outline" size="sm" onClick={() => window.open('/pitch', '_blank')}>
-              🎤 Abrir Pitch Oficial
+            <Button variant="outline" size="sm" onClick={() => window.open('/pitch', '_blank')} className="flex items-center gap-2">
+              <Mic size={16} /> Abrir Pitch Oficial
             </Button>
           </div>
 
@@ -82,7 +82,9 @@ export function CoreactHelpModal({ isCollapsed }: { isCollapsed?: boolean }) {
             borderRadius: 'var(--radius-md)',
             marginBottom: '1rem'
           }}>
-            <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>🎯 Nível 1: Iniciativas</h4>
+            <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem', display: 'flex', alignItems: 'center' }}>
+              <Target size={16} style={{ marginRight: '0.5rem', color: 'var(--brand-primary)' }} /> Nível 1: Iniciativas
+            </h4>
             <p style={{ marginBottom: '0.5rem' }}>A Iniciativa é o grande "Guarda-Chuva" estratégico. (Ex: "Lançamento Coleção 2026")</p>
             <p style={{ fontSize: '0.85rem' }}>Aqui não se coloca a mão na massa. A Iniciativa serve para agrupar vários projetos sob um mesmo teto e mostrar o progresso global à diretoria.</p>
           </div>
@@ -93,7 +95,9 @@ export function CoreactHelpModal({ isCollapsed }: { isCollapsed?: boolean }) {
             borderRadius: 'var(--radius-md)',
             marginBottom: '1rem'
           }}>
-            <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>📁 Nível 2: Projetos</h4>
+            <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem', display: 'flex', alignItems: 'center' }}>
+              <Folder size={16} style={{ marginRight: '0.5rem', color: 'var(--brand-primary)' }} /> Nível 2: Projetos
+            </h4>
             <p style={{ marginBottom: '0.5rem' }}>Debaixo de uma Iniciativa, nascem os Projetos. O Projeto tem um dono responsável, orçamento e prazos. (Ex: "Produção do Vídeo Promocional")</p>
             <p style={{ fontSize: '0.85rem' }}>Projetos também podem ter Checklists rápidos (ex: "Assinar contrato da locação de estúdio").</p>
           </div>
@@ -104,7 +108,9 @@ export function CoreactHelpModal({ isCollapsed }: { isCollapsed?: boolean }) {
             borderRadius: 'var(--radius-md)',
             marginBottom: '1.5rem'
           }}>
-            <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>📋 Nível 3: Etapas (Stages) e Tarefas (Tasks)</h4>
+            <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem', display: 'flex', alignItems: 'center' }}>
+              <ListTodo size={16} style={{ marginRight: '0.5rem', color: 'var(--brand-primary)' }} /> Nível 3: Etapas (Stages) e Tarefas (Tasks)
+            </h4>
             <p style={{ marginBottom: '0.5rem' }}>O Projeto é dividido em Etapas (ex: "Pré-Produção do Vídeo"). E dentro das Etapas moram as Tarefas, que é onde a execução individual acontece de verdade.</p>
             <p style={{ fontSize: '0.85rem' }}>Exemplo da Tarefa: "Definir paleta de cores do cenário" (Atribuída diretamente para você, com Urgência Média).</p>
           </div>

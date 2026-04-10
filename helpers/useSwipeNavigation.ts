@@ -43,7 +43,7 @@ export function useSwipeNavigation(
         gap: "8px",
         boxShadow: "var(--shadow-sm)"
       });
-      feedbackEl.innerHTML = "💡 <b>Use dois dedos (Trackpad)</b> ou arraste p/ navegar";
+      feedbackEl.innerHTML = "<b>Use dois dedos (Trackpad)</b> ou arraste p/ navegar";
       document.body.appendChild(feedbackEl);
     }
 
@@ -54,7 +54,7 @@ export function useSwipeNavigation(
         el.style.color = "var(--muted-foreground)";
         el.style.borderColor = "var(--border)";
         el.style.transform = "scale(1)";
-        el.innerHTML = "💡 <b>Use dois dedos (Trackpad)</b> ou arraste p/ navegar";
+        el.innerHTML = "<b>Use dois dedos (Trackpad)</b> ou arraste p/ navegar";
       }
     };
 
@@ -70,7 +70,7 @@ export function useSwipeNavigation(
         el.style.backgroundColor = "var(--primary)";
         el.style.color = "var(--primary-foreground)";
         el.style.borderColor = "var(--primary)";
-        el.innerHTML = dx > 0 ? "✨ Solte para Voltar no Tempo!" : "✨ Solte para Avançar no Tempo!";
+        el.innerHTML = dx > 0 ? "Solte para Voltar no Tempo!" : "Solte para Avançar no Tempo!";
       } else {
         el.style.backgroundColor = "var(--card)";
         el.style.color = "var(--foreground)";
@@ -102,7 +102,7 @@ export function useSwipeNavigation(
       if (el) {
         el.style.backgroundColor = "var(--card)";
         el.style.color = "var(--foreground)";
-        el.innerHTML = "↔️ Arraste para os lados";
+        el.innerHTML = "Arraste para os lados";
       }
     };
 
@@ -200,7 +200,7 @@ export function useSwipeNavigation(
         if (el) {
            el.style.backgroundColor = "var(--secondary)";
            el.style.color = "var(--secondary-foreground)";
-           el.innerHTML = "✔️ Navegado! (Solte e repita)";
+           el.innerHTML = "Navegado! (Solte e repita)";
         }
       }
     };
@@ -249,7 +249,7 @@ export function useSwipeNavigation(
         if (el) {
            el.style.backgroundColor = "var(--secondary)";
            el.style.color = "var(--secondary-foreground)";
-           el.innerHTML = "✔️ Navegado! (Mude o movimento)";
+           el.innerHTML = "Navegado! (Mude o movimento)";
         }
         
         // Debounce before allowing next trackpad swipe naturally

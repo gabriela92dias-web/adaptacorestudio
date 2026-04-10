@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Megaphone, FileText, Instagram, MessageCircle, Mail, MailOpen } from "lucide-react";
+import { Megaphone, FileText, Instagram, MessageCircle, Mail, MailOpen, Sparkles } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Textarea } from "../../ui/textarea";
@@ -417,12 +417,11 @@ export function NoticeGenerator() {
     setGenerated(true);
   };
 
-  // Texto WhatsApp
   const whatsappText = () => {
     let text = `*${notice.title}*\n\n${notice.message}`;
-    if (notice.validity) text += `\n\n📅 _Válido até ${notice.validity}_`;
-    if (notice.link) text += `\n\n🔗 ${notice.link}`;
-    if (notice.cta) text += `\n\n👉 *${notice.cta}*`;
+    if (notice.validity) text += `\n\n_Válido até ${notice.validity}_`;
+    if (notice.link) text += `\n\n${notice.link}`;
+    if (notice.cta) text += `\n\n*${notice.cta}*`;
     return text;
   };
 
@@ -546,10 +545,10 @@ export function NoticeGenerator() {
         <Button
           onClick={handleGenerate}
           disabled={selectedFormats.size === 0}
-          className="w-full"
+          className="w-full gap-2"
           size="lg"
         >
-          ✨ Gerar Visualizações
+          <Sparkles className="w-4 h-4" /> Gerar Visualizações
         </Button>
       </Card>
 

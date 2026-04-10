@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, RefreshCw, Trash2, ExternalLink } from "lucide-react";
+import { AlertTriangle, RefreshCw, Trash2, ExternalLink, XCircle, Wrench } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
@@ -24,7 +24,7 @@ export function ForceRebuildBanner() {
       );
 
       if (has404) {
-        console.error('[ADAPTA] ⚠️ Detected Figma Make cache error - showing modal');
+        console.error('[ADAPTA] [!] Detected Figma Make cache error - showing modal');
         setShow(true);
       }
     };
@@ -84,7 +84,7 @@ export function ForceRebuildBanner() {
               <AlertTriangle className="h-8 w-8 text-destructive" />
             </div>
             <div className="flex-1">
-              <CardTitle className="text-2xl">⚠️ Cache do Figma Make Travado</CardTitle>
+              <CardTitle className="text-2xl">Cache do Figma Make Travado</CardTitle>
               <CardDescription className="text-base mt-2">
                 Detectamos que o Figma Make está tentando carregar arquivos antigos que não existem mais
               </CardDescription>
@@ -95,7 +95,7 @@ export function ForceRebuildBanner() {
         <CardContent className="space-y-6 pt-6">
           {/* Erro Técnico */}
           <Alert variant="destructive">
-            <AlertTitle className="font-mono text-xs">❌ Erro Detectado:</AlertTitle>
+            <AlertTitle className="font-mono text-xs flex items-center gap-2"><XCircle className="h-4 w-4" /> Erro Detectado:</AlertTitle>
             <AlertDescription className="font-mono text-xs mt-2 break-all">
               GET .../954d8e2cbc48ca65fd85d0da0f9728b575686a81.js → 404 (Not Found)
             </AlertDescription>
@@ -116,7 +116,7 @@ export function ForceRebuildBanner() {
 
           {/* Soluções */}
           <div className="space-y-3">
-            <h3 className="font-semibold text-lg">🔧 Soluções (tente nesta ordem):</h3>
+            <h3 className="font-semibold text-lg flex items-center gap-2"><Wrench className="h-5 w-5" /> Soluções (tente nesta ordem):</h3>
 
             {/* Solução 1 - Recomendada */}
             <Button

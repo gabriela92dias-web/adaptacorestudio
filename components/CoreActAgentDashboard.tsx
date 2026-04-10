@@ -180,7 +180,7 @@ export function CoreActAgentDashboard({ teamMemberId, userName }: { teamMemberId
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.greeting}>Olá, {userName}! 👋</h1>
+        <h1 className={styles.greeting}>Olá, {userName}!</h1>
         <p className={styles.dateSubtitle}>{todayStr.charAt(0).toUpperCase() + todayStr.slice(1)}</p>
       </header>
 

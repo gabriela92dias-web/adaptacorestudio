@@ -1,7 +1,7 @@
 // Biblioteca de Rótulos Prontos - ADAPTA CORE STUDIO
-// 📚 Visualização, upload e seleção (sem edição)
+// Visualização, upload e seleção (sem edição)
 import { lazy, Suspense, useState, useEffect, useRef } from "react";
-import { Package, Check, Upload, X, FileText, Image as ImageIcon, Trash2, Plus } from "lucide-react";
+import { Package, Check, Upload, X, FileText, Image as ImageIcon, Trash2, Plus, Box, Leaf, Sparkles, Folder } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Badge } from "../../ui/badge";
 import { Input } from "../../ui/input";
@@ -268,17 +268,17 @@ function LabelCard({
         </div>
 
         {/* Detalhes */}
-        <div className="text-xs text-muted-foreground space-y-0.5">
+        <div className="text-xs text-muted-foreground space-y-1">
           {isCustom ? (
             <>
-              <div>📁 {customLabel.fileType.toUpperCase()}</div>
-              <div className="text-[10px] opacity-60">📤 Personalizado · ✨ Base: {figmaRotulo.nome}</div>
+              <div className="flex items-center gap-1.5"><Folder className="w-3 h-3" /> {customLabel.fileType.toUpperCase()}</div>
+              <div className="text-[10px] opacity-60 flex items-center gap-1"><Upload className="w-3 h-3" /> Personalizado · <Sparkles className="w-3 h-3" /> Base: {figmaRotulo.nome}</div>
             </>
           ) : (
             <>
-              <div>📦 {figmaRotulo.peso}</div>
-              <div>🌿 {figmaRotulo.composicao}</div>
-              <div className="text-[10px] opacity-60">✨ Do Figma · Arraste para personalizar</div>
+              <div className="flex items-center gap-1.5"><Box className="w-3 h-3" /> {figmaRotulo.peso}</div>
+              <div className="flex items-center gap-1.5"><Leaf className="w-3 h-3" /> {figmaRotulo.composicao}</div>
+              <div className="text-[10px] opacity-60 flex items-center gap-1"><Sparkles className="w-3 h-3" /> Do Figma · Arraste para personalizar</div>
             </>
           )}
         </div>

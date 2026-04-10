@@ -285,7 +285,7 @@ export function VerdeVoxCore() {
         {/* Info Footer */}
         <div className="p-4 bg-neutral-800 border border-neutral-700 rounded-lg">
           <p className="text-sm text-neutral-400">
-            <span className="text-neutral-500">💡 Dica:</span> O VerdeVox Core permite gravar, editar e processar áudios com qualidade profissional. 
+            <span className="text-neutral-500">Dica:</span> O VerdeVox Core permite gravar, editar e processar áudios com qualidade profissional. 
             Use os parâmetros de edição para ajustar tom, velocidade e aplicar efeitos especiais.
           </p>
         </div>

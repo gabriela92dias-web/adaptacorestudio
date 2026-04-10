@@ -375,18 +375,18 @@ async function generateMockAnalysis(platform: string, imageUrl: string): Promise
         ...analiseCores.problemas,
         // Só adiciona problema de contexto se NÃO houver cores piratas
         ...(tipoPeca.tipo === 'institucional' && analiseCores.usoColorCore && !temCoresPiratas
-          ? ['🚨 Tipo de peça: INSTITUCIONAL - Color Core OFICIAL é PROIBIDO']
+          ? ['Tipo de peça: INSTITUCIONAL - Color Core OFICIAL é PROIBIDO']
           : []
         ),
       ],
       sugestoes: [
-        `📋 Tipo detectado: ${tipoPeca.publico}`,
-        `✓ Paleta permitida: ${tipoPeca.paletaPermitida.join(', ')}`,
+        `Tipo detectado: ${tipoPeca.publico}`,
+        `Permitido: ${tipoPeca.paletaPermitida.join(', ')}`,
         ...(tipoPeca.paletaProibida.length > 0 
-          ? [`❌ Paleta proibida: ${tipoPeca.paletaProibida.join(', ')}`]
+          ? [`Proibido: ${tipoPeca.paletaProibida.join(', ')}`]
           : []
         ),
-        `🎨 Cores detectadas: ${analiseCores.coresDetectadas.join(', ')}`,
+        `Cores detectadas: ${analiseCores.coresDetectadas.join(', ')}`,
         ...analiseCores.sugestoes,
       ],
       metadata: {
@@ -427,15 +427,15 @@ async function generateMockAnalysis(platform: string, imageUrl: string): Promise
   // Alertas críticos APENAS se Color Core OFICIAL usado indevidamente em institucional
   // NÃO alertar se já tiver cores piratas (problema maior já detectado)
   if (tipoPeca.tipo === 'institucional' && analiseCores.usoColorCore && !temCoresPiratas) {
-    alertasCriticos.push('🚨 Color Core OFICIAL usado em material INSTITUCIONAL - substituir urgentemente');
+    alertasCriticos.push('Color Core OFICIAL usado em material INSTITUCIONAL - substituir urgentemente');
     alertasCriticos.push('Material corporativo só aceita Neutral System + Verde Core');
   }
   
   // Alerta para cores piratas (problema mais grave que contexto errado)
   if (temCoresPiratas) {
-    alertasCriticos.push('🚨 CORES PIRATAS DETECTADAS - códigos HEX não são da Cartilha oficial');
+    alertasCriticos.push('CORES PIRATAS DETECTADAS - códigos HEX não são da Cartilha oficial');
     if (tipoPeca.publico.includes('infantil') || tipoPeca.tipo === 'campanha-especifica') {
-      alertasCriticos.push(`✓ Color Core PERMITIDO para ${tipoPeca.publico.toLowerCase()}, mas DEVE usar cores OFICIAIS`);
+      alertasCriticos.push(`Color Core PERMITIDO para ${tipoPeca.publico.toLowerCase()}, mas DEVE usar cores OFICIAIS`);
     }
   }
 

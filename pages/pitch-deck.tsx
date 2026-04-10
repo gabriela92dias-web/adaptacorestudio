@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowRight, ArrowLeft, Sparkles, Zap, ChevronRight, Layers, MousePointer2, CheckCircle2, LayoutTemplate, Globe, Moon, Sun, Pencil, X, Plus, Trash2, Star, ArrowRightCircle, Check, Dot, Flame, Rocket, type LucideIcon } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Sparkles, Zap, ChevronRight, Layers, MousePointer2, CheckCircle2, LayoutTemplate, Globe, Moon, Sun, Pencil, X, Plus, Trash2, Star, ArrowRightCircle, Check, Dot, Flame, Rocket, Palette, LayoutGrid, Monitor, AlertTriangle, Loader2, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -20,13 +20,13 @@ interface SlideData {
 
 // ─── Configurações de Visual/Ícone ───────────────────────────────────────────
 
-const VISUAL_OPTIONS: { value: string; label: string; thumb: string }[] = [
-  { value: 'glow',       label: 'Glow',      thumb: '🌟' },
-  { value: 'v8-mock',    label: 'CoreAct',   thumb: '⚡' },
-  { value: 'layers',     label: 'Camadas',   thumb: '📐' },
-  { value: 'color-core', label: 'Cores',     thumb: '🎨' },
-  { value: 'sameness',   label: 'Grid',      thumb: '📊' },
-  { value: 'system',     label: 'Sistema',   thumb: '🖥️' },
+const VISUAL_OPTIONS: { value: string; label: string; icon: LucideIcon }[] = [
+  { value: 'glow',       label: 'Glow',      icon: Sparkles },
+  { value: 'v8-mock',    label: 'CoreAct',   icon: Zap },
+  { value: 'layers',     label: 'Camadas',   icon: Layers },
+  { value: 'color-core', label: 'Cores',     icon: Palette },
+  { value: 'sameness',   label: 'Grid',      icon: LayoutGrid },
+  { value: 'system',     label: 'Sistema',   icon: Monitor },
 ];
 
 const ICON_OPTIONS: { value: string; label: string; Icon: LucideIcon }[] = [
@@ -475,7 +475,7 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
                         border: isActive ? '1px solid var(--primary)' : '1px solid var(--border)',
                       }}
                     >
-                      <span className="text-lg">{opt.thumb}</span>
+                      <opt.icon className="w-5 h-5 mb-1" />
                       {opt.label}
                     </button>
                   );
@@ -523,11 +523,11 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: EditMod
 
         {/* Footer */}
         <div className="sticky bottom-0 z-10 flex flex-col gap-2 px-6 py-4 border-t" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
-          <p className="text-xs" style={{ color: saving === 'error' ? 'var(--destructive)' : 'var(--muted-foreground)' }}>
-            {saving === 'translating' && '⏳ Traduzindo automaticamente para EN e DE…'}
-            {saving === 'error' && '⚠️ Tradução falhou. Edição salva só neste idioma.'}
-            {saving === 'idle' && `✏️ Editando em ${LANG_LABELS[activeLang]}. Ao salvar, EN e DE são traduzidos automaticamente.`}
-          </p>
+          <div className="flex items-center gap-2 text-xs" style={{ color: saving === 'error' ? 'var(--destructive)' : 'var(--muted-foreground)' }}>
+            {saving === 'translating' && <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Traduzindo automaticamente para EN e DE…</>}
+            {saving === 'error' && <><AlertTriangle className="w-3.5 h-3.5" /> Tradução falhou. Edição salva só neste idioma.</>}
+            {saving === 'idle' && <><Pencil className="w-3.5 h-3.5" /> Editando em {LANG_LABELS[activeLang]}. Ao salvar, EN e DE são traduzidos automaticamente.</>}
+          </div>
           <div className="flex gap-3 justify-end">
             <button
               onClick={onClose}

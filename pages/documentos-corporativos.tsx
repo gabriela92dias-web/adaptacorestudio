@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FileText, FileEdit, IdCard, FileSignature, Award, FileDown, Info,
-  Layers, Mail, MonitorPlay, Presentation
+  Layers, Mail, MonitorPlay, Presentation, Settings, UserCircle, Box
 } from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/Tabs";
@@ -235,7 +235,10 @@ export default function DocumentosCorporativos() {
               <div className={styles.card}>
                 <div className={styles.previewContainer}>
                   <div className={`${styles.previewShape} ${styles.shapeDigital} ${styles.shapeDigitalBorder}`}>
-                    <div className={styles.previewInnerText}>🖥️ Apresentação</div>
+                    <div className={styles.previewInnerText}>
+                      <Presentation size={24} className="mb-2 opacity-50" />
+                      Apresentação
+                    </div>
                   </div>
                 </div>
                 <div className={styles.cardBody}>
@@ -253,7 +256,10 @@ export default function DocumentosCorporativos() {
               <div className={styles.card}>
                 <div className={styles.previewContainer}>
                   <div className={`${styles.previewShape} ${styles.shapeDigital} ${styles.shapeDigitalBorder}`}>
-                    <div className={styles.previewInnerText}>⚙️ Gerador Dinâmico</div>
+                    <div className={styles.previewInnerText}>
+                      <Settings size={24} className="mb-2 opacity-50" />
+                      Gerador Dinâmico
+                    </div>
                   </div>
                 </div>
                 <div className={styles.cardBody}>
@@ -271,7 +277,10 @@ export default function DocumentosCorporativos() {
               <div className={styles.card}>
                 <div className={styles.previewContainer}>
                   <div className={`${styles.previewShape} ${styles.shapeDigital} ${styles.shapeDigitalAvatar}`}>
-                    <div className={styles.previewInnerText}>⚙️ Avatar</div>
+                    <div className={styles.previewInnerText}>
+                      <UserCircle size={24} className="mb-2 opacity-50" />
+                      Avatar
+                    </div>
                   </div>
                 </div>
                 <div className={styles.cardBody}>
@@ -289,7 +298,10 @@ export default function DocumentosCorporativos() {
               <div className={styles.card}>
                 <div className={styles.previewContainer}>
                   <div className={`${styles.previewShape} ${styles.shapeDigital} ${styles.shapeDigitalBorder}`}>
-                    <div className={styles.previewInnerText}>⚙️ Embalagens 3D</div>
+                    <div className={styles.previewInnerText}>
+                      <Box size={24} className="mb-2 opacity-50" />
+                      Embalagens 3D
+                    </div>
                   </div>
                 </div>
                 <div className={styles.cardBody}>

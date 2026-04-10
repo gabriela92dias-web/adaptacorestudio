@@ -364,7 +364,7 @@ export default function V8Dashboard() {
                   <tbody>
                     {modulos.filter((m: any) => m.status === 'on').map((m: any) => (
                       <tr key={m.id}>
-                        <td>🧩 Módulo: {m.nome}</td>
+                        <td>Módulo: {m.nome}</td>
                         <td style={{width: 140}}>
                           <button className="btn" style={{width: '100%', fontSize: 9}} onClick={() => updateModuleField(m.id, 'ok', !m.ok)}>
                             {m.ok ? "MARCAR PENDENTE" : "MARCAR CONCLUÍDO"}
@@ -384,7 +384,7 @@ export default function V8Dashboard() {
                     ))}
                     {gates.map((g: any) => (
                       <tr key={g.id}>
-                        <td>🚧 Soft Gate: {g.name}</td>
+                        <td>Soft Gate: {g.name}</td>
                         <td style={{width: 140}}>
                           <button className="btn" style={{width: '100%', fontSize: 9}} onClick={() => toggleGate(g.id, g.ok)}>
                             {g.ok ? "REVOGAR OK" : "APROVAR"}

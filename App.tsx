@@ -270,6 +270,7 @@ export function App() {
           <Route path="/forgot-password" element={<Page_13 />} />
           <Route path="/pitch" element={<PitchDeck />} />
           <Route path="/tools/gerar-doc/slide-padrao" element={<UserRoute><SlidePadrao /></UserRoute>} />
+          <Route path="/apresentacao/:slug" element={<SlidePadrao />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </React.Suspense>

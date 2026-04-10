@@ -11,7 +11,7 @@ import { Helmet } from "react-helmet";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { motion } from "motion/react";
-import { Copy, Check, Sparkles } from "lucide-react";
+import { Copy, Check, Sparkles, Sun, Wine, Leaf, Zap, Palette, Target, type LucideIcon } from "lucide-react";
 import { useTheme } from "../../../utils/theme-context";
 import { colorPalette, filterForFeature, getCampaignRoles } from "../../../utils/color-data";
 import styles from "./color-wheel-page.module.css";
@@ -66,11 +66,11 @@ const HARMONY_MODES = [
   { id: "split" as const, name: "Dinâmico & Equilíbrio", icon: "⋀", angles: [0, 150, 210], description: "Split-Complementar" },
 ];
 
-const MOODS = [
-  { id: 'alegre', name: 'Alegre', desc: 'Quente', icon: '☀️', targetHue: 35, targetLum: 0.6 },
-  { id: 'sobrio', name: 'Sóbrio', desc: 'Frio', icon: '🍸', targetHue: 220, targetLum: 0.2 },
-  { id: 'natural', name: 'Natural', desc: 'Fresco', icon: '🌿', targetHue: 140, targetLum: 0.4 },
-  { id: 'impacto', name: 'Impacto', desc: 'Vibrante', icon: '💥', targetHue: 340, targetLum: 0.5 },
+const MOODS: { id: string, name: string, desc: string, icon: LucideIcon, targetHue: number, targetLum: number }[] = [
+  { id: 'alegre', name: 'Alegre', desc: 'Quente', icon: Sun, targetHue: 35, targetLum: 0.6 },
+  { id: 'sobrio', name: 'Sóbrio', desc: 'Frio', icon: Wine, targetHue: 220, targetLum: 0.2 },
+  { id: 'natural', name: 'Natural', desc: 'Fresco', icon: Leaf, targetHue: 140, targetLum: 0.4 },
+  { id: 'impacto', name: 'Impacto', desc: 'Vibrante', icon: Zap, targetHue: 340, targetLum: 0.5 },
 ];
 
 // ─── Componente Principal ─────────────────────────────────────
@@ -329,7 +329,7 @@ export function ColorWheelPage() {
         {emptyState && (
           <div className={styles.emptyState}>
             <div className={styles.emptyStateInner}>
-              <div className={styles.emptyEmoji}>🎨</div>
+              <div className={styles.emptyEmoji} style={{ display: 'flex', justifyContent: 'center' }}><Palette className="w-12 h-12" style={{ color: "var(--primary)" }} /></div>
               <h2 className={styles.emptyTitle}>Paleta ainda não configurada</h2>
               <p className={styles.emptyText}>
                 Adicione as cores da identidade visual Adapta em{" "}
@@ -356,7 +356,7 @@ export function ColorWheelPage() {
                       className={styles.moodBtn}
                       onClick={() => applyMood(mood.id)}
                     >
-                      <span className={styles.moodEmoji}>{mood.icon}</span>
+                      <span className={styles.moodEmoji} style={{ display: 'flex', alignItems: 'center' }}><mood.icon size={16} /></span>
                       <span>{mood.name}</span>
                     </button>
                   ))}
@@ -476,8 +476,8 @@ export function ColorWheelPage() {
               <div className={styles.wheelWrapper} style={{ width: wheelSize, height: wheelSize }}>
 
                 {/* Dicas flutuantes (Atualizadas) */}
-                <div className={styles.tipCenter} style={{ color: tipColor }}>
-                  <span style={{fontWeight: 700}}>🎯 Motor Inteligente:</span> <span>O contraste do Texto/Apoio é auto-ajustado em tempo real.</span>
+                <div className={styles.tipCenter} style={{ color: tipColor, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
+                  <span style={{fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem'}}><Target size={16} /> Motor Inteligente:</span> <span>O contraste do Texto/Apoio é auto-ajustado em tempo real.</span>
                 </div>
 
                 <svg

@@ -13,6 +13,7 @@ import {
   Shuffle,
   Eye,
   Info,
+  Sparkles,
 } from "lucide-react";
 import { useBrandStudio } from "../../../contexts/brand-context";
 import { SampleLogo } from "../../../components/brand-studio/sample-logo";
@@ -204,7 +205,7 @@ export function LogoCores() {
                       onClick={() => setViewMode("animated")}
                       className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold rounded-lg transition-all ${viewMode === "animated" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 scale-[1.02] ring-2 ring-primary/20" : "text-muted-foreground hover:bg-black/5"}`}
                     >
-                      Animado ✨
+                      Animado <Sparkles className="w-4 h-4" />
                     </button>
                   </div>
                 </div>

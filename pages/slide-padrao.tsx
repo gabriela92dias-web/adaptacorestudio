@@ -3,7 +3,9 @@ import {
   ArrowRight, ArrowLeft, ChevronRight, Layers, Globe, Moon, Sun,
   Pencil, X, Plus, Trash2, Star, ArrowRightCircle, Check, Dot,
   Flame, Rocket, Copy, ChevronUp, ChevronDown, Zap,
-  CheckCircle2, LayoutTemplate, AlertCircle,
+  CheckCircle2, LayoutTemplate, AlertCircle, PanelLeft, PanelRight, Square,
+  Sparkles, Grid, Monitor, Wind, ArrowUp, ZoomIn, List, GitCommit,
+  LayoutGrid, Target, Tag, GitBranch, Flag,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -46,24 +48,24 @@ interface ContentStore {
 // ─── Constants ─────────────────────────────────────────────────────────────────
 
 const LAYOUT_OPTIONS = [
-  { value: 'split-right', label: 'Padrão L/R', thumb: '◨' },
-  { value: 'split-left',  label: 'Reverso R/L', thumb: '◧' },
-  { value: 'center',      label: 'Centro',      thumb: '■' },
+  { value: 'split-right', label: 'Padrão L/R', icon: PanelRight },
+  { value: 'split-left',  label: 'Reverso R/L', icon: PanelLeft },
+  { value: 'center',      label: 'Centro',      icon: Square },
 ];
 
 const BG_OPTIONS = [
-  { value: 'solid',       label: 'Limpo',   thumb: '⬛' },
-  { value: 'glow',        label: 'Glow',    thumb: '🌟' },
-  { value: 'grid',        label: 'Grid',    thumb: '📐' },
-  { value: 'layers',      label: 'Layers',  thumb: '📚' },
-  { value: 'mockup',      label: 'Mockup',  thumb: '💻' },
+  { value: 'solid',       label: 'Limpo',   icon: Square },
+  { value: 'glow',        label: 'Glow',    icon: Sparkles },
+  { value: 'grid',        label: 'Grid',    icon: Grid },
+  { value: 'layers',      label: 'Layers',  icon: Layers },
+  { value: 'mockup',      label: 'Mockup',  icon: Monitor },
 ];
 
 const ANIM_OPTIONS = [
-  { value: 'none',        label: 'Seca',    thumb: '⚡' },
-  { value: 'fade',        label: 'Fade',    thumb: '💨' },
-  { value: 'slide-up',    label: 'Sobe',    thumb: '⬆️' },
-  { value: 'zoom',        label: 'Zoom In', thumb: '🔍' },
+  { value: 'none',        label: 'Seca',    icon: Zap },
+  { value: 'fade',        label: 'Fade',    icon: Wind },
+  { value: 'slide-up',    label: 'Sobe',    icon: ArrowUp },
+  { value: 'zoom',        label: 'Zoom In', icon: ZoomIn },
 ];
 
 const ICON_OPTIONS: { value: string; label: string; Icon: LucideIcon }[] = [
@@ -79,11 +81,11 @@ const ICON_OPTIONS: { value: string; label: string; Icon: LucideIcon }[] = [
 const ICON_MAP: Record<string, LucideIcon> = Object.fromEntries(ICON_OPTIONS.map(o => [o.value, o.Icon]));
 
 type ViewType = 'list' | 'cards' | 'sequence' | 'flow';
-const VIEW_CONFIG: Record<ViewType, { label: string; emoji: string; isFullWidth: boolean }> = {
-  list:     { label: 'Lista',     emoji: '📋', isFullWidth: false },
-  flow:     { label: 'Fluxo',     emoji: '⬇️', isFullWidth: false },
-  cards:    { label: 'Cards',     emoji: '🃏', isFullWidth: true  },
-  sequence: { label: 'Sequência', emoji: '➡️', isFullWidth: true  },
+const VIEW_CONFIG: Record<ViewType, { label: string; icon: LucideIcon; isFullWidth: boolean }> = {
+  list:     { label: 'Lista',     icon: List, isFullWidth: false },
+  flow:     { label: 'Fluxo',     icon: GitCommit, isFullWidth: false },
+  cards:    { label: 'Cards',     icon: LayoutGrid, isFullWidth: true  },
+  sequence: { label: 'Sequência', icon: ArrowRight, isFullWidth: true  },
 };
 
 const ALL_LANGS: Lang[] = ['pt', 'en', 'de'];
@@ -136,11 +138,11 @@ const DEFAULT_CONTENT: ContentStore = {
 // ─── Slide Templates ───────────────────────────────────────────────────────────
 
 const SLIDE_TEMPLATES: {
-  label: string; emoji: string;
+  label: string; icon: LucideIcon;
   make: (id: number) => { pt: SlideData; en: SlideData; de: SlideData };
 }[] = [
   {
-    label: 'Capa', emoji: '🎯',
+    label: 'Capa', icon: Target,
     make: id => ({
       pt: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Título Principal', subtitle: 'Subtítulo da apresentação', badge: 'CATEGORIA' },
       en: { id, type: 'cover', layout: 'center', bgStyle: 'glow', animation: 'fade', title: 'Main Title', subtitle: 'Presentation subtitle', badge: 'CATEGORY' },
@@ -148,7 +150,7 @@ const SLIDE_TEMPLATES: {
     }),
   },
   {
-    label: 'Divisor', emoji: '🏷️',
+    label: 'Divisor', icon: Tag,
     make: id => ({
       pt: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Seção', subtitle: 'Descrição da seção' },
       en: { id, type: 'part', layout: 'center', bgStyle: 'solid', animation: 'slide-up', title: '01. Section', subtitle: 'Section description' },
@@ -156,7 +158,7 @@ const SLIDE_TEMPLATES: {
     }),
   },
   {
-    label: 'Lista', emoji: '📋',
+    label: 'Lista', icon: List,
     make: id => ({
       pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Título', content: 'Contexto breve.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Ponto 1'), newTopic('Ponto 2'), newTopic('Ponto 3')] } },
       en: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Title', content: 'Brief context.', topicBlock: { view: 'list', icon: 'chevron-right', topics: [newTopic('Point 1'), newTopic('Point 2'), newTopic('Point 3')] } },
@@ -164,7 +166,7 @@ const SLIDE_TEMPLATES: {
     }),
   },
   {
-    label: 'Cards', emoji: '🃏',
+    label: 'Cards', icon: LayoutGrid,
     make: id => ({
       pt: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Título', content: '', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Elemento 1'), newTopic('Elemento 2'), newTopic('Elemento 3')] } },
       en: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Title', content: '', topicBlock: { view: 'cards', gridCols: 3, topics: [newTopic('Element 1'), newTopic('Element 2'), newTopic('Element 3')] } },
@@ -172,7 +174,7 @@ const SLIDE_TEMPLATES: {
     }),
   },
   {
-    label: 'Sequência', emoji: '➡️',
+    label: 'Sequência', icon: ArrowRight,
     make: id => ({
       pt: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Processo', content: '', topicBlock: { view: 'sequence', topics: [newTopic('Passo 1'), newTopic('Passo 2'), newTopic('Passo 3'), newTopic('Passo 4')] } },
       en: { id, type: 'generic', layout: 'center', bgStyle: 'solid', animation: 'fade', title: 'Process', content: '', topicBlock: { view: 'sequence', topics: [newTopic('Step 1'), newTopic('Step 2'), newTopic('Step 3'), newTopic('Step 4')] } },
@@ -180,7 +182,7 @@ const SLIDE_TEMPLATES: {
     }),
   },
   {
-    label: 'Fluxo', emoji: '⬇️',
+    label: 'Fluxo', icon: GitBranch,
     make: id => ({
       pt: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Fluxo', content: '', topicBlock: { view: 'flow', topics: [newTopic('Etapa 1'), newTopic('Etapa 2'), newTopic('Etapa 3')] } },
       en: { id, type: 'generic', layout: 'split-right', bgStyle: 'grid', animation: 'fade', title: 'Flow', content: '', topicBlock: { view: 'flow', topics: [newTopic('Stage 1'), newTopic('Stage 2'), newTopic('Stage 3')] } },
@@ -188,7 +190,7 @@ const SLIDE_TEMPLATES: {
     }),
   },
   {
-    label: 'Encerramento', emoji: '🙌',
+    label: 'Encerramento', icon: Flag,
     make: id => ({
       pt: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Próximos Passos', content: 'Defina o caminho a seguir.', badge: 'CONCLUSÃO' },
       en: { id, type: 'future', layout: 'center', bgStyle: 'glow', animation: 'zoom', title: 'Next Steps', content: 'Define the path forward.', badge: 'CONCLUSION' },
@@ -609,17 +611,20 @@ function TopicBlockEditor({ slideIndex, activeLang, draft, setDraft }: {
       <div className="flex flex-col gap-2">
         <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Visualização</label>
         <div className="grid grid-cols-4 gap-2">
-          {(Object.keys(VIEW_CONFIG) as ViewType[]).map(v => (
-            <button key={v} onClick={() => setVisual({ view: v })}
-              className="flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl text-xs font-semibold transition-all"
-              style={btnSt(block.view === v)}>
-              <span className="text-lg">{VIEW_CONFIG[v].emoji}</span>
-              {VIEW_CONFIG[v].label}
-            </button>
-          ))}
+          {(Object.keys(VIEW_CONFIG) as ViewType[]).map(v => {
+            const ViewIcon = VIEW_CONFIG[v].icon;
+            return (
+              <button key={v} onClick={() => setVisual({ view: v })}
+                className="flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-xl text-xs font-semibold transition-all"
+                style={btnSt(block.view === v)}>
+                <ViewIcon className="w-5 h-5" />
+                {VIEW_CONFIG[v].label}
+              </button>
+            )
+          })}
         </div>
         <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-          {isFullView ? '🖼️ Ocupa largura total do slide.' : '📐 Aparece na coluna esquerda com visual ao lado.'}
+          {isFullView ? 'Ocupa largura total do slide.' : 'Aparece centralizado na coluna.'}
         </p>
       </div>
 
@@ -897,12 +902,13 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: {
               <div className="flex flex-col gap-2">
                 {LAYOUT_OPTIONS.map(opt => {
                   const active = (draft.pt[slideIndex].layout ?? 'center') === opt.value;
+                  const ThumbIcon = (opt as any).icon;
                   return (
                     <button key={opt.value}
                       onClick={() => setDraft(prev => { const next = JSON.parse(JSON.stringify(prev)) as ContentStore; for (const l of ALL_LANGS) next[l][slideIndex].layout = opt.value as any; return next; })}
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all w-full text-left"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all w-full text-left"
                       style={{ background: active ? 'var(--primary)' : 'var(--background)', color: active ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: active ? '1px solid var(--primary)' : '1px solid var(--border)' }}>
-                      <span className="text-base w-6 text-center">{opt.thumb}</span>{opt.label}
+                      <ThumbIcon className={`w-4 h-4 text-center ${!active ? 'opacity-50' : ''}`} />{opt.label}
                     </button>
                   );
                 })}
@@ -914,12 +920,13 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: {
               <div className="flex flex-col gap-2">
                 {BG_OPTIONS.map(opt => {
                   const active = (draft.pt[slideIndex].bgStyle ?? 'solid') === opt.value;
+                  const ThumbIcon = (opt as any).icon;
                   return (
                     <button key={opt.value}
                       onClick={() => setDraft(prev => { const next = JSON.parse(JSON.stringify(prev)) as ContentStore; for (const l of ALL_LANGS) next[l][slideIndex].bgStyle = opt.value as any; return next; })}
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all w-full text-left"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all w-full text-left"
                       style={{ background: active ? 'var(--primary)' : 'var(--background)', color: active ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: active ? '1px solid var(--primary)' : '1px solid var(--border)' }}>
-                      <span className="text-base w-6 text-center">{opt.thumb}</span>{opt.label}
+                      <ThumbIcon className={`w-4 h-4 text-center ${!active ? 'opacity-50' : ''}`} />{opt.label}
                     </button>
                   );
                 })}
@@ -931,12 +938,13 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: {
               <div className="flex flex-col gap-2">
                 {ANIM_OPTIONS.map(opt => {
                   const active = (draft.pt[slideIndex].animation ?? 'none') === opt.value;
+                  const ThumbIcon = (opt as any).icon;
                   return (
                     <button key={opt.value}
                       onClick={() => setDraft(prev => { const next = JSON.parse(JSON.stringify(prev)) as ContentStore; for (const l of ALL_LANGS) next[l][slideIndex].animation = opt.value as any; return next; })}
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all w-full text-left"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all w-full text-left"
                       style={{ background: active ? 'var(--primary)' : 'var(--background)', color: active ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: active ? '1px solid var(--primary)' : '1px solid var(--border)' }}>
-                      <span className="text-base w-6 text-center">{opt.thumb}</span>{opt.label}
+                      <ThumbIcon className={`w-4 h-4 text-center ${!active ? 'opacity-50' : ''}`} />{opt.label}
                     </button>
                   );
                 })}
@@ -958,8 +966,8 @@ function EditModal({ slideIndex, activeLang, content, onSave, onClose }: {
           style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
           <p className="text-xs" style={{ color: saving === 'error' ? '#f59e0b' : 'var(--muted-foreground)' }}>
             {saving === 'translating' && '⏳ Traduzindo automaticamente para EN e DE…'}
-            {saving === 'error' && '⚠️ Tradução falhou. Salvo no idioma atual.'}
-            {saving === 'idle' && `✏️ Editando em ${LANG_LABELS[activeLang]}. Outros idiomas são traduzidos ao salvar.`}
+            {saving === 'error' && 'Problema na tradução. Salvo no idioma atual.'}
+            {saving === 'idle' && `Editando em ${LANG_LABELS[activeLang]}. Outros idiomas são traduzidos ao salvar.`}
           </p>
           <div className="flex gap-3 justify-end">
             <button onClick={onClose} disabled={saving === 'translating'}
@@ -994,16 +1002,31 @@ function AddSlideMenu({ onAdd, onClose }: { onAdd: (tpl: typeof SLIDE_TEMPLATES[
             <X className="w-4 h-4" />
           </button>
         </div>
-        {SLIDE_TEMPLATES.map(tpl => (
-          <button key={tpl.label} onClick={() => { onAdd(tpl); onClose(); }}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left transition-all"
-            style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}>
-            <span className="text-xl">{tpl.emoji}</span>
-            <span className="font-semibold text-sm">{tpl.label}</span>
-          </button>
-        ))}
+        {SLIDE_TEMPLATES.map(tpl => {
+          const TemplateIcon = tpl.icon;
+          return (
+            <button key={tpl.label} onClick={() => { onAdd(tpl); onClose(); }}
+              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left transition-all"
+              style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--primary)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}>
+              <TemplateIcon className="w-5 h-5 opacity-60" style={{ color: 'var(--foreground)' }} />
+              <span className="font-semibold text-sm">{tpl.label}</span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Slide Content Safe Zone ──────────────────────────────────────────────────
+
+function SlideContentWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex-1 flex flex-col justify-center w-full max-w-[1400px] mx-auto px-10 xl:px-20 pt-28 pb-32 z-10 relative">
+      <div className="w-full relative">
+        {children}
       </div>
     </div>
   );
@@ -1120,8 +1143,14 @@ export default function SlidePadrao() {
                     <div className="text-xs font-semibold truncate" style={{ color: idx === current ? 'var(--primary)' : 'var(--foreground)' }}>
                       {idx + 1}. {s.title}
                     </div>
-                    <div className="text-[10px]" style={{ color: 'var(--muted-foreground)' }}>
-                      {s.type}{s.topicBlock ? ` · ${VIEW_CONFIG[s.topicBlock.view].emoji}` : ''}
+                    <div className="text-[10px] flex items-center gap-1 mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+                      <span>{s.type}</span>
+                      {s.topicBlock && (
+                        <>
+                          <span className="opacity-40">•</span>
+                          {React.createElement(VIEW_CONFIG[s.topicBlock.view].icon, { className: "w-3 h-3 opacity-60" })}
+                        </>
+                      )}
                     </div>
                   </div>
                   <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1154,7 +1183,7 @@ export default function SlidePadrao() {
         )}
 
         {/* ── Main Area ── */}
-        <div className="flex-1 relative overflow-hidden flex flex-col items-center justify-center min-h-screen">
+        <div className="flex-1 relative overflow-hidden flex flex-col min-h-screen">
 
           {/* Ambient Background Engine */}
           {slide.bgStyle === 'glow' && (
@@ -1172,7 +1201,7 @@ export default function SlidePadrao() {
             }} />
           )}
 
-          {/* Top bar */}
+          {/* Top bar (Fora da Safe Zone) */}
           <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-50">
             <button onClick={() => setPanelOpen(p => !p)}
               className="px-3 h-8 rounded-full text-xs font-medium flex items-center gap-1.5 transition-colors"
@@ -1198,8 +1227,8 @@ export default function SlidePadrao() {
             </div>
           </div>
 
-          {/* Slide */}
-          <div className="relative z-10 w-full max-w-6xl px-8 flex flex-col justify-center min-h-[70vh]">
+          {/* Slide Content Safe Zone */}
+          <SlideContentWrapper>
             <div key={`${current}-${lang}-${slide.animation}`} className={`w-full ${
               slide.animation === 'fade' ? 'animate-in fade-in duration-700 ease-out' :
               slide.animation === 'slide-up' ? 'animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out' :
@@ -1207,9 +1236,9 @@ export default function SlidePadrao() {
             }`}>
               <SlideVisual slide={slide} />
             </div>
-          </div>
+          </SlideContentWrapper>
 
-          {/* Nav */}
+          {/* Nav (Fora da Safe Zone) */}
           <div className="absolute bottom-8 left-6 right-6 flex justify-between items-center z-50">
             <div className="flex gap-2">
               {slideList.map((_, idx) => (

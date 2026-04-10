@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { AlertTriangle, RefreshCw, Trash2 } from "lucide-react";
+import { AlertTriangle, RefreshCw, Trash2, XCircle, Wrench, Lightbulb } from "lucide-react";
 
 /**
  * Componente que detecta erros de cache do Figma Make e oferece soluções
@@ -73,8 +73,8 @@ export function CacheClearer() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="bg-muted p-4 rounded-lg space-y-2">
-            <p className="text-sm font-mono text-destructive">
-              ❌ Erro: {errorMessage}
+            <p className="text-sm font-mono text-destructive flex items-center gap-2">
+              <XCircle className="w-4 h-4" /> Erro: {errorMessage}
             </p>
             <p className="text-sm text-muted-foreground">
               Esse arquivo não existe mais - foi substituído na última atualização.
@@ -82,7 +82,7 @@ export function CacheClearer() {
           </div>
 
           <div className="space-y-3">
-            <p className="font-semibold">🔧 Soluções Recomendadas:</p>
+            <p className="font-semibold flex items-center gap-2"><Wrench className="w-4 h-4" /> Soluções Recomendadas:</p>
             
             <div className="space-y-2">
               <Button
@@ -116,7 +116,7 @@ export function CacheClearer() {
           </div>
 
           <div className="text-sm text-muted-foreground border-t pt-4">
-            <p className="font-semibold mb-2">💡 Solução Manual (se o problema persistir):</p>
+            <p className="font-semibold mb-2 flex items-center gap-2"><Lightbulb className="w-4 h-4" /> Solução Manual (se o problema persistir):</p>
             <ol className="list-decimal list-inside space-y-1 text-xs">
               <li>Abra DevTools (F12)</li>
               <li>Vá em Application → Storage</li>
