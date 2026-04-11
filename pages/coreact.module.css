@@ -16,13 +16,13 @@
 
 .container {
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto 1fr auto;
   gap: var(--spacing-4);
   width: 100%;
   flex: 1;
   min-height: 0;
   padding: var(--spacing-5);
-  /* overflow gerenciado pelo pai — sem overflow aqui */
+  /* 4 linhas: header, kpis, mainGrid (2 colunas), atividade recente (full width) */
 }
 
 /* ---- HEADER ---- */
@@ -139,7 +139,7 @@
 }
 
 .kpiValue {
-  font-size: var(--font-size-3xl);
+  font-size: clamp(var(--font-size-xl), 3vw, var(--font-size-3xl));
   font-weight: 800;
   font-family: var(--font-family-heading);
   line-height: 1;
@@ -181,7 +181,7 @@
 
 .mainGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;    /* lg+: 2 colunas */
+  grid-template-columns: 5fr 7fr;    /* proporção ~42/58 — equipe menos larga, projetos mais espaço */
   gap: var(--spacing-4);
   min-height: 0;
 }

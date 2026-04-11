@@ -336,67 +336,68 @@ function CoreActMacroDashboard({ userName }: { userName: string }) {
               )}
             </div>
           </section>
-
-          <section className={styles.card}>
-            <div className={styles.cardHeaderRow}>
-              <h2 className={styles.cardTitle}>Atividade Recente</h2>
-            </div>
-
-            <div className={styles.activitiesList}>
-              {!activitiesData?.activityLogs || activitiesData.activityLogs.length === 0 ? (
-                <div className={styles.emptyState}>Nenhuma atividade registrada ainda.</div>
-              ) : (
-                activitiesData.activityLogs.slice(0, 5).map(log => {
-                  const entityMap: Record<string, string> = {
-                    tasks: 'Tarefa',
-                    projects: 'Projeto',
-                    budget_items: 'Item de orçamento',
-                    team_members: 'Membro da equipe'
-                  };
-                  const entityName = log.entityType ? (entityMap[log.entityType] || log.entityType) : 'Item';
-
-                  let text = `${entityName} atualizado(a)`;
-                  let Icon = Activity;
-
-                  switch(log.action) {
-                    case 'created': text = `Novo(a) ${entityName.toLowerCase()}`; Icon = Plus; break;
-                    case 'completed': text = `${entityName} concluído(a)`; Icon = CheckSquare; break;
-                    case 'deleted': text = `${entityName} removido(a)`; Icon = Trash; break;
-                    case 'commented': text = `Comentário em ${entityName.toLowerCase()}`; Icon = MessageSquare; break;
-                    case 'assigned': text = `Atribuição em ${entityName.toLowerCase()}`; Icon = Users; break;
-                    case 'status_changed': text = `Status alterado`; Icon = RefreshCw; break;
-                    case 'updated': text = `${entityName} atualizado(a)`; Icon = Edit2; break;
-                  }
-
-                  const rtf = new Intl.RelativeTimeFormat('pt-BR', { numeric: 'auto' });
-                  const date = new Date(log.performedAt || new Date());
-                  const daysDiff = Math.round((date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-                  const hoursDiff = Math.round((date.getTime() - new Date().getTime()) / (1000 * 60 * 60));
-                  const minsDiff = Math.round((date.getTime() - new Date().getTime()) / (1000 * 60));
-
-                  let timeStr = rtf.format(minsDiff, 'minute');
-                  if (Math.abs(daysDiff) > 0) timeStr = rtf.format(daysDiff, 'day');
-                  else if (Math.abs(hoursDiff) > 0) timeStr = rtf.format(hoursDiff, 'hour');
-
-                  return (
-                    <div key={log.id} className={styles.activityItem}>
-                      <div className={styles.activityIconWrapper}>
-                        <Icon size={14} />
-                      </div>
-                      <div className={styles.activityContent}>
-                        <span className={styles.activityText}>
-                          <strong>{log.performerName || 'Sistema'}</strong> {text.toLowerCase()}
-                        </span>
-                        <span className={styles.activityTime}>{timeStr}</span>
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </section>
         </div>
       </div>
+
+      {/* Atividade Recente — full width, fora do grid de 2 colunas */}
+      <section className={styles.card}>
+        <div className={styles.cardHeaderRow}>
+          <h2 className={styles.cardTitle}>Atividade Recente</h2>
+        </div>
+
+        <div className={styles.activitiesList}>
+          {!activitiesData?.activityLogs || activitiesData.activityLogs.length === 0 ? (
+            <div className={styles.emptyState}>Nenhuma atividade registrada ainda.</div>
+          ) : (
+            activitiesData.activityLogs.slice(0, 5).map(log => {
+              const entityMap: Record<string, string> = {
+                tasks: 'Tarefa',
+                projects: 'Projeto',
+                budget_items: 'Item de orçamento',
+                team_members: 'Membro da equipe'
+              };
+              const entityName = log.entityType ? (entityMap[log.entityType] || log.entityType) : 'Item';
+
+              let text = `${entityName} atualizado(a)`;
+              let Icon = Activity;
+
+              switch(log.action) {
+                case 'created': text = `Novo(a) ${entityName.toLowerCase()}`; Icon = Plus; break;
+                case 'completed': text = `${entityName} concluído(a)`; Icon = CheckSquare; break;
+                case 'deleted': text = `${entityName} removido(a)`; Icon = Trash; break;
+                case 'commented': text = `Comentário em ${entityName.toLowerCase()}`; Icon = MessageSquare; break;
+                case 'assigned': text = `Atribuição em ${entityName.toLowerCase()}`; Icon = Users; break;
+                case 'status_changed': text = `Status alterado`; Icon = RefreshCw; break;
+                case 'updated': text = `${entityName} atualizado(a)`; Icon = Edit2; break;
+              }
+
+              const rtf = new Intl.RelativeTimeFormat('pt-BR', { numeric: 'auto' });
+              const date = new Date(log.performedAt || new Date());
+              const daysDiff = Math.round((date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+              const hoursDiff = Math.round((date.getTime() - new Date().getTime()) / (1000 * 60 * 60));
+              const minsDiff = Math.round((date.getTime() - new Date().getTime()) / (1000 * 60));
+
+              let timeStr = rtf.format(minsDiff, 'minute');
+              if (Math.abs(daysDiff) > 0) timeStr = rtf.format(daysDiff, 'day');
+              else if (Math.abs(hoursDiff) > 0) timeStr = rtf.format(hoursDiff, 'hour');
+
+              return (
+                <div key={log.id} className={styles.activityItem}>
+                  <div className={styles.activityIconWrapper}>
+                    <Icon size={14} />
+                  </div>
+                  <div className={styles.activityContent}>
+                    <span className={styles.activityText}>
+                      <strong>{log.performerName || 'Sistema'}</strong> {text.toLowerCase()}
+                    </span>
+                    <span className={styles.activityTime}>{timeStr}</span>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </section>
     </div>
   );
 }
