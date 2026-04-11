@@ -66,6 +66,12 @@
   --spacing-19: 4.75rem;
   --spacing-20: 5rem;
 
+  /* ⚠️  LAYOUT STRUCTURE TOKENS — BLINDADOS ⚠️
+     Estes tokens controlam alinhamentos estruturais entre componentes.
+     Sidebar header e CoreAct header DEVEM ter a mesma altura.
+     NÃO altere sem auditar: AppSidebar.tsx, CoreActLayout.module.css */
+  --header-height: 4.5rem;
+
   /* Font Families */
   --font-family-base: 'DM Sans', system-ui, sans-serif;
   --font-family-heading: 'Urbanist', system-ui, sans-serif;

@@ -18,10 +18,9 @@
   border-bottom: 1px solid var(--border);
   background-color: var(--surface);
   flex-shrink: 0;
-  height: 4.5rem;
+  height: var(--header-height); /* 🔒 Token blindado — sincronizado com sidebar header */
   gap: var(--spacing-3);
   overflow: visible;
-  /* height: 4.5rem — alinhado com a altura do header da sidebar (S.header) */
 }
 
 @media (max-width: 767px) {
@@ -167,7 +166,7 @@
 .level3 { }
 
 /* Niveis adaptativos — ajustam density do conteudo sem mudar altura do header */
-/* O header SEMPRE fica em 4.5rem para alinhar com a sidebar */
+/* O header usa var(--header-height) — token blindado em base.css */
 
 .level1 .navItem {
   padding: var(--spacing-1) var(--spacing-2);
