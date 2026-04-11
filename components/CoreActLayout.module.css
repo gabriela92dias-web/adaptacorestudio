@@ -18,10 +18,10 @@
   border-bottom: 1px solid var(--border);
   background-color: var(--surface);
   flex-shrink: 0;
-  height: 3.5rem;
+  height: 4.5rem;
   gap: var(--spacing-3);
   overflow: visible;
-  /* overflow:visible — impede corte do botão '+ Ações' na extremidade direita */
+  /* height: 4.5rem — alinhado com a altura do header da sidebar (S.header) */
 }
 
 @media (max-width: 767px) {
