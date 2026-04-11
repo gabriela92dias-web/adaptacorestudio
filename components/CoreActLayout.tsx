@@ -56,7 +56,7 @@ export const CoreActLayout = ({ children }: { children?: React.ReactNode }) => {
                 title={item.label}
               >
                 <Icon size={16} className={styles.navIcon} />
-                                {level < 2 && <span className={styles.navLabel}>{item.label}</span>}
+                <span className={styles.navLabel}>{item.label}</span>
               </NavLink>
             );
           })}

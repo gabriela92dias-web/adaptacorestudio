@@ -432,21 +432,23 @@ export const AppSidebar = () => {
           <div style={S.header(isMobile ? false : collapsed)}>
             <div style={S.logo(isMobile ? false : collapsed)}>
               <Sparkles size={20} style={{ color: "var(--foreground)", flexShrink: 0 }} />
-              <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
-                <span style={{
-                  fontFamily: "var(--font-family-heading)",
-                  fontWeight: 800,
-                  fontSize: "var(--font-size-md)",
-                  letterSpacing: "0.05em",
-                }}>ADAPTA</span>
-                <span style={{
-                  fontFamily: "var(--font-family-base)",
-                  fontWeight: 400,
-                  fontSize: "var(--font-size-xs)",
-                  letterSpacing: "0.1em",
-                  color: "var(--muted-foreground)",
-                }}>CORE STUDIO</span>
-              </div>
+              {!(isMobile ? false : collapsed) && (
+                <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+                  <span style={{
+                    fontFamily: "var(--font-family-heading)",
+                    fontWeight: 800,
+                    fontSize: "var(--font-size-md)",
+                    letterSpacing: "0.05em",
+                  }}>ADAPTA</span>
+                  <span style={{
+                    fontFamily: "var(--font-family-base)",
+                    fontWeight: 400,
+                    fontSize: "var(--font-size-xs)",
+                    letterSpacing: "0.1em",
+                    color: "var(--muted-foreground)",
+                  }}>CORE STUDIO</span>
+                </div>
+              )}
             </div>
           </div>
 

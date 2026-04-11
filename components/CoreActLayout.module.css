@@ -88,6 +88,21 @@
   scroll-snap-align: start;
 }
 
+/* Label de texto das tabs — esconde em telas onde 9 tabs + texto nao cabem */
+.navLabel {
+  display: inline;
+}
+
+@media (max-width: 1279px) {
+  .navLabel {
+    display: none;
+  }
+  .navItem {
+    padding: var(--spacing-2);
+    font-size: var(--font-size-sm);
+  }
+}
+
 @media (max-width: 767px) {
   .navItem {
     padding: var(--spacing-2);
@@ -151,9 +166,8 @@
 .level2 { }
 .level3 { }
 
-.level1 .header {
-  height: 3rem;
-}
+/* Niveis adaptativos — ajustam density do conteudo sem mudar altura do header */
+/* O header SEMPRE fica em 4.5rem para alinhar com a sidebar */
 
 .level1 .navItem {
   padding: var(--spacing-1) var(--spacing-2);
@@ -164,14 +178,6 @@
   padding: var(--spacing-4);
 }
 
-.level2 .header {
-  height: 2.5rem;
-}
-
 .level2 .main {
   padding: var(--spacing-3);
-}
-
-.level3 .header {
-  height: 2.5rem;
 }
